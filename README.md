@@ -2,9 +2,11 @@
 
 **Break the gates. Climb the Spire. Weave the Khaos.**
 
-Khaos Nexus is a NeoForge RPG mod for Minecraft 1.21.1. Ranked dungeon gates open across your world, an endless tower waits to be climbed, and every player chooses a class, carries a Soulbound Codex, and grows their Khaos Rank. It's built to drop into big packs like All the Mods 10, and its difficulty and loot scale to whatever modpack it's in.
+Khaos Nexus is a NeoForge RPG mod for Minecraft 1.21.1. Ranked dungeon gates open across your world, an endless tower waits to be climbed, and every player chooses a class, carries a Soulbound Codex, and grows their Khaos Rank.
 
-> **Status:** in planning. Development starts in mid-October 2026. ATM10 (1.21.1) comes first, with an ATM11 port once it's stable. It will be released on CurseForge.
+It's a complete adventure all on its own, and it evolves with the mods you add. Install Apotheosis, Ars Nouveau, Relics, or a big pack like All the Mods, and the gates, loot, and difficulty scale up to match.
+
+> **Status:** in planning. Development starts in mid-October 2026. The first release targets Minecraft 1.21.1 (NeoForge), and it will be released on CurseForge. It works on its own or alongside other mods, and it's tested against big packs like All the Mods 10. A port to newer versions (for ATM11) comes once 1.21.1 is stable.
 
 ---
 
@@ -63,7 +65,7 @@ Khaos Nexus is a NeoForge RPG mod for Minecraft 1.21.1. Ranked dungeon gates ope
 ---
 
 ## Compatibility (planned)
-Everything here is optional, and the mod runs without any of these installed.
+Khaos Nexus never needs any other mod. Each one below just adds more when it's installed.
 - **Apotheosis / Apothic Attributes:** class and Codex affixes, plus new attributes for magic and summons.
 - **Relics, Artifacts, Curios**
 - **Ars Nouveau:** the main magic partner, with deeper integration planned in the **Ars Nexus** add-on.
