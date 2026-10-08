@@ -1,0 +1,14 @@
+name: Suggestion
+description: Ideas for new features or changes
+labels: [suggestion]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why would it be good?

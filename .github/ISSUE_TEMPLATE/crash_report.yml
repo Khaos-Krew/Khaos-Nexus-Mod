@@ -1,0 +1,33 @@
+name: Crash report
+description: The game or server crashed
+labels: [crash, needs-triage]
+body:
+  - type: input
+    id: mod_version
+    attributes:
+      label: Khaos Nexus version
+    validations:
+      required: true
+  - type: input
+    id: modpack
+    attributes:
+      label: Modpack and version
+      placeholder: e.g. All the Mods 10 v4.2, or "none"
+  - type: dropdown
+    id: side
+    attributes:
+      label: Client or server?
+      options: [Client, Dedicated server, Singleplayer]
+    validations:
+      required: true
+  - type: input
+    id: crash_log
+    attributes:
+      label: Crash report link
+      description: Upload the crash report and latest.log to https://mclo.gs and paste the links
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What were you doing when it crashed?

@@ -1,0 +1,45 @@
+name: Bug report
+description: Something in Khaos Nexus isn't working right
+labels: [bug, needs-triage]
+body:
+  - type: input
+    id: mod_version
+    attributes:
+      label: Khaos Nexus version
+      placeholder: e.g. 0.1.0
+    validations:
+      required: true
+  - type: input
+    id: modpack
+    attributes:
+      label: Modpack and version
+      placeholder: e.g. All the Mods 10 v4.2, or "none"
+  - type: dropdown
+    id: side
+    attributes:
+      label: Where does it happen?
+      options: [Singleplayer, Multiplayer server, Both, Not sure]
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options: [Nexus Gates, Raids, Nexus Spire, Classes or abilities, Khaos Weaving or Codex, Techniques, Khaos Rank or hunter rank, Loot or shop or Gate Board, HUD or UI, Guide or Ponder, Quests, Discord webhook, Mod compatibility, Other]
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+  - type: input
+    id: logs
+    attributes:
+      label: Log link
+      description: Upload latest.log to https://mclo.gs and paste the link

@@ -1,0 +1,32 @@
+name: Mod compatibility issue
+description: Khaos Nexus conflicts with or doesn't work well with another mod
+labels: [compat, needs-triage]
+body:
+  - type: input
+    id: mod_version
+    attributes:
+      label: Khaos Nexus version
+    validations:
+      required: true
+  - type: input
+    id: other_mod
+    attributes:
+      label: Other mod and version
+      placeholder: e.g. Apotheosis 8.1.0
+    validations:
+      required: true
+  - type: input
+    id: modpack
+    attributes:
+      label: Modpack and version
+  - type: textarea
+    id: what
+    attributes:
+      label: What goes wrong?
+    validations:
+      required: true
+  - type: input
+    id: logs
+    attributes:
+      label: Log link
+      description: https://mclo.gs
