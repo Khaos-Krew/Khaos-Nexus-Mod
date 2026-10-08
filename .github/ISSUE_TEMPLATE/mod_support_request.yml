@@ -1,0 +1,56 @@
+name: Request mod support
+description: Suggest a mod you'd like Khaos Nexus to work with or integrate
+title: "[Mod support] "
+labels: [mod-support-request]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Want Khaos Nexus to work with another mod? Tell us about it here. Please search existing requests first, and give a 👍 to one that's already open instead of making a duplicate.
+  - type: input
+    id: mod_name
+    attributes:
+      label: Mod name
+      placeholder: e.g. Occultism
+    validations:
+      required: true
+  - type: input
+    id: mod_link
+    attributes:
+      label: CurseForge or Modrinth link
+      placeholder: https://www.curseforge.com/minecraft/mc-mods/...
+    validations:
+      required: true
+  - type: input
+    id: mc_version
+    attributes:
+      label: Minecraft / loader version it supports
+      placeholder: e.g. 1.21.1 NeoForge
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of support?
+      multiple: true
+      options:
+        - Make them work together without problems
+        - Its mobs or bosses in gates or the Spire
+        - Its items or gear in gate loot
+        - Class or ability synergy
+        - Magic or Khaos Weaving integration
+        - Attributes or stat scaling
+        - Quest chapter (FTB Quests)
+        - Other (explain below)
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: How should they work together?
+      description: Give any specific ideas you have, like which class it fits, which gate rank its loot belongs in, and so on.
+    validations:
+      required: true
+  - type: input
+    id: modpack
+    attributes:
+      label: Modpack you play it in (optional)
+      placeholder: e.g. All the Mods 10

@@ -73,12 +73,14 @@ Khaos Nexus never needs any other mod. Each one below just adds more when it's i
 - **FTB Teams, FTB Chunks, FTB Quests**
 - **Parry mods:** when one is installed, the Tank uses that mod's parry and adds its class bonuses on top.
 
+Want another mod supported? [Request mod support](https://github.com/Khaos-Krew/Khaos-Nexus-Mod/issues/new?template=mod_support_request.yml), and give a 👍 to requests you'd like to see. The most-requested mods go to the top of the list.
+
 Server owners can tune gate rates, scaling, loot, minion caps and more in the config and datapacks.
 
 ---
 
 ## Reporting issues
-Found a bug, a crash, or a mod conflict? [Open an issue](https://github.com/Khaos-Krew/Khaos-Nexus-Mod/issues/new/choose) and pick the matching form. Please include your mod version, modpack, and an [mclo.gs](https://mclo.gs) log link.
+Found a bug, a crash, or a mod conflict? [Open an issue](https://github.com/Khaos-Krew/Khaos-Nexus-Mod/issues/new/choose) and pick the matching form, including **Request mod support** for mods you'd like us to work with. Please include your mod version, modpack, and an [mclo.gs](https://mclo.gs) log link.
 
 ## Community
 Khaos Nexus is named after the Khaos Nexus Discord community, where it's being made.
