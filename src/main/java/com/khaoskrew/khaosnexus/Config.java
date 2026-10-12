@@ -120,6 +120,28 @@ public final class Config {
 
     static {
         SERVER_BUILDER.pop();
+        SERVER_BUILDER.comment("Daily bounties reset each Minecraft day and pay Nexus Tokens. Tokens are not crafted.")
+                .push("bounties");
+    }
+
+    public static final ModConfigSpec.IntValue BOUNTY_GATES = SERVER_BUILDER
+            .comment("Gate clears required for the daily gate bounty.")
+            .defineInRange("gateClears", 2, 1, 100);
+    public static final ModConfigSpec.IntValue BOUNTY_GATE_TOKENS = SERVER_BUILDER
+            .defineInRange("gateTokens", 4, 0, 64);
+    public static final ModConfigSpec.IntValue BOUNTY_RAIDS = SERVER_BUILDER
+            .comment("Raid clears required for the daily raid bounty.")
+            .defineInRange("raidClears", 1, 1, 20);
+    public static final ModConfigSpec.IntValue BOUNTY_RAID_TOKENS = SERVER_BUILDER
+            .defineInRange("raidTokens", 6, 0, 64);
+    public static final ModConfigSpec.IntValue BOUNTY_SPIRE_FLOOR = SERVER_BUILDER
+            .comment("Spire floor that completes the daily Spire bounty.")
+            .defineInRange("spireFloor", 2, 1, 10000);
+    public static final ModConfigSpec.IntValue BOUNTY_SPIRE_TOKENS = SERVER_BUILDER
+            .defineInRange("spireTokens", 6, 0, 64);
+
+    static {
+        SERVER_BUILDER.pop();
     }
 
     static final ModConfigSpec SERVER_SPEC = SERVER_BUILDER.build();

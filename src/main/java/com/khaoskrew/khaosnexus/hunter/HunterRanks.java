@@ -2,6 +2,7 @@ package com.khaoskrew.khaosnexus.hunter;
 
 import java.util.UUID;
 
+import com.khaoskrew.khaosnexus.bounty.Bounties;
 import com.khaoskrew.khaosnexus.Config;
 import com.khaoskrew.khaosnexus.gate.GateRank;
 import com.khaoskrew.khaosnexus.network.FeedbackPayload;
@@ -78,6 +79,7 @@ public final class HunterRanks {
         HunterProfile profile = profile(player);
         profile.gatesCleared++;
         addXp(player, gateRank.tuning().hunterXp.get());
+        Bounties.onGateClear(player);
         player.displayClientMessage(Component.translatable(
                 "khaosnexus.hunter.gate_xp",
                 gateRank.tuning().hunterXp.get(),

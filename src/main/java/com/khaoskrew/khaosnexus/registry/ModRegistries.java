@@ -43,6 +43,8 @@ public final class ModRegistries {
     public static final DeferredItem<BlockItem> NEXUS_GATE_ITEM = ITEMS.register("nexus_gate",
             () -> new NexusGateItem(NEXUS_GATE.get(), new Item.Properties()));
 
+    public static final DeferredItem<Item> NEXUS_TOKEN = ITEMS.registerSimpleItem("nexus_token");
+
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<NexusGateBlockEntity>> NEXUS_GATE_ENTITY =
             BLOCK_ENTITIES.register("nexus_gate", () -> BlockEntityType.Builder
                     .of(NexusGateBlockEntity::new, NEXUS_GATE.get())
@@ -53,7 +55,10 @@ public final class ModRegistries {
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.khaosnexus"))
                     .icon(() -> new ItemStack(NEXUS_GATE_ITEM.get()))
-                    .displayItems((parameters, output) -> output.accept(NEXUS_GATE_ITEM.get()))
+                    .displayItems((parameters, output) -> {
+                        output.accept(NEXUS_GATE_ITEM.get());
+                        output.accept(NEXUS_TOKEN.get());
+                    })
                     .build());
 
     private ModRegistries() {}

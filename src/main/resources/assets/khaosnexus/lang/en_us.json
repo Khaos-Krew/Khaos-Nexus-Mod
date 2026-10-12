@@ -67,5 +67,12 @@
   "key.categories.khaosnexus": "Khaos Nexus",
   "key.khaosnexus.ability": "Class ability",
   "key.khaosnexus.ability_alt": "Class ability (secondary)",
-  "key.khaosnexus.class": "Choose class"
+  "key.khaosnexus.class": "Choose class",
+  "item.khaosnexus.nexus_token": "Nexus Token",
+  "khaosnexus.bounty.list": "Daily bounties: gates %s/%s, raids %s/%s, Spire floor %s/%s.",
+  "khaosnexus.bounty.toast": "Bounty complete",
+  "khaosnexus.bounty.toast_body": "Nexus Tokens added to your inventory.",
+  "khaosnexus.bounty.gates_done": "Gate bounty complete. +%s Nexus Tokens.",
+  "khaosnexus.bounty.raids_done": "Raid bounty complete. +%s Nexus Tokens.",
+  "khaosnexus.bounty.spire_done": "Spire bounty complete. +%s Nexus Tokens."
 }

@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import com.khaoskrew.khaosnexus.KhaosNexus;
 import com.khaoskrew.khaosnexus.gate.GateRank;
+import com.khaoskrew.khaosnexus.bounty.Bounties;
 import com.khaoskrew.khaosnexus.hunter.ClassService;
 import com.khaoskrew.khaosnexus.hunter.HunterClass;
 import com.khaoskrew.khaosnexus.hunter.HunterProfile;
@@ -75,7 +76,12 @@ public final class KhaosCommands {
                                         .executes(context -> {
                                             ServerPlayer player = context.getSource().getPlayerOrException();
                                             return ClassService.equip(player, StringArgumentType.getString(context, "id")) ? 1 : 0;
-                                        })))));
+                                        }))))
+                .then(Commands.literal("bounty")
+                        .executes(context -> {
+                            Bounties.describe(context.getSource().getPlayerOrException());
+                            return 1;
+                        })));
     }
 
     private static int showClass(ServerPlayer player) {
