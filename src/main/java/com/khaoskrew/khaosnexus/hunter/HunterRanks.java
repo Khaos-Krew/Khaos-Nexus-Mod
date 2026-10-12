@@ -3,6 +3,7 @@ package com.khaoskrew.khaosnexus.hunter;
 import java.util.UUID;
 
 import com.khaoskrew.khaosnexus.bounty.Bounties;
+import com.khaoskrew.khaosnexus.title.Titles;
 import com.khaoskrew.khaosnexus.Config;
 import com.khaoskrew.khaosnexus.gate.GateRank;
 import com.khaoskrew.khaosnexus.network.FeedbackPayload;
@@ -58,6 +59,9 @@ public final class HunterRanks {
         sync(player);
         if (after.ordinal() > before.ordinal()) {
             announceRankUp(player, after);
+            if (after == GateRank.S) {
+                Titles.unlock(player, Titles.HUNTER_S);
+            }
         }
     }
 
@@ -80,6 +84,7 @@ public final class HunterRanks {
         profile.gatesCleared++;
         addXp(player, gateRank.tuning().hunterXp.get());
         Bounties.onGateClear(player);
+        Titles.unlock(player, Titles.GATE_BREAKER);
         player.displayClientMessage(Component.translatable(
                 "khaosnexus.hunter.gate_xp",
                 gateRank.tuning().hunterXp.get(),

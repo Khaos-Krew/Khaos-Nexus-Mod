@@ -105,5 +105,16 @@
   "khaosnexus.spire.checkpoint": "Checkpoint saved at floor %s.",
   "khaosnexus.spire.cleared": "Floor %s cleared.",
   "khaosnexus.spire.boss": "Floor %s Guardian",
-  "khaosnexus.spire.death": "The Spire throws you out. Your gear stays, and you are weakened for a moment."
+  "khaosnexus.spire.death": "The Spire throws you out. Your gear stays, and you are weakened for a moment.",
+  "khaosnexus.title.toast": "Title unlocked",
+  "khaosnexus.title.unlocked": "Title unlocked: %s. Equip it with /khaosnexus title equip.",
+  "khaosnexus.title.equipped": "Showing title %s.",
+  "khaosnexus.title.locked": "You have not earned %s.",
+  "khaosnexus.title.none": "No titles yet. Clear a gate, a raid, or a Spire checkpoint.",
+  "khaosnexus.title.list": "Titles: %s. Showing: %s.",
+  "khaosnexus.title.gate_breaker": "Gate Breaker",
+  "khaosnexus.title.raid_victor": "Raid Victor",
+  "khaosnexus.title.spire_climber": "Spire Climber",
+  "khaosnexus.title.hunter_s": "S-Rank Hunter",
+  "khaosnexus.title.class_bound": "Class Bound"
 }

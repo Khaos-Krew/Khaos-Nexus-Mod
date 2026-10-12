@@ -3,6 +3,7 @@ package com.khaoskrew.khaosnexus.hunter;
 import java.util.List;
 
 import com.khaoskrew.khaosnexus.Config;
+import com.khaoskrew.khaosnexus.title.Titles;
 
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -52,6 +53,7 @@ public final class ClassService {
         profile.swapReady = now + Config.CLASS_SWAP_COOLDOWN.get();
         HunterRanks.sync(player);
         player.displayClientMessage(Component.translatable("khaosnexus.class.equipped", Component.translatable(hunterClass.translationKey())), false);
+        Titles.unlock(player, Titles.CLASS_BOUND);
         return true;
     }
 

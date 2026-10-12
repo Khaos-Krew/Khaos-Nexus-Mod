@@ -6,6 +6,7 @@ import com.khaoskrew.khaosnexus.bounty.Bounties;
 import com.khaoskrew.khaosnexus.hunter.HunterProfile;
 import com.khaoskrew.khaosnexus.hunter.HunterRanks;
 import com.khaoskrew.khaosnexus.party.PartyService;
+import com.khaoskrew.khaosnexus.title.Titles;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -119,6 +120,7 @@ public final class SpireService {
                 if (floor % interval == 0) {
                     profile.spireCheckpoint = floor;
                     player.displayClientMessage(Component.translatable("khaosnexus.spire.checkpoint", floor), false);
+                    Titles.unlock(player, Titles.SPIRE_CLIMBER);
                 }
             }
             Bounties.onSpireFloor(player, floor);

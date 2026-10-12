@@ -8,6 +8,7 @@ import com.khaoskrew.khaosnexus.bounty.Bounties;
 import com.khaoskrew.khaosnexus.party.PartyService;
 import com.khaoskrew.khaosnexus.raid.RaidService;
 import com.khaoskrew.khaosnexus.spire.SpireService;
+import com.khaoskrew.khaosnexus.title.Titles;
 import com.khaoskrew.khaosnexus.hunter.ClassService;
 import com.khaoskrew.khaosnexus.hunter.HunterClass;
 import com.khaoskrew.khaosnexus.hunter.HunterProfile;
@@ -132,6 +133,20 @@ public final class KhaosCommands {
                         }))
                         .then(Commands.literal("newseason").requires(source -> source.hasPermission(2)).executes(context -> {
                             SpireService.newSeason(context.getSource().getPlayerOrException());
+                            return 1;
+                        })))
+                .then(Commands.literal("title")
+                        .executes(context -> {
+                            Titles.list(context.getSource().getPlayerOrException());
+                            return 1;
+                        })
+                        .then(Commands.literal("equip")
+                                .then(Commands.argument("id", StringArgumentType.word())
+                                        .executes(context -> Titles.equip(
+                                                context.getSource().getPlayerOrException(),
+                                                StringArgumentType.getString(context, "id")) ? 1 : 0)))
+                        .then(Commands.literal("clear").executes(context -> {
+                            Titles.clear(context.getSource().getPlayerOrException());
                             return 1;
                         }))));
     }

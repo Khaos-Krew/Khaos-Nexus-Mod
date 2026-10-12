@@ -1,6 +1,7 @@
 package com.khaoskrew.khaosnexus.hunter;
 
 import com.khaoskrew.khaosnexus.KhaosNexus;
+import com.khaoskrew.khaosnexus.title.Titles;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Mob;
@@ -17,6 +18,7 @@ public final class ClassEvents {
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
             ClassService.reapply(player);
+            Titles.apply(player);
         }
     }
 
@@ -24,6 +26,7 @@ public final class ClassEvents {
     public static void onClone(PlayerEvent.Clone event) {
         if (event.getEntity() instanceof ServerPlayer player) {
             ClassService.reapply(player);
+            Titles.apply(player);
         }
     }
 

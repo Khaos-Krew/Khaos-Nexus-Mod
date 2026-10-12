@@ -10,6 +10,7 @@ import com.khaoskrew.khaosnexus.hunter.HunterProfile;
 import com.khaoskrew.khaosnexus.hunter.HunterRanks;
 import com.khaoskrew.khaosnexus.party.PartyService;
 import com.khaoskrew.khaosnexus.registry.ModRegistries;
+import com.khaoskrew.khaosnexus.title.Titles;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -99,6 +100,7 @@ public final class RaidService {
             HunterRanks.sync(player);
             placeLoot(level, player);
             Bounties.onRaidClear(player);
+            Titles.unlock(player, Titles.RAID_VICTOR);
             player.displayClientMessage(Component.translatable("khaosnexus.raid.loot"), false);
         }
     }
