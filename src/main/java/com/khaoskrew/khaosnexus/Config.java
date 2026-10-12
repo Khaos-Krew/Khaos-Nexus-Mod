@@ -52,17 +52,39 @@ public final class Config {
             .defineInRange("naturalSpawnInterval", 200, 20, 72000);
 
     public static final RankValues RANK_E = RankValues.define(SERVER_BUILDER, "E",
-            List.of("minecraft:zombie"), 3, 45, 1.0D, 1.0D, "minecraft:emerald", 2, 5);
+            List.of("minecraft:zombie"), 3, 45, 1.0D, 1.0D, "minecraft:emerald", 2, 5, 8);
     public static final RankValues RANK_D = RankValues.define(SERVER_BUILDER, "D",
-            List.of("minecraft:zombie", "minecraft:skeleton"), 5, 25, 1.35D, 1.15D, "minecraft:emerald", 4, 12);
+            List.of("minecraft:zombie", "minecraft:skeleton"), 5, 25, 1.35D, 1.15D, "minecraft:emerald", 4, 12, 14);
     public static final RankValues RANK_C = RankValues.define(SERVER_BUILDER, "C",
-            List.of("minecraft:skeleton", "minecraft:spider"), 6, 15, 1.75D, 1.35D, "minecraft:diamond", 1, 24);
+            List.of("minecraft:skeleton", "minecraft:spider"), 6, 15, 1.75D, 1.35D, "minecraft:diamond", 1, 24, 22);
     public static final RankValues RANK_B = RankValues.define(SERVER_BUILDER, "B",
-            List.of("minecraft:pillager", "minecraft:husk"), 8, 8, 2.25D, 1.55D, "minecraft:diamond", 2, 40);
+            List.of("minecraft:pillager", "minecraft:husk"), 8, 8, 2.25D, 1.55D, "minecraft:diamond", 2, 40, 34);
     public static final RankValues RANK_A = RankValues.define(SERVER_BUILDER, "A",
-            List.of("minecraft:vindicator", "minecraft:witch"), 8, 5, 3.0D, 1.8D, "minecraft:netherite_scrap", 1, 65);
+            List.of("minecraft:vindicator", "minecraft:witch"), 8, 5, 3.0D, 1.8D, "minecraft:netherite_scrap", 1, 65, 50);
     public static final RankValues RANK_S = RankValues.define(SERVER_BUILDER, "S",
-            List.of("minecraft:evoker", "minecraft:ravager"), 6, 2, 4.0D, 2.0D, "minecraft:netherite_ingot", 1, 100);
+            List.of("minecraft:evoker", "minecraft:ravager"), 6, 2, 4.0D, 2.0D, "minecraft:netherite_ingot", 1, 100, 80);
+
+    static {
+        SERVER_BUILDER.pop();
+        SERVER_BUILDER.comment("Hunter rank is separate from vanilla XP. Clearing a gate grants the rank's hunterXp.")
+                .push("hunter");
+    }
+
+    public static final ModConfigSpec.IntValue XP_D = SERVER_BUILDER
+            .comment("Hunter XP required to reach rank D. Rank E is always 0.")
+            .defineInRange("xpRankD", 20, 1, 1000000);
+    public static final ModConfigSpec.IntValue XP_C = SERVER_BUILDER
+            .comment("Hunter XP required to reach rank C.")
+            .defineInRange("xpRankC", 60, 1, 1000000);
+    public static final ModConfigSpec.IntValue XP_B = SERVER_BUILDER
+            .comment("Hunter XP required to reach rank B.")
+            .defineInRange("xpRankB", 120, 1, 1000000);
+    public static final ModConfigSpec.IntValue XP_A = SERVER_BUILDER
+            .comment("Hunter XP required to reach rank A.")
+            .defineInRange("xpRankA", 200, 1, 1000000);
+    public static final ModConfigSpec.IntValue XP_S = SERVER_BUILDER
+            .comment("Hunter XP required to reach rank S.")
+            .defineInRange("xpRankS", 320, 1, 1000000);
 
     static {
         SERVER_BUILDER.pop();
@@ -89,6 +111,7 @@ public final class Config {
         public final ModConfigSpec.ConfigValue<String> rewardItem;
         public final ModConfigSpec.IntValue rewardCount;
         public final ModConfigSpec.IntValue rewardXp;
+        public final ModConfigSpec.IntValue hunterXp;
 
         private RankValues(
                 ModConfigSpec.ConfigValue<List<? extends String>> mobs,
@@ -98,7 +121,8 @@ public final class Config {
                 ModConfigSpec.DoubleValue damageMultiplier,
                 ModConfigSpec.ConfigValue<String> rewardItem,
                 ModConfigSpec.IntValue rewardCount,
-                ModConfigSpec.IntValue rewardXp) {
+                ModConfigSpec.IntValue rewardXp,
+                ModConfigSpec.IntValue hunterXp) {
             this.mobs = mobs;
             this.mobCount = mobCount;
             this.weight = weight;
@@ -107,6 +131,7 @@ public final class Config {
             this.rewardItem = rewardItem;
             this.rewardCount = rewardCount;
             this.rewardXp = rewardXp;
+            this.hunterXp = hunterXp;
         }
 
         private static RankValues define(
@@ -119,7 +144,8 @@ public final class Config {
                 double defaultDamage,
                 String defaultReward,
                 int defaultRewardCount,
-                int defaultXp) {
+                int defaultXp,
+                int defaultHunterXp) {
             builder.comment("Spawn list, stat scaling, placement weight, and clear reward for rank " + rank + ".")
                     .push(rank);
             RankValues values = new RankValues(
@@ -138,7 +164,9 @@ public final class Config {
                     builder.comment("How many of the reward item to drop. 0 drops none.")
                             .defineInRange("rewardCount", defaultRewardCount, 0, 64),
                     builder.comment("Experience granted at the gate when the wave is cleared.")
-                            .defineInRange("rewardXp", defaultXp, 0, 100000));
+                            .defineInRange("rewardXp", defaultXp, 0, 100000),
+                    builder.comment("Hunter XP granted to the player who opened the gate when the wave is cleared.")
+                            .defineInRange("hunterXp", defaultHunterXp, 0, 100000));
             builder.pop();
             return values;
         }

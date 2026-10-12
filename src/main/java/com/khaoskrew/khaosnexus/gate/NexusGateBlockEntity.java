@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.khaoskrew.khaosnexus.hunter.HunterRanks;
 import com.khaoskrew.khaosnexus.registry.ModRegistries;
 
 import net.minecraft.core.BlockPos;
@@ -40,6 +41,8 @@ public class NexusGateBlockEntity extends BlockEntity {
     private boolean active;
     private boolean closed;
     private int waveSize;
+    @Nullable
+    private UUID activator;
     private final List<UUID> waveMobs = new ArrayList<>();
     private final List<BlockPos> waveAnchors = new ArrayList<>();
     @Nullable
@@ -59,6 +62,13 @@ public class NexusGateBlockEntity extends BlockEntity {
 
     public boolean isClosed() {
         return this.closed;
+    }
+
+    public void setRank(GateRank rank) {
+        this.rank = rank;
+        this.rankAssigned = true;
+        this.setChanged();
+        this.sync();
     }
 
     public void assignRank(RandomSource random) {
@@ -88,6 +98,9 @@ public class NexusGateBlockEntity extends BlockEntity {
         if (!GateArena.spawnWave(server, this)) {
             player.displayClientMessage(Component.translatable("khaosnexus.gate.spawn_failed"), false);
             return InteractionResult.FAIL;
+        }
+        if (player instanceof ServerPlayer serverPlayer) {
+            this.activator = serverPlayer.getUUID();
         }
         this.active = true;
         this.waveSize = this.waveMobs.size();
@@ -189,6 +202,7 @@ public class NexusGateBlockEntity extends BlockEntity {
         this.sync();
         GateArena.dropReward(level, pos, cleared);
         GateArena.announce(level, pos, Component.translatable("khaosnexus.gate.cleared", Component.translatable(cleared.translationKey())), false);
+        HunterRanks.onGateCleared(level, pos, cleared, this.activator);
     }
 
     public Component rankLine(String key) {
@@ -232,6 +246,9 @@ public class NexusGateBlockEntity extends BlockEntity {
         tag.putBoolean("Active", this.active);
         tag.putBoolean("Closed", this.closed);
         tag.putInt("WaveSize", this.waveSize);
+        if (this.activator != null) {
+            tag.putString("Activator", this.activator.toString());
+        }
         ListTag ids = new ListTag();
         long[] anchors = new long[this.waveMobs.size()];
         for (int i = 0; i < this.waveMobs.size(); i++) {
@@ -251,6 +268,14 @@ public class NexusGateBlockEntity extends BlockEntity {
         this.active = tag.getBoolean("Active");
         this.closed = tag.getBoolean("Closed");
         this.waveSize = tag.getInt("WaveSize");
+        this.activator = null;
+        if (tag.contains("Activator")) {
+            try {
+                this.activator = UUID.fromString(tag.getString("Activator"));
+            } catch (IllegalArgumentException ignored) {
+                this.activator = null;
+            }
+        }
         this.waveMobs.clear();
         this.waveAnchors.clear();
         ListTag ids = tag.getList("WaveMobs", Tag.TAG_STRING);

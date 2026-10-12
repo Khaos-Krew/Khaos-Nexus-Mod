@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
 
+import com.khaoskrew.khaosnexus.hunter.ModAttachments;
+import com.khaoskrew.khaosnexus.network.ModPayloads;
 import com.khaoskrew.khaosnexus.registry.ModRegistries;
 
 import net.neoforged.bus.api.IEventBus;
@@ -20,6 +22,8 @@ public class KhaosNexus {
     public KhaosNexus(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
         ModRegistries.register(modEventBus);
+        ModAttachments.ATTACHMENT_TYPES.register(modEventBus);
+        modEventBus.addListener(ModPayloads::register);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         modContainer.registerConfig(ModConfig.Type.SERVER, Config.SERVER_SPEC);
     }

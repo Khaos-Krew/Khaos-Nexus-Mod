@@ -17,5 +17,11 @@
   "khaosnexus.gate.spawn_failed": "This Nexus Gate could not summon its wave. Check the mob ids in the server config.",
   "khaosnexus.gate.mob_name": "%s-rank Nexus mob",
   "khaosnexus.gate.bossbar": "Rank %s Nexus Gate — %s remaining",
-  "khaosnexus.gate.appeared": "Rank %s Nexus Gate appeared at %s, %s, %s."
+  "khaosnexus.gate.appeared": "Rank %s Nexus Gate appeared at %s, %s, %s.",
+  "khaosnexus.hunter.gate_xp": "+%s hunter XP. Your hunter rank is %s.",
+  "khaosnexus.hunter.rank_up_title": "Hunter rank up",
+  "khaosnexus.hunter.rank_up": "You are now hunter rank %s.",
+  "khaosnexus.command.rank": "Hunter rank %s (%s XP).",
+  "khaosnexus.command.rank_set": "%s is hunter rank %s (%s XP).",
+  "khaosnexus.command.unknown_rank": "Unknown hunter rank %s. Use E, D, C, B, A, or S."
 }
