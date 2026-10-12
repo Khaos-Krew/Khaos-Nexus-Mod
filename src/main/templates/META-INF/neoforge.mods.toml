@@ -37,7 +37,7 @@ authors="Khaos Krew"
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-Khaos Nexus — NeoForge 1.21.1 foundation (M0 scaffold).
+Khaos Nexus adds ranked Nexus Gates, from E through S, for NeoForge 1.21.1. It runs on its own.
 '''
 
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
