@@ -32,7 +32,7 @@ public final class Config {
             .defineInRange("leashRadius", 10, 3, 48);
 
     public static final ModConfigSpec.BooleanValue NATURAL_SPAWNING = SERVER_BUILDER
-            .comment("When true, Nexus Gates appear near players on their own. Set this to false to leave gates to crafting and placing only.")
+            .comment("When true, Nexus Gates appear near players on their own. This is on by default. Set it to false to leave gates to the creative tab and commands.")
             .define("naturalSpawning", true);
 
     public static final ModConfigSpec.IntValue NATURAL_SPAWNS_PER_DAY = SERVER_BUILDER

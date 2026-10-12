@@ -40,6 +40,12 @@ public class GateGameTests {
 
     @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform", timeoutTicks = 100)
     public static void naturalSpawningCanBeDisabled(GameTestHelper helper) {
+        if (!Boolean.TRUE.equals(Config.NATURAL_SPAWNING.getDefault())) {
+            helper.fail("natural spawning is off by default");
+        }
+        if (Config.NATURAL_SPAWNS_PER_DAY.getDefault() <= 0) {
+            helper.fail("the daily natural-spawn cap defaults to zero");
+        }
         boolean spawning = Config.NATURAL_SPAWNING.get();
         int perDay = Config.NATURAL_SPAWNS_PER_DAY.get();
         try {
@@ -59,8 +65,8 @@ public class GateGameTests {
             Config.NATURAL_SPAWNING.set(spawning);
             Config.NATURAL_SPAWNS_PER_DAY.set(perDay);
         }
-        if (helper.getLevel().getServer().getRecipeManager().byKey(ResourceLocation.parse("khaosnexus:nexus_gate")).isEmpty()) {
-            helper.fail("missing nexus gate crafting recipe");
+        if (helper.getLevel().getServer().getRecipeManager().byKey(ResourceLocation.parse("khaosnexus:nexus_gate")).isPresent()) {
+            helper.fail("nexus gate must not have a crafting recipe");
         }
         helper.succeed();
     }
