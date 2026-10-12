@@ -7,6 +7,7 @@ import com.khaoskrew.khaosnexus.gate.NexusGateItem;
 import com.khaoskrew.khaosnexus.raid.PersonalLootBlock;
 import com.khaoskrew.khaosnexus.raid.PersonalLootBlockEntity;
 import com.khaoskrew.khaosnexus.raid.RaidAltarBlock;
+import com.khaoskrew.khaosnexus.spire.SpireGateBlock;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -43,6 +44,14 @@ public final class ModRegistries {
                     .pushReaction(PushReaction.BLOCK)
                     .requiresCorrectToolForDrops());
 
+    public static final DeferredBlock<SpireGateBlock> SPIRE_GATE = BLOCKS.registerBlock("spire_gate", SpireGateBlock::new,
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_BLUE)
+                    .strength(3.0F, 6.0F)
+                    .lightLevel(state -> 10)
+                    .sound(SoundType.AMETHYST)
+                    .requiresCorrectToolForDrops());
+
     public static final DeferredBlock<RaidAltarBlock> RAID_ALTAR = BLOCKS.registerBlock("raid_altar", RaidAltarBlock::new,
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_RED)
@@ -60,6 +69,7 @@ public final class ModRegistries {
             () -> new NexusGateItem(NEXUS_GATE.get(), new Item.Properties()));
 
     public static final DeferredItem<Item> NEXUS_TOKEN = ITEMS.registerSimpleItem("nexus_token");
+    public static final DeferredItem<BlockItem> SPIRE_GATE_ITEM = ITEMS.registerSimpleBlockItem(SPIRE_GATE);
     public static final DeferredItem<BlockItem> RAID_ALTAR_ITEM = ITEMS.registerSimpleBlockItem(RAID_ALTAR);
     public static final DeferredItem<BlockItem> PERSONAL_LOOT_ITEM = ITEMS.registerSimpleBlockItem(PERSONAL_LOOT);
 
@@ -81,6 +91,7 @@ public final class ModRegistries {
                     .displayItems((parameters, output) -> {
                         output.accept(NEXUS_GATE_ITEM.get());
                         output.accept(NEXUS_TOKEN.get());
+                        output.accept(SPIRE_GATE_ITEM.get());
                         output.accept(RAID_ALTAR_ITEM.get());
                         output.accept(PERSONAL_LOOT_ITEM.get());
                     })

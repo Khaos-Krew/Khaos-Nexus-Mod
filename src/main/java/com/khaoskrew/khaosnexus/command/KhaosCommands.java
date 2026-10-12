@@ -7,6 +7,7 @@ import com.khaoskrew.khaosnexus.gate.GateRank;
 import com.khaoskrew.khaosnexus.bounty.Bounties;
 import com.khaoskrew.khaosnexus.party.PartyService;
 import com.khaoskrew.khaosnexus.raid.RaidService;
+import com.khaoskrew.khaosnexus.spire.SpireService;
 import com.khaoskrew.khaosnexus.hunter.ClassService;
 import com.khaoskrew.khaosnexus.hunter.HunterClass;
 import com.khaoskrew.khaosnexus.hunter.HunterProfile;
@@ -111,6 +112,27 @@ public final class KhaosCommands {
                         .then(Commands.literal("start").executes(context -> {
                             ServerPlayer player = context.getSource().getPlayerOrException();
                             return RaidService.start(player, player.blockPosition()) ? 1 : 0;
+                        })))
+                .then(Commands.literal("spire")
+                        .executes(context -> {
+                            SpireService.status(context.getSource().getPlayerOrException());
+                            return 1;
+                        })
+                        .then(Commands.literal("enter").executes(context -> {
+                            SpireService.enter(context.getSource().getPlayerOrException());
+                            return 1;
+                        }))
+                        .then(Commands.literal("leave").executes(context -> {
+                            SpireService.leave(context.getSource().getPlayerOrException());
+                            return 1;
+                        }))
+                        .then(Commands.literal("checkpoint").executes(context -> {
+                            SpireService.checkpoint(context.getSource().getPlayerOrException());
+                            return 1;
+                        }))
+                        .then(Commands.literal("newseason").requires(source -> source.hasPermission(2)).executes(context -> {
+                            SpireService.newSeason(context.getSource().getPlayerOrException());
+                            return 1;
                         }))));
     }
 

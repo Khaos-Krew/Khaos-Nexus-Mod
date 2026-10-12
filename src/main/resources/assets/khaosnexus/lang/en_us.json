@@ -94,5 +94,16 @@
   "khaosnexus.raid.boss": "Raid Boss",
   "khaosnexus.raid.lockout": "You already took raid loot this week. You can still help.",
   "khaosnexus.raid.loot": "Your personal loot chest is beside you.",
-  "khaosnexus.raid.not_yours": "This chest belongs to someone else."
+  "khaosnexus.raid.not_yours": "This chest belongs to someone else.",
+  "block.khaosnexus.spire_gate": "Spire Gate",
+  "khaosnexus.spire.missing": "The Nexus Spire dimension is not loaded.",
+  "khaosnexus.spire.entered": "Nexus Spire, floor %s. Clear the guardian to climb.",
+  "khaosnexus.spire.left": "You left the Nexus Spire.",
+  "khaosnexus.spire.season": "A new Spire season has started (%s). Personal progress resets on the next entry.",
+  "khaosnexus.spire.status": "Next earned floor %s. Checkpoint %s. Server record %s by %s.",
+  "khaosnexus.spire.nobody": "nobody",
+  "khaosnexus.spire.checkpoint": "Checkpoint saved at floor %s.",
+  "khaosnexus.spire.cleared": "Floor %s cleared.",
+  "khaosnexus.spire.boss": "Floor %s Guardian",
+  "khaosnexus.spire.death": "The Spire throws you out. Your gear stays, and you are weakened for a moment."
 }

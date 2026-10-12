@@ -163,6 +163,19 @@ public final class Config {
 
     static {
         SERVER_BUILDER.pop();
+        SERVER_BUILDER.comment("The Nexus Spire is an endless tower. A checkpoint is saved every few floors, and a new season starts only when an admin asks.")
+                .push("spire");
+    }
+
+    public static final ModConfigSpec.IntValue SPIRE_CHECKPOINT = SERVER_BUILDER
+            .comment("Floors between checkpoints.")
+            .defineInRange("checkpointInterval", 10, 1, 100);
+    public static final ModConfigSpec.DoubleValue SPIRE_HEALTH_PER_FLOOR = SERVER_BUILDER
+            .comment("Extra boss health added for each floor.")
+            .defineInRange("healthPerFloor", 4.0D, 0.0D, 100.0D);
+
+    static {
+        SERVER_BUILDER.pop();
     }
 
     static final ModConfigSpec SERVER_SPEC = SERVER_BUILDER.build();

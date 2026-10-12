@@ -9,6 +9,9 @@ import com.khaoskrew.khaosnexus.gate.NexusGateBlockEntity;
 import com.khaoskrew.khaosnexus.registry.ModRegistries;
 
 import com.khaoskrew.khaosnexus.raid.RaidService;
+import com.khaoskrew.khaosnexus.spire.SpireService;
+
+import net.minecraft.world.entity.monster.Zombie;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.monster.Ravager;
@@ -130,6 +133,25 @@ public class HunterGameTests {
         }
         if (!found) {
             helper.fail("the raid did not leave a personal loot chest");
+        }
+        helper.succeed();
+    }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform", timeoutTicks = 80)
+    public static void spireFloorAdvancesOnAClear(GameTestHelper helper) {
+        ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        HunterRanks.profile(player).spireFloor = 1;
+        BlockPos pos = helper.absolutePos(new BlockPos(0, 4, 0));
+        player.teleportTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
+        SpireService.generate(helper.getLevel(), 1, 1);
+        BlockPos bossPos = SpireService.origin(1, 1);
+        var bosses = helper.getLevel().getEntitiesOfClass(Zombie.class, new AABB(bossPos).inflate(8.0D));
+        if (bosses.isEmpty()) {
+            helper.fail("spire guardian did not spawn");
+        }
+        bosses.get(0).hurt(player.damageSources().playerAttack(player), 10000.0F);
+        if (HunterRanks.profile(player).spireFloor < 2) {
+            helper.fail("clearing floor 1 did not open floor 2");
         }
         helper.succeed();
     }
