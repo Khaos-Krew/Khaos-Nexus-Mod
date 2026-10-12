@@ -116,5 +116,9 @@
   "khaosnexus.title.raid_victor": "Raid Victor",
   "khaosnexus.title.spire_climber": "Spire Climber",
   "khaosnexus.title.hunter_s": "S-Rank Hunter",
-  "khaosnexus.title.class_bound": "Class Bound"
+  "khaosnexus.title.class_bound": "Class Bound",
+  "khaosnexus.hud.rank": "Hunter %s  ·  %s XP",
+  "khaosnexus.hud.class": "%s  ·  Spire %s  ·  Party %s",
+  "khaosnexus.hud.bounty": "Today: %s gates, %s raids",
+  "khaosnexus.hud.no_class": "No class"
 }

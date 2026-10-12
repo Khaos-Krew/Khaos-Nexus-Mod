@@ -186,6 +186,20 @@ public final class Config {
         return Math.max(LEASH_RADIUS.get(), ARENA_RADIUS.get() + 2);
     }
 
+    private static final ModConfigSpec.Builder CLIENT_BUILDER = new ModConfigSpec.Builder();
+
+    public static final ModConfigSpec.BooleanValue HUD_ENABLED = CLIENT_BUILDER
+            .comment("Draw the hunter HUD panel.")
+            .define("hudEnabled", true);
+    public static final ModConfigSpec.IntValue HUD_X = CLIENT_BUILDER
+            .comment("HUD panel left edge, in GUI pixels.")
+            .defineInRange("hudX", 6, 0, 4000);
+    public static final ModConfigSpec.IntValue HUD_Y = CLIENT_BUILDER
+            .comment("HUD panel top edge, in GUI pixels.")
+            .defineInRange("hudY", 6, 0, 4000);
+
+    static final ModConfigSpec CLIENT_SPEC = CLIENT_BUILDER.build();
+
     static boolean isRegistryId(Object value) {
         return value instanceof String text && ResourceLocation.tryParse(text) != null;
     }

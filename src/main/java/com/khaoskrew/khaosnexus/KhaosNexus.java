@@ -26,6 +26,7 @@ public class KhaosNexus {
         modEventBus.addListener(ModPayloads::register);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         modContainer.registerConfig(ModConfig.Type.SERVER, Config.SERVER_SPEC);
+        modContainer.registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_SPEC);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
