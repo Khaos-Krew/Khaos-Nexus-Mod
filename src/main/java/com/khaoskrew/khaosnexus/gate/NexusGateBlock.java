@@ -79,7 +79,7 @@ public class NexusGateBlock extends BaseEntityBlock {
             return;
         }
         if (level.getBlockEntity(pos) instanceof NexusGateBlockEntity gate) {
-            player.displayClientMessage(gate.rankLine("khaosnexus.gate.placed"), true);
+            player.displayClientMessage(gate.rankLine("khaosnexus.gate.placed"), false);
         }
     }
 
@@ -90,7 +90,7 @@ public class NexusGateBlock extends BaseEntityBlock {
         }
         if (state.getValue(CLOSED) || gate.isClosed()) {
             if (!level.isClientSide) {
-                player.displayClientMessage(Component.translatable("khaosnexus.gate.closed"), true);
+                player.displayClientMessage(Component.translatable("khaosnexus.gate.closed"), false);
             }
             return InteractionResult.FAIL;
         }

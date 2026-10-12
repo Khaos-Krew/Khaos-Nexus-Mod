@@ -1,7 +1,9 @@
 package com.khaoskrew.khaosnexus.gate;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
@@ -18,8 +20,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -27,14 +32,18 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class NexusGateBlockEntity extends BlockEntity {
     private GateRank rank = GateRank.E;
     private boolean rankAssigned;
     private boolean active;
     private boolean closed;
+    private int waveSize;
     private final List<UUID> waveMobs = new ArrayList<>();
     private final List<BlockPos> waveAnchors = new ArrayList<>();
+    @Nullable
+    private ServerBossEvent bossEvent;
 
     public NexusGateBlockEntity(BlockPos pos, BlockState state) {
         super(ModRegistries.NEXUS_GATE_ENTITY.get(), pos, state);
@@ -67,20 +76,24 @@ public class NexusGateBlockEntity extends BlockEntity {
             return InteractionResult.SUCCESS;
         }
         if (this.closed || this.getBlockState().getValue(NexusGateBlock.CLOSED)) {
-            player.displayClientMessage(Component.translatable("khaosnexus.gate.closed"), true);
+            player.displayClientMessage(Component.translatable("khaosnexus.gate.closed"), false);
             return InteractionResult.FAIL;
         }
         if (this.active) {
-            player.displayClientMessage(Component.translatable("khaosnexus.gate.remaining", this.rankLabel(), this.livingCount(server)), true);
+            int living = this.livingCount(server);
+            this.updateBossBar(server, living);
+            player.displayClientMessage(Component.translatable("khaosnexus.gate.remaining", this.rankLabel(), living), false);
             return InteractionResult.SUCCESS;
         }
         if (!GateArena.spawnWave(server, this)) {
-            player.displayClientMessage(Component.translatable("khaosnexus.gate.spawn_failed"), true);
+            player.displayClientMessage(Component.translatable("khaosnexus.gate.spawn_failed"), false);
             return InteractionResult.FAIL;
         }
         this.active = true;
+        this.waveSize = this.waveMobs.size();
         this.setChanged();
         this.sync();
+        this.updateBossBar(server, this.waveSize);
         GateArena.announce(server, this.getBlockPos(), this.rankLine("khaosnexus.gate.activated"), false);
         return InteractionResult.SUCCESS;
     }
@@ -92,7 +105,11 @@ public class NexusGateBlockEntity extends BlockEntity {
     }
 
     private void tickServer(ServerLevel level) {
-        if (!this.active || this.closed || this.waveMobs.isEmpty() || level.getGameTime() % 10L != 0L) {
+        if (!this.active || this.closed) {
+            this.hideBossBar();
+            return;
+        }
+        if (this.waveMobs.isEmpty() || level.getGameTime() % 10L != 0L) {
             return;
         }
         boolean pending = false;
@@ -122,6 +139,8 @@ public class NexusGateBlockEntity extends BlockEntity {
         if (changed) {
             this.setChanged();
         }
+        int living = this.livingCount(level);
+        this.updateBossBar(level, living);
         if (!pending) {
             this.finishWave(level);
         }
@@ -148,6 +167,8 @@ public class NexusGateBlockEntity extends BlockEntity {
         this.waveMobs.clear();
         this.waveAnchors.clear();
         this.active = false;
+        this.waveSize = 0;
+        this.hideBossBar();
         this.setChanged();
     }
 
@@ -158,6 +179,8 @@ public class NexusGateBlockEntity extends BlockEntity {
         this.closed = true;
         this.waveMobs.clear();
         this.waveAnchors.clear();
+        this.waveSize = 0;
+        this.hideBossBar();
         this.setChanged();
         BlockState state = level.getBlockState(pos);
         if (state.getBlock() instanceof NexusGateBlock && !state.getValue(NexusGateBlock.CLOSED)) {
@@ -208,6 +231,7 @@ public class NexusGateBlockEntity extends BlockEntity {
         tag.putBoolean("RankAssigned", this.rankAssigned);
         tag.putBoolean("Active", this.active);
         tag.putBoolean("Closed", this.closed);
+        tag.putInt("WaveSize", this.waveSize);
         ListTag ids = new ListTag();
         long[] anchors = new long[this.waveMobs.size()];
         for (int i = 0; i < this.waveMobs.size(); i++) {
@@ -226,6 +250,7 @@ public class NexusGateBlockEntity extends BlockEntity {
         this.rankAssigned = tag.getBoolean("RankAssigned");
         this.active = tag.getBoolean("Active");
         this.closed = tag.getBoolean("Closed");
+        this.waveSize = tag.getInt("WaveSize");
         this.waveMobs.clear();
         this.waveAnchors.clear();
         ListTag ids = tag.getList("WaveMobs", Tag.TAG_STRING);
@@ -250,5 +275,50 @@ public class NexusGateBlockEntity extends BlockEntity {
     @Override
     public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        this.hideBossBar();
+    }
+
+    private void updateBossBar(ServerLevel level, int living) {
+        int total = Math.max(this.waveSize, 1);
+        ServerBossEvent bar = this.bossEvent();
+        bar.setName(Component.translatable("khaosnexus.gate.bossbar", this.rankLabel(), living));
+        bar.setColor(this.rank.barColor());
+        bar.setProgress(Math.max(0.0F, Math.min(1.0F, living / (float) total)));
+        Vec3 center = Vec3.atCenterOf(this.getBlockPos());
+        Set<ServerPlayer> keep = new HashSet<>();
+        for (ServerPlayer player : level.players()) {
+            if (player.distanceToSqr(center) <= 48.0D * 48.0D) {
+                bar.addPlayer(player);
+                keep.add(player);
+            }
+        }
+        for (ServerPlayer player : List.copyOf(bar.getPlayers())) {
+            if (!keep.contains(player)) {
+                bar.removePlayer(player);
+            }
+        }
+    }
+
+    private ServerBossEvent bossEvent() {
+        if (this.bossEvent == null) {
+            this.bossEvent = new ServerBossEvent(
+                    Component.translatable("khaosnexus.gate.bossbar", this.rankLabel(), this.waveSize),
+                    this.rank.barColor(),
+                    BossEvent.BossBarOverlay.PROGRESS);
+            this.bossEvent.setProgress(1.0F);
+        }
+        return this.bossEvent;
+    }
+
+    private void hideBossBar() {
+        if (this.bossEvent != null) {
+            this.bossEvent.removeAllPlayers();
+            this.bossEvent = null;
+        }
     }
 }

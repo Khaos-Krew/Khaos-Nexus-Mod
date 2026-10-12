@@ -15,5 +15,7 @@
   "khaosnexus.gate.closed": "This Nexus Gate is closed.",
   "khaosnexus.gate.cleared": "Rank %s Nexus Gate cleared. The gate closes.",
   "khaosnexus.gate.spawn_failed": "This Nexus Gate could not summon its wave. Check the mob ids in the server config.",
-  "khaosnexus.gate.mob_name": "%s-rank Nexus mob"
+  "khaosnexus.gate.mob_name": "%s-rank Nexus mob",
+  "khaosnexus.gate.bossbar": "Rank %s Nexus Gate — %s remaining",
+  "khaosnexus.gate.appeared": "Rank %s Nexus Gate appeared at %s, %s, %s."
 }

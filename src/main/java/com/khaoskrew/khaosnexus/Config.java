@@ -31,6 +31,26 @@ public final class Config {
             .comment("Mobs that wander farther than this are pulled back to their spawn point. Keep this larger than arenaRadius.")
             .defineInRange("leashRadius", 10, 3, 48);
 
+    public static final ModConfigSpec.BooleanValue NATURAL_SPAWNING = SERVER_BUILDER
+            .comment("When true, Nexus Gates appear near players on their own. Set this to false to leave gates to crafting and placing only.")
+            .define("naturalSpawning", true);
+
+    public static final ModConfigSpec.IntValue NATURAL_SPAWNS_PER_DAY = SERVER_BUILDER
+            .comment("How many gates may appear on their own during one Minecraft day, across the whole server. 0 disables natural spawning.")
+            .defineInRange("naturalSpawnsPerDay", 3, 0, 100);
+
+    public static final ModConfigSpec.IntValue NATURAL_SPAWN_MIN_DISTANCE = SERVER_BUILDER
+            .comment("Closest a natural gate may appear to a player, in blocks.")
+            .defineInRange("naturalSpawnMinDistance", 24, 8, 128);
+
+    public static final ModConfigSpec.IntValue NATURAL_SPAWN_MAX_DISTANCE = SERVER_BUILDER
+            .comment("Farthest a natural gate may appear from a player, in blocks.")
+            .defineInRange("naturalSpawnMaxDistance", 64, 16, 256);
+
+    public static final ModConfigSpec.IntValue NATURAL_SPAWN_INTERVAL = SERVER_BUILDER
+            .comment("How often the server tries to place the next natural gate, in ticks. 20 ticks is one second.")
+            .defineInRange("naturalSpawnInterval", 200, 20, 72000);
+
     public static final RankValues RANK_E = RankValues.define(SERVER_BUILDER, "E",
             List.of("minecraft:zombie"), 3, 45, 1.0D, 1.0D, "minecraft:emerald", 2, 5);
     public static final RankValues RANK_D = RankValues.define(SERVER_BUILDER, "D",
