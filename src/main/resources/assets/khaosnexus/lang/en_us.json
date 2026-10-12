@@ -1,3 +1,19 @@
 {
-  "khaosnexus.configuration.title": "Khaos Nexus Configs"
+  "khaosnexus.configuration.title": "Khaos Nexus Configs",
+  "itemGroup.khaosnexus": "Khaos Nexus",
+  "block.khaosnexus.nexus_gate": "Nexus Gate",
+  "khaosnexus.rank.e": "E",
+  "khaosnexus.rank.d": "D",
+  "khaosnexus.rank.c": "C",
+  "khaosnexus.rank.b": "B",
+  "khaosnexus.rank.a": "A",
+  "khaosnexus.rank.s": "S",
+  "khaosnexus.gate.tooltip": "Place it, then right-click to open a ranked wave.",
+  "khaosnexus.gate.placed": "Rank %s Nexus Gate. Right-click to open it.",
+  "khaosnexus.gate.activated": "Rank %s Nexus Gate opened. Clear the wave.",
+  "khaosnexus.gate.remaining": "Rank %s Nexus Gate: %s mobs remaining.",
+  "khaosnexus.gate.closed": "This Nexus Gate is closed.",
+  "khaosnexus.gate.cleared": "Rank %s Nexus Gate cleared. The gate closes.",
+  "khaosnexus.gate.spawn_failed": "This Nexus Gate could not summon its wave. Check the mob ids in the server config.",
+  "khaosnexus.gate.mob_name": "%s-rank Nexus mob"
 }

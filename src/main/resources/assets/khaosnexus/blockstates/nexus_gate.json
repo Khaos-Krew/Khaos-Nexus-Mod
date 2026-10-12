@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "closed=false": {
+      "model": "khaosnexus:block/nexus_gate"
+    },
+    "closed=true": {
+      "model": "khaosnexus:block/nexus_gate_closed"
+    }
+  }
+}
