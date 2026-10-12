@@ -142,6 +142,27 @@ public final class Config {
 
     static {
         SERVER_BUILDER.pop();
+        SERVER_BUILDER.comment("Raids use the built-in party. Boss health grows with party size, and each fighter gets a personal chest.")
+                .push("raids");
+    }
+
+    public static final ModConfigSpec.IntValue RAID_MIN_PARTY = SERVER_BUILDER
+            .comment("Smallest party that can start a raid. 1 lets a solo player test it.")
+            .defineInRange("minParty", 1, 1, 5);
+    public static final ModConfigSpec.IntValue RAID_MAX_PARTY = SERVER_BUILDER
+            .comment("Largest raid party.")
+            .defineInRange("maxParty", 5, 1, 5);
+    public static final ModConfigSpec.DoubleValue RAID_HEALTH_SCALE = SERVER_BUILDER
+            .comment("Boss health multiplier added for each party member after the first.")
+            .defineInRange("healthScale", 0.5D, 0.0D, 10.0D);
+    public static final ModConfigSpec.ConfigValue<String> RAID_REWARD = SERVER_BUILDER
+            .comment("Item id placed in each player's personal loot chest.")
+            .define("rewardItem", "minecraft:diamond", Config::isRegistryId);
+    public static final ModConfigSpec.IntValue RAID_REWARD_COUNT = SERVER_BUILDER
+            .defineInRange("rewardCount", 1, 1, 64);
+
+    static {
+        SERVER_BUILDER.pop();
     }
 
     static final ModConfigSpec SERVER_SPEC = SERVER_BUILDER.build();

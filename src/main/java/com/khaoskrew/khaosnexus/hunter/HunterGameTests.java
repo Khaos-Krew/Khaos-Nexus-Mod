@@ -1,12 +1,18 @@
 package com.khaoskrew.khaosnexus.hunter;
 
+import com.khaoskrew.khaosnexus.Config;
 import com.khaoskrew.khaosnexus.KhaosNexus;
+import com.khaoskrew.khaosnexus.bounty.Bounties;
 import com.khaoskrew.khaosnexus.gate.GateRank;
 import com.khaoskrew.khaosnexus.gate.NexusGateBlock;
 import com.khaoskrew.khaosnexus.gate.NexusGateBlockEntity;
 import com.khaoskrew.khaosnexus.registry.ModRegistries;
 
+import com.khaoskrew.khaosnexus.raid.RaidService;
+
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.monster.Ravager;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -83,6 +89,47 @@ public class HunterGameTests {
         helper.useBlock(GATE, player);
         if (!gate.isActive()) {
             helper.fail("an S-rank hunter could not open an S gate");
+        }
+        helper.succeed();
+    }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform", timeoutTicks = 40)
+    public static void dailyGateBountyPaysTokens(GameTestHelper helper) {
+        ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        Bounties.refresh(player);
+        int need = Config.BOUNTY_GATES.get();
+        for (int i = 0; i < need; i++) {
+            Bounties.onGateClear(player);
+        }
+        if (player.getInventory().countItem(ModRegistries.NEXUS_TOKEN.get()) < Config.BOUNTY_GATE_TOKENS.get()) {
+            helper.fail("the gate bounty did not pay Nexus Tokens");
+        }
+        helper.succeed();
+    }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform", timeoutTicks = 80)
+    public static void raidBossLeavesPersonalLoot(GameTestHelper helper) {
+        ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        HunterRanks.profile(player).raidWeek = -1L;
+        BlockPos pos = helper.absolutePos(GATE);
+        player.teleportTo(pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D);
+        if (!RaidService.start(player, pos)) {
+            helper.fail("raid did not start");
+        }
+        var bosses = helper.getLevel().getEntitiesOfClass(Ravager.class, new AABB(pos).inflate(6.0D));
+        if (bosses.isEmpty()) {
+            helper.fail("raid boss did not spawn");
+        }
+        bosses.get(0).hurt(player.damageSources().playerAttack(player), 10000.0F);
+        BlockPos origin = player.blockPosition();
+        boolean found = false;
+        for (BlockPos check : BlockPos.betweenClosed(origin.offset(-3, -1, -3), origin.offset(3, 3, 3))) {
+            if (helper.getLevel().getBlockState(check).is(ModRegistries.PERSONAL_LOOT.get())) {
+                found = true;
+            }
+        }
+        if (!found) {
+            helper.fail("the raid did not leave a personal loot chest");
         }
         helper.succeed();
     }

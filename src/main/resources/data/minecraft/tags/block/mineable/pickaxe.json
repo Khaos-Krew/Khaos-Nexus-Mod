@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
-    "khaosnexus:nexus_gate"
+    "khaosnexus:nexus_gate",
+    "khaosnexus:raid_altar",
+    "khaosnexus:personal_loot"
   ]
 }

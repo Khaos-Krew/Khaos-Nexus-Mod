@@ -4,6 +4,9 @@ import com.khaoskrew.khaosnexus.KhaosNexus;
 import com.khaoskrew.khaosnexus.gate.NexusGateBlock;
 import com.khaoskrew.khaosnexus.gate.NexusGateBlockEntity;
 import com.khaoskrew.khaosnexus.gate.NexusGateItem;
+import com.khaoskrew.khaosnexus.raid.PersonalLootBlock;
+import com.khaoskrew.khaosnexus.raid.PersonalLootBlockEntity;
+import com.khaoskrew.khaosnexus.raid.RaidAltarBlock;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -40,10 +43,30 @@ public final class ModRegistries {
                     .pushReaction(PushReaction.BLOCK)
                     .requiresCorrectToolForDrops());
 
+    public static final DeferredBlock<RaidAltarBlock> RAID_ALTAR = BLOCKS.registerBlock("raid_altar", RaidAltarBlock::new,
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_RED)
+                    .strength(3.0F, 6.0F)
+                    .sound(SoundType.STONE)
+                    .requiresCorrectToolForDrops());
+
+    public static final DeferredBlock<PersonalLootBlock> PERSONAL_LOOT = BLOCKS.registerBlock("personal_loot", PersonalLootBlock::new,
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_ORANGE)
+                    .strength(2.0F, 6.0F)
+                    .sound(SoundType.WOOD));
+
     public static final DeferredItem<BlockItem> NEXUS_GATE_ITEM = ITEMS.register("nexus_gate",
             () -> new NexusGateItem(NEXUS_GATE.get(), new Item.Properties()));
 
     public static final DeferredItem<Item> NEXUS_TOKEN = ITEMS.registerSimpleItem("nexus_token");
+    public static final DeferredItem<BlockItem> RAID_ALTAR_ITEM = ITEMS.registerSimpleBlockItem(RAID_ALTAR);
+    public static final DeferredItem<BlockItem> PERSONAL_LOOT_ITEM = ITEMS.registerSimpleBlockItem(PERSONAL_LOOT);
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PersonalLootBlockEntity>> PERSONAL_LOOT_ENTITY =
+            BLOCK_ENTITIES.register("personal_loot", () -> BlockEntityType.Builder
+                    .of(PersonalLootBlockEntity::new, PERSONAL_LOOT.get())
+                    .build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<NexusGateBlockEntity>> NEXUS_GATE_ENTITY =
             BLOCK_ENTITIES.register("nexus_gate", () -> BlockEntityType.Builder
@@ -58,6 +81,8 @@ public final class ModRegistries {
                     .displayItems((parameters, output) -> {
                         output.accept(NEXUS_GATE_ITEM.get());
                         output.accept(NEXUS_TOKEN.get());
+                        output.accept(RAID_ALTAR_ITEM.get());
+                        output.accept(PERSONAL_LOOT_ITEM.get());
                     })
                     .build());
 

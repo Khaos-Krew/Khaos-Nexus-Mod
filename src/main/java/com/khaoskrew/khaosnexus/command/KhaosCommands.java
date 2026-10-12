@@ -5,6 +5,8 @@ import java.util.Locale;
 import com.khaoskrew.khaosnexus.KhaosNexus;
 import com.khaoskrew.khaosnexus.gate.GateRank;
 import com.khaoskrew.khaosnexus.bounty.Bounties;
+import com.khaoskrew.khaosnexus.party.PartyService;
+import com.khaoskrew.khaosnexus.raid.RaidService;
 import com.khaoskrew.khaosnexus.hunter.ClassService;
 import com.khaoskrew.khaosnexus.hunter.HunterClass;
 import com.khaoskrew.khaosnexus.hunter.HunterProfile;
@@ -81,7 +83,35 @@ public final class KhaosCommands {
                         .executes(context -> {
                             Bounties.describe(context.getSource().getPlayerOrException());
                             return 1;
-                        })));
+                        }))
+                .then(Commands.literal("party")
+                        .executes(context -> {
+                            PartyService.list(context.getSource().getPlayerOrException());
+                            return 1;
+                        })
+                        .then(Commands.literal("create").executes(context -> {
+                            PartyService.create(context.getSource().getPlayerOrException());
+                            return 1;
+                        }))
+                        .then(Commands.literal("invite")
+                                .then(Commands.argument("player", EntityArgument.player())
+                                        .executes(context -> {
+                                            PartyService.invite(context.getSource().getPlayerOrException(), EntityArgument.getPlayer(context, "player"));
+                                            return 1;
+                                        })))
+                        .then(Commands.literal("accept").executes(context -> {
+                            PartyService.accept(context.getSource().getPlayerOrException());
+                            return 1;
+                        }))
+                        .then(Commands.literal("leave").executes(context -> {
+                            PartyService.leave(context.getSource().getPlayerOrException());
+                            return 1;
+                        })))
+                .then(Commands.literal("raid")
+                        .then(Commands.literal("start").executes(context -> {
+                            ServerPlayer player = context.getSource().getPlayerOrException();
+                            return RaidService.start(player, player.blockPosition()) ? 1 : 0;
+                        }))));
     }
 
     private static int showClass(ServerPlayer player) {
