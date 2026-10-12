@@ -88,6 +88,38 @@ public final class Config {
 
     static {
         SERVER_BUILDER.pop();
+        SERVER_BUILDER.comment("One class is equipped at a time. Swapping is free after a short cooldown.")
+                .push("classes");
+    }
+
+    public static final ModConfigSpec.IntValue CLASS_SWAP_COOLDOWN = SERVER_BUILDER
+            .comment("Ticks to wait before equipping a different class. 20 ticks is one second.")
+            .defineInRange("swapCooldown", 200, 0, 72000);
+    public static final ModConfigSpec.IntValue ABILITY_COOLDOWN = SERVER_BUILDER
+            .comment("Ticks before the class primary ability (V) can be used again.")
+            .defineInRange("primaryCooldown", 100, 0, 72000);
+    public static final ModConfigSpec.IntValue ABILITY_ALT_COOLDOWN = SERVER_BUILDER
+            .comment("Ticks before the class secondary ability (B) can be used again.")
+            .defineInRange("secondaryCooldown", 160, 0, 72000);
+    public static final ModConfigSpec.IntValue MINION_CAP = SERVER_BUILDER
+            .comment("How many Summoner or Necromancer minions one player can have out.")
+            .defineInRange("minionCap", 3, 1, 8);
+
+    static {
+        SERVER_BUILDER.pop();
+        SERVER_BUILDER.comment("A player can solo a gate at their hunter rank or lower. A higher gate needs a party of this size.")
+                .push("access");
+    }
+
+    public static final ModConfigSpec.BooleanValue GATE_ACCESS = SERVER_BUILDER
+            .comment("When true, survival players cannot open a gate above their hunter rank unless their party is large enough.")
+            .define("enabled", true);
+    public static final ModConfigSpec.IntValue GATE_PARTY_SIZE = SERVER_BUILDER
+            .comment("Party size that may open a gate above the player's hunter rank. 1 allows anyone.")
+            .defineInRange("partySize", 2, 1, 5);
+
+    static {
+        SERVER_BUILDER.pop();
     }
 
     static final ModConfigSpec SERVER_SPEC = SERVER_BUILDER.build();

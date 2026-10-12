@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.khaoskrew.khaosnexus.hunter.HunterAccess;
 import com.khaoskrew.khaosnexus.hunter.HunterRanks;
 import com.khaoskrew.khaosnexus.registry.ModRegistries;
 
@@ -87,6 +88,13 @@ public class NexusGateBlockEntity extends BlockEntity {
         }
         if (this.closed || this.getBlockState().getValue(NexusGateBlock.CLOSED)) {
             player.displayClientMessage(Component.translatable("khaosnexus.gate.closed"), false);
+            return InteractionResult.FAIL;
+        }
+        if (player instanceof ServerPlayer serverPlayer && !HunterAccess.canOpen(serverPlayer, this.rank)) {
+            player.displayClientMessage(Component.translatable(
+                    "khaosnexus.gate.rank_locked",
+                    Component.translatable(this.rank.translationKey()),
+                    Component.translatable(HunterRanks.rankOf(serverPlayer).translationKey())), false);
             return InteractionResult.FAIL;
         }
         if (this.active) {

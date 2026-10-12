@@ -4,6 +4,8 @@ import java.util.Locale;
 
 import com.khaoskrew.khaosnexus.KhaosNexus;
 import com.khaoskrew.khaosnexus.gate.GateRank;
+import com.khaoskrew.khaosnexus.hunter.ClassService;
+import com.khaoskrew.khaosnexus.hunter.HunterClass;
 import com.khaoskrew.khaosnexus.hunter.HunterProfile;
 import com.khaoskrew.khaosnexus.hunter.HunterRanks;
 
@@ -13,7 +15,6 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -60,7 +61,33 @@ public final class KhaosCommands {
                                                             Component.translatable(HunterRanks.rankOf(player).translationKey()),
                                                             HunterRanks.profile(player).xp), true);
                                                     return 1;
-                                                }))))));
+                                                })))))
+                .then(Commands.literal("class")
+                        .executes(context -> showClass(context.getSource().getPlayerOrException()))
+                        .then(Commands.literal("equip")
+                                .then(Commands.argument("id", StringArgumentType.word())
+                                        .suggests((context, builder) -> {
+                                            for (HunterClass hunterClass : HunterClass.values()) {
+                                                builder.suggest(hunterClass.id());
+                                            }
+                                            return builder.buildFuture();
+                                        })
+                                        .executes(context -> {
+                                            ServerPlayer player = context.getSource().getPlayerOrException();
+                                            return ClassService.equip(player, StringArgumentType.getString(context, "id")) ? 1 : 0;
+                                        })))));
+    }
+
+    private static int showClass(ServerPlayer player) {
+        HunterClass hunterClass = ClassService.equipped(player);
+        if (hunterClass == null) {
+            player.displayClientMessage(Component.translatable("khaosnexus.class.none"), false);
+        } else {
+            player.displayClientMessage(Component.translatable(
+                    "khaosnexus.class.current",
+                    Component.translatable(hunterClass.translationKey())), false);
+        }
+        return 1;
     }
 
     public static int showRank(ServerPlayer player) {

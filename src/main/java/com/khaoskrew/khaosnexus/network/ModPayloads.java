@@ -20,5 +20,6 @@ public final class ModPayloads {
         PayloadRegistrar registrar = event.registrar("1");
         registrar.playToClient(FeedbackPayload.TYPE, FeedbackPayload.STREAM_CODEC, (payload, context) ->
                 context.enqueueWork(() -> showFeedback(payload)));
+        registrar.playToServer(ActionPayload.TYPE, ActionPayload.STREAM_CODEC, ActionPayload::handle);
     }
 }

@@ -7,14 +7,22 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 
 @Mod(value = KhaosNexus.MODID, dist = Dist.CLIENT)
 public final class NexusGateClient {
     public NexusGateClient(IEventBus modEventBus) {
         modEventBus.addListener(NexusGateClient::registerRenderers);
+        modEventBus.addListener(NexusGateClient::registerKeys);
     }
 
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModRegistries.NEXUS_GATE_ENTITY.get(), NexusGateRenderer::new);
+    }
+
+    private static void registerKeys(RegisterKeyMappingsEvent event) {
+        event.register(ClassKeybinds.PRIMARY);
+        event.register(ClassKeybinds.SECONDARY);
+        event.register(ClassKeybinds.CLASS_MENU);
     }
 }
