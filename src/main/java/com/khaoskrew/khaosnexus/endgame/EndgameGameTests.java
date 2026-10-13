@@ -139,4 +139,21 @@ public class EndgameGameTests {
         boss.discard();
         helper.succeed();
     }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    public static void aurasUnlockByAchievement(GameTestHelper helper) {
+        helper.assertTrue(JsonPool.AURAS.all().size() >= 6, "bundled auras load");
+        var p = new com.khaoskrew.khaosnexus.hunter.HunterProfile();
+        helper.assertTrue(Auras.unlockedIds(p).isEmpty(), "a new hunter has no auras");
+        p.addTitle(RedGates.TITLE);
+        p.spireBest = 100;
+        p.endgame.putInt("BossRushWins", 1);
+        var ids = Auras.unlockedIds(p).stream().map(ResourceLocation::getPath).toList();
+        helper.assertTrue(ids.contains("red_gate") && ids.contains("spire_100") && ids.contains("boss_rush"), "title, floor and stat unlocks");
+        helper.assertFalse(ids.contains("hunter_s") || ids.contains("national"), "rank and prestige still locked");
+        for (var a : JsonPool.AURAS.all().values()) {
+            helper.assertTrue(Auras.particle(a) != null, "every bundled aura has a simple particle");
+        }
+        helper.succeed();
+    }
 }

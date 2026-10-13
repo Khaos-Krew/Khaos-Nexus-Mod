@@ -410,5 +410,17 @@
   "khaosnexus.affix.khaosnexus.swift": "[Swift]",
   "khaosnexus.affix.khaosnexus.vampiric": "[Vampiric]",
   "khaosnexus.affix.khaosnexus.titanic": "[Titanic]",
-  "khaosnexus.affix.khaosnexus.berserk": "[Berserk]"
+  "khaosnexus.affix.khaosnexus.berserk": "[Berserk]",
+  "khaosnexus.aura.khaosnexus.hunter_s": "S-Rank Glow",
+  "khaosnexus.aura.khaosnexus.red_gate": "Crimson Survivor",
+  "khaosnexus.aura.khaosnexus.spire_100": "Spire Ascendant",
+  "khaosnexus.aura.khaosnexus.boss_rush": "Rush Champion",
+  "khaosnexus.aura.khaosnexus.national": "National Flame",
+  "khaosnexus.aura.khaosnexus.ss_rank": "SS Static",
+  "khaosnexus.aura.locked": "Aura %s is locked or unknown.",
+  "khaosnexus.aura.equipped": "Aura equipped: %s",
+  "khaosnexus.aura.cleared": "Aura removed.",
+  "khaosnexus.aura.none": "You have not unlocked any auras yet.",
+  "khaosnexus.aura.list": "Unlocked auras (/khaosnexus aura equip <id>):",
+  "khaosnexus.card.aura": "Aura"
 }

@@ -492,6 +492,12 @@ public final class Config {
     public static final ModConfigSpec.IntValue SPIRE_BOSS_INTERVAL = SERVER_BUILDER
             .comment("Every Nth floor is a boss floor with an affix from data/<ns>/khaosnexus_spire_affixes/. 0 = off.")
             .defineInRange("spireBossInterval", 10, 0, 1000);
+    public static final ModConfigSpec.BooleanValue AURAS = SERVER_BUILDER
+            .comment("Cosmetic particle auras unlocked by achievements. Auras are datapack files in data/<ns>/khaosnexus_auras/.")
+            .define("auras", true);
+    public static final ModConfigSpec.IntValue AURA_INTERVAL = SERVER_BUILDER
+            .comment("Ticks between aura particle bursts.")
+            .defineInRange("auraInterval", 10, 1, 200);
     // endgame-config-end
     static {
         SERVER_BUILDER.pop();

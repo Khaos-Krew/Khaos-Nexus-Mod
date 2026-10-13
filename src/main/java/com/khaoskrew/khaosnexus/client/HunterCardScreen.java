@@ -223,6 +223,12 @@ public class HunterCardScreen extends Screen {
         line(g, x, y + 138, Component.translatable("khaosnexus.card.spire"),
                 Component.translatable("khaosnexus.card.spire_value", p.spireFloor, p.spireBest));
         line(g, x, y + 150, Component.translatable("khaosnexus.card.party"), Component.literal(String.valueOf(p.partySize)));
+        String aura = p.endgame.getString("Aura");
+        if (!aura.isEmpty()) {
+            net.minecraft.resources.ResourceLocation id = net.minecraft.resources.ResourceLocation.parse(aura);
+            line(g, x, y + 162, Component.translatable("khaosnexus.card.aura"),
+                    Component.translatable("khaosnexus.aura." + id.getNamespace() + "." + id.getPath()));
+        }
     }
 
     private void forgeList(GuiGraphics g, int x, int y) {
