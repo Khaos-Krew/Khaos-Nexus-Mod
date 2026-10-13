@@ -39,6 +39,7 @@ public final class ModRegistries {
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_PURPLE)
                     .strength(3.0F, 6.0F)
+                    .noOcclusion()
                     .lightLevel(state -> state.getValue(NexusGateBlock.CLOSED) ? 4 : 12)
                     .sound(SoundType.AMETHYST)
                     .pushReaction(PushReaction.BLOCK)

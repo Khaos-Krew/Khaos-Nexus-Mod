@@ -48,6 +48,30 @@ public class NexusGateBlock extends BaseEntityBlock {
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
+    /** Client-side rift particles: rank-coloured dust drifting off the tear's ragged edges plus portal motes. */
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, net.minecraft.util.RandomSource random) {
+        if (state.getValue(CLOSED) || !(level.getBlockEntity(pos) instanceof NexusGateBlockEntity gate)) {
+            return;
+        }
+        int c = gate.getRank().color();
+        org.joml.Vector3f rgb = new org.joml.Vector3f(((c >> 16) & 255) / 255.0F, ((c >> 8) & 255) / 255.0F, (c & 255) / 255.0F);
+        for (int i = 0; i < 6; i++) {
+            double t = random.nextDouble();
+            double half = 1.25D * Math.pow(Math.sin(Math.PI * t), 0.8D);
+            double x = pos.getX() + 0.5D + (random.nextBoolean() ? half : -half) + random.nextGaussian() * 0.08D;
+            double y = pos.getY() + 0.5D + t * 5.0D;
+            double z = pos.getZ() + 0.5D + random.nextGaussian() * 0.1D;
+            level.addParticle(new net.minecraft.core.particles.DustParticleOptions(rgb, 1.2F + random.nextFloat()),
+                    x, y, z, 0.0D, 0.02D, 0.0D);
+        }
+        for (int i = 0; i < 2; i++) {
+            level.addParticle(net.minecraft.core.particles.ParticleTypes.REVERSE_PORTAL,
+                    pos.getX() + 0.5D + random.nextGaussian() * 0.5D, pos.getY() + 1.0D + random.nextDouble() * 4.5D,
+                    pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
+        }
+    }
+
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new NexusGateBlockEntity(pos, state);

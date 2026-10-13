@@ -24,7 +24,7 @@ public final class NexusGateClient {
     }
 
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(ModRegistries.NEXUS_GATE_ENTITY.get(), NexusGateRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistries.NEXUS_GATE_ENTITY.get(), context -> new NexusRiftRenderer());
     }
 
     private static void registerKeys(RegisterKeyMappingsEvent event) {
