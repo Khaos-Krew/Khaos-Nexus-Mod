@@ -27,6 +27,10 @@ sourceSets.main.resources {
 }
 
 repositories {
+    exclusiveContent {
+        forRepository { maven { name = "Modrinth"; url = "https://api.modrinth.com/maven" } }
+        filter { includeGroup "maven.modrinth" }
+    }
     maven {
         name = 'GeckoLib'
         url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
@@ -134,6 +138,11 @@ configurations {
 }
 
 dependencies {
+    // Optional companions, compile-time only (never shipped or required). Their classes are only touched from
+    // compat code that runs after a ModList check, so the mod loads fine without them.
+    compileOnly("maven.modrinth:ars-nouveau:yWDnir1o") { transitive = false }
+    compileOnly("maven.modrinth:relics-mod:WKEe9sPL") { transitive = false }
+    compileOnly("maven.modrinth:curios:yohfFbgD") { transitive = false }
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
