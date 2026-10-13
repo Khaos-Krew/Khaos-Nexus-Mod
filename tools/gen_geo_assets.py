@@ -122,6 +122,7 @@ def rig_brute():
         r.cube('chest', (ox, 26 + oy, 5.5), (2.5, 6, 2.5), 'spike')
     return r, d
 
+SWORD_TILT = -10
 def rig_warden():
     """Khaos Warden of the Rift (v4, hand-laid): layered plate armour, flared pauldrons, horned crowned helm,
     fanged visor, segmented gauntlets with fingers, tattered cape, tapered greatsword."""
@@ -141,7 +142,8 @@ def rig_warden():
         B(f'{side}_shin', (x, 2, -1.5), (9, 4, 12), 'gauntlet')
         B(f'{side}_shin', (x, 1.3, -8.3), (8, 2.6, 3.5), 'gauntlet', rot=(12, 0, 0))
     r.bone('hips', 'root', (0, 30, 0))
-    B('hips', (0, 31, 0), (20, 4, 11), 'belt'); B('hips', (0, 31, -5.9), (4, 3.5, 1), 'rune')
+    B('hips', (0, 31, 0), (20, 4, 11), 'belt'); B('hips', (0, 31, -6.0), (5.6, 4.6, 0.8), 'guard'); B('hips', (0, 31, -6.3), (3.4, 2.8, 0.6), 'rune')
+    for s_ in (-1, 1): B('hips', (s_ * 7.5, 31, -5.8), (1.4, 4.2, 0.8), 'guard')
     r.bone('tasset_front', 'hips', (0, 31, -6))
     r.bone('tasset_back', 'hips', (0, 31, 6))
     for s in (-1, 1):
@@ -179,7 +181,9 @@ def rig_warden():
         r.bone(f'{side}_hand', f'{side}_forearm', (x, 32, 0))
         B(f'{side}_hand', (x, 29, 0), (8, 6, 8), 'fist'); B(f'{side}_hand', (x, 30, -3.6), (9, 3, 3.5), 'gauntlet')
         for i in range(4):
-            B(f'{side}_hand', (x + (i - 1.5) * 2.1, 25.5, -2.6), (1.8, 5, 2.2), 'gauntlet', rot=(-25, 0, 0))
+            fx_ = x + s * 0.2; fy_ = 31.2 - i * 2.1
+            B(f'{side}_hand', (fx_, fy_, -4.6), (7.6, 1.8, 2.0), 'gauntlet')          # curled finger
+            B(f'{side}_hand', (fx_ + s * 3.4, fy_, -4.9), (1.2, 1.2, 1.2), 'crown')   # knuckle stud
         B(f'{side}_hand', (x - s * 4.6, 28, -1.5), (2, 4.5, 2.2), 'gauntlet', rot=(0, 0, s * -30))
     r.bone('head', 'chest', (0, 60, 0))
     B('head', (0, 70, 0), (16, 16, 16), 'helm')
@@ -194,19 +198,23 @@ def rig_warden():
     r.bone('jaw', 'head', (0, 62, -2))
     B('jaw', (0, 62.8, -3.5), (14, 5.5, 9), 'helm', rot=(8, 0, 0))
     for i, xx in enumerate((-5, -3, -1, 1, 3, 5)):
-        B('jaw', (xx, 65.5 + (0.6 if i in (0, 5) else 0), -8.2), (1, 2.4 if i in (0, 5) else 1.6, 1), 'claw')
+        big = i in (0, 5)
+        B('jaw', (xx, 65.3 + (0.9 if big else 0), -8.25), (1.1 if big else 0.9, 3.2 if big else 1.8, 1), 'claw', rot=(-8, 0, 0))
     r.bone('cape1', 'chest', (0, 60, 6.5), (6, 0, 0)); B('cape1', (0, 52.5, 7), (24, 15, 1), 'cape')
     r.bone('cape2', 'cape1', (0, 45, 7)); B('cape2', (0, 37.5, 7.2), (25, 15, 1), 'cape')
     r.bone('cape3', 'cape2', (0, 30, 7.2)); B('cape3', (0, 23, 7.4), (26, 14, 1), 'capehem')
     x = -15
-    r.bone('sword', 'right_hand', (x, 28, 0), (-12, 0, 0))
-    B('sword', (x, 30, -1.5), (2.5, 12, 2.5), 'grip'); B('sword', (x, 23, -1.5), (4, 3, 4), 'guard')
-    B('sword', (x, 37, -1.5), (14, 2.5, 4), 'guard')
-    for s in (-1, 1): B('sword', (x + s * 8, 38.5, -1.5), (4, 3, 3), 'guard', rot=(0, 0, s * 30))
-    B('sword', (x, 43, -1.5), (3, 9, 9), 'greatblade')
-    B('sword', (x, 65, -1.5), (2.4, 35, 8), 'greatblade')
-    for (yy, h, w) in ((85.5, 6, 6), (91, 5, 4), (95.5, 4, 2)):
-        B('sword', (x, yy, -1.5), (2.2, h, w), 'greatblade')
+    r.bone('sword', 'right_hand', (x, 29, -0.5), (SWORD_TILT, 0, 6))
+    B('sword', (x, 29, -0.5), (2.4, 13, 2.4), 'grip'); B('sword', (x, 21.6, -0.5), (3.6, 2.4, 3.6), 'guard')
+    B('sword', (x, 20.0, -0.5), (2, 1.2, 2), 'rune')
+    B('sword', (x, 36.6, -0.5), (13, 2.2, 4.2), 'guard'); B('sword', (x, 36.6, -0.5), (3.4, 3.4, 4.6), 'rune')
+    for s_ in (-1, 1): B('sword', (x + s_ * 7.6, 38.2, -0.5), (3.6, 2.6, 3), 'guard', rot=(0, 0, s_ * 32))
+    B('sword', (x, 42.5, -0.5), (2.8, 9, 8.6), 'greatblade')
+    B('sword', (x, 64.5, -0.5), (2.2, 35, 8), 'greatblade')
+    for (yy, h, w) in ((85, 6, 6), (90.5, 5, 4), (95, 4, 2)):
+        B('sword', (x, yy, -0.5), (2.0, h, w), 'greatblade')
+    for s_ in (-1, 1):  # fist wraps around the grip
+        B('right_hand', (x, 29, -0.5 + s_ * 1.6), (6.4, 4.8, 0.9), 'gauntlet')
     d = dict(L=30, th=30, hs=16, sy=58, ny=60, sx=15, aw=10, ah=30, tw=20, td=10, hand_y=26)
     return r, d
 
@@ -241,7 +249,7 @@ MOBS = {
  'rift_stalker': dict(rig=rig_stalker, k=4, ts=[256, 256], pal=dict(base='#25212E', dark='#0D0914', accent='#5E3F7C', robe='#2A1F3C'), glow='#C23346', eye='#E0485A', eyes='slit'),
  'void_caster': dict(rig=rig_caster, k=4, ts=[256, 256], pal=dict(base='#261F2B', dark='#110B15', accent='#7520A1', robe='#301C35'), glow='#8E2745', eye='#B35AE0', orb='#CA59EE', eyes='dots'),
  'rift_brute': dict(rig=rig_brute, k=2, ts=[256, 256], pal=dict(base='#2E212B', dark='#140B10', accent='#463442'), glow='#B13648', eye='#E04A5C', crystal='#8A45A0', eyes='dots'),
- 'rift_warden': dict(rig=rig_warden, k=2, ts=[512, 512], boss=True, pal=dict(base='#2A2327', dark='#120D10', accent='#5C5053', cape='#4A141C'), glow='#AD2530', eye='#FF3B47', crystal='#A15FC0', eyes='visor'),
+ 'rift_warden': dict(rig=rig_warden, k=2, ts=[512, 512], boss=True, pal=dict(base='#2A2327', dark='#120D10', accent='#5C5053', cape='#4A141C'), trim='#6E5A3C', glow='#AD2530', eye='#FF3B47', crystal='#A15FC0', eyes='visor'),
  'spire_guardian': dict(rig=rig_guardian, k=2, ts=[512, 512], boss=True, pal=dict(base='#2D2528', dark='#120D0F', accent='#5A5054', cape='#4C151E'), glow='#962933', eye='#B04BE0', core='#7F18A9', eyes='visor'),
 }
 
@@ -367,6 +375,17 @@ class Painter:
                         for yy in range(fy + 2 * k, fy + min(fh - k, 2 * k + fh // 2)):
                             s.gl(cx, yy, s.gc, 0.55); s.dk(cx, yy, 0.5)
                         for xx in range(cx - 2 * k, cx + 2 * k + 1): s.gl(xx, fy + 3 * k, s.gc, 0.5)
+                if side and s.mob.get('trim') and role in ('pauldron', 'breastplate', 'helmspire', 'gauntlet') and fw > 3 * k and fh > 3 * k:
+                    tc = hx(s.mob['trim'])
+                    for xx in range(fx, fx + fw):
+                        for yy in list(range(fy, fy + max(1, k // 2))) + list(range(fy + fh - max(1, k // 2), fy + fh)):
+                            s.px(xx, yy, mul(tc, 1.25 if yy < fy + k else 0.8))
+                    for xx in range(fx + 2 * k, fx + fw - 2 * k, 3 * k):  # trim rivets
+                        s.px(xx, fy + fh - k, mul(tc, 1.8))
+                if side and s.mob.get('trim'):
+                    for _ in range(max(1, fw * fh // (60 * k))):  # wear: bright chips on edges, dark pits
+                        xx = s.rnd.randrange(fx, fx + fw); yy = s.rnd.choice((fy, fy + fh - 1, s.rnd.randrange(fy, fy + fh)))
+                        s.dk(xx, yy, s.rnd.choice((1.6, 0.55)))
                 if role == 'helm' and fn == 'north' and fh > 8 * k: s.eyes(f)
                 if role == 'visorplate' and fn == 'north':
                     ey = fy + fh // 2
@@ -374,6 +393,13 @@ class Painter:
                         for yy in range(ey - k // 2, ey + k // 2 + 1): s.px(xx, yy, (6, 3, 6)); s.gl(xx, yy, s.ec, 1.0 if yy <= ey else 0.6)
             elif role in ('cape', 'capehem'):
                 cc = P['cape']; s.fill(f, fn, mul(cc, 0.65), mul(cc, 1.2), ao=False)
+                for xx in range(fx, fx + fw):  # cloth weave
+                    for yy in range(fy, fy + fh):
+                        if (xx + yy) % 2 == 0: s.dk(xx, yy, 0.9)
+                        if (xx // 2 + yy // 2) % 7 == 0: s.dk(xx, yy, 1.1)
+                if side and s.mob.get('trim'):
+                    for xx in range(fx, fx + fw):
+                        for yy in range(fy, fy + k // 2): s.px(xx, yy, hx(s.mob['trim']))
                 for xx in range(fx, fx + fw):
                     ph = ((xx - fx) / k) % 4
                     kk = 0.65 if ph < 0.8 else (1.25 if ph < 1.6 else 1.0)
@@ -450,6 +476,12 @@ class Painter:
                 if role == 'jaw' and fn == 'north':
                     for xx in range(fx + k, fx + fw - k, max(2, k)): s.px(xx, fy, (150, 140, 140))  # teeth
     def save(s, name):
+        if s.mob.get('trim'):  # soft 1px halo around emissive lines so the glow reads cleanly
+            halo = s.glow.filter(ImageFilter.MaxFilter(3)); hp = halo.load(); W, H = s.glow.size
+            for yy in range(H):
+                for xx in range(W):
+                    if s.gp[xx, yy][3] == 0 and hp[xx, yy][3] and s.bp[xx, yy][3]:
+                        r_, g_, b_, _ = hp[xx, yy]; s.gp[xx, yy] = (r_ * 2 // 7, g_ * 2 // 7, b_ * 2 // 7, 255)
         s.base.save(out('textures', 'entity', f'{name}.png'), optimize=True)
         s.glow.save(out('textures', 'entity', f'{name}_glow.png'), optimize=True)
         w = s.glow.copy(); p = w.load(); W, H = w.size
