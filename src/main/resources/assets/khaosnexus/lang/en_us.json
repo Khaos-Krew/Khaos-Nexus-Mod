@@ -405,5 +405,10 @@
   "khaosnexus.top.header.spire": "Highest Spire floor (season %s)",
   "khaosnexus.top.header.weekly": "Weekly-modifier clears (week %s)",
   "khaosnexus.top.empty": "No entries yet.",
-  "khaosnexus.top.placed": "New leaderboard time: #%1$s for %2$s-rank clears!"
+  "khaosnexus.top.placed": "New leaderboard time: #%1$s for %2$s-rank clears!",
+  "khaosnexus.affix.khaosnexus.armored": "[Armored]",
+  "khaosnexus.affix.khaosnexus.swift": "[Swift]",
+  "khaosnexus.affix.khaosnexus.vampiric": "[Vampiric]",
+  "khaosnexus.affix.khaosnexus.titanic": "[Titanic]",
+  "khaosnexus.affix.khaosnexus.berserk": "[Berserk]"
 }

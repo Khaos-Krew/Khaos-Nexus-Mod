@@ -477,6 +477,21 @@ public final class Config {
     public static final ModConfigSpec.IntValue LEADERBOARD_SIZE = SERVER_BUILDER
             .comment("Entries shown by /khaosnexus top.")
             .defineInRange("leaderboardSize", 10, 1, 50);
+    public static final ModConfigSpec.BooleanValue SPIRE_INFINITE = SERVER_BUILDER
+            .comment("Infinite Spire scaling: past spireScaleFrom, each floor adds spireScalePerFloor to boss health and damage, and every spireBossInterval floor rolls an affix.")
+            .define("spireInfinite", true);
+    public static final ModConfigSpec.IntValue SPIRE_SCALE_FROM = SERVER_BUILDER
+            .comment("Floor where the extra per-floor scaling starts.")
+            .defineInRange("spireScaleFrom", 10, 1, 100000);
+    public static final ModConfigSpec.DoubleValue SPIRE_SCALE_PER_FLOOR = SERVER_BUILDER
+            .comment("Extra health and damage per floor past spireScaleFrom (0.06 = +6% per floor, linear).")
+            .defineInRange("spireScalePerFloor", 0.06D, 0.0D, 10.0D);
+    public static final ModConfigSpec.DoubleValue SPIRE_SCALE_CAP = SERVER_BUILDER
+            .comment("Highest total multiplier from the per-floor scaling.")
+            .defineInRange("spireScaleCap", 50.0D, 1.0D, 100000.0D);
+    public static final ModConfigSpec.IntValue SPIRE_BOSS_INTERVAL = SERVER_BUILDER
+            .comment("Every Nth floor is a boss floor with an affix from data/<ns>/khaosnexus_spire_affixes/. 0 = off.")
+            .defineInRange("spireBossInterval", 10, 0, 1000);
     // endgame-config-end
     static {
         SERVER_BUILDER.pop();

@@ -33,6 +33,8 @@ public final class HunterProfile implements INBTSerializable<CompoundTag> {
     public boolean cardUnlocked;
     /** Skill ranks, "class.node:rank" comma list. */
     public String skills = "";
+    /** Post-S endgame state (mastery, auras, prestige rank, awakening, boss rush...). Keys are owned by endgame/*. */
+    public CompoundTag endgame = new CompoundTag();
 
     public static final StreamCodec<RegistryFriendlyByteBuf, HunterProfile> STREAM_CODEC = StreamCodec.of(
             HunterProfile::encode,
@@ -86,6 +88,7 @@ public final class HunterProfile implements INBTSerializable<CompoundTag> {
         tag.putInt("RaidsCleared", this.raidsCleared);
         tag.putBoolean("CardUnlocked", this.cardUnlocked);
         tag.putString("Skills", this.skills);
+        tag.put("Endgame", this.endgame.copy());
         return tag;
     }
 
@@ -112,6 +115,7 @@ public final class HunterProfile implements INBTSerializable<CompoundTag> {
         this.raidsCleared = tag.getInt("RaidsCleared");
         // Saves from before the Hunter Card: anyone who already made progress keeps their hunter UI.
         this.skills = tag.getString("Skills");
+        this.endgame = tag.getCompound("Endgame").copy();
         this.cardUnlocked = tag.contains("CardUnlocked") ? tag.getBoolean("CardUnlocked") : this.hasProgress();
     }
 
@@ -137,6 +141,7 @@ public final class HunterProfile implements INBTSerializable<CompoundTag> {
         buf.writeVarInt(profile.raidsCleared);
         buf.writeBoolean(profile.cardUnlocked);
         buf.writeUtf(profile.skills);
+        buf.writeNbt(profile.endgame);
     }
 
     private static HunterProfile decode(RegistryFriendlyByteBuf buf) {
@@ -162,6 +167,8 @@ public final class HunterProfile implements INBTSerializable<CompoundTag> {
         profile.raidsCleared = buf.readVarInt();
         profile.cardUnlocked = buf.readBoolean();
         profile.skills = buf.readUtf();
+        CompoundTag endgame = buf.readNbt();
+        profile.endgame = endgame == null ? new CompoundTag() : endgame;
         return profile;
     }
 }

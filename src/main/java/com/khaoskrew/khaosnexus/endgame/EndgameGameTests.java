@@ -119,4 +119,24 @@ public class EndgameGameTests {
         helper.assertTrue(Leaderboards.format(clear, lb.top(clear, 2)).getString().contains("1:30"), "times print as m:ss");
         helper.succeed();
     }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    public static void infiniteSpireScalesAndAffixes(GameTestHelper helper) {
+        int from = Config.SPIRE_SCALE_FROM.get();
+        helper.assertTrue(InfiniteSpire.scale(from) == 1.0D, "no extra scaling up to spireScaleFrom");
+        helper.assertTrue(Math.abs(InfiniteSpire.scale(from + 10) - (1.0D + 10 * Config.SPIRE_SCALE_PER_FLOOR.get())) < 1e-9, "linear per-floor scaling");
+        helper.assertTrue(InfiniteSpire.scale(10_000_000 / 100) <= Config.SPIRE_SCALE_CAP.get(), "scaling is capped");
+        helper.assertTrue(JsonPool.SPIRE_AFFIXES.all().size() >= 5, "bundled affixes load");
+        helper.assertTrue(InfiniteSpire.affix(1, 11) == null, "non-boss floors have no affix");
+        ResourceLocation a = InfiniteSpire.affix(1, 40);
+        helper.assertTrue(a != null && a.equals(InfiniteSpire.affix(1, 40)), "boss-floor affix is deterministic");
+        helper.assertFalse("titanic".equals(String.valueOf(InfiniteSpire.affix(1, 10)).replace("khaosnexus:", "")), "min_floor respected");
+        Mob boss = EntityType.ZOMBIE.create(helper.getLevel());
+        boss.moveTo(helper.absoluteVec(new net.minecraft.world.phys.Vec3(1, 2, 1)));
+        double hp = boss.getMaxHealth();
+        InfiniteSpire.apply(boss, 1, from + 9);
+        helper.assertTrue(boss.getMaxHealth() > hp, "deep floors are tougher");
+        boss.discard();
+        helper.succeed();
+    }
 }

@@ -101,6 +101,11 @@ public final class SpireService {
         }
         int floor = boss.getPersistentData().getInt(FLOOR);
         SpireData data = SpireData.get(killer.server.overworld());
+        for (net.minecraft.world.item.ItemStack bonus : com.khaoskrew.khaosnexus.endgame.InfiniteSpire.rewards(boss)) {
+            if (!killer.getInventory().add(bonus)) {
+                killer.drop(bonus, false);
+            }
+        }
         if (floor > data.bestFloor) {
             data.bestFloor = floor;
             data.holder = killer.getGameProfile().getName();
@@ -180,6 +185,7 @@ public final class SpireService {
             boss.setHealth((float) health.getValue());
         }
         boss.setCustomName(Component.translatable("khaosnexus.spire.boss", floor));
+        com.khaoskrew.khaosnexus.endgame.InfiniteSpire.apply(boss, season, floor);
         boss.setPersistenceRequired();
         boss.getPersistentData().putBoolean(BOSS, true);
         boss.getPersistentData().putInt(FLOOR, floor);
