@@ -130,4 +130,49 @@ public class CompatGameTests {
         }
         helper.succeed();
     }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    public static void modBossTuningScalesOnceAndStaysFair(GameTestHelper helper) {
+        var cata = net.minecraft.resources.ResourceLocation.parse("cataclysm:ignis");
+        var mowzie = net.minecraft.resources.ResourceLocation.parse("mowziesmobs:frostmaw");
+        boolean any = Config.CATACLYSM_ANY_RANK.get();
+        try {
+            Config.CATACLYSM_ANY_RANK.set(false);
+            helper.assertFalse(CompatPools.allowedAt(cata, GateRank.A), "Cataclysm bosses are S-rank only by default");
+            helper.assertTrue(CompatPools.allowedAt(cata, GateRank.S), "Cataclysm bosses allowed in S gates");
+            helper.assertTrue(CompatPools.allowedAt(mowzie, GateRank.A), "other boss mods keep their ranks");
+            Config.CATACLYSM_ANY_RANK.set(true);
+            helper.assertTrue(CompatPools.allowedAt(cata, GateRank.A), "cataclysmAnyRank lifts the S-only rule");
+        } finally {
+            Config.CATACLYSM_ANY_RANK.set(any);
+        }
+        helper.assertFalse(Config.CATACLYSM_RIFT_PHASE.get(), "rift phase is off by default");
+        double[] ignis = ModBossTuning.scales(cata);
+        helper.assertTrue(ignis[0] == 0.45D && ignis[1] == 0.55D, "per-boss override for Ignis");
+        double[] other = ModBossTuning.scales(mowzie);
+        helper.assertTrue(other[0] == Config.MOD_BOSS_HEALTH.get() && other[1] == Config.MOD_BOSS_DAMAGE.get(), "globals for unlisted bosses");
+
+        var level = helper.getLevel();
+        net.minecraft.core.BlockPos at = helper.absolutePos(new net.minecraft.core.BlockPos(2, 2, 2));
+        net.minecraft.world.entity.Mob boss = com.khaoskrew.khaosnexus.gate.GateArena.spawnMob(level, GateRank.S, EntityType.ZOMBIE, at, 0F,
+                ModBossTuning.healthScale(EntityType.ZOMBIE), true);
+        helper.assertTrue(boss != null, "boss spawned");
+        ModBossTuning.setUp(boss, GateRank.S, level.getGameTime());
+        double base = net.minecraft.world.entity.ai.attributes.DefaultAttributes.getSupplier(EntityType.ZOMBIE)
+                .getBaseValue(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE);
+        helper.assertTrue(Math.abs(boss.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE).getBaseValue() - base) < 1e-6,
+                "attack damage attribute is not rank-scaled, so melee is scaled only once");
+        double expected = GateRank.S.tuning().damageMultiplier.get() * Config.MOD_BOSS_DAMAGE.get();
+        helper.assertTrue(Math.abs(ModBossTuning.damageMultiplier(boss) - expected) < 1e-6, "one damage multiplier = rank x scale");
+        helper.assertTrue(boss.isNoAi() && boss.isInvulnerable(), "grace period freezes the boss");
+        var arrow = new net.minecraft.world.entity.projectile.Arrow(EntityType.ARROW, level);
+        arrow.setOwner(boss);
+        helper.assertTrue(ModBossTuning.source(arrow, arrow) == boss, "projectiles trace back to the boss");
+        helper.assertTrue(ModBossTuning.applyParty(boss, level) == 0 && boss.getHealth() == boss.getMaxHealth(), "no extra hunters, no extra health");
+        boss.getPersistentData().getCompound("khaosnexus.mod_boss").putLong("EngagedUntil", level.getGameTime() + 100);
+        helper.assertTrue(ModBossTuning.engagedIn(level, boss.getBoundingBox().inflate(4), 0L), "engaged boss holds the dungeon open");
+        boss.discard();
+        arrow.discard();
+        helper.succeed();
+    }
 }

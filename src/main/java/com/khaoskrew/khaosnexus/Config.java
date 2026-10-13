@@ -265,7 +265,7 @@ public final class Config {
             .comment("RANK=entity_id entries. Used only when that entity exists; each dungeon of that rank has bossModChance to use one.")
             .defineListAllowEmpty("optionalBosses", List.of(
                     "B=mowziesmobs:ferrous_wroughtnaut", "B=mowziesmobs:umvuthi", "A=mowziesmobs:frostmaw",
-                    "A=ars_nouveau:wilden_boss", "A=cataclysm:ender_guardian", "S=cataclysm:ignis", "S=cataclysm:the_harbinger",
+                    "A=ars_nouveau:wilden_boss", "S=cataclysm:ender_guardian", "S=cataclysm:ignis", "S=cataclysm:the_harbinger",
                     "S=cataclysm:netherite_monstrosity"), () -> "S=modid:boss", o -> o instanceof String str && str.contains("="));
     public static final ModConfigSpec.DoubleValue BOSS_MOD_CHANCE = SERVER_BUILDER
             .comment("Chance a dungeon uses an optional boss when one is available for its rank.")
@@ -281,8 +281,8 @@ public final class Config {
             .defineInRange("optionalLootChance", 0.2D, 0.0D, 1.0D);
     public static final ModConfigSpec.DoubleValue MOD_BOSS_HEALTH = SERVER_BUILDER
             .comment("Extra health multiplier for optional boss-mod bosses in dungeons, on top of the rank multiplier.",
-                    "Those bosses already have large health pools, so the default leaves them as their mod made them.")
-            .defineInRange("modBossHealthScale", 1.0D, 0.1D, 10.0D);
+                    "Those bosses already have large health pools, so the default halves them. modBossScale overrides it per boss.")
+            .defineInRange("modBossHealthScale", 0.5D, 0.1D, 10.0D);
     public static final ModConfigSpec.BooleanValue MOD_BOSS_WAKE = SERVER_BUILDER
             .comment("Wake optional bosses that spawn dormant (Mowzie's Wroughtnaut and Frostmaw, Cataclysm's Netherite Monstrosity)",
                     "so they fight in the boss room. Entries in modBossWake say how.")
@@ -293,6 +293,28 @@ public final class Config {
                     "mowziesmobs:ferrous_wroughtnaut=active:1", "mowziesmobs:frostmaw=active:1",
                     "cataclysm:netherite_monstrosity=is_Awaken:1"),
                     () -> "modid:boss=key:1", o -> o instanceof String str && str.contains("=") && str.contains(":"));
+    public static final ModConfigSpec.DoubleValue MOD_BOSS_DAMAGE = SERVER_BUILDER
+            .comment("Damage multiplier for optional boss-mod bosses in dungeons, on top of the rank damage multiplier.",
+                    "Applied once to every hit they cause: melee, abilities and projectiles. modBossScale overrides it per boss.")
+            .defineInRange("modBossDamageScale", 0.6D, 0.05D, 10.0D);
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> MOD_BOSS_SCALE = SERVER_BUILDER
+            .comment("Per-boss overrides: entity_id=health,damage. They replace modBossHealthScale and modBossDamageScale for that boss.")
+            .defineListAllowEmpty("modBossScale", List.of(
+                    "cataclysm:ender_guardian=0.6,0.5", "cataclysm:ignis=0.45,0.55",
+                    "cataclysm:the_harbinger=0.5,0.7", "cataclysm:netherite_monstrosity=0.35,0.35"),
+                    () -> "modid:boss=0.5,0.6", o -> o instanceof String str && str.contains("=") && str.contains(","));
+    public static final ModConfigSpec.BooleanValue CATACLYSM_ANY_RANK = SERVER_BUILDER
+            .comment("Allow Cataclysm bosses in optionalBosses below S rank. Off: Cataclysm entries only spawn in S-rank gates.")
+            .define("cataclysmAnyRank", false);
+    public static final ModConfigSpec.BooleanValue CATACLYSM_RIFT_PHASE = SERVER_BUILDER
+            .comment("At 30% health, gate Cataclysm bosses gain a void shield (10% max health) and summon two rift mobs once.")
+            .define("cataclysmRiftPhase", false);
+    public static final ModConfigSpec.IntValue MOD_BOSS_GRACE = SERVER_BUILDER
+            .comment("Seconds a boss-mod boss stays still and cannot be hurt after it spawns in a dungeon.")
+            .defineInRange("modBossGraceSeconds", 5, 0, 60);
+    public static final ModConfigSpec.DoubleValue MOD_BOSS_PARTY_HEALTH = SERVER_BUILDER
+            .comment("Extra boss-mod boss health per additional hunter near it when the grace period ends (0.25 = +25% each).")
+            .defineInRange("modBossPartyHealth", 0.25D, 0.0D, 2.0D);
     public static final ModConfigSpec.DoubleValue CLASS_BONUS_SCALE = SERVER_BUILDER
             .comment("Multiplier for every companion-mod class bonus. The bonuses themselves are datapack values in",
                     "data/<namespace>/khaosnexus_class_compat/<class>.json.")

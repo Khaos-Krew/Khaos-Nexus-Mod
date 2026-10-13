@@ -312,7 +312,8 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         }
         com.khaoskrew.khaosnexus.dungeon.DungeonInstances.get(dungeon).touch(this.dungeonSlot, this.dungeonGen, now);
         var wide = this.dungeonBox.inflatedBy(16);
-        if (dungeon.players().stream().anyMatch(p -> wide.isInside(p.blockPosition()))) {
+        if (dungeon.players().stream().anyMatch(p -> wide.isInside(p.blockPosition()))
+                || com.khaoskrew.khaosnexus.compat.ModBossTuning.engagedIn(dungeon, net.minecraft.world.phys.AABB.of(wide), now)) {
             this.lastOccupied = now;
             return false;
         }

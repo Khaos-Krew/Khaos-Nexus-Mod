@@ -240,9 +240,10 @@ public final class DungeonService {
         boolean modded = !type.builtInRegistryHolder().key().location().getNamespace().equals(com.khaoskrew.khaosnexus.KhaosNexus.MODID)
                 && !type.builtInRegistryHolder().key().location().getNamespace().equals("minecraft");
         Mob boss = GateArena.spawnMob(level, rank, type, layout.boss(), 180.0F,
-                custom ? 3.0D : modded ? Config.MOD_BOSS_HEALTH.get() : 1.0D, true);
+                custom ? 3.0D : modded ? com.khaoskrew.khaosnexus.compat.ModBossTuning.healthScale(type) : 1.0D, true);
         if (boss != null && modded) {
             com.khaoskrew.khaosnexus.compat.CompatPools.wake(boss);
+            com.khaoskrew.khaosnexus.compat.ModBossTuning.setUp(boss, rank, level.getGameTime());
         }
         if (boss != null) {
             boss.addTag("khaosnexus_dungeon_boss");

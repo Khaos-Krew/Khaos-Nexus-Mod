@@ -38,12 +38,20 @@ public final class CompatPools {
         for (String line : Config.OPTIONAL_BOSSES.get()) {
             if (matches(line, rank, false)) {
                 ResourceLocation id = ResourceLocation.tryParse(line.split("=", 2)[1].trim());
+                if (id != null && !allowedAt(id, rank)) {
+                    continue;
+                }
                 if (id != null && BuiltInRegistries.ENTITY_TYPE.containsKey(id)) {
                     pool.add(BuiltInRegistries.ENTITY_TYPE.get(id));
                 }
             }
         }
         return pool.isEmpty() ? Optional.empty() : Optional.of(pool.get(random.nextInt(pool.size())));
+    }
+
+    /** Cataclysm bosses are S-rank only unless compat.cataclysmAnyRank is on. */
+    public static boolean allowedAt(ResourceLocation id, GateRank rank) {
+        return rank == GateRank.S || !"cataclysm".equals(id.getNamespace()) || Config.CATACLYSM_ANY_RANK.get();
     }
 
     public static List<ItemStack> loot(GateRank rank, RandomSource random) {
