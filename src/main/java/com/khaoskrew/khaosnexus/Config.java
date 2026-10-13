@@ -186,6 +186,17 @@ public final class Config {
                 .push("dungeons");
     }
 
+    public static final ModConfigSpec.BooleanValue GATE_DUNGEONS = SERVER_BUILDER
+            .comment("Opening a gate teleports the party into a generated dungeon in khaosnexus:gate_dungeon.",
+                    "Killing the boss clears the gate. When false, gates spawn their wave around the gate block instead.")
+            .define("gateDungeons", true);
+
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> DUNGEON_BOSSES = SERVER_BUILDER
+            .comment("Boss mob per gate rank, in order E, D, C, B, A, S.")
+            .defineList("bosses", List.of("khaosnexus:rift_brute", "khaosnexus:rift_brute", "khaosnexus:rift_brute",
+                    "khaosnexus:spire_guardian", "khaosnexus:spire_guardian", "khaosnexus:rift_warden"),
+                    () -> "khaosnexus:rift_brute", o -> o instanceof String);
+
     public static final ModConfigSpec.BooleanValue DUNGEON_NO_FLIGHT = SERVER_BUILDER
             .comment("Stop flight inside dungeons: creative-style mayfly, elytra gliding and modded flight are cancelled every tick.")
             .define("blockFlight", true);

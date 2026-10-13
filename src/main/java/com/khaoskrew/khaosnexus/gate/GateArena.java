@@ -55,31 +55,12 @@ public final class GateArena {
                 KhaosNexus.LOGGER.warn("Nexus Gate skipped unknown mob id {}", id);
                 continue;
             }
-            Entity created = type.get().create(level);
-            if (!(created instanceof Mob mob)) {
-                if (created != null) {
-                    created.discard();
-                }
-                KhaosNexus.LOGGER.warn("Nexus Gate skipped non-mob id {}", id);
-                continue;
-            }
             BlockPos anchor = findSpawn(level, origin, i, count, radius);
             double dx = origin.getX() + 0.5D - (anchor.getX() + 0.5D);
             double dz = origin.getZ() + 0.5D - (anchor.getZ() + 0.5D);
             float yaw = (float) (Math.atan2(dz, dx) * (180.0D / Math.PI)) - 90.0F;
-            mob.moveTo(anchor.getX() + 0.5D, anchor.getY(), anchor.getZ() + 0.5D, yaw, 0.0F);
-            EventHooks.finalizeMobSpawn(mob, level, level.getCurrentDifficultyAt(anchor), MobSpawnType.EVENT, null);
-            if (mob.isSpawnCancelled()) {
-                mob.discard();
-                continue;
-            }
-            scale(mob, tuning.healthMultiplier.get(), tuning.damageMultiplier.get());
-            if (mob instanceof com.khaoskrew.khaosnexus.mob.RiftMob rift) {
-                rift.setGateRank(rank);
-            }
-            mob.setPersistenceRequired();
-            mob.setCustomName(Component.translatable("khaosnexus.gate.mob_name", Component.translatable(rank.translationKey())));
-            if (!level.addFreshEntity(mob)) {
+            Mob mob = spawnMob(level, rank, type.get(), anchor, yaw, 1.0D);
+            if (mob == null) {
                 continue;
             }
             gate.rememberMob(mob.getUUID(), anchor);
@@ -94,6 +75,36 @@ public final class GateArena {
                 40, 0.4D, 0.6D, 0.4D, 0.15D);
         KhaosNexus.LOGGER.info("Nexus Gate at {} opened at rank {} with {} mobs", origin.toShortString(), rank, spawned);
         return true;
+    }
+
+    /** Spawns one rank-scaled gate mob. Returns null when the type is not a mob or the spawn was cancelled. */
+    @org.jetbrains.annotations.Nullable
+    public static Mob spawnMob(ServerLevel level, GateRank rank, EntityType<?> type, BlockPos anchor, float yaw, double extraHealth) {
+        Config.RankValues tuning = rank.tuning();
+        Entity created = type.create(level);
+        if (!(created instanceof Mob mob)) {
+            if (created != null) {
+                created.discard();
+            }
+            KhaosNexus.LOGGER.warn("Nexus Gate skipped non-mob id {}", EntityType.getKey(type));
+            return null;
+        }
+        mob.moveTo(anchor.getX() + 0.5D, anchor.getY(), anchor.getZ() + 0.5D, yaw, 0.0F);
+        EventHooks.finalizeMobSpawn(mob, level, level.getCurrentDifficultyAt(anchor), MobSpawnType.EVENT, null);
+        if (mob.isSpawnCancelled()) {
+            mob.discard();
+            return null;
+        }
+        scale(mob, tuning.healthMultiplier.get() * extraHealth, tuning.damageMultiplier.get());
+        if (mob instanceof com.khaoskrew.khaosnexus.mob.RiftMob rift) {
+            rift.setGateRank(rank);
+        }
+        mob.setPersistenceRequired();
+        mob.setCustomName(Component.translatable("khaosnexus.gate.mob_name", Component.translatable(rank.translationKey())));
+        if (!level.addFreshEntity(mob)) {
+            return null;
+        }
+        return mob;
     }
 
     public static void leash(Entity entity, BlockPos anchor) {

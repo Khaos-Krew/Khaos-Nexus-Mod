@@ -110,6 +110,46 @@ public final class KhaosCommands {
                             PartyService.leave(context.getSource().getPlayerOrException());
                             return 1;
                         })))
+                .then(Commands.literal("dungeon")
+                        .then(Commands.literal("preview").requires(source -> source.hasPermission(2))
+                                .then(Commands.argument("rank", com.mojang.brigadier.arguments.StringArgumentType.greedyString()).executes(context -> {
+                                    ServerPlayer player = context.getSource().getPlayerOrException();
+                                    com.khaoskrew.khaosnexus.gate.GateRank rank = com.khaoskrew.khaosnexus.gate.GateRank.byName(
+                                            com.mojang.brigadier.arguments.StringArgumentType.getString(context, "rank").split(" ")[0].toUpperCase(Locale.ROOT));
+                                    var dungeon = com.khaoskrew.khaosnexus.dungeon.DungeonService.level(player.server);
+                                    if (dungeon == null) {
+                                        return 0;
+                                    }
+                                    var origin = com.khaoskrew.khaosnexus.dungeon.DungeonService.allocate(dungeon);
+                                    var layout = com.khaoskrew.khaosnexus.dungeon.DungeonService.build(dungeon, rank, origin, player.getRandom());
+                                    if (layout == null) {
+                                        return 0;
+                                    }
+                                    com.khaoskrew.khaosnexus.dungeon.DungeonService.populate(dungeon, rank, layout, player.getRandom());
+                                    if (context.getInput().endsWith(" cutaway")) {
+                                        com.khaoskrew.khaosnexus.dungeon.DungeonService.cutaway(dungeon, layout.box());
+                                        var b0 = layout.box();
+                                        double span = Math.max(b0.getXSpan(), b0.getZSpan());
+                                        player.teleportTo(dungeon, (b0.minX() + b0.maxX()) / 2.0D, b0.maxY() + span * 0.5D + 10.0D, (b0.minZ() + b0.maxZ()) / 2.0D, 180.0F, 90.0F);
+                                    } else {
+                                        com.khaoskrew.khaosnexus.dungeon.DungeonService.sendIn(player, dungeon, layout.spawn(), player.level(), player.blockPosition());
+                                    }
+                                    var b = layout.box();
+                                    context.getSource().sendSuccess(() -> net.minecraft.network.chat.Component.literal(
+                                            "Dungeon " + rank + ": " + layout.pieces() + " pieces, box " + b.minX() + " " + b.minZ() + " to " + b.maxX() + " " + b.maxZ()
+                                            + ", boss " + (layout.boss() == null ? "none" : layout.boss().toShortString())), false);
+                                    return 1;
+                                })))
+                        .then(Commands.literal("leave").executes(context -> {
+                            ServerPlayer player = context.getSource().getPlayerOrException();
+                            if (player.level().dimension() != com.khaoskrew.khaosnexus.dungeon.DungeonRules.GATE_DUNGEON
+                                    || !com.khaoskrew.khaosnexus.dungeon.DungeonService.sendBack(player)) {
+                                player.displayClientMessage(net.minecraft.network.chat.Component.translatable("khaosnexus.dungeon.not_inside"), false);
+                                return 0;
+                            }
+                            player.displayClientMessage(net.minecraft.network.chat.Component.translatable("khaosnexus.dungeon.left"), false);
+                            return 1;
+                        })))
                 .then(Commands.literal("raid")
                         .then(Commands.literal("start").executes(context -> {
                             ServerPlayer player = context.getSource().getPlayerOrException();
