@@ -1,0 +1,25 @@
+{
+  "radius": 8,
+  "enemy_effects": [
+    {
+      "id": "minecraft:wither",
+      "amplifier": 1,
+      "seconds": 6
+    },
+    {
+      "id": "minecraft:slowness",
+      "amplifier": 0,
+      "seconds": 6
+    }
+  ],
+  "self_effects": [
+    {
+      "id": "minecraft:absorption",
+      "amplifier": 2,
+      "seconds": 10
+    }
+  ],
+  "cooldown_seconds": 80,
+  "particle": "minecraft:soul",
+  "class": "necromancer"
+}

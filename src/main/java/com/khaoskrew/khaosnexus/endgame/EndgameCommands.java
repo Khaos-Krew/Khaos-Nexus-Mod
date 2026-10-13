@@ -75,6 +75,18 @@ public final class EndgameCommands {
                     BossRush.leave(c.getSource().getPlayerOrException(), false);
                     return 1;
                 })));
+        root.then(Commands.literal("awaken")
+                .executes(c -> {
+                    ServerPlayer p = c.getSource().getPlayerOrException();
+                    p.displayClientMessage(Awakening.status(com.khaoskrew.khaosnexus.hunter.HunterRanks.profile(p)), false);
+                    return 1;
+                })
+                .then(Commands.literal("use").executes(c -> Awakening.cast(c.getSource().getPlayerOrException()) ? 1 : 0))
+                .then(Commands.literal("choose").then(Commands.argument("id", StringArgumentType.word())
+                        .suggests((c, b) -> SharedSuggestionProvider.suggest(Awakening.options(
+                                com.khaoskrew.khaosnexus.hunter.HunterRanks.profile(c.getSource().getPlayerOrException()).classId)
+                                .stream().map(r -> r.getPath()), b))
+                        .executes(c -> Awakening.command(c.getSource().getPlayerOrException(), StringArgumentType.getString(c, "id")) ? 1 : 0))));
         // endgame-commands-end
         event.getDispatcher().register(root);
     }

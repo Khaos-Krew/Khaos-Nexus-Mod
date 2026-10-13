@@ -517,6 +517,8 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
                 com.khaoskrew.khaosnexus.endgame.Leaderboards.recordClear(near, cleared, level.getGameTime() - this.startedAt);
             }
             if (this.ss) {
+                var prof = HunterRanks.profile(near);
+                prof.endgame.putInt("SSClears", prof.endgame.getInt("SSClears") + 1);
                 int base = cleared.tuning().hunterXp.get();
                 HunterRanks.addXp(near, com.khaoskrew.khaosnexus.endgame.Prestige.scaleXp(base) - base);
             }

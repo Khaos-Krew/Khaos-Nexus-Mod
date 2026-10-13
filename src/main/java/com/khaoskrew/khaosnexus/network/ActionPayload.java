@@ -39,7 +39,11 @@ public record ActionPayload(int action, String id) implements CustomPacketPayloa
             if (payload.action() == PRIMARY) {
                 ClassAbilities.cast(player, true);
             } else if (payload.action() == SECONDARY) {
-                ClassAbilities.cast(player, false);
+                if (player.isShiftKeyDown() && com.khaoskrew.khaosnexus.endgame.Awakening.has(player)) {
+                    com.khaoskrew.khaosnexus.endgame.Awakening.cast(player);
+                } else {
+                    ClassAbilities.cast(player, false);
+                }
             } else if (payload.action() == EQUIP) {
                 ClassService.equip(player, payload.id());
             } else if (payload.action() == SKILL_SPEND || payload.action() == SKILL_RESPEC) {

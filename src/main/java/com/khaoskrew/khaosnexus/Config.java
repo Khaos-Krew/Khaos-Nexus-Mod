@@ -570,6 +570,12 @@ public final class Config {
     public static final ModConfigSpec.IntValue CHALLENGE_ATTEMPTS = SERVER_BUILDER
             .comment("Attempts per player per month (0 = unlimited). A challenge allows one life per attempt.")
             .defineInRange("challengeAttemptsPerMonth", 3, 0, 1000);
+    public static final ModConfigSpec.BooleanValue AWAKENING = SERVER_BUILDER
+            .comment("Second Awakening: a one-time quest at National level that unlocks an awakened ability (sneak + secondary ability key). Options are datapack files in data/<ns>/khaosnexus_awakenings/.")
+            .define("secondAwakening", true);
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> AWAKENING_STEPS = SERVER_BUILDER
+            .comment("Quest steps after reaching National, in order. Forms: stat:<EndgameKey>:<min>, spire:<floor>, title:<id>.")
+            .defineListAllowEmpty("awakeningSteps", List.of("stat:SSClears:3", "spire:120", "stat:BossRushWins:5"), () -> "spire:120", o -> o instanceof String);
     // endgame-config-end
     static {
         SERVER_BUILDER.pop();

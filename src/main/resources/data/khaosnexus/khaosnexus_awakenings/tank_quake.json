@@ -1,0 +1,14 @@
+{
+  "radius": 7,
+  "damage": 14,
+  "enemy_effects": [
+    {
+      "id": "minecraft:slowness",
+      "amplifier": 3,
+      "seconds": 3
+    }
+  ],
+  "cooldown_seconds": 60,
+  "particle": "minecraft:explosion",
+  "class": "tank"
+}

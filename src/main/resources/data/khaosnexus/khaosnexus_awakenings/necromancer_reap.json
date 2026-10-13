@@ -1,0 +1,8 @@
+{
+  "radius": 6,
+  "damage": 16,
+  "heal_allies": 4,
+  "cooldown_seconds": 60,
+  "particle": "minecraft:soul_fire_flame",
+  "class": "necromancer"
+}

@@ -1,0 +1,14 @@
+{
+  "radius": 5,
+  "damage": 18,
+  "enemy_effects": [
+    {
+      "id": "minecraft:wither",
+      "amplifier": 1,
+      "seconds": 4
+    }
+  ],
+  "cooldown_seconds": 60,
+  "particle": "minecraft:sweep_attack",
+  "class": "assassin"
+}

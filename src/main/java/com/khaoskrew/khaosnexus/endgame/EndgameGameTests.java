@@ -274,4 +274,32 @@ public class EndgameGameTests {
         }
         helper.succeed();
     }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    @SuppressWarnings("removal")
+    public static void secondAwakeningQuestAndCast(GameTestHelper helper) {
+        for (var c : com.khaoskrew.khaosnexus.hunter.HunterClass.values()) {
+            helper.assertTrue(Awakening.options(c.id()).size() == 2, "two awakening options for " + c.id());
+        }
+        var player = helper.makeMockServerPlayerInLevel();
+        var p = com.khaoskrew.khaosnexus.hunter.HunterRanks.profile(player);
+        p.classId = "caster";
+        ResourceLocation meteor = ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "caster_meteor");
+        helper.assertTrue("khaosnexus.awaken.not_ready".equals(Awakening.choose(p, meteor)), "locked before the quest");
+        p.endgame.putInt(Prestige.KEY, Prestige.NATIONAL);
+        p.endgame.putInt("SSClears", 3);
+        p.endgame.putInt(Prestige.RUSH_WINS, 5);
+        p.spireBest = 120;
+        helper.assertTrue(Awakening.missing(p).isEmpty(), "quest complete");
+        helper.assertTrue(Awakening.choose(p, ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "tank_quake")) != null, "other class option refused");
+        helper.assertTrue(Awakening.choose(p, meteor) == null && Awakening.has(player), "awakened");
+        helper.assertTrue("khaosnexus.awaken.already".equals(Awakening.choose(p, ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "caster_time"))), "one-time choice");
+        Mob target = helper.spawnWithNoFreeWill(EntityType.ZOMBIE, new BlockPos(1, 2, 1));
+        player.moveTo(target.position().add(1, 0, 0));
+        float hp = target.getHealth();
+        helper.assertTrue(Awakening.cast(player), "cast");
+        helper.assertTrue(target.getHealth() < hp, "awakened ability hits enemies");
+        helper.assertFalse(Awakening.cast(player), "cooldown");
+        helper.succeed();
+    }
 }
