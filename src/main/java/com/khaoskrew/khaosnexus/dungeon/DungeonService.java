@@ -55,7 +55,7 @@ public final class DungeonService {
 
     private DungeonService() {}
 
-    public record Layout(BlockPos spawn, @Nullable BlockPos boss, List<BlockPos> mobs, List<BlockPos> loot, BoundingBox box, int pieces) {}
+    public record Layout(BlockPos spawn, float yaw, @Nullable BlockPos boss, List<BlockPos> mobs, List<BlockPos> loot, BoundingBox box, int pieces) {}
 
     public static int depth(GateRank rank) {
         return new int[] {4, 5, 6, 7, 8, 10}[rank.ordinal()];
@@ -169,7 +169,14 @@ public final class DungeonService {
         }
         KhaosNexus.LOGGER.info("Gate dungeon rank {} at {}: {} pieces, {} mob spots, {} chests, boss {}",
                 rank, origin.toShortString(), best.size(), mobs.size(), loot.size(), boss == null ? "none" : boss.toShortString());
-        return new Layout(spawn, boss, mobs, loot, box, best.size());
+        // The entrance template's doorway faces north; turn the arrival view with the piece's rotation.
+        float yaw = switch (best.get(0).getRotation()) {
+            case CLOCKWISE_90 -> -90.0F;
+            case CLOCKWISE_180 -> 0.0F;
+            case COUNTERCLOCKWISE_90 -> 90.0F;
+            default -> 180.0F;
+        };
+        return new Layout(spawn, yaw, boss, mobs, loot, box, best.size());
     }
 
     /** Fills chests, spawns mobs. Returns the boss, which the gate tracks for its clear. */
@@ -205,14 +212,14 @@ public final class DungeonService {
         return boss;
     }
 
-    public static void sendIn(ServerPlayer player, ServerLevel dungeon, BlockPos spawn, Level from, BlockPos gate) {
+    public static void sendIn(ServerPlayer player, ServerLevel dungeon, BlockPos spawn, float yaw, Level from, BlockPos gate) {
         if (player.level() != dungeon) {
             CompoundTag back = new CompoundTag();
             back.putString("Dim", from.dimension().location().toString());
             back.putLong("Pos", gate.asLong());
             player.getPersistentData().put(RETURN, back);
         }
-        player.teleportTo(dungeon, spawn.getX() + 0.5D, spawn.getY(), spawn.getZ() + 0.5D, 180.0F, 0.0F);
+        player.teleportTo(dungeon, spawn.getX() + 0.5D, spawn.getY(), spawn.getZ() + 0.5D, yaw, 0.0F);
     }
 
     /** Sends a player back to the gate they came through. False when they have no return point. */

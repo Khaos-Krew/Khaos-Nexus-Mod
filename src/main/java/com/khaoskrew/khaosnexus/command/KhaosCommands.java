@@ -132,7 +132,7 @@ public final class KhaosCommands {
                                         double span = Math.max(b0.getXSpan(), b0.getZSpan());
                                         player.teleportTo(dungeon, (b0.minX() + b0.maxX()) / 2.0D, b0.maxY() + span * 0.5D + 10.0D, (b0.minZ() + b0.maxZ()) / 2.0D, 180.0F, 90.0F);
                                     } else {
-                                        com.khaoskrew.khaosnexus.dungeon.DungeonService.sendIn(player, dungeon, layout.spawn(), player.level(), player.blockPosition());
+                                        com.khaoskrew.khaosnexus.dungeon.DungeonService.sendIn(player, dungeon, layout.spawn(), layout.yaw(), player.level(), player.blockPosition());
                                     }
                                     var b = layout.box();
                                     context.getSource().sendSuccess(() -> net.minecraft.network.chat.Component.literal(

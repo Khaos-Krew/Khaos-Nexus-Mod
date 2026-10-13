@@ -59,6 +59,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
     private boolean inDungeon;
     @Nullable
     private BlockPos dungeonSpawn;
+    private float dungeonYaw = 180.0F;
     @Nullable
     private net.minecraft.world.level.levelgen.structure.BoundingBox dungeonBox;
 
@@ -113,7 +114,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         if (this.active && this.inDungeon && player instanceof ServerPlayer serverPlayer) {
             ServerLevel dungeon = com.khaoskrew.khaosnexus.dungeon.DungeonService.level(server.getServer());
             if (dungeon != null && this.dungeonSpawn != null) {
-                com.khaoskrew.khaosnexus.dungeon.DungeonService.sendIn(serverPlayer, dungeon, this.dungeonSpawn, server, this.getBlockPos());
+                com.khaoskrew.khaosnexus.dungeon.DungeonService.sendIn(serverPlayer, dungeon, this.dungeonSpawn, this.dungeonYaw, server, this.getBlockPos());
                 return InteractionResult.SUCCESS;
             }
         }
@@ -162,6 +163,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         }
         this.inDungeon = true;
         this.dungeonSpawn = layout.spawn();
+        this.dungeonYaw = layout.yaw();
         this.dungeonBox = layout.box();
         this.activator = player.getUUID();
         this.active = true;
@@ -175,7 +177,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         net.minecraft.world.phys.Vec3 here = net.minecraft.world.phys.Vec3.atCenterOf(this.getBlockPos());
         for (ServerPlayer member : com.khaoskrew.khaosnexus.party.PartyService.onlineMembers(player)) {
             if (member == player || (member.level() == server && member.distanceToSqr(here) <= 32.0D * 32.0D)) {
-                com.khaoskrew.khaosnexus.dungeon.DungeonService.sendIn(member, dungeon, layout.spawn(), server, this.getBlockPos());
+                com.khaoskrew.khaosnexus.dungeon.DungeonService.sendIn(member, dungeon, layout.spawn(), layout.yaw(), server, this.getBlockPos());
                 member.displayClientMessage(Component.translatable("khaosnexus.dungeon.entered", this.rankLabel()), false);
             }
         }
@@ -364,6 +366,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         tag.put("WaveMobs", ids);
         if (this.inDungeon && this.dungeonSpawn != null && this.dungeonBox != null) {
             tag.putLong("DungeonSpawn", this.dungeonSpawn.asLong());
+            tag.putFloat("DungeonYaw", this.dungeonYaw);
             var b = this.dungeonBox;
             tag.putIntArray("DungeonBox", new int[] {b.minX(), b.minY(), b.minZ(), b.maxX(), b.maxY(), b.maxZ()});
         }
@@ -388,6 +391,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         }
         this.inDungeon = tag.contains("DungeonSpawn");
         this.dungeonSpawn = this.inDungeon ? BlockPos.of(tag.getLong("DungeonSpawn")) : null;
+        this.dungeonYaw = tag.contains("DungeonYaw") ? tag.getFloat("DungeonYaw") : 180.0F;
         int[] box = tag.getIntArray("DungeonBox");
         this.dungeonBox = box.length == 6 ? new net.minecraft.world.level.levelgen.structure.BoundingBox(box[0], box[1], box[2], box[3], box[4], box[5]) : null;
         this.inDungeon = this.inDungeon && this.dungeonBox != null;
