@@ -243,4 +243,35 @@ public class EndgameGameTests {
         helper.assertTrue(helper.getLevel().getBlockState(helper.absolutePos(new BlockPos(0, 39, 0))).is(net.minecraft.world.level.block.Blocks.POLISHED_BLACKSTONE_BRICKS), "arena floor");
         helper.succeed();
     }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    public static void challengeGatesRules(GameTestHelper helper) {
+        helper.assertTrue(JsonPool.CHALLENGES.all().size() >= 4, "bundled challenges load");
+        helper.assertTrue(Challenges.month(1_760_000_000_000L).equals("2025-10"), "UTC month key");
+        ResourceLocation a = Challenges.active("2026-10");
+        helper.assertTrue(a != null && a.equals(Challenges.active("2026-10")), "monthly pick is stable");
+        helper.assertFalse(a.equals(Challenges.active("2026-11")), "rotation changes month to month");
+        var c = JsonPool.CHALLENGES.get(ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "iron_wall"));
+        var p = new com.khaoskrew.khaosnexus.hunter.HunterProfile();
+        p.xp = com.khaoskrew.khaosnexus.hunter.HunterRanks.threshold(GateRank.S);
+        p.classId = "assassin";
+        helper.assertTrue(Challenges.refusal(p, c, 1, "2026-10") != null, "class lock");
+        p.classId = "tank";
+        helper.assertTrue(Challenges.refusal(p, c, 2, "2026-10") != null, "solo only");
+        helper.assertTrue(Challenges.refusal(p, c, 1, "2026-10") == null, "eligible");
+        for (int i = 0; i < Config.CHALLENGE_ATTEMPTS.get(); i++) {
+            Challenges.spendAttempt(p, "2026-10");
+        }
+        helper.assertTrue(Challenges.refusal(p, c, 1, "2026-10") != null, "monthly attempts cap");
+        helper.assertTrue(Challenges.refusal(p, c, 1, "2026-11") == null, "attempts reset next month");
+        helper.assertTrue(Challenges.stages(c).size() == 3, "stages resolve");
+        String force = Config.CHALLENGE_FORCE.get();
+        try {
+            Config.CHALLENGE_FORCE.set("khaosnexus:void_choir");
+            helper.assertTrue(Challenges.active("2026-10").getPath().equals("void_choir"), "forced challenge");
+        } finally {
+            Config.CHALLENGE_FORCE.set(force);
+        }
+        helper.succeed();
+    }
 }

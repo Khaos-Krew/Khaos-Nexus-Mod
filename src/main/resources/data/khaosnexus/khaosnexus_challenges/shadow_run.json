@@ -1,0 +1,28 @@
+{
+  "rules": {
+    "solo": true,
+    "class": "assassin",
+    "min_rank": "S",
+    "time_limit_seconds": 300
+  },
+  "stages": [
+    [
+      "khaosnexus:rift_stalker",
+      "khaosnexus:rift_stalker",
+      "khaosnexus:rift_stalker",
+      "khaosnexus:rift_stalker"
+    ],
+    [
+      "minecraft:evoker",
+      "khaosnexus:rift_stalker",
+      "khaosnexus:rift_stalker"
+    ],
+    [
+      "khaosnexus:rift_warden"
+    ]
+  ],
+  "health_scale": 1.0,
+  "heal_after": 2,
+  "title": "challenge_shadow_run",
+  "rift_cores": 4
+}

@@ -52,25 +52,33 @@ public final class BossRush {
     public static final String TAG = "khaosnexus.boss_rush";
     public static final String TITLE = "rush_champion";
 
-    static final class Run {
+    public static final class Run {
         final UUID id = UUID.randomUUID();
         final List<UUID> players = new ArrayList<>();
         final Map<UUID, Vec3> returnPos = new HashMap<>();
         final Map<UUID, ResourceKey<Level>> returnDim = new HashMap<>();
-        final List<EntityType<?>> bosses;
+        /** Each stage is a group of mobs fought together; boss rush uses one boss per stage. */
+        final List<List<EntityType<?>>> stages;
         final int healAfter;
         final double healthScale;
         final BlockPos origin;
+        final java.util.Set<UUID> alive = new java.util.HashSet<>();
+        /** Called for each surviving player on a win, with the run time in ticks. Null = boss rush rewards. */
+        java.util.function.BiConsumer<ServerPlayer, Long> onWin;
+        String label = "khaosnexus.rush.boss";
         int stage;
         long startTick;
         long nextSpawn = -1;
-        UUID boss;
 
-        Run(List<EntityType<?>> bosses, int healAfter, double healthScale, BlockPos origin) {
-            this.bosses = bosses;
+        Run(List<List<EntityType<?>>> stages, int healAfter, double healthScale, BlockPos origin) {
+            this.stages = stages;
             this.healAfter = healAfter;
             this.healthScale = healthScale;
             this.origin = origin;
+        }
+
+        int size() {
+            return this.stages.size();
         }
     }
 
@@ -119,24 +127,7 @@ public final class BossRush {
         if (!Config.BOSS_RUSH.get()) {
             return false;
         }
-        ServerLevel arenaLevel = leader.server.getLevel(SpireService.DIMENSION);
         GateRank min = GateRank.byName(Config.BOSS_RUSH_MIN_RANK.get().trim());
-        if (arenaLevel == null || runOf(leader.getUUID()) != null) {
-            leader.displayClientMessage(Component.translatable("khaosnexus.rush.busy"), false);
-            return false;
-        }
-        List<ServerPlayer> party = new ArrayList<>();
-        for (ServerPlayer m : PartyService.onlineMembers(leader)) {
-            if (m == leader || (m.level() == leader.level() && m.distanceToSqr(leader) < 32 * 32 && runOf(m.getUUID()) == null)) {
-                party.add(m);
-            }
-        }
-        for (ServerPlayer m : party) {
-            if (HunterRanks.rankOf(m).ordinal() < min.ordinal()) {
-                leader.displayClientMessage(Component.translatable("khaosnexus.rush.rank", Component.translatable(min.translationKey())), false);
-                return false;
-            }
-        }
         ResourceLocation rosterId = ResourceLocation.tryParse(Config.BOSS_RUSH_ROSTER.get());
         List<EntityType<?>> fights = rosterId == null ? List.of() : roster(rosterId, leader.getRandom().nextLong());
         if (fights.isEmpty()) {
@@ -144,15 +135,57 @@ public final class BossRush {
             return false;
         }
         JsonObject o = JsonPool.BOSS_RUSH.get(rosterId);
-        BlockPos origin = new BlockPos(-20000 - (nextSlot++ % 64) * 128, 100, 0);
-        Run run = new Run(fights, GsonHelper.getAsInt(o, "heal_after", 3), GsonHelper.getAsDouble(o, "health_scale", 1.0D), origin);
+        List<List<EntityType<?>>> stages = new ArrayList<>();
+        fights.forEach(f -> stages.add(List.of(f)));
+        Run run = new Run(stages, GsonHelper.getAsInt(o, "heal_after", 3), GsonHelper.getAsDouble(o, "health_scale", 1.0D), nextOrigin());
+        List<ServerPlayer> party = gather(leader);
+        for (ServerPlayer m : party) {
+            if (HunterRanks.rankOf(m).ordinal() < min.ordinal()) {
+                leader.displayClientMessage(Component.translatable("khaosnexus.rush.rank", Component.translatable(min.translationKey())), false);
+                return false;
+            }
+        }
+        if (!launch(leader, party, run)) {
+            return false;
+        }
+        for (ServerPlayer m : party) {
+            m.displayClientMessage(Component.translatable("khaosnexus.rush.started", fights.size()), false);
+        }
+        return true;
+    }
+
+    static BlockPos nextOrigin() {
+        return new BlockPos(-20000 - (nextSlot++ % 64) * 128, 100, 0);
+    }
+
+    /** The leader plus party members within 32 blocks who are not in another run. */
+    static List<ServerPlayer> gather(ServerPlayer leader) {
+        List<ServerPlayer> party = new ArrayList<>();
+        for (ServerPlayer m : PartyService.onlineMembers(leader)) {
+            if (m == leader || (m.level() == leader.level() && m.distanceToSqr(leader) < 32 * 32 && runOf(m.getUUID()) == null)) {
+                party.add(m);
+            }
+        }
+        if (!party.contains(leader)) {
+            party.add(0, leader);
+        }
+        return party;
+    }
+
+    /** Builds the arena, moves the party in and starts the clock. */
+    static boolean launch(ServerPlayer leader, List<ServerPlayer> party, Run run) {
+        ServerLevel arenaLevel = leader.server.getLevel(SpireService.DIMENSION);
+        if (arenaLevel == null || runOf(leader.getUUID()) != null) {
+            leader.displayClientMessage(Component.translatable("khaosnexus.rush.busy"), false);
+            return false;
+        }
+        BlockPos origin = run.origin;
         buildArena(arenaLevel, origin);
         for (ServerPlayer m : party) {
             run.players.add(m.getUUID());
             run.returnPos.put(m.getUUID(), m.position());
             run.returnDim.put(m.getUUID(), m.level().dimension());
             m.teleportTo(arenaLevel, origin.getX() + 0.5D, origin.getY() + 1, origin.getZ() - 8.5D, 0.0F, 0.0F);
-            m.displayClientMessage(Component.translatable("khaosnexus.rush.started", fights.size()), false);
         }
         run.startTick = leader.server.getTickCount();
         run.nextSpawn = run.startTick + 60;
@@ -178,17 +211,22 @@ public final class BossRush {
         if (level == null) {
             return;
         }
-        Mob boss = GateArena.spawnMob(level, GateRank.S, run.bosses.get(run.stage), run.origin.offset(0, 0, 6), 180.0F, run.healthScale, true);
-        if (boss == null) {
-            run.stage++;
-            run.nextSpawn = server.getTickCount() + 1;
+        List<EntityType<?>> group = run.stages.get(run.stage);
+        run.nextSpawn = -1;
+        for (int i = 0; i < group.size(); i++) {
+            int dx = group.size() == 1 ? 0 : (i % 5 - 2) * 3;
+            Mob boss = GateArena.spawnMob(level, GateRank.S, group.get(i), run.origin.offset(dx, 0, 6 + i / 5 * 2), 180.0F, run.healthScale, group.size() == 1);
+            if (boss != null) {
+                boss.getPersistentData().putUUID(TAG, run.id);
+                boss.setCustomName(Component.translatable(run.label, run.stage + 1, run.size(), boss.getType().getDescription()));
+                run.alive.add(boss.getUUID());
+            }
+        }
+        if (run.alive.isEmpty()) {
+            onBossDown(server, run);
             return;
         }
-        boss.getPersistentData().putUUID(TAG, run.id);
-        boss.setCustomName(Component.translatable("khaosnexus.rush.boss", run.stage + 1, run.bosses.size(), boss.getType().getDescription()));
-        run.boss = boss.getUUID();
-        run.nextSpawn = -1;
-        forEach(server, run, p -> p.displayClientMessage(Component.translatable("khaosnexus.rush.fight", run.stage + 1, run.bosses.size()), true));
+        forEach(server, run, p -> p.displayClientMessage(Component.translatable("khaosnexus.rush.fight", run.stage + 1, run.size()), true));
     }
 
     private static void forEach(MinecraftServer server, Run run, java.util.function.Consumer<ServerPlayer> f) {
@@ -203,7 +241,7 @@ public final class BossRush {
     /** Advances the run after a rush boss dies. Package-visible for tests. */
     static void onBossDown(MinecraftServer server, Run run) {
         run.stage++;
-        run.boss = null;
+        run.alive.clear();
         if (run.stage == run.healAfter) {
             forEach(server, run, p -> {
                 p.setHealth(p.getMaxHealth());
@@ -211,7 +249,7 @@ public final class BossRush {
                 p.displayClientMessage(Component.translatable("khaosnexus.rush.healed"), false);
             });
         }
-        if (run.stage >= run.bosses.size()) {
+        if (run.stage >= run.size()) {
             win(server, run);
         } else {
             run.nextSpawn = server.getTickCount() + Config.BOSS_RUSH_DELAY.get();
@@ -220,6 +258,11 @@ public final class BossRush {
 
     private static void win(MinecraftServer server, Run run) {
         long ticks = server.getTickCount() - run.startTick;
+        if (run.onWin != null) {
+            forEach(server, run, p -> run.onWin.accept(p, ticks));
+            end(server, run);
+            return;
+        }
         forEach(server, run, p -> {
             var prof = HunterRanks.profile(p);
             prof.endgame.putInt(Prestige.RUSH_WINS, prof.endgame.getInt(Prestige.RUSH_WINS) + 1);
@@ -247,10 +290,12 @@ public final class BossRush {
 
     private static void discardBoss(MinecraftServer server, Run run) {
         ServerLevel level = server.getLevel(SpireService.DIMENSION);
-        if (run.boss != null && level != null) {
-            Entity e = level.getEntity(run.boss);
-            if (e != null) {
-                e.discard();
+        if (level != null) {
+            for (UUID id : run.alive) {
+                Entity e = level.getEntity(id);
+                if (e != null) {
+                    e.discard();
+                }
             }
         }
     }
@@ -289,7 +334,7 @@ public final class BossRush {
         }
         if (event.getEntity() instanceof Mob mob && mob.getPersistentData().hasUUID(TAG)) {
             Run run = RUNS.get(mob.getPersistentData().getUUID(TAG));
-            if (run != null && mob.getUUID().equals(run.boss)) {
+            if (run != null && run.alive.remove(mob.getUUID()) && run.alive.isEmpty()) {
                 onBossDown(mob.getServer(), run);
             }
         }
@@ -306,13 +351,16 @@ public final class BossRush {
     public static void onTick(ServerTickEvent.Post event) {
         MinecraftServer server = event.getServer();
         for (Run run : List.copyOf(RUNS.values())) {
-            if (run.nextSpawn >= 0 && server.getTickCount() >= run.nextSpawn && run.stage < run.bosses.size()) {
+            if (run.nextSpawn >= 0 && server.getTickCount() >= run.nextSpawn && run.stage < run.size()) {
                 spawnNext(server, run);
-            } else if (run.boss != null && server.getTickCount() % 40 == 0) {
+            } else if (!run.alive.isEmpty() && server.getTickCount() % 40 == 0) {
                 ServerLevel level = server.getLevel(SpireService.DIMENSION);
-                Entity e = level == null ? null : level.getEntity(run.boss);
-                if (e == null || !e.isAlive()) {
-                    // Boss vanished without dying (despawn or unload): count it so the run cannot soft-lock.
+                // Mobs that vanished without dying (despawn or unload) count as down so the run cannot soft-lock.
+                run.alive.removeIf(id -> {
+                    Entity e = level == null ? null : level.getEntity(id);
+                    return e == null || !e.isAlive();
+                });
+                if (run.alive.isEmpty()) {
                     onBossDown(server, run);
                 }
             }
@@ -320,7 +368,9 @@ public final class BossRush {
     }
 
     static Run testRun(List<EntityType<?>> bosses, int healAfter) {
-        Run run = new Run(bosses, healAfter, 1.0D, BlockPos.ZERO);
+        List<List<EntityType<?>>> stages = new ArrayList<>();
+        bosses.forEach(b -> stages.add(List.of(b)));
+        Run run = new Run(stages, healAfter, 1.0D, BlockPos.ZERO);
         RUNS.put(run.id, run);
         return run;
     }

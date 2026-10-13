@@ -561,6 +561,15 @@ public final class Config {
     public static final ModConfigSpec.IntValue BOSS_RUSH_DELAY = SERVER_BUILDER
             .comment("Ticks between one boss dying and the next spawning.")
             .defineInRange("bossRushDelay", 60, 0, 1200);
+    public static final ModConfigSpec.BooleanValue CHALLENGES = SERVER_BUILDER
+            .comment("Monthly challenge gates: authored encounters with fixed rules. Files in data/<ns>/khaosnexus_challenges/.")
+            .define("challengeGates", true);
+    public static final ModConfigSpec.ConfigValue<String> CHALLENGE_FORCE = SERVER_BUILDER
+            .comment("Force this challenge id instead of the monthly pick (empty = monthly).")
+            .define("challengeForce", "");
+    public static final ModConfigSpec.IntValue CHALLENGE_ATTEMPTS = SERVER_BUILDER
+            .comment("Attempts per player per month (0 = unlimited). A challenge allows one life per attempt.")
+            .defineInRange("challengeAttemptsPerMonth", 3, 0, 1000);
     // endgame-config-end
     static {
         SERVER_BUILDER.pop();

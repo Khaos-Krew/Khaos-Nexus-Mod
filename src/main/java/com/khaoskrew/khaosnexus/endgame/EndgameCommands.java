@@ -64,6 +64,17 @@ public final class EndgameCommands {
                     BossRush.leave(c.getSource().getPlayerOrException(), false);
                     return 1;
                 })));
+        root.then(Commands.literal("challenge")
+                .executes(c -> {
+                    ServerPlayer p = c.getSource().getPlayerOrException();
+                    p.displayClientMessage(Challenges.describe(p), false);
+                    return 1;
+                })
+                .then(Commands.literal("start").executes(c -> Challenges.start(c.getSource().getPlayerOrException()) ? 1 : 0))
+                .then(Commands.literal("leave").executes(c -> {
+                    BossRush.leave(c.getSource().getPlayerOrException(), false);
+                    return 1;
+                })));
         // endgame-commands-end
         event.getDispatcher().register(root);
     }

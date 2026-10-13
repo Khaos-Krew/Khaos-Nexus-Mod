@@ -1,0 +1,27 @@
+{
+  "rules": {
+    "solo": true,
+    "class": "tank",
+    "min_rank": "S",
+    "time_limit_seconds": 900
+  },
+  "stages": [
+    [
+      "khaosnexus:rift_brute",
+      "khaosnexus:rift_brute",
+      "khaosnexus:rift_brute"
+    ],
+    [
+      "minecraft:ravager",
+      "minecraft:vindicator",
+      "minecraft:vindicator"
+    ],
+    [
+      "khaosnexus:spire_guardian"
+    ]
+  ],
+  "health_scale": 1.0,
+  "heal_after": 2,
+  "title": "challenge_iron_wall",
+  "rift_cores": 4
+}
