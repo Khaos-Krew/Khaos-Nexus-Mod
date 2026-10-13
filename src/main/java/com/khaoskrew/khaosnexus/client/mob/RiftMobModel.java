@@ -15,6 +15,7 @@ public class RiftMobModel extends HierarchicalModel<RiftMob> {
     private final ModelPart rightLeg;
     private final ModelPart leftLeg;
     private final ModelPart orb;
+    private final ModelPart cape;
     private final boolean caster;
 
     public RiftMobModel(ModelPart root, boolean caster) {
@@ -25,6 +26,8 @@ public class RiftMobModel extends HierarchicalModel<RiftMob> {
         this.rightLeg = root.getChild("right_leg");
         this.leftLeg = root.getChild("left_leg");
         this.orb = root.hasChild("orb") ? root.getChild("orb") : null;
+        ModelPart body = root.getChild("body");
+        this.cape = body.hasChild("cape") ? body.getChild("cape") : null;
         this.caster = caster;
     }
 
@@ -58,6 +61,9 @@ public class RiftMobModel extends HierarchicalModel<RiftMob> {
             float a = Mth.sin(this.attackTime * Mth.PI);
             this.rightArm.xRot -= a * 1.6F;
             this.leftArm.xRot -= a * 1.6F;
+        }
+        if (this.cape != null) {
+            this.cape.xRot += Mth.sin(ageInTicks * 0.08F) * 0.04F + limbSwingAmount * 0.5F;
         }
         if (this.orb != null) {
             this.orb.y += Mth.sin(ageInTicks * 0.15F) * 1.0F;

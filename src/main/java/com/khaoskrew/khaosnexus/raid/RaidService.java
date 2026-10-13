@@ -21,7 +21,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.monster.Ravager;
 import net.neoforged.neoforge.event.EventHooks;
 
 public final class RaidService {
@@ -43,7 +42,7 @@ public final class RaidService {
         if (!(player.level() instanceof ServerLevel level)) {
             return false;
         }
-        Ravager boss = EntityType.RAVAGER.create(level);
+        Mob boss = com.khaoskrew.khaosnexus.mob.ModEntities.RIFT_WARDEN.get().create(level);
         if (boss == null) {
             return false;
         }
