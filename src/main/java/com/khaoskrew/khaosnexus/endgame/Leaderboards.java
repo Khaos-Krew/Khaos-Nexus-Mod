@@ -117,8 +117,9 @@ public final class Leaderboards extends SavedData {
         }
         for (int i = 0; i < top.size(); i++) {
             Entry e = top.get(i);
-            String v = lowerBetter(board) ? String.format("%d:%02d", e.value() / 1200, (e.value() / 20) % 60) : Long.toString(e.value());
-            out.append("\n").append(Component.literal((i + 1) + ". " + e.name() + "  " + v));
+            Component v = board.startsWith("spire_") ? com.khaoskrew.khaosnexus.spire.SpireService.where((int) e.value())
+                    : Component.literal(lowerBetter(board) ? String.format("%d:%02d", e.value() / 1200, (e.value() / 20) % 60) : Long.toString(e.value()));
+            out.append("\n").append(Component.literal((i + 1) + ". " + e.name() + "  ")).append(v);
         }
         return out;
     }

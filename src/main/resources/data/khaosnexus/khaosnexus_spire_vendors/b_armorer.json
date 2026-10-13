@@ -1,0 +1,105 @@
+{
+  "name": "khaosnexus.vendor.armorer",
+  "trades": [
+    {
+      "cost": {
+        "item": "khaosnexus:nexus_token",
+        "count": 4,
+        "per_floor": 0.5
+      },
+      "result": {
+        "item": "minecraft:diamond_sword",
+        "enchantments": [
+          {
+            "id": "minecraft:sharpness",
+            "level": 2,
+            "per_floor": 0.5,
+            "max": 5
+          }
+        ]
+      },
+      "max_uses": 2
+    },
+    {
+      "cost": {
+        "item": "khaosnexus:nexus_token",
+        "count": 4,
+        "per_floor": 0.5
+      },
+      "result": {
+        "item": "minecraft:diamond_chestplate",
+        "enchantments": [
+          {
+            "id": "minecraft:protection",
+            "level": 2,
+            "per_floor": 0.4,
+            "max": 4
+          }
+        ]
+      },
+      "max_uses": 2
+    },
+    {
+      "cost": {
+        "item": "khaosnexus:nexus_token",
+        "count": 3,
+        "per_floor": 0.5
+      },
+      "result": {
+        "item": "minecraft:bow",
+        "enchantments": [
+          {
+            "id": "minecraft:power",
+            "level": 2,
+            "per_floor": 0.5,
+            "max": 5
+          }
+        ]
+      },
+      "max_uses": 2
+    },
+    {
+      "cost": {
+        "item": "khaosnexus:nexus_token",
+        "count": 8,
+        "per_floor": 0.5
+      },
+      "cost_b": {
+        "item": "khaosnexus:rift_core",
+        "count": 2
+      },
+      "result": {
+        "item": "minecraft:netherite_sword",
+        "enchantments": [
+          {
+            "id": "minecraft:sharpness",
+            "level": 3,
+            "per_floor": 0.3,
+            "max": 5
+          }
+        ]
+      },
+      "max_uses": 1,
+      "min_floor": 3,
+      "min_rank": "A"
+    },
+    {
+      "cost": {
+        "item": "khaosnexus:nexus_token",
+        "count": 6
+      },
+      "result": {
+        "item": "minecraft:shield",
+        "enchantments": [
+          {
+            "id": "minecraft:unbreaking",
+            "level": 2,
+            "per_floor": 0.2,
+            "max": 3
+          }
+        ]
+      },
+      "max_uses": 2
+    }
+  ]
+}

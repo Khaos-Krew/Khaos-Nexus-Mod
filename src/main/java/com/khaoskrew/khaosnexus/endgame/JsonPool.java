@@ -26,6 +26,8 @@ public final class JsonPool extends SimpleJsonResourceReloadListener {
     public static final JsonPool CHALLENGES = new JsonPool("khaosnexus_challenges");
     public static final JsonPool AWAKENINGS = new JsonPool("khaosnexus_awakenings");
     public static final JsonPool RAID_BOSSES = new JsonPool("khaosnexus_raid_bosses");
+    public static final JsonPool SPIRE_THEMES = new JsonPool("khaosnexus_spire_themes");
+    public static final JsonPool SPIRE_VENDORS = new JsonPool("khaosnexus_spire_vendors");
 
     private final String folder;
     private final Map<ResourceLocation, JsonObject> entries = new LinkedHashMap<>();
@@ -65,5 +67,7 @@ public final class JsonPool extends SimpleJsonResourceReloadListener {
         event.addListener(CHALLENGES);
         event.addListener(AWAKENINGS);
         event.addListener(RAID_BOSSES);
+        event.addListener(SPIRE_THEMES);
+        event.addListener(SPIRE_VENDORS);
     }
 }

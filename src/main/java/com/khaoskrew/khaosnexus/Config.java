@@ -187,11 +187,26 @@ public final class Config {
     }
 
     public static final ModConfigSpec.IntValue SPIRE_CHECKPOINT = SERVER_BUILDER
-            .comment("Floors between checkpoints.")
-            .defineInRange("checkpointInterval", 10, 1, 100);
+            .comment("Floors between checkpoints. Every floor's town is a checkpoint when this is 1 (reaching floor N's town saves floor N).")
+            .defineInRange("checkpointInterval", 1, 1, 100);
     public static final ModConfigSpec.DoubleValue SPIRE_HEALTH_PER_FLOOR = SERVER_BUILDER
-            .comment("Extra boss health added for each floor.")
+            .comment("Extra boss health added for each Spire level cleared in total (floor 2 level 1 = 11 levels in, with 10 levels per floor).")
             .defineInRange("healthPerFloor", 4.0D, 0.0D, 100.0D);
+    public static final ModConfigSpec.IntValue SPIRE_LEVELS = SERVER_BUILDER
+            .comment("Levels (boss arenas) per Spire floor. Each floor starts with a safe town.")
+            .defineInRange("levelsPerFloor", 10, 1, 50);
+    public static final ModConfigSpec.BooleanValue SPIRE_TOWNS = SERVER_BUILDER
+            .comment("Build a safe town with vendors and a checkpoint at the start of every floor. Off = floors start straight at level 1.")
+            .define("towns", true);
+    public static final ModConfigSpec.BooleanValue SPIRE_VENDORS = SERVER_BUILDER
+            .comment("Spawn vendor NPCs in towns. Trades are datapack files in data/<ns>/khaosnexus_spire_vendors/.")
+            .define("vendors", true);
+    public static final ModConfigSpec.IntValue SPIRE_REPAIR_CORES = SERVER_BUILDER
+            .comment("Rift Cores the repair vendor charges per 25% of durability restored (paid in Nexus Tokens instead when you have no cores).")
+            .defineInRange("repairCostCores", 1, 0, 64);
+    public static final ModConfigSpec.IntValue SPIRE_REPAIR_TOKENS = SERVER_BUILDER
+            .comment("Nexus Tokens per 25% of durability when paying with tokens.")
+            .defineInRange("repairCostTokens", 2, 0, 64);
     public static final ModConfigSpec.IntValue SPIRE_DEATH_WEAKNESS = SERVER_BUILDER
             .comment("Weakness duration, in ticks, after dying in the Spire. 20 ticks is one second.")
             .defineInRange("deathWeakness", 600, 0, 72000);
@@ -482,7 +497,7 @@ public final class Config {
             .define("spireInfinite", true);
     public static final ModConfigSpec.IntValue SPIRE_SCALE_FROM = SERVER_BUILDER
             .comment("Floor where the extra per-floor scaling starts.")
-            .defineInRange("spireScaleFrom", 10, 1, 100000);
+            .defineInRange("spireScaleFrom", 3, 1, 100000);
     public static final ModConfigSpec.DoubleValue SPIRE_SCALE_PER_FLOOR = SERVER_BUILDER
             .comment("Extra health and damage per floor past spireScaleFrom (0.06 = +6% per floor, linear).")
             .defineInRange("spireScalePerFloor", 0.06D, 0.0D, 10.0D);
@@ -490,8 +505,8 @@ public final class Config {
             .comment("Highest total multiplier from the per-floor scaling.")
             .defineInRange("spireScaleCap", 50.0D, 1.0D, 100000.0D);
     public static final ModConfigSpec.IntValue SPIRE_BOSS_INTERVAL = SERVER_BUILDER
-            .comment("Every Nth floor is a boss floor with an affix from data/<ns>/khaosnexus_spire_affixes/. 0 = off.")
-            .defineInRange("spireBossInterval", 10, 0, 1000);
+            .comment("The final-level boss of every Nth floor rolls an affix from data/<ns>/khaosnexus_spire_affixes/. 0 = off.")
+            .defineInRange("spireBossInterval", 1, 0, 1000);
     public static final ModConfigSpec.BooleanValue AURAS = SERVER_BUILDER
             .comment("Cosmetic particle auras unlocked by achievements. Auras are datapack files in data/<ns>/khaosnexus_auras/.")
             .define("auras", true);
@@ -514,14 +529,14 @@ public final class Config {
             .comment("SS requires having cleared a Red Gate.")
             .define("ssRequiresRedGate", true);
     public static final ModConfigSpec.IntValue SS_SPIRE = SERVER_BUILDER
-            .comment("SS requires this best Spire floor.")
-            .defineInRange("ssSpireFloor", 50, 0, 100000);
+            .comment("SS requires this many fully cleared Spire floors (10 levels each).")
+            .defineInRange("ssSpireFloor", 5, 0, 100000);
     public static final ModConfigSpec.IntValue SS_RUSH = SERVER_BUILDER
             .comment("SS requires this many boss rush wins.")
             .defineInRange("ssBossRushWins", 1, 0, 1000);
     public static final ModConfigSpec.IntValue NATIONAL_SPIRE = SERVER_BUILDER
-            .comment("National requires this best Spire floor (and SS).")
-            .defineInRange("nationalSpireFloor", 100, 0, 100000);
+            .comment("National requires this many fully cleared Spire floors (and SS).")
+            .defineInRange("nationalSpireFloor", 10, 0, 100000);
     public static final ModConfigSpec.IntValue NATIONAL_RUSH = SERVER_BUILDER
             .comment("National requires this many boss rush wins.")
             .defineInRange("nationalBossRushWins", 3, 0, 1000);
@@ -575,7 +590,7 @@ public final class Config {
             .define("secondAwakening", true);
     public static final ModConfigSpec.ConfigValue<List<? extends String>> AWAKENING_STEPS = SERVER_BUILDER
             .comment("Quest steps after reaching National, in order. Forms: stat:<EndgameKey>:<min>, spire:<floor>, title:<id>.")
-            .defineListAllowEmpty("awakeningSteps", List.of("stat:SSClears:3", "spire:120", "stat:BossRushWins:5"), () -> "spire:120", o -> o instanceof String);
+            .defineListAllowEmpty("awakeningSteps", List.of("stat:SSClears:3", "spire:12", "stat:BossRushWins:5"), () -> "spire:12", o -> o instanceof String);
     public static final ModConfigSpec.BooleanValue GROUP_RAIDS = SERVER_BUILDER
             .comment("Group raids: multi-phase raid bosses for up to groupRaidMaxParty hunters, with tank aggro and healer cleanses. Bosses are datapack files in data/<ns>/khaosnexus_raid_bosses/.")
             .define("groupRaids", true);

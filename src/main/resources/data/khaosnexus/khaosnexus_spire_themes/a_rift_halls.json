@@ -1,0 +1,16 @@
+{
+  "floor": "minecraft:polished_deepslate",
+  "accent": "minecraft:deepslate_tiles",
+  "wall": "minecraft:deepslate_bricks",
+  "pillar": "minecraft:polished_basalt",
+  "light": "minecraft:sea_lantern",
+  "trim": "minecraft:chiseled_deepslate",
+  "rank": "C",
+  "bosses": [
+    "khaosnexus:rift_ghoul",
+    "khaosnexus:rift_stalker",
+    "khaosnexus:void_caster",
+    "khaosnexus:rift_brute"
+  ],
+  "final_boss": "khaosnexus:spire_guardian"
+}

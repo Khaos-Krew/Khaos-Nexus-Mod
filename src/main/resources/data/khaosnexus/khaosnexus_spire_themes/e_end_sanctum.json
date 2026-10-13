@@ -1,0 +1,16 @@
+{
+  "floor": "minecraft:purpur_block",
+  "accent": "minecraft:end_stone_bricks",
+  "wall": "minecraft:purpur_pillar",
+  "pillar": "minecraft:obsidian",
+  "light": "minecraft:pearlescent_froglight",
+  "trim": "minecraft:crying_obsidian",
+  "rank": "S",
+  "bosses": [
+    "minecraft:enderman",
+    "khaosnexus:void_caster",
+    "khaosnexus:rift_stalker",
+    "minecraft:ravager"
+  ],
+  "final_boss": "khaosnexus:spire_guardian"
+}

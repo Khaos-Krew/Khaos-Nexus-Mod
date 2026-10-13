@@ -1,0 +1,81 @@
+{
+  "name": "khaosnexus.vendor.alchemist",
+  "trades": [
+    {
+      "cost": {
+        "item": "khaosnexus:nexus_token",
+        "count": 1
+      },
+      "result": {
+        "item": "minecraft:potion",
+        "potion": "minecraft:strong_healing",
+        "count": 1
+      },
+      "max_uses": 12
+    },
+    {
+      "cost": {
+        "item": "khaosnexus:nexus_token",
+        "count": 1
+      },
+      "result": {
+        "item": "minecraft:splash_potion",
+        "potion": "minecraft:strong_healing",
+        "count": 1,
+        "per_floor": 0.25
+      },
+      "max_uses": 12,
+      "min_floor": 2
+    },
+    {
+      "cost": {
+        "item": "khaosnexus:nexus_token",
+        "count": 2
+      },
+      "result": {
+        "item": "minecraft:potion",
+        "potion": "minecraft:long_strength",
+        "count": 1
+      },
+      "max_uses": 6,
+      "min_rank": "B"
+    },
+    {
+      "cost": {
+        "item": "khaosnexus:nexus_token",
+        "count": 2
+      },
+      "result": {
+        "item": "minecraft:potion",
+        "potion": "minecraft:long_fire_resistance",
+        "count": 1
+      },
+      "max_uses": 6
+    },
+    {
+      "cost": {
+        "item": "khaosnexus:nexus_token",
+        "count": 3
+      },
+      "result": {
+        "item": "minecraft:potion",
+        "potion": "minecraft:strong_regeneration",
+        "count": 1
+      },
+      "max_uses": 6,
+      "min_floor": 3
+    },
+    {
+      "cost": {
+        "item": "minecraft:emerald",
+        "count": 8
+      },
+      "result": {
+        "item": "minecraft:golden_apple",
+        "count": 1,
+        "per_floor": 0.2
+      },
+      "max_uses": 8
+    }
+  ]
+}

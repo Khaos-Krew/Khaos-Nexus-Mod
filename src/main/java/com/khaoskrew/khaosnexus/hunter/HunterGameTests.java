@@ -138,18 +138,23 @@ public class HunterGameTests {
     @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform", timeoutTicks = 80)
     public static void spireFloorAdvancesOnAClear(GameTestHelper helper) {
         ServerPlayer player = helper.makeMockServerPlayerInLevel();
-        HunterRanks.profile(player).spireFloor = 1;
+        HunterProfile profile = HunterRanks.profile(player);
+        SpireService.migrate(profile);
+        profile.spireFloor = 1;
+        profile.endgame.putInt(SpireService.LEVEL_KEY, SpireService.levels());
         BlockPos pos = helper.absolutePos(new BlockPos(0, 4, 0));
         player.teleportTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
-        SpireService.generate(helper.getLevel(), 1, 1);
-        BlockPos bossPos = SpireService.origin(1, 1);
-        var bosses = helper.getLevel().getEntitiesOfClass(com.khaoskrew.khaosnexus.mob.RiftBoss.class, new AABB(bossPos).inflate(8.0D));
-        if (bosses.isEmpty()) {
-            helper.fail("spire guardian did not spawn");
+        var boss = SpireService.generate(helper.getLevel(), 1, SpireService.levels(), 1);
+        if (boss == null) {
+            helper.fail("level guardian did not spawn");
         }
-        bosses.get(0).hurt(player.damageSources().playerAttack(player), 10000.0F);
-        if (HunterRanks.profile(player).spireFloor < 2) {
-            helper.fail("clearing floor 1 did not open floor 2");
+        player.teleportTo(boss.getX(), boss.getY(), boss.getZ() + 2);
+        boss.hurt(player.damageSources().playerAttack(player), 1.0E7F);
+        if (boss.isAlive()) {
+            boss.hurt(player.damageSources().playerAttack(player), 1.0E7F);
+        }
+        if (profile.spireFloor < 2 || profile.spireBest < 1) {
+            helper.fail("clearing the last level of floor 1 did not open floor 2");
         }
         helper.succeed();
     }

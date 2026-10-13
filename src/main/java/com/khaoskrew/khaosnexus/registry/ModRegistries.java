@@ -45,6 +45,18 @@ public final class ModRegistries {
                     .pushReaction(PushReaction.BLOCK)
                     .requiresCorrectToolForDrops());
 
+    public static final DeferredBlock<com.khaoskrew.khaosnexus.spire.SpirePortalBlock> SPIRE_PORTAL = BLOCKS.registerBlock("spire_portal",
+            com.khaoskrew.khaosnexus.spire.SpirePortalBlock::new,
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_PURPLE)
+                    .strength(-1.0F, 3600000.0F)
+                    .noOcclusion()
+                    .noCollission()
+                    .noLootTable()
+                    .lightLevel(state -> 12)
+                    .sound(SoundType.AMETHYST)
+                    .pushReaction(PushReaction.BLOCK));
+
     public static final DeferredBlock<SpireGateBlock> SPIRE_GATE = BLOCKS.registerBlock("spire_gate", SpireGateBlock::new,
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_BLUE)
@@ -77,6 +89,11 @@ public final class ModRegistries {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PersonalLootBlockEntity>> PERSONAL_LOOT_ENTITY =
             BLOCK_ENTITIES.register("personal_loot", () -> BlockEntityType.Builder
                     .of(PersonalLootBlockEntity::new, PERSONAL_LOOT.get())
+                    .build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.khaoskrew.khaosnexus.spire.SpirePortalBlockEntity>> SPIRE_PORTAL_ENTITY =
+            BLOCK_ENTITIES.register("spire_portal", () -> BlockEntityType.Builder
+                    .of(com.khaoskrew.khaosnexus.spire.SpirePortalBlockEntity::new, SPIRE_PORTAL.get())
                     .build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<NexusGateBlockEntity>> NEXUS_GATE_ENTITY =

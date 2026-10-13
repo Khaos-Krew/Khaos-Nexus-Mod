@@ -25,6 +25,7 @@ public final class NexusGateClient {
 
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModRegistries.NEXUS_GATE_ENTITY.get(), context -> new NexusRiftRenderer());
+        event.registerBlockEntityRenderer(ModRegistries.SPIRE_PORTAL_ENTITY.get(), context -> new SpirePortalRenderer());
     }
 
     private static void registerKeys(RegisterKeyMappingsEvent event) {
