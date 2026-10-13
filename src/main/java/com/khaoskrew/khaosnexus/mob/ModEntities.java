@@ -29,7 +29,13 @@ public final class ModEntities {
             () -> EntityType.Builder.<RiftBoss>of(RiftBoss::guardian, MobCategory.MONSTER).sized(1.3F, 4.0F).clientTrackingRange(12)
                     .build(KhaosNexus.MODID + ":spire_guardian"));
 
+    public static final DeferredHolder<EntityType<?>, EntityType<VoidOrb>> VOID_ORB = ENTITIES.register("void_orb",
+            () -> EntityType.Builder.<VoidOrb>of(VoidOrb::new, MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(6).updateInterval(2)
+                    .build(KhaosNexus.MODID + ":void_orb"));
+
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(KhaosNexus.MODID);
+    /** Render-only item for the Void Caster's spell projectile (not in the creative tab). */
+    public static final DeferredItem<Item> VOID_ORB_ITEM = ITEMS.registerSimpleItem("void_orb");
     public static final DeferredItem<DeferredSpawnEggItem> RIFT_GHOUL_EGG = egg("rift_ghoul", RIFT_GHOUL, 0x25252E, 0xC12F41);
     public static final DeferredItem<DeferredSpawnEggItem> RIFT_STALKER_EGG = egg("rift_stalker", RIFT_STALKER, 0x2A1F3C, 0xC23346);
     public static final DeferredItem<DeferredSpawnEggItem> VOID_CASTER_EGG = egg("void_caster", VOID_CASTER, 0x301C35, 0xCA59EE);

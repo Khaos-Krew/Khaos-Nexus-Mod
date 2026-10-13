@@ -59,6 +59,9 @@ public class RiftMob extends Monster implements GeoEntity {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
+        if (this.getType() == ModEntities.VOID_CASTER.get()) {
+            this.goalSelector.addGoal(1, new VoidSpellGoal(this));
+        }
         this.goalSelector.addGoal(2, new WindupMeleeGoal(this));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.8D));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 8.0F));
@@ -105,7 +108,7 @@ public class RiftMob extends Monster implements GeoEntity {
         RawAnimation walk = this.anim("walk", true);
         controllers.add(new AnimationController<>(this, "movement", 6,
                 state -> state.setAndContinue(state.isMoving() ? walk : idle)));
-        AnimationController<RiftMob> action = new AnimationController<>(this, "action", 3, state -> software.bernie.geckolib.animation.PlayState.STOP)
+        AnimationController<RiftMob> action = new AnimationController<>(this, "action", 1, state -> software.bernie.geckolib.animation.PlayState.STOP)
                 .triggerableAnim("attack", this.anim("attack", false));
         if (this instanceof RiftBoss) {
             action.triggerableAnim("roar", this.anim("roar", false));
@@ -121,14 +124,14 @@ public class RiftMob extends Monster implements GeoEntity {
         return this.geoCache;
     }
 
-    /** Ticks from the start of the attack animation to the strike frame, per mob (matches animation.json). */
+    /** Ticks from the start of the attack animation to the impact frame (just before the swing's end keyframe), per mob (matches animation.json). */
     protected int strikeDelay() {
         return switch (EntityType.getKey(this.getType()).getPath()) {
-            case "rift_brute" -> 9;
-            case "void_caster" -> 7;
-            case "rift_warden" -> 12;
-            case "spire_guardian" -> 10;
-            default -> 5;
+            case "rift_brute" -> 11;
+            case "void_caster" -> 9;
+            case "rift_warden" -> 16;
+            case "spire_guardian" -> 14;
+            default -> 7;
         };
     }
 
@@ -191,6 +194,64 @@ public class RiftMob extends Monster implements GeoEntity {
             this.triggerAnim("action", "attack");
         }
         return hit;
+    }
+
+    /** Void Caster: from range, raise the orb (same windup animation + flare) and hurl a void pearl on the impact frame. */
+    static final class VoidSpellGoal extends net.minecraft.world.entity.ai.goal.Goal {
+        private final RiftMob mob;
+        private int cooldown = 20;
+        private int cast;
+
+        VoidSpellGoal(RiftMob mob) {
+            this.mob = mob;
+            this.setFlags(java.util.EnumSet.of(Flag.MOVE, Flag.LOOK));
+        }
+
+        private boolean inRange() {
+            net.minecraft.world.entity.LivingEntity t = this.mob.getTarget();
+            if (t == null || !t.isAlive()) return false;
+            double d = this.mob.distanceToSqr(t);
+            return d > 16.0D && d < 400.0D && this.mob.hasLineOfSight(t);
+        }
+
+        @Override
+        public boolean canUse() {
+            return this.inRange();
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return this.cast > 0 || this.inRange();
+        }
+
+        @Override
+        public boolean requiresUpdateEveryTick() {
+            return true;
+        }
+
+        @Override
+        public void tick() {
+            net.minecraft.world.entity.LivingEntity t = this.mob.getTarget();
+            if (t == null) return;
+            this.mob.getLookControl().setLookAt(t, 30.0F, 30.0F);
+            this.mob.getNavigation().stop();
+            if (this.cast > 0) {
+                if (--this.cast == 0) {
+                    net.minecraft.world.phys.Vec3 from = this.mob.position().add(0, 1.5, 0).add(this.mob.getLookAngle().scale(0.8));
+                    net.minecraft.world.phys.Vec3 dir = t.getEyePosition().subtract(0, 0.4, 0).subtract(from);
+                    VoidOrb orb = new VoidOrb(this.mob.level(), this.mob, dir);
+                    orb.setPos(from);
+                    this.mob.level().addFreshEntity(orb);
+                    this.mob.playSound(net.minecraft.sounds.SoundEvents.ILLUSIONER_CAST_SPELL, 1.0F, 0.7F);
+                }
+            } else if (--this.cooldown <= 0) {
+                this.cooldown = 50 + this.mob.getRandom().nextInt(30);
+                this.cast = this.mob.strikeDelay();
+                this.mob.swing(net.minecraft.world.InteractionHand.MAIN_HAND);
+                this.mob.triggerAnim("action", "attack");
+                this.mob.playSound(net.minecraft.sounds.SoundEvents.EVOKER_PREPARE_ATTACK, 0.8F, 1.3F);
+            }
+        }
     }
 
     /** Melee goal that plays the windup first and lets the strike frame deal the damage. */

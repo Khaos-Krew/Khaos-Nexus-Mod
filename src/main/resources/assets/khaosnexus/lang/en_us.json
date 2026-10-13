@@ -137,5 +137,7 @@
   "entity.khaosnexus.rift_warden": "Khaos Warden of the Rift",
   "item.khaosnexus.rift_warden_spawn_egg": "Khaos Warden of the Rift Spawn Egg",
   "entity.khaosnexus.spire_guardian": "Spire Guardian",
-  "item.khaosnexus.spire_guardian_spawn_egg": "Spire Guardian Spawn Egg"
+  "item.khaosnexus.spire_guardian_spawn_egg": "Spire Guardian Spawn Egg",
+  "item.khaosnexus.void_orb": "Void Orb",
+  "entity.khaosnexus.void_orb": "Void Orb"
 }

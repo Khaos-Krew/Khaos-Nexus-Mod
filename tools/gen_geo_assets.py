@@ -667,9 +667,11 @@ def anim_set(name, d, rig):
                'jaw': [(0, [0, 0, 0]), (0.3, [30, 0, 0]), (0.7, [0, 0, 0])]}; L = 0.8
     # follow-through layer: anticipation lean, weight shift onto the front foot at the strike frame,
     # overshoot on recovery, and cloth/chains lagging behind the motion.
-    TS = {'rift_brute': 0.45, 'void_caster': 0.35, 'rift_warden': 0.6, 'spire_guardian': 0.5}.get(name, 0.25)
+    # windup peak (arms fully raised) and impact frame (swing lands); RiftMob.strikeDelay() must match the impact
+    TP = {'rift_brute': 0.45, 'void_caster': 0.35, 'rift_warden': 0.6, 'spire_guardian': 0.5}.get(name, 0.25)
+    TS = {'rift_brute': 0.6, 'void_caster': 0.5, 'rift_warden': 0.85, 'spire_guardian': 0.75}.get(name, 0.4)
     def arc(a_w, a_s, a_o):
-        return [(0, [0, 0, 0]), (TS * 0.8, a_w), (TS, a_s), (TS + (L - TS) * 0.45, a_o), (L, [0, 0, 0])]
+        return [(0, [0, 0, 0]), (TP, a_w), (TS, a_s), (TS + (L - TS) * 0.45, a_o), (L, [0, 0, 0])]
     extra = {'torso': arc([-8, 0, 0], [12, 0, 0], [-3, 0, 0]),
              'right_leg': arc([8, 0, 0], [-22, 0, 0], [-6, 0, 0]), 'left_leg': arc([-6, 0, 0], [14, 0, 0], [4, 0, 0]),
              'right_shin': arc([4, 0, 0], [18, 0, 0], [5, 0, 0]),

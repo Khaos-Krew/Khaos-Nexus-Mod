@@ -12,6 +12,7 @@ public final class RiftMobClient {
     }
 
     public static void renderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(ModEntities.VOID_ORB.get(), c -> new net.minecraft.client.renderer.entity.ThrownItemRenderer<>(c, 1.6F, true));
         event.registerEntityRenderer(ModEntities.RIFT_GHOUL.get(), c -> new RiftMobRenderer(c, "rift_ghoul", 0.5F));
         event.registerEntityRenderer(ModEntities.RIFT_STALKER.get(), c -> new RiftMobRenderer(c, "rift_stalker", 0.5F));
         event.registerEntityRenderer(ModEntities.VOID_CASTER.get(), c -> new RiftMobRenderer(c, "void_caster", 0.55F));

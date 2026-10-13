@@ -331,9 +331,13 @@ def install(G):
         r.bone('orb_orbit', 'root', (0, 22, 0))
         oy, oz = 22, -11
         r.bone('orb', 'orb_orbit', (0, oy, oz))
-        B('orb', (0, oy, oz), (4, 4, 4), 'orb')
-        for sz in ((5, 3, 3), (3, 5, 3), (3, 3, 5)): B('orb', (0, oy, oz), sz, 'orb')
-        B('orb', (0, oy, oz), (5.2, 5.2, 5.2), 'orbshell')
+        R = 2.9                                            # stepped sphere: horizontal slabs, each a cross + a 45deg-rotated octagon
+        for k_ in range(-3, 4):
+            yy = k_ * 0.8; rr = math.sqrt(max(R * R - yy * yy, 0.5)); w = 2 * rr; h = 0.82
+            B('orb', (0, oy + yy, oz), (w, h, w * 0.42), 'orb'); B('orb', (0, oy + yy, oz), (w * 0.42, h, w), 'orb')
+            B('orb', (0, oy + yy, oz), (w * 0.72, h, w * 0.72), 'orb', rot=(0, 45, 0))
+        for rx, ry in ((45, 0), (0, 45), (45, 45)):         # translucent rotated shells round off the corners
+            B('orb', (0, oy, oz), (4.9, 4.9, 4.9), 'orbshell', rot=(rx, ry, 0))
         r.bone('orb_band', 'orb', (0, oy, oz), (20, 0, 15))
         for i in range(10):
             a_ = 2 * math.pi * i / 10
@@ -384,7 +388,7 @@ def install(G):
             B(prev, (x, hy + 1.6, 0), (4.2, 1.4, 4.2), 'guard')                                    # wrist shackle
             for k_ in range(5):
                 cn = f'{side}_chain{k_}'
-                r.bone(cn, prev, (x, y, 0), (0, 0, 0))
+                r.bone(cn, prev, (x, y, 0), (55, 0, sgn * 22) if k_ == 0 else (0, 0, 0))   # cancel arm pose so links hang
                 B(cn, (x, y - 1.0, 0), (0.6 if k_ % 2 else 1.2, 2.1, 1.2 if k_ % 2 else 0.6), 'guard')
                 prev = cn; y -= 2.0
             bn = f'{side}_chainblade'; r.bone(bn, prev, (x, y, 0), (0, 0, 0))
