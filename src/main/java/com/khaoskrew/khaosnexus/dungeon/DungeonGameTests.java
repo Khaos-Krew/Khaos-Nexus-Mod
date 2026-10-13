@@ -52,4 +52,35 @@ public class DungeonGameTests {
             helper.assertTrue(again.slot() <= lease.slot(), "freed slot was not reused");
         });
     }
+
+    /** Themes load from data, Create's theme stays out without Create, and a themed build is reskinned. */
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform", timeoutTicks = 2400)
+    public static void themesLoadPickAndReskin(GameTestHelper helper) {
+        var ids = DungeonThemes.all().stream().map(t -> t.id().getPath()).toList();
+        helper.assertTrue(ids.contains("rift_bastion") && ids.contains("frostbound_crypt") && ids.contains("overgrown_ruin"), "themes missing: " + ids);
+        DungeonThemes.Theme subway = DungeonThemes.get(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "create_subway"));
+        helper.assertTrue(subway == null || !subway.available(), "Create theme offered without Create");
+        ServerLevel level = helper.getLevel();
+        for (int i = 0; i < 40; i++) {
+            var picked = DungeonThemes.pick(level, helper.absolutePos(BlockPos.ZERO), GateRank.C, level.getRandom());
+            helper.assertTrue(!picked.getPath().equals("create_subway"), "rolled the Create theme");
+        }
+        ServerLevel found = DungeonService.level(level.getServer());
+        ServerLevel dungeon = found != null ? found : level;
+        DungeonInstances.Lease lease = DungeonService.allocate(dungeon);
+        var frost = net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "frostbound_crypt");
+        DungeonService.Layout layout = DungeonService.build(dungeon, GateRank.E, lease.origin(), dungeon.getRandom(), frost);
+        helper.assertTrue(layout != null && layout.boss() != null, "frostbound build failed");
+        int ice = 0;
+        int old = 0;
+        for (BlockPos p : BlockPos.betweenClosed(layout.box().minX(), layout.box().minY(), layout.box().minZ(),
+                layout.box().maxX(), layout.box().maxY(), layout.box().maxZ())) {
+            var b = dungeon.getBlockState(p);
+            if (b.is(net.minecraft.world.level.block.Blocks.PACKED_ICE)) ice++;
+            if (b.is(net.minecraft.world.level.block.Blocks.POLISHED_BLACKSTONE_BRICKS)) old++;
+        }
+        DungeonService.release(dungeon, lease, layout.box());
+        helper.assertTrue(ice > 50 && old == 0, "palette not applied: ice=" + ice + " blackstone=" + old);
+        helper.succeed();
+    }
 }

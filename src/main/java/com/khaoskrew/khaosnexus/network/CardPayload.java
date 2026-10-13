@@ -27,10 +27,10 @@ public record CardPayload(List<Gate> gates, int radius, List<ForgeLine> forge) i
     }
 
     /** state: 0 open, 1 active, 2 cleared. */
-    public record Gate(String rank, BlockPos pos, int distance, int state) {
+    public record Gate(String rank, BlockPos pos, int distance, int state, String theme) {
         public static final StreamCodec<RegistryFriendlyByteBuf, Gate> CODEC = StreamCodec.composite(
                 ByteBufCodecs.STRING_UTF8, Gate::rank, BlockPos.STREAM_CODEC, Gate::pos,
-                ByteBufCodecs.VAR_INT, Gate::distance, ByteBufCodecs.VAR_INT, Gate::state, Gate::new);
+                ByteBufCodecs.VAR_INT, Gate::distance, ByteBufCodecs.VAR_INT, Gate::state, ByteBufCodecs.STRING_UTF8, Gate::theme, Gate::new);
     }
 
     public static final Type<CardPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "hunter_card"));

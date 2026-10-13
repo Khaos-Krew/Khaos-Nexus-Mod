@@ -21,6 +21,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -121,7 +122,14 @@ public final class KhaosCommands {
                                         return 0;
                                     }
                                     var lease = com.khaoskrew.khaosnexus.dungeon.DungeonService.allocate(dungeon);
-                                    var layout = com.khaoskrew.khaosnexus.dungeon.DungeonService.build(dungeon, rank, lease.origin(), player.getRandom());
+                                    String[] words = com.mojang.brigadier.arguments.StringArgumentType.getString(context, "rank").split(" ");
+                                    ResourceLocation themeId = null;
+                                    for (int w = 1; w < words.length; w++) {
+                                        if (!words[w].equals("cutaway")) {
+                                            themeId = ResourceLocation.parse(words[w].contains(":") ? words[w] : "khaosnexus:" + words[w]);
+                                        }
+                                    }
+                                    var layout = com.khaoskrew.khaosnexus.dungeon.DungeonService.build(dungeon, rank, lease.origin(), player.getRandom(), themeId);
                                     if (layout == null) {
                                         return 0;
                                     }

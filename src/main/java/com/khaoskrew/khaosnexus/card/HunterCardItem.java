@@ -87,7 +87,7 @@ public class HunterCardItem extends Item {
                         if (d <= radius) {
                             boolean closed = gate.isClosed() || gate.getBlockState().getValue(NexusGateBlock.CLOSED);
                             out.add(new CardPayload.Gate(gate.getRank().name(), p, (int) Math.round(d),
-                                    closed ? 2 : gate.isActive() ? 1 : 0));
+                                    closed ? 2 : gate.isActive() ? 1 : 0, com.khaoskrew.khaosnexus.dungeon.DungeonThemes.nameKey(gate.getTheme())));
                         }
                     }
                 }

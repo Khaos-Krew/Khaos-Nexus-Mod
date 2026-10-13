@@ -213,5 +213,9 @@
   "khaosnexus.card.forge_core": ", %s core",
   "curios.identifier.hunter_card": "Hunter Card",
   "key.khaosnexus.card": "Open Hunter Card",
-  "khaosnexus.card.none_equipped": "No Hunter Card in your inventory or card slot."
+  "khaosnexus.card.none_equipped": "No Hunter Card in your inventory or card slot.",
+  "theme.khaosnexus.rift_bastion": "Rift Bastion",
+  "theme.khaosnexus.frostbound_crypt": "Frostbound Crypt",
+  "theme.khaosnexus.overgrown_ruin": "Overgrown Ruin",
+  "theme.khaosnexus.create_subway": "Abandoned Subway"
 }

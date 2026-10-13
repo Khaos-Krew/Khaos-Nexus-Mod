@@ -190,6 +190,21 @@ public final class Config {
             .comment("Opening a gate teleports the party into a generated dungeon in khaosnexus:gate_dungeon.",
                     "Killing the boss clears the gate. When false, gates spawn their wave around the gate block instead.")
             .define("gateDungeons", true);
+    public static final ModConfigSpec.BooleanValue THEMES_ENABLED = SERVER_BUILDER
+            .comment("Dungeon themes (data/<ns>/khaosnexus_dungeon_theme). Off = every dungeon is Rift Bastion.")
+            .define("dungeonThemes", true);
+    public static final ModConfigSpec.DoubleValue THEME_BIOME_INFLUENCE = SERVER_BUILDER
+            .comment("How strongly a gate's biome weights the theme roll. 0 = pure weighted random, 1 = the multipliers in the theme files.")
+            .defineInRange("dungeonThemeBiomeInfluence", 1.0D, 0.0D, 4.0D);
+    public static final ModConfigSpec.ConfigValue<String> THEME_FIXED = SERVER_BUILDER
+            .comment("Force every new gate to this theme id (e.g. khaosnexus:frostbound_crypt). Empty = roll.")
+            .define("dungeonThemeFixed", "");
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> THEMES_DISABLED = SERVER_BUILDER
+            .comment("Theme ids never rolled.")
+            .defineListAllowEmpty("dungeonThemesDisabled", List.of(), () -> "khaosnexus:overgrown_ruin", o -> o instanceof String);
+    public static final ModConfigSpec.BooleanValue THEME_HAZARDS = SERVER_BUILDER
+            .comment("Theme environmental hazards (chill, heat, ...). Hook only for now; keep off.")
+            .define("dungeonThemeHazards", false);
 
     public static final ModConfigSpec.ConfigValue<List<? extends String>> DUNGEON_BOSSES = SERVER_BUILDER
             .comment("Boss mob per gate rank, in order E, D, C, B, A, S.")

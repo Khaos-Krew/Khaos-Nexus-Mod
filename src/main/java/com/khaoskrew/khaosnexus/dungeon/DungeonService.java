@@ -87,9 +87,23 @@ public final class DungeonService {
 
     @Nullable
     public static Layout build(ServerLevel level, GateRank rank, BlockPos origin, RandomSource random) {
+        return build(level, rank, origin, random, null);
+    }
+
+    @Nullable
+    public static Layout build(ServerLevel level, GateRank rank, BlockPos origin, RandomSource random, @Nullable ResourceLocation themeId) {
+        DungeonThemes.Theme theme = DungeonThemes.get(themeId);
         var registry = level.registryAccess().registryOrThrow(Registries.TEMPLATE_POOL);
-        Optional<Holder.Reference<StructureTemplatePool>> start = registry.getHolder(ResourceKey.create(Registries.TEMPLATE_POOL,
-                ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "dungeon/" + tier(rank) + "/start")));
+        ResourceLocation startId = ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "dungeon/" + tier(rank) + "/start");
+        if (theme != null && theme.pools().containsKey(tier(rank))) {
+            ResourceLocation own = theme.pools().get(tier(rank));
+            if (registry.containsKey(own)) {
+                startId = own;
+            } else {
+                KhaosNexus.LOGGER.warn("Theme {} pool {} is missing; using the default pieces", theme.id(), own);
+            }
+        }
+        Optional<Holder.Reference<StructureTemplatePool>> start = registry.getHolder(ResourceKey.create(Registries.TEMPLATE_POOL, startId));
         if (start.isEmpty()) {
             KhaosNexus.LOGGER.error("Dungeon start pool for {} is missing", tier(rank));
             return null;
@@ -135,6 +149,9 @@ public final class DungeonService {
         }
         if (box == null) {
             return null;
+        }
+        if (theme != null) {
+            DungeonThemes.apply(level, theme, box, random);
         }
         BlockPos spawn = null;
         BlockPos boss = null;
@@ -283,7 +300,7 @@ public final class DungeonService {
             for (int z = box.minZ(); z <= box.maxZ(); z++) {
                 for (int y = box.maxY(); y >= box.minY(); y--) {
                     if (!level.getBlockState(c.set(x, y, z)).isAir()) {
-                        if (level.getBlockState(c).is(Blocks.DEEPSLATE_BRICKS)) {
+                        if (!level.getBlockState(c).is(Blocks.LIGHT)) { // roof block, whatever the theme made it
                             level.setBlock(c, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
                         }
                         break;

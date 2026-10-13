@@ -35,6 +35,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 
 public class NexusGateBlockEntity extends BlockEntity implements software.bernie.geckolib.animatable.GeoBlockEntity {
@@ -68,6 +69,20 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
 
     /** Game time the gate first ticked (0 = not yet). Drives the client crack-open animation. */
     public long bornAt;
+    /** Dungeon theme rolled once for this gate (null until the first server tick). */
+    @Nullable
+    private ResourceLocation theme;
+
+    @Nullable
+    public ResourceLocation getTheme() {
+        return this.theme;
+    }
+
+    public void setTheme(@Nullable ResourceLocation theme) {
+        this.theme = theme;
+        this.setChanged();
+        this.sync();
+    }
     /** Client only: closed state seen last frame and when it flipped, for the collapse animation. */
     public Boolean clientLastClosed;
     public long clientClosedAt = Long.MIN_VALUE;
@@ -161,7 +176,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
             return InteractionResult.FAIL;
         }
         var lease = com.khaoskrew.khaosnexus.dungeon.DungeonService.allocate(dungeon);
-        var layout = com.khaoskrew.khaosnexus.dungeon.DungeonService.build(dungeon, this.rank, lease.origin(), server.getRandom());
+        var layout = com.khaoskrew.khaosnexus.dungeon.DungeonService.build(dungeon, this.rank, lease.origin(), server.getRandom(), this.theme);
         if (layout == null) {
             com.khaoskrew.khaosnexus.dungeon.DungeonService.release(dungeon, lease, null);
             player.displayClientMessage(Component.translatable("khaosnexus.gate.spawn_failed"), false);
@@ -220,6 +235,11 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
     }
 
     private void tickServer(ServerLevel level) {
+        if (this.theme == null && this.rankAssigned) {
+            this.theme = com.khaoskrew.khaosnexus.dungeon.DungeonThemes.pick(level, this.getBlockPos(), this.rank, level.getRandom());
+            this.setChanged();
+            this.sync();
+        }
         if (this.bornAt == 0L) { // first tick of a new gate: clients play the crack-open animation from here
             this.bornAt = level.getGameTime();
             this.setChanged();
@@ -426,6 +446,9 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.putLong("BornAt", this.bornAt);
+        if (this.theme != null) {
+            tag.putString("Theme", this.theme.toString());
+        }
         tag.putString("Rank", this.rank.name());
         tag.putBoolean("RankAssigned", this.rankAssigned);
         tag.putBoolean("Active", this.active);
@@ -458,6 +481,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         this.bornAt = tag.getLong("BornAt");
+        this.theme = tag.contains("Theme") ? ResourceLocation.tryParse(tag.getString("Theme")) : null;
         this.rank = GateRank.byName(tag.getString("Rank"));
         this.rankAssigned = tag.getBoolean("RankAssigned");
         this.active = tag.getBoolean("Active");

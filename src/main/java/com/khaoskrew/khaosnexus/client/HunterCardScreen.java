@@ -187,7 +187,7 @@ public class HunterCardScreen extends Screen {
             return;
         }
         int row = y + 16;
-        for (int i = this.scroll; i < Math.min(this.gates.size(), this.scroll + 12); i++) {
+        for (int i = this.scroll; i < Math.min(this.gates.size(), this.scroll + 8); i++) {
             CardPayload.Gate gate = this.gates.get(i);
             GateRank r = GateRank.byName(gate.rank());
             int color = 0xFF000000 | r.color();
@@ -197,7 +197,8 @@ public class HunterCardScreen extends Screen {
             g.drawString(this.font, Component.translatable("khaosnexus.card.distance", gate.distance()), x + 150, row + 1, 0xFFD0C0E0, false);
             g.drawString(this.font, Component.translatable("khaosnexus.card.state." + gate.state()), x + 210, row + 1,
                     gate.state() == 2 ? 0xFF7A8A7A : gate.state() == 1 ? 0xFFFF6070 : 0xFFB44BE6, false);
-            row += 12;
+            g.drawString(this.font, Component.translatable(gate.theme()), x + 26, row + 11, 0xFF9C8CB0, false);
+            row += 23;
         }
     }
 
