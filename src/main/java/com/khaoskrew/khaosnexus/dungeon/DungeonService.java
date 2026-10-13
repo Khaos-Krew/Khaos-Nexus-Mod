@@ -217,7 +217,8 @@ public final class DungeonService {
         }
         List<? extends String> bosses = Config.DUNGEON_BOSSES.get();
         String id = bosses.isEmpty() ? "khaosnexus:rift_brute" : bosses.get(Math.min(rank.ordinal(), bosses.size() - 1));
-        EntityType<?> type = EntityType.byString(id).orElse(com.khaoskrew.khaosnexus.mob.ModEntities.RIFT_BRUTE.get());
+        EntityType<?> type = com.khaoskrew.khaosnexus.compat.CompatPools.boss(rank, random)
+                .orElseGet(() -> EntityType.byString(id).orElse(com.khaoskrew.khaosnexus.mob.ModEntities.RIFT_BRUTE.get()));
         boolean custom = type.builtInRegistryHolder().key().location().getPath().startsWith("rift_brute");
         Mob boss = GateArena.spawnMob(level, rank, type, layout.boss(), 180.0F, custom ? 3.0D : 1.0D);
         if (boss != null) {

@@ -8,7 +8,7 @@ import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 /**
- * Presence checks for companion mods. Nothing here calls those mods' APIs.
+ * Presence checks for companion mods. Nothing here calls those mods' APIs; integrations look up attributes, entities and tags by id at runtime.
  */
 public final class SoftCompat {
     public record Hook(String modId, String label, ModConfigSpec.BooleanValue toggle) {
@@ -32,13 +32,14 @@ public final class SoftCompat {
     }
 
     public static final Hook ARS = new Hook("ars_nouveau", "Ars Nouveau", Config.COMPAT_ARS);
+    public static final Hook IRONS = new Hook("irons_spellbooks", "Iron's Spells 'n Spellbooks", Config.COMPAT_IRONS);
     public static final Hook APOTHEOSIS = new Hook("apotheosis", "Apotheosis", Config.COMPAT_APOTHEOSIS);
     public static final Hook FTB_TEAMS = new Hook("ftbteams", "FTB Teams", Config.COMPAT_FTB_TEAMS);
     public static final Hook FTB_CHUNKS = new Hook("ftbchunks", "FTB Chunks", Config.COMPAT_FTB_CHUNKS);
     public static final Hook FTB_QUESTS = new Hook("ftbquests", "FTB Quests", Config.COMPAT_FTB_QUESTS);
     public static final Hook CURIOS = new Hook("curios", "Curios", Config.COMPAT_CURIOS);
 
-    public static final Hook[] HOOKS = {ARS, APOTHEOSIS, FTB_TEAMS, FTB_CHUNKS, FTB_QUESTS, CURIOS};
+    public static final Hook[] HOOKS = {ARS, IRONS, APOTHEOSIS, FTB_TEAMS, FTB_CHUNKS, FTB_QUESTS, CURIOS};
 
     private SoftCompat() {}
 

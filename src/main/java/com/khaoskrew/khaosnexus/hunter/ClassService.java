@@ -50,6 +50,7 @@ public final class ClassService {
             player.setHealth(player.getMaxHealth());
         }
         profile.classId = hunterClass.id();
+        com.khaoskrew.khaosnexus.compat.ClassCompat.apply(player, hunterClass);
         com.khaoskrew.khaosnexus.compat.ProgressHooks.classSelected(player, hunterClass.id());
         profile.swapReady = now + Config.CLASS_SWAP_COOLDOWN.get();
         HunterRanks.sync(player);
@@ -74,6 +75,7 @@ public final class ClassService {
     public static void reapply(ServerPlayer player) {
         HunterClass hunterClass = equipped(player);
         clearPassives(player);
+        com.khaoskrew.khaosnexus.compat.ClassCompat.apply(player, hunterClass);
         if (hunterClass == null) {
             return;
         }

@@ -24,6 +24,7 @@ public class KhaosNexus {
         modEventBus.addListener(this::commonSetup);
         ModRegistries.register(modEventBus);
         com.khaoskrew.khaosnexus.card.HunterCard.register(modEventBus);
+        com.khaoskrew.khaosnexus.material.MaterialLootModifier.SERIALIZERS.register(modEventBus);
         com.khaoskrew.khaosnexus.mob.ModEntities.register(modEventBus);
         ModAttachments.ATTACHMENT_TYPES.register(modEventBus);
         com.khaoskrew.khaosnexus.compat.ProgressHooks.register(modEventBus);

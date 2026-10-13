@@ -132,6 +132,13 @@ public final class GateArena {
                 KhaosNexus.LOGGER.warn("Nexus Gate reward item {} is not a registered item", itemId);
             }
         }
+        java.util.List<ItemStack> extras = new java.util.ArrayList<>(com.khaoskrew.khaosnexus.material.MaterialTiers.roll(rank, level.getRandom()));
+        extras.addAll(com.khaoskrew.khaosnexus.compat.CompatPools.loot(rank, level.getRandom()));
+        for (ItemStack material : extras) {
+            ItemEntity drop = new ItemEntity(level, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, material);
+            drop.setDefaultPickUpDelay();
+            level.addFreshEntity(drop);
+        }
         int xp = tuning.rewardXp.get();
         if (xp > 0) {
             ExperienceOrb.award(level, Vec3.atCenterOf(pos).add(0.0D, 0.5D, 0.0D), xp);

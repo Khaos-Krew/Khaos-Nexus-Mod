@@ -223,8 +223,29 @@ public final class Config {
     }
 
     public static final ModConfigSpec.BooleanValue COMPAT_ARS = SERVER_BUILDER
-            .comment("Ars Nouveau. Detection only.")
+            .comment("Ars Nouveau: Caster, Lifebinder, Summoner and Necromancer gain Ars spell damage and mana; Wilden bosses join gate boss pools.")
             .define("arsNouveau", true);
+    public static final ModConfigSpec.BooleanValue COMPAT_IRONS = SERVER_BUILDER
+            .comment("Iron's Spells 'n Spellbooks: light support. Caster, Lifebinder, Summoner and Necromancer scale its spell power schools.")
+            .define("ironsSpells", true);
+    public static final ModConfigSpec.BooleanValue COMPAT_BOSS_MODS = SERVER_BUILDER
+            .comment("Let installed boss mods (for example Cataclysm or Mowzie's Mobs) join dungeon boss pools from optionalBosses.")
+            .define("bossMods", true);
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> OPTIONAL_BOSSES = SERVER_BUILDER
+            .comment("RANK=entity_id entries. Used only when that entity exists; each dungeon of that rank has bossModChance to use one.")
+            .defineListAllowEmpty("optionalBosses", List.of(
+                    "B=mowziesmobs:ferrous_wroughtnaut", "B=mowziesmobs:umvuthi", "A=mowziesmobs:frostmaw",
+                    "A=ars_nouveau:wilden_boss", "A=cataclysm:ender_guardian", "S=cataclysm:ignis", "S=cataclysm:the_harbinger",
+                    "S=cataclysm:netherite_monstrosity"), () -> "S=modid:boss", o -> o instanceof String str && str.contains("="));
+    public static final ModConfigSpec.DoubleValue BOSS_MOD_CHANCE = SERVER_BUILDER
+            .comment("Chance a dungeon uses an optional boss when one is available for its rank.")
+            .defineInRange("bossModChance", 0.35D, 0.0D, 1.0D);
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> OPTIONAL_LOOT = SERVER_BUILDER
+            .comment("RANK=item_id or RANK=#tag entries added to gate rewards when present (accessory mods, relics and so on).",
+                    "Each entry is rolled with a 20% chance per clear at that rank or higher.")
+            .defineListAllowEmpty("optionalLoot", List.of(
+                    "B=#curios:charm", "A=#curios:ring", "A=#curios:necklace", "S=#curios:belt"),
+                    () -> "A=modid:item", o -> o instanceof String str && str.contains("="));
     public static final ModConfigSpec.BooleanValue COMPAT_APOTHEOSIS = SERVER_BUILDER
             .comment("Apotheosis. Detection only.")
             .define("apotheosis", true);
@@ -240,6 +261,31 @@ public final class Config {
     public static final ModConfigSpec.BooleanValue COMPAT_CURIOS = SERVER_BUILDER
             .comment("Curios. Detection only.")
             .define("curios", true);
+
+    static {
+        SERVER_BUILDER.pop();
+    }
+
+    static {
+        SERVER_BUILDER.comment("Material tiers: modded ores and ingots scale gate rewards by rank.",
+                "Datapacks map item tags to ranks in data/<namespace>/khaosnexus_material_tiers/*.json.").push("materials");
+    }
+
+    public static final ModConfigSpec.BooleanValue MATERIAL_LOOT = SERVER_BUILDER
+            .comment("Add tiered materials to gate rewards and dungeon chests.")
+            .define("tieredLoot", true);
+
+    public static final ModConfigSpec.BooleanValue MATERIAL_AUTO_DETECT = SERVER_BUILDER
+            .comment("Pick up every other c:ingots/* tag in the pack at autoRank, so unlisted modded metals still drop.")
+            .define("autoDetectIngots", true);
+
+    public static final ModConfigSpec.ConfigValue<String> MATERIAL_AUTO_RANK = SERVER_BUILDER
+            .comment("Rank for auto-detected ingots (E, D, C, B, A or S).")
+            .define("autoRank", "C");
+
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> MATERIAL_TIER_OVERRIDES = SERVER_BUILDER
+            .comment("Extra RANK=tag entries, for example \"S=c:ingots/my_metal\". Added on top of the datapack tiers.")
+            .defineListAllowEmpty("tierOverrides", List.of(), () -> "C=c:ingots/example", o -> o instanceof String str && str.contains("="));
 
     static {
         SERVER_BUILDER.pop();
@@ -262,7 +308,7 @@ public final class Config {
         SERVER_BUILDER.pop();
     }
 
-    static final ModConfigSpec SERVER_SPEC = SERVER_BUILDER.build();
+    public static final ModConfigSpec SERVER_SPEC = SERVER_BUILDER.build();
 
     private Config() {}
 
