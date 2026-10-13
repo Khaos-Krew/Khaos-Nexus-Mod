@@ -123,6 +123,27 @@ def rig_brute():
     return r, d
 
 SWORD_TILT = -10
+GRIP_TILT = -40   # sword held up and out in guard: handle across the forearm
+
+def grip_fist(r, hand, c, rot, w, s, fist='fist', finger='gauntlet', stud='crown', name=None):
+    """Closed fist built around a weapon grip. The grip runs along the grip bone's local +y; the bone is
+    rotated so the handle sits across the forearm (like a real grip), not along it. Clears the hand's old cubes,
+    keeps an axis-aligned wrist cuff, and returns the grip bone (parent the weapon to it, built along +y at c)."""
+    x, y, z = c
+    r.bones[hand]['cubes'] = []
+    hy = r.bones[hand]['pivot'][1]
+    r.box(hand, (x, hy - 1.0, 0), (w + 0.8, 2.0, w + 0.8), finger)                     # wrist cuff
+    g = r.bone(name or hand.replace('hand', 'grip'), hand, (x, y, z), rot)
+    B = r.box; L = w * 0.8
+    B(g, (x, y, z), (w * 0.8, L, w * 0.9), fist)                                         # palm / back of hand
+    B(g, (x + s * w * 0.42, y, z + w * 0.05), (w * 0.22, L * 0.9, w * 0.7), finger)       # back-of-hand plate (outer)
+    for i in range(4):                                                                   # four fingers curled over the grip
+        fy = y - L * 0.375 + i * L * 0.25
+        B(g, (x, fy, z - w * 0.5), (w * 0.86, L * 0.21, w * 0.2), finger)                # finger across the front
+        B(g, (x - s * w * 0.44, fy, z - w * 0.2), (w * 0.2, L * 0.21, w * 0.55), finger)  # finger tip tucked on the inner side
+        B(g, (x + s * w * 0.44, fy, z - w * 0.5), (w * 0.14, w * 0.14, w * 0.14), stud)   # knuckle
+    B(g, (x - s * w * 0.3, y + L * 0.5, z - w * 0.3), (w * 0.3, w * 0.25, w * 0.55), finger)  # thumb over the top of the grip
+    return g
 def rig_warden():
     """Khaos Warden of the Rift (v4, hand-laid): layered plate armour, flared pauldrons, horned crowned helm,
     fanged visor, segmented gauntlets with fingers, tattered cape, tapered greatsword."""
@@ -214,8 +235,9 @@ def rig_warden():
         for (yy, h, w) in ((56, 6, 6), (61.5, 5, 4), (66, 4, 2)):
             B(bone, (x, g + yy, z), (2.0, h, w), 'greatblade')
     x = -15
-    r.bone('sword', 'right_hand', (x, 29, -0.5), (SWORD_TILT, 0, 6))
-    sword_parts('sword', x, 29, -0.5)
+    gb = grip_fist(r, 'right_hand', (x, 28.5, 0), (GRIP_TILT, 0, 0), 8.4, -1)
+    r.bone('sword', gb, (x, 28.5, 0))
+    sword_parts('sword', x, 28.5, 0)
     # sheathed on the back: grip over the right shoulder, tip toward the left hip
     BACK_Z = 12.5; g = 52 - 30
     r.bone('scabbard', 'chest', (0, 52, BACK_Z), (0, 0, 145))
@@ -227,8 +249,6 @@ def rig_warden():
     sword_parts('sword_back', 0, g, BACK_Z)
     B('chest', (0, 52, -6.6), (3, 30, 1), 'belt', rot=(0, 0, 38)); B('chest', (0, 52, 7.6), (3, 30, 1), 'belt', rot=(0, 0, -38))
     B('chest', (0, 52, -7.2), (3.4, 3.4, 0.8), 'guard')
-    for s_ in (-1, 1):  # fist wraps around the grip
-        B('right_hand', (x, 29, -0.5 + s_ * 1.6), (6.4, 4.8, 0.9), 'gauntlet')
     d = dict(L=30, th=30, hs=16, sy=58, ny=60, sx=15, aw=10, ah=30, tw=20, td=10, hand_y=26)
     return r, d
 

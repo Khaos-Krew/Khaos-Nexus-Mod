@@ -52,12 +52,14 @@ def install(G):
         B('jaw', (0, ny + 1.2, -0.6), (5.6, 1.6, 5), 'jaw')
         for xx in (-1.8, -0.6, 0.6, 1.8): B('jaw', (xx, ny + 2.2, -2.9), (0.6, 0.8, 0.5), 'claw')
         # rusted cleaver in the right hand (blade points forward/down like the vanilla held pose)
-        xr = -5; r.bone('cleaver', 'right_hand', (xr, hy - 1.2, 0))
-        B('cleaver', (xr, hy - 1.2, 0), (1.2, 1.2, 4), 'grip')
-        B('cleaver', (xr, hy - 1.2, -2.6), (1.8, 0.8, 1.2), 'guard')
-        B('cleaver', (xr, hy - 0.2, -7.2), (0.5, 4.2, 8), 'blade')
-        B('cleaver', (xr, hy + 1.8, -7.2), (0.7, 0.6, 8.2), 'trim')
-        for i in range(3): B('cleaver', (xr, hy - 2.2, -4.6 - i * 2.6), (0.6, 0.6, 1.0), 'rune')
+        xr = -5; g = hy - 1.2   # cleaver: handle across the fist, blade forward
+        gb = G.grip_fist(r, 'right_hand', (xr, g, 0), (-80, 0, 0), 3.0, -1, fist='rib', finger='claw', stud='claw')
+        r.bone('cleaver', gb, (xr, g, 0))
+        B('cleaver', (xr, g - 0.6, 0), (1.1, 4.6, 1.1), 'grip')
+        B('cleaver', (xr, g + 2.0, 0), (2.0, 0.8, 1.6), 'guard')
+        B('cleaver', (xr, g + 6.6, 1.0), (0.5, 8.2, 4.2), 'blade')      # blade below the spine
+        B('cleaver', (xr, g + 6.6, -1.2), (0.7, 8.4, 0.6), 'trim')      # thick spine
+        for i in range(3): B('cleaver', (xr, g + 4.2 + i * 2.6, 2.9), (0.6, 1.0, 0.6), 'rune')
         # soul fire wisps in the chest cavity
         r.bone('soul', 'chest', (0, 20, 0)); B('soul', (0, 20, 0), (2, 2, 2), 'core'); B('soul', (0, 21.6, 0), (1, 1.4, 1), 'core')
         return r, d

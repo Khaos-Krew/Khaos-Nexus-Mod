@@ -158,8 +158,9 @@ def install(G):
         r.bone('cape1', 'chest', (0, 47, 4.5), (5, 0, 0)); B('cape1', (0, 42, 5), (16, 10, 1), 'cape')
         r.bone('cape2', 'cape1', (0, 37, 4.5)); B('cape2', (0, 32, 5), (16.5, 10, 1), 'cape')
         r.bone('cape3', 'cape2', (0, 27, 4.5)); B('cape3', (0, 23, 5), (17, 8, 1), 'capehem')
-        x = -12; g = hy + 3  # halberd shaft straight through the closed right fist
-        r.bone('halberd', 'right_hand', (x, g, 0), (0, 0, 0))
+        x = -12; g = hy + 3  # halberd shaft across the closed right fist, angled forward and across the body
+        gb = G.grip_fist(r, 'right_hand', (x, g, 0), (-45, 0, -25), 8.6, -1)
+        r.bone('halberd', gb, (x, g, 0), (0, 0, 0))
         B('halberd', (x, g + 12, 0), (2.4, 62, 2.4), 'shaft'); B('halberd', (x, g - 19.6, 0), (3.2, 2.2, 3.2), 'guard')
         for yy in (g + 34, g + 40): B('halberd', (x, yy, 0), (3.2, 1.4, 3.2), 'guard')
         B('halberd', (x - 6, g + 37, 0), (9, 12, 1.6), 'axehead'); B('halberd', (x - 10.4, g + 37, 0), (2.4, 16, 1.4), 'axehead')
