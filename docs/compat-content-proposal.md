@@ -199,8 +199,18 @@ Final defaults:
 - **Boss healing.** Ignis healed back to full between exchanges. The new healing scale fixes this.
 - **Uneven damage scaling.** Before the change, only melee was rank-scaled. Now every hit, including abilities and projectiles, is scaled exactly once.
 
+**Re-run at the final numbers (0.1.2):** each boss got one solo trial with the same script at the shipped defaults. No further changes were needed.
+
+| Boss | Result |
+|---|---|
+| Ender Guardian | Script **won** in about 160 s, all 8 apples used. |
+| Ignis | 360 → 132 (−63%) in 160 s, then the script died. |
+| The Harbinger | 780 → 29 (−96%) in 166 s, then the script died. |
+| Netherite Monstrosity | Script **won** in 214 s, 7 apples used. |
+
+All four fights last 2.5–3.5 minutes for the script, which wins or nearly wins each one. A person should be roughly twice as fast and take less damage, which gives about the 1–3 minutes with real risk that we were aiming for.
+
 **Not verified yet:**
-- No trials at the final values. Each final number was adjusted from its last trial, and no boss was re-run at the values that ship. That includes Ignis at 0.2/0.4.
 - No person has played these fights.
 - The Ender Guardian and Netherite Monstrosity deaths don't print a log line, so those results come from the health samples.
 

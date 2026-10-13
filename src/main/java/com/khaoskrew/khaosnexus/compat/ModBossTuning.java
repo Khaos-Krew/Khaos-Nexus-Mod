@@ -207,7 +207,7 @@ public final class ModBossTuning {
 
     /** Some bosses smash blocks regardless of mobGriefing; hunters knocked into the void below the arena are put back. */
     private static void rescue(Mob boss, ServerLevel level, BlockPos home) {
-        AABB column = new AABB(home).inflate(48.0D, 0.0D, 48.0D).setMinY(level.getMinBuildHeight() - 64).setMaxY(home.getY() - 10);
+        AABB column = new AABB(home).inflate(48.0D, 0.0D, 48.0D).setMinY(level.getMinBuildHeight() - 64).setMaxY(home.getY() - 24);
         for (Player p : level.getEntitiesOfClass(Player.class, column, p -> p.isAlive() && !p.isSpectator())) {
             p.teleportTo(home.getX() + 0.5D, home.getY() + 1, home.getZ() + 6.5D);
             p.resetFallDistance();

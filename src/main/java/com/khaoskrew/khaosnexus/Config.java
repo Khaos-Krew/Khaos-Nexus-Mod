@@ -60,7 +60,7 @@ public final class Config {
     public static final RankValues RANK_B = RankValues.define(SERVER_BUILDER, "B",
             List.of("khaosnexus:void_caster", "khaosnexus:rift_brute", "khaosnexus:rift_stalker", "minecraft:pillager"), 8, 8, 2.25D, 1.55D, "minecraft:diamond", 2, 40, 34);
     public static final RankValues RANK_A = RankValues.define(SERVER_BUILDER, "A",
-            List.of("khaosnexus:rift_brute", "khaosnexus:void_caster", "minecraft:vindicator", "minecraft:witch"), 8, 5, 3.0D, 1.8D, "minecraft:netherite_scrap", 1, 65, 50);
+            List.of("khaosnexus:rift_brute", "khaosnexus:void_caster", "minecraft:vindicator", "minecraft:witch"), 8, 5, 3.0D, 1.8D, "minecraft:netherite_scrap", 2, 65, 50);
     public static final RankValues RANK_S = RankValues.define(SERVER_BUILDER, "S",
             List.of("khaosnexus:rift_brute", "khaosnexus:void_caster", "minecraft:evoker", "minecraft:ravager"), 6, 2, 4.0D, 2.0D, "minecraft:netherite_ingot", 1, 100, 80);
 
@@ -102,8 +102,9 @@ public final class Config {
             .comment("Ticks before the class secondary ability (B) can be used again.")
             .defineInRange("secondaryCooldown", 160, 0, 72000);
     public static final ModConfigSpec.IntValue SKILL_XP_PER_LEVEL = SERVER_BUILDER
-            .comment("Hunter XP per hunter level. Each level past 1 grants skillPointsPerLevel skill points.")
-            .defineInRange("skillXpPerLevel", 10, 1, 100000);
+            .comment("Hunter XP per hunter level. Each level past 1 grants skillPointsPerLevel skill points.",
+                    "14 puts the level cap (25) just past rank S, so a full skill tree is finished around S rather than mid-A.")
+            .defineInRange("skillXpPerLevel", 14, 1, 100000);
     public static final ModConfigSpec.IntValue SKILL_POINTS_PER_LEVEL = SERVER_BUILDER
             .comment("Skill points per hunter level. Every class has its own full pool.")
             .defineInRange("skillPointsPerLevel", 1, 0, 10);

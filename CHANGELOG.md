@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.2-beta (2026-10-13)
+
+### Balance
+- Hunter XP per level: 10 → 14 (`skillXpPerLevel`). The level-25 cap now lands just after rank S (336 XP) instead of halfway through rank A, so the last skill points arrive with S rank. Existing servers keep the value already saved in their config.
+- A-rank gate reward: 1 → 2 netherite scrap, so it clearly beats B rank's 2 diamonds.
+
+### Cataclysm bosses
+- All four were re-tested solo at the 0.1.1 numbers. No changes were needed (results are in `docs/compat-content-proposal.md`).
+- The void rescue under boss arenas now only moves hunters more than 24 blocks below the boss, so lower rooms of the same dungeon are left alone.
+
 ## 0.1.1-beta (2026-10-13)
 
 ### Companion-mod items (each loads only when its mod is installed)
