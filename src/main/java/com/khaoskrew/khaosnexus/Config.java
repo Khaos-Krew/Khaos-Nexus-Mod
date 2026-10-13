@@ -101,6 +101,21 @@ public final class Config {
     public static final ModConfigSpec.IntValue ABILITY_ALT_COOLDOWN = SERVER_BUILDER
             .comment("Ticks before the class secondary ability (B) can be used again.")
             .defineInRange("secondaryCooldown", 160, 0, 72000);
+    public static final ModConfigSpec.IntValue SKILL_XP_PER_LEVEL = SERVER_BUILDER
+            .comment("Hunter XP per hunter level. Each level past 1 grants skillPointsPerLevel skill points.")
+            .defineInRange("skillXpPerLevel", 10, 1, 100000);
+    public static final ModConfigSpec.IntValue SKILL_POINTS_PER_LEVEL = SERVER_BUILDER
+            .comment("Skill points per hunter level. Every class has its own full pool.")
+            .defineInRange("skillPointsPerLevel", 1, 0, 10);
+    public static final ModConfigSpec.IntValue SKILL_MAX_LEVEL = SERVER_BUILDER
+            .comment("Hunter level cap.")
+            .defineInRange("skillMaxLevel", 60, 1, 1000);
+    public static final ModConfigSpec.ConfigValue<String> SKILL_RESPEC_ITEM = SERVER_BUILDER
+            .comment("Item a skill respec costs. Empty = free.")
+            .define("skillRespecItem", "khaosnexus:rift_core");
+    public static final ModConfigSpec.IntValue SKILL_RESPEC_COUNT = SERVER_BUILDER
+            .comment("How many of skillRespecItem a respec costs. 0 = free.")
+            .defineInRange("skillRespecCount", 1, 0, 64);
     public static final ModConfigSpec.IntValue MINION_CAP = SERVER_BUILDER
             .comment("How many Summoner or Necromancer minions one player can have out.")
             .defineInRange("minionCap", 3, 1, 8);

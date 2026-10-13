@@ -39,5 +39,9 @@ public final class NexusGateClient {
                 VanillaGuiLayers.HOTBAR,
                 ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "hud"),
                 HunterHud::render);
+        event.registerAbove(
+                VanillaGuiLayers.HOTBAR,
+                ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "skill_hud"),
+                SkillHud::render);
     }
 }

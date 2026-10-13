@@ -26,6 +26,8 @@ public class HunterCardScreen extends Screen {
     private final List<CardPayload.Gate> gates;
     private final int radius;
     private final List<CardPayload.ForgeLine> forge;
+    private final CardPayload.SkillHeader skillHeader;
+    private final List<CardPayload.SkillLine> skills;
     private int tab;
     private int scroll;
 
@@ -34,6 +36,8 @@ public class HunterCardScreen extends Screen {
         this.gates = payload.gates();
         this.radius = payload.radius();
         this.forge = payload.forge();
+        this.skillHeader = payload.skillHeader();
+        this.skills = payload.skills();
         this.tab = lastTab;
     }
 
@@ -59,7 +63,7 @@ public class HunterCardScreen extends Screen {
         float k = scale();
         int x = (int) (left() * k);
         int y = (int) ((top() - 22) * k);
-        String[] tabs = {"khaosnexus.card.tab.info", "khaosnexus.card.tab.gates", "khaosnexus.card.tab.settings", "khaosnexus.card.tab.forge"};
+        String[] tabs = {"khaosnexus.card.tab.info", "khaosnexus.card.tab.gates", "khaosnexus.card.tab.settings", "khaosnexus.card.tab.forge", "khaosnexus.card.tab.skills"};
         int tw = (int) (W * k / tabs.length); // tabs span the scaled card width
         for (int i = 0; i < tabs.length; i++) {
             int t = i;
@@ -81,6 +85,58 @@ public class HunterCardScreen extends Screen {
             this.addRenderableWidget(new Slider(sx, sy + 78, "khaosnexus.card.set.ui_opacity", Config.UI_OPACITY, 0.2D, 1.0D, true));
             this.addRenderableWidget(Button.builder(Component.translatable("khaosnexus.card.set.apply"), btn -> this.init())
                     .bounds(sx, sy + 110, 200, 18).build());
+        }
+        if (this.tab == 4) {
+            this.skillWidgets(k);
+        }
+    }
+
+    private static final int[] STATE_COLOR = {0xFFF2EEF8, 0xFF8A6A6A, 0xFF8A7A9A, 0xFFE0C070, 0xFFB0A0C0};
+
+    private Component skillName(CardPayload.SkillLine l) {
+        return Component.translatable("skill.khaosnexus." + this.skillHeader.classId() + "." + l.id());
+    }
+
+    private void skillWidgets(float k) {
+        String cls = this.skillHeader.classId();
+        for (CardPayload.SkillLine l : this.skills) {
+            int bx = (int) ((left() + 8 + l.x() * 96) * k);
+            int by = (int) ((top() + 40 + l.y() * 30) * k);
+            String label = this.font.plainSubstrByWidth(skillName(l).getString(), 70) + " " + l.rank() + "/" + l.maxRank();
+            Button b = Button.builder(Component.literal(label).withColor(STATE_COLOR[l.state()]), btn ->
+                    net.neoforged.neoforge.network.PacketDistributor.sendToServer(
+                            new com.khaoskrew.khaosnexus.network.ActionPayload(com.khaoskrew.khaosnexus.network.ActionPayload.SKILL_SPEND, l.id())))
+                    .bounds(bx, by, (int) (92 * k), (int) (20 * k)).build();
+            net.minecraft.network.chat.MutableComponent tip = skillName(l).copy().withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE)
+                    .append("\n").append(Component.translatable("skill.khaosnexus." + cls + "." + l.id() + ".desc").withStyle(net.minecraft.ChatFormatting.GRAY))
+                    .append("\n").append(Component.translatable("khaosnexus.card.skill_rank", l.rank(), l.maxRank()))
+                    .append("\n").append(Component.translatable("khaosnexus.card.skill_cost", l.cost()));
+            if (l.state() == 1) {
+                tip.append("\n").append(Component.translatable("khaosnexus.card.skill_locked_rank", l.minRank()).withStyle(net.minecraft.ChatFormatting.RED));
+            } else if (l.state() == 2) {
+                tip.append("\n").append(Component.translatable("khaosnexus.card.skill_needs").withStyle(net.minecraft.ChatFormatting.RED));
+            }
+            b.setTooltip(net.minecraft.client.gui.components.Tooltip.create(tip));
+            b.active = l.state() == 0;
+            this.addRenderableWidget(b);
+        }
+        if (!this.skills.isEmpty()) {
+            Component cost = this.skillHeader.respecItem().isEmpty() ? Component.translatable("khaosnexus.card.respec_free")
+                    : Component.translatable("khaosnexus.card.respec_cost",
+                    net.minecraft.core.registries.BuiltInRegistries.ITEM.get(ResourceLocationHelper.parse(this.skillHeader.respecItem())).getDescription(),
+                    this.skillHeader.respecCount());
+            Button r = Button.builder(Component.translatable("khaosnexus.card.respec"), btn ->
+                    net.neoforged.neoforge.network.PacketDistributor.sendToServer(
+                            new com.khaoskrew.khaosnexus.network.ActionPayload(com.khaoskrew.khaosnexus.network.ActionPayload.SKILL_RESPEC, "")))
+                    .bounds((int) ((left() + W - 78) * k), (int) ((top() + H - 26) * k), (int) (70 * k), (int) (18 * k)).build();
+            r.setTooltip(net.minecraft.client.gui.components.Tooltip.create(cost));
+            this.addRenderableWidget(r);
+        }
+    }
+
+    private static final class ResourceLocationHelper {
+        static net.minecraft.resources.ResourceLocation parse(String s) {
+            return net.minecraft.resources.ResourceLocation.parse(s);
         }
     }
 
@@ -114,6 +170,19 @@ public class HunterCardScreen extends Screen {
             this.gateList(g, x + 8, y + 24);
         } else if (this.tab == 3) {
             this.forgeList(g, x + 8, y + 24);
+        } else if (this.tab == 4) {
+            if (this.skills.isEmpty()) {
+                g.drawString(this.font, Component.translatable("khaosnexus.card.no_class_skills"), x + 8, y + 24, 0xFFA898B8, false);
+            } else {
+                g.drawString(this.font, Component.translatable("khaosnexus.card.skills_header", this.skillHeader.level(),
+                        this.skillHeader.free(), this.skillHeader.total()), x + 8, y + 24, 0xFFE0C070, false);
+                for (CardPayload.SkillLine l : this.skills) { // connector ticks to prerequisites, drawn under the buttons
+                    if (l.y() > 0 && l.x() < 3) {
+                        int cx = x + 8 + l.x() * 96 + 46;
+                        g.fill(cx, y + 40 + l.y() * 30 - 10, cx + 1, y + 40 + l.y() * 30, 0xFF5A2A7A);
+                    }
+                }
+            }
         } else {
             g.drawString(this.font, Component.translatable("khaosnexus.card.set.note"), x + 8, y + 20, 0xFFA898B8, false);
         }

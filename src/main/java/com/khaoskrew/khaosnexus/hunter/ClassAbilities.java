@@ -3,6 +3,9 @@ package com.khaoskrew.khaosnexus.hunter;
 import java.util.Comparator;
 import java.util.List;
 
+import com.khaoskrew.khaosnexus.skill.SkillService;
+import com.khaoskrew.khaosnexus.skill.SkillTrees.Stat;
+
 import com.khaoskrew.khaosnexus.Config;
 
 import net.minecraft.core.BlockPos;
@@ -46,21 +49,23 @@ public final class ClassAbilities {
         if (!(player.level() instanceof ServerLevel level)) {
             return;
         }
+        double pw = SkillService.mult(player, primary, Stat.POWER);
+        double rad = SkillService.mult(player, primary, Stat.RADIUS);
         boolean used = switch (hunterClass) {
-            case TANK -> primary ? effect(player, new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 200, 1)) : taunt(player, level);
-            case ASSASSIN -> primary ? dash(player) : effect(player, new MobEffectInstance(MobEffects.INVISIBILITY, 100, 0));
-            case CASTER -> primary ? bolt(player, level) : effect(player, new MobEffectInstance(MobEffects.SLOW_FALLING, 160, 0));
-            case RANGER -> primary ? shot(player, level) : effect(player, new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 160, 1));
-            case LIFEBINDER -> primary ? mend(player) : effect(player, new MobEffectInstance(MobEffects.REGENERATION, 160, 0));
-            case BERSERKER -> primary ? effect(player, new MobEffectInstance(MobEffects.DAMAGE_BOOST, 160, 1)) : rage(player);
-            case SUMMONER -> primary ? summon(player, level, com.khaoskrew.khaosnexus.mob.ModEntities.RIFT_FAMILIAR.get(), true) : healMinions(player, level);
-            case NECROMANCER -> primary ? summon(player, level, com.khaoskrew.khaosnexus.mob.ModEntities.BONE_THRALL.get(), false) : wither(player, level);
+            case TANK -> primary ? effect(player, new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, (int) (200 * pw), 1)) : taunt(player, level, 8.0D * rad);
+            case ASSASSIN -> primary ? dash(player, 5.0D * rad) : effect(player, new MobEffectInstance(MobEffects.INVISIBILITY, (int) (100 * pw), 0));
+            case CASTER -> primary ? bolt(player, level, (float) (8.0D * pw), 12.0D * rad) : effect(player, new MobEffectInstance(MobEffects.SLOW_FALLING, (int) (160 * pw), 0));
+            case RANGER -> primary ? shot(player, level, (float) (7.0D * pw), 24.0D * rad) : effect(player, new MobEffectInstance(MobEffects.MOVEMENT_SPEED, (int) (160 * pw), 1));
+            case LIFEBINDER -> primary ? mend(player, (float) pw, 8.0D * rad) : effect(player, new MobEffectInstance(MobEffects.REGENERATION, (int) (160 * pw), 0));
+            case BERSERKER -> primary ? effect(player, new MobEffectInstance(MobEffects.DAMAGE_BOOST, (int) (160 * pw), 1)) : rage(player, pw);
+            case SUMMONER -> primary ? summon(player, level, com.khaoskrew.khaosnexus.mob.ModEntities.RIFT_FAMILIAR.get(), true) : healMinions(player, level, (float) (6.0D * pw));
+            case NECROMANCER -> primary ? summon(player, level, com.khaoskrew.khaosnexus.mob.ModEntities.BONE_THRALL.get(), false) : wither(player, level, 6.0D * rad, (int) (80 * pw));
         };
         if (!used) {
             return;
         }
         AbilityVfx.play(player, level, hunterClass, primary);
-        int cooldown = primary ? Config.ABILITY_COOLDOWN.get() : Config.ABILITY_ALT_COOLDOWN.get();
+        int cooldown = (int) Math.round((primary ? Config.ABILITY_COOLDOWN.get() : Config.ABILITY_ALT_COOLDOWN.get()) * SkillService.mult(player, primary, Stat.COOLDOWN));
         if (primary) {
             profile.abilityReady = now + cooldown;
         } else {
@@ -76,62 +81,61 @@ public final class ClassAbilities {
         return true;
     }
 
-    private static boolean dash(ServerPlayer player) {
+    private static boolean dash(ServerPlayer player, double distance) {
         Vec3 look = player.getLookAngle();
-        double distance = 5.0D;
         player.teleportTo(player.getX() + look.x * distance, player.getY(), player.getZ() + look.z * distance);
         player.resetFallDistance();
         return true;
     }
 
-    private static boolean taunt(ServerPlayer player, ServerLevel level) {
-        AABB box = player.getBoundingBox().inflate(8.0D);
+    private static boolean taunt(ServerPlayer player, ServerLevel level, double radius) {
+        AABB box = player.getBoundingBox().inflate(radius);
         for (Mob mob : level.getEntitiesOfClass(Mob.class, box, LivingEntity::isAlive)) {
             mob.setTarget(player);
         }
         return true;
     }
 
-    private static boolean bolt(ServerPlayer player, ServerLevel level) {
-        Mob target = nearest(player, level, 12.0D);
+    private static boolean bolt(ServerPlayer player, ServerLevel level, float damage, double range) {
+        Mob target = nearest(player, level, range);
         if (target == null) {
             player.displayClientMessage(Component.translatable("khaosnexus.ability.no_target"), false);
             return false;
         }
-        target.hurt(player.damageSources().magic(), 8.0F);
+        target.hurt(player.damageSources().magic(), damage);
         return true;
     }
 
-    private static boolean shot(ServerPlayer player, ServerLevel level) {
-        Mob target = nearest(player, level, 24.0D);
+    private static boolean shot(ServerPlayer player, ServerLevel level, float damage, double range) {
+        Mob target = nearest(player, level, range);
         if (target == null) {
             player.displayClientMessage(Component.translatable("khaosnexus.ability.no_target"), false);
             return false;
         }
-        target.hurt(player.damageSources().playerAttack(player), 7.0F);
+        target.hurt(player.damageSources().playerAttack(player), damage);
         target.addEffect(new MobEffectInstance(MobEffects.GLOWING, 100, 0));
         return true;
     }
 
-    private static boolean mend(ServerPlayer player) {
-        player.heal(8.0F);
+    private static boolean mend(ServerPlayer player, float power, double radius) {
+        player.heal(8.0F * power);
         if (player.level() instanceof ServerLevel level) {
             for (ServerPlayer ally : level.players()) {
-                if (ally != player && ally.distanceToSqr(player) <= 8.0D * 8.0D) {
-                    ally.heal(6.0F);
+                if (ally != player && ally.distanceToSqr(player) <= radius * radius) {
+                    ally.heal(6.0F * power);
                 }
             }
         }
         return true;
     }
 
-    private static boolean rage(ServerPlayer player) {
+    private static boolean rage(ServerPlayer player, double power) {
         if (player.getHealth() > player.getMaxHealth() * 0.5F) {
             player.displayClientMessage(Component.translatable("khaosnexus.ability.rage_health"), false);
             return false;
         }
-        player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 120, 1));
-        player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 120, 0));
+        player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, (int) (120 * power), 1));
+        player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, (int) (120 * power), 0));
         return true;
     }
 
@@ -166,10 +170,10 @@ public final class ClassAbilities {
         return true;
     }
 
-    private static boolean healMinions(ServerPlayer player, ServerLevel level) {
+    private static boolean healMinions(ServerPlayer player, ServerLevel level, float amount) {
         boolean healed = false;
         for (Mob mob : minions(player, level)) {
-            mob.heal(6.0F);
+            mob.heal(amount);
             healed = true;
         }
         if (!healed) {
@@ -178,10 +182,10 @@ public final class ClassAbilities {
         return healed;
     }
 
-    private static boolean wither(ServerPlayer player, ServerLevel level) {
+    private static boolean wither(ServerPlayer player, ServerLevel level, double radius, int ticks) {
         boolean hit = false;
-        for (Mob mob : level.getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(6.0D), entity -> entity.isAlive() && !isOwnedMinion(player, entity))) {
-            mob.addEffect(new MobEffectInstance(MobEffects.WITHER, 80, 0));
+        for (Mob mob : level.getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(radius), entity -> entity.isAlive() && !isOwnedMinion(player, entity))) {
+            mob.addEffect(new MobEffectInstance(MobEffects.WITHER, ticks, 0));
             hit = true;
         }
         if (!hit) {

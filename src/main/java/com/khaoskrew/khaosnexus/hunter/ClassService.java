@@ -83,5 +83,6 @@ public final class ClassService {
         if (instance != null) {
             instance.addOrReplacePermanentModifier(hunterClass.modifier());
         }
+        com.khaoskrew.khaosnexus.skill.SkillService.applyPassives(player);
     }
 }

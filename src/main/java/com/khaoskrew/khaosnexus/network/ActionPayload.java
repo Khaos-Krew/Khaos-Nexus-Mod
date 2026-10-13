@@ -23,6 +23,8 @@ public record ActionPayload(int action, String id) implements CustomPacketPayloa
     public static final int SECONDARY = 1;
     public static final int EQUIP = 2;
     public static final int OPEN_CARD = 3;
+    public static final int SKILL_SPEND = 4;
+    public static final int SKILL_RESPEC = 5;
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
@@ -40,6 +42,16 @@ public record ActionPayload(int action, String id) implements CustomPacketPayloa
                 ClassAbilities.cast(player, false);
             } else if (payload.action() == EQUIP) {
                 ClassService.equip(player, payload.id());
+            } else if (payload.action() == SKILL_SPEND || payload.action() == SKILL_RESPEC) {
+                if (!com.khaoskrew.khaosnexus.card.HunterCard.isUnlocked(player)) {
+                    return;
+                }
+                var r = payload.action() == SKILL_SPEND ? com.khaoskrew.khaosnexus.skill.SkillService.spend(player, payload.id())
+                        : com.khaoskrew.khaosnexus.skill.SkillService.respec(player);
+                player.displayClientMessage(net.minecraft.network.chat.Component.translatable(payload.action() == SKILL_RESPEC
+                        && r == com.khaoskrew.khaosnexus.skill.SkillService.Result.OK ? "khaosnexus.skill.respec_done"
+                        : "khaosnexus.skill.result." + r.name().toLowerCase(java.util.Locale.ROOT)), true);
+                com.khaoskrew.khaosnexus.card.HunterCardItem.sendCard(player);
             } else if (payload.action() == OPEN_CARD) {
                 net.minecraft.world.item.ItemStack card = com.khaoskrew.khaosnexus.compat.CuriosCompat.wornCard(player);
                 if (card.isEmpty()) {

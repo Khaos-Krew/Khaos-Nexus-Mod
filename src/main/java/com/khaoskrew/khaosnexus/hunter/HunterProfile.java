@@ -31,6 +31,8 @@ public final class HunterProfile implements INBTSerializable<CompoundTag> {
     public int raidsCleared;
     /** Set once the player has held a Hunter Card. Never cleared, so losing the card keeps the unlock. */
     public boolean cardUnlocked;
+    /** Skill ranks, "class.node:rank" comma list. */
+    public String skills = "";
 
     public static final StreamCodec<RegistryFriendlyByteBuf, HunterProfile> STREAM_CODEC = StreamCodec.of(
             HunterProfile::encode,
@@ -83,6 +85,7 @@ public final class HunterProfile implements INBTSerializable<CompoundTag> {
         tag.putInt("GatesCleared", this.gatesCleared);
         tag.putInt("RaidsCleared", this.raidsCleared);
         tag.putBoolean("CardUnlocked", this.cardUnlocked);
+        tag.putString("Skills", this.skills);
         return tag;
     }
 
@@ -108,6 +111,7 @@ public final class HunterProfile implements INBTSerializable<CompoundTag> {
         this.gatesCleared = tag.getInt("GatesCleared");
         this.raidsCleared = tag.getInt("RaidsCleared");
         // Saves from before the Hunter Card: anyone who already made progress keeps their hunter UI.
+        this.skills = tag.getString("Skills");
         this.cardUnlocked = tag.contains("CardUnlocked") ? tag.getBoolean("CardUnlocked") : this.hasProgress();
     }
 
@@ -132,6 +136,7 @@ public final class HunterProfile implements INBTSerializable<CompoundTag> {
         buf.writeVarInt(profile.gatesCleared);
         buf.writeVarInt(profile.raidsCleared);
         buf.writeBoolean(profile.cardUnlocked);
+        buf.writeUtf(profile.skills);
     }
 
     private static HunterProfile decode(RegistryFriendlyByteBuf buf) {
@@ -156,6 +161,7 @@ public final class HunterProfile implements INBTSerializable<CompoundTag> {
         profile.gatesCleared = buf.readVarInt();
         profile.raidsCleared = buf.readVarInt();
         profile.cardUnlocked = buf.readBoolean();
+        profile.skills = buf.readUtf();
         return profile;
     }
 }

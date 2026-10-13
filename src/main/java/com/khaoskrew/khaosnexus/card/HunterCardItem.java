@@ -117,9 +117,15 @@ public class HunterCardItem extends Item {
             return false;
         }
         HunterCard.unlock(server);
+        sendCard(server);
+        return true;
+    }
+
+    /** Sends (or refreshes) the card screen contents. */
+    public static void sendCard(ServerPlayer server) {
         int radius = Config.CARD_GATE_RADIUS.get();
         PacketDistributor.sendToPlayer(server, new CardPayload(nearbyGates((ServerLevel) server.level(), server.blockPosition(), radius), radius,
-                com.khaoskrew.khaosnexus.forge.ForgeRecipes.cardLines(server)));
-        return true;
+                com.khaoskrew.khaosnexus.forge.ForgeRecipes.cardLines(server),
+                com.khaoskrew.khaosnexus.skill.SkillService.header(server), com.khaoskrew.khaosnexus.skill.SkillService.lines(server)));
     }
 }
