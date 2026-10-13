@@ -183,7 +183,7 @@ public final class SkillService {
         SkillTrees.Kind kind = primary ? SkillTrees.Kind.PRIMARY : SkillTrees.Kind.SECONDARY;
         for (var e : ranks(p, c).entrySet()) {
             SkillTrees.Node n = SkillTrees.node(c, e.getKey());
-            if (n != null && n.kind() == kind && n.stat() == stat) {
+            if (n != null && (n.kind() == kind || n.kind() == SkillTrees.Kind.CAPSTONE) && n.stat() == stat) {  // capstones boost both actives
                 sum += n.perRank() * e.getValue();
             }
         }

@@ -109,7 +109,7 @@ public final class Config {
             .defineInRange("skillPointsPerLevel", 1, 0, 10);
     public static final ModConfigSpec.IntValue SKILL_MAX_LEVEL = SERVER_BUILDER
             .comment("Hunter level cap.")
-            .defineInRange("skillMaxLevel", 60, 1, 1000);
+            .defineInRange("skillMaxLevel", 25, 1, 1000);
     public static final ModConfigSpec.ConfigValue<String> SKILL_RESPEC_ITEM = SERVER_BUILDER
             .comment("Item a skill respec costs. Empty = free.")
             .define("skillRespecItem", "khaosnexus:rift_core");

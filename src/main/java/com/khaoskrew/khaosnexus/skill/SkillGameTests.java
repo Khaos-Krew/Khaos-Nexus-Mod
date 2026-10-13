@@ -64,4 +64,26 @@ public class SkillGameTests {
         helper.assertTrue(SkillService.spent(HunterRanks.profile(player), c) == 0, "points refunded");
         helper.succeed();
     }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    public static void skillCapstoneBoostsBothActives(GameTestHelper helper) {
+        ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        player.setGameMode(GameType.SURVIVAL);
+        ClassService.equip(player, "caster");
+        HunterRanks.profile(player).skills = "";
+        HunterRanks.setXp(player, HunterRanks.threshold(GateRank.S));
+        helper.assertTrue(SkillService.level(HunterRanks.profile(player).xp) == com.khaoskrew.khaosnexus.Config.SKILL_MAX_LEVEL.get(),
+                "S rank reaches the level cap");
+        for (String id : new String[] {"primary_power", "secondary_power", "passive_a"}) {
+            helper.assertTrue(SkillService.spend(player, id) == SkillService.Result.OK, "spend " + id);
+        }
+        double before = SkillService.mult(player, false, SkillTrees.Stat.POWER);
+        helper.assertTrue(SkillService.spend(player, "capstone") == SkillService.Result.OK, "capstone at S rank");
+        helper.assertTrue(SkillService.mult(player, true, SkillTrees.Stat.POWER) > 1.3D, "capstone boosts the primary");
+        helper.assertTrue(SkillService.mult(player, false, SkillTrees.Stat.POWER) > before + 0.2D, "capstone boosts the secondary");
+        int cost = 0;
+        for (SkillTrees.Node n : SkillTrees.tree(HunterClass.byId("caster"))) cost += n.cost() * n.maxRank();
+        helper.assertTrue(cost <= SkillService.totalPoints(HunterRanks.profile(player)), "a capped hunter can finish one tree");
+        helper.succeed();
+    }
 }
