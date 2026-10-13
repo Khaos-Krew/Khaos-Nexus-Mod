@@ -546,6 +546,21 @@ public final class Config {
     public static final ModConfigSpec.DoubleValue SS_XP = SERVER_BUILDER
             .comment("Hunter XP multiplier for clearing an SS gate.")
             .defineInRange("ssXpMultiplier", 1.5D, 0.0D, 20.0D);
+    public static final ModConfigSpec.BooleanValue BOSS_RUSH = SERVER_BUILDER
+            .comment("Boss rush: a timed chain of bosses with one heal. Rosters are datapack files in data/<ns>/khaosnexus_boss_rush/.")
+            .define("bossRush", true);
+    public static final ModConfigSpec.ConfigValue<String> BOSS_RUSH_ROSTER = SERVER_BUILDER
+            .comment("Roster id used by /khaosnexus bossrush start.")
+            .define("bossRushRoster", "khaosnexus:default");
+    public static final ModConfigSpec.ConfigValue<String> BOSS_RUSH_MIN_RANK = SERVER_BUILDER
+            .comment("Lowest hunter rank that can start a boss rush.")
+            .define("bossRushMinRank", "S");
+    public static final ModConfigSpec.IntValue BOSS_RUSH_REWARD_CORES = SERVER_BUILDER
+            .comment("Rift Cores each surviving hunter gets for a boss rush win.")
+            .defineInRange("bossRushRewardCores", 4, 0, 64);
+    public static final ModConfigSpec.IntValue BOSS_RUSH_DELAY = SERVER_BUILDER
+            .comment("Ticks between one boss dying and the next spawning.")
+            .defineInRange("bossRushDelay", 60, 0, 1200);
     // endgame-config-end
     static {
         SERVER_BUILDER.pop();

@@ -178,13 +178,14 @@ public final class KhaosCommands {
                 .then(Commands.literal("top")
                         .then(Commands.argument("board", StringArgumentType.word())
                                 .suggests((c, b) -> net.minecraft.commands.SharedSuggestionProvider.suggest(
-                                        java.util.List.of("E", "D", "C", "B", "A", "S", "spire", "weekly"), b))
+                                        java.util.List.of("E", "D", "C", "B", "A", "S", "spire", "weekly", "rush"), b))
                                 .executes(context -> {
                                     String arg = StringArgumentType.getString(context, "board");
                                     var server = context.getSource().getServer();
                                     String board = switch (arg.toLowerCase(Locale.ROOT)) {
                                         case "spire" -> com.khaoskrew.khaosnexus.endgame.Leaderboards.spireBoard(
                                                 com.khaoskrew.khaosnexus.spire.SpireData.get(server.overworld()).season);
+                                        case "rush" -> com.khaoskrew.khaosnexus.endgame.Leaderboards.rushBoard();
                                         case "weekly" -> com.khaoskrew.khaosnexus.endgame.Leaderboards.weeklyBoard(
                                                 com.khaoskrew.khaosnexus.endgame.WeeklyModifiers.currentWeek());
                                         default -> com.khaoskrew.khaosnexus.endgame.Leaderboards.clearBoard(

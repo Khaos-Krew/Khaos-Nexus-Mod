@@ -221,4 +221,26 @@ public class EndgameGameTests {
         boss.discard();
         helper.succeed();
     }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    public static void bossRushRosterAndProgress(GameTestHelper helper) {
+        ResourceLocation def = ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "default");
+        var fights = BossRush.roster(def, 42L);
+        helper.assertTrue(fights.size() == 5, "five fights even when boss mods are missing");
+        helper.assertTrue(fights.equals(BossRush.roster(def, 42L)), "seeded shuffle");
+        helper.assertTrue(fights.stream().allMatch(t -> net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(t) != null), "only registered bosses");
+        helper.assertTrue(BossRush.roster(ResourceLocation.parse("t:none"), 1L).isEmpty(), "missing roster is empty");
+        var run = BossRush.testRun(fights, 3);
+        var server = helper.getLevel().getServer();
+        for (int i = 0; i < 4; i++) {
+            BossRush.onBossDown(server, run);
+        }
+        helper.assertTrue(BossRush.running(run) && run.stage == 4, "run continues until the last boss");
+        BossRush.onBossDown(server, run);
+        helper.assertFalse(BossRush.running(run), "run ends after the last boss");
+        helper.assertTrue(Leaderboards.lowerBetter(Leaderboards.rushBoard()), "rush board is a time board");
+        BossRush.buildArena(helper.getLevel(), helper.absolutePos(new BlockPos(0, 40, 0)));
+        helper.assertTrue(helper.getLevel().getBlockState(helper.absolutePos(new BlockPos(0, 39, 0))).is(net.minecraft.world.level.block.Blocks.POLISHED_BLACKSTONE_BRICKS), "arena floor");
+        helper.succeed();
+    }
 }

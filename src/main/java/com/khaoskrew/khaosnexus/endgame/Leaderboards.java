@@ -48,9 +48,17 @@ public final class Leaderboards extends SavedData {
         return "weekly_w" + week;
     }
 
+    public static String rushBoard() {
+        return "rush_all";
+    }
+
+    public static String challengeBoard(String challenge) {
+        return "challenge_" + challenge;
+    }
+
     /** Lower is better for clear times; higher for everything else. */
     public static boolean lowerBetter(String board) {
-        return board.startsWith("clear_");
+        return board.startsWith("clear_") || board.startsWith("rush_") || board.startsWith("challenge_");
     }
 
     /** Records a value; returns the player's 1-based place on that board, or 0 when boards are off. */

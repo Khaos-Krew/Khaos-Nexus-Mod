@@ -466,5 +466,18 @@
   "khaosnexus.prestige.ss_gate": "SS",
   "khaosnexus.gate.ss_locked": "Only SS-rank or National-level hunters can open an SS gate.",
   "khaosnexus.title.hunter_ss": "SS-Rank Hunter",
-  "khaosnexus.title.hunter_national": "National-Level Hunter"
+  "khaosnexus.title.hunter_national": "National-Level Hunter",
+  "khaosnexus.rush.busy": "You are already in a boss rush, or the arena dimension is missing.",
+  "khaosnexus.rush.rank": "Every party member must be at least %s rank to start a boss rush.",
+  "khaosnexus.rush.no_roster": "The boss rush roster is empty or missing.",
+  "khaosnexus.rush.started": "Boss rush started: %s bosses, one heal. The clock is running!",
+  "khaosnexus.rush.boss": "Rush %s/%s: %s",
+  "khaosnexus.rush.fight": "Boss %s of %s",
+  "khaosnexus.rush.healed": "Halfway respite: you are fully healed.",
+  "khaosnexus.rush.won": "Boss rush cleared in %s!",
+  "khaosnexus.rush.died": "You fell in the boss rush.",
+  "khaosnexus.rush.left": "You left the boss rush.",
+  "khaosnexus.title.rush_champion": "Rush Champion",
+  "khaosnexus.top.header.rush": "Fastest boss rushes",
+  "khaosnexus.top.header.challenge": "Challenge %s: fastest clears"
 }
