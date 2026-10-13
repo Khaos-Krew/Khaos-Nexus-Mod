@@ -4,9 +4,9 @@
 
 Khaos Nexus is a NeoForge RPG mod for Minecraft 1.21.1. Ranked dungeon gates open across your world, an endless tower waits to be climbed, and every player chooses a class, carries a Soulbound Codex, and grows their Khaos Rank.
 
-It's a complete adventure all on its own, and it evolves with the mods you add. Install Apotheosis, Ars Nouveau, Relics, or a big pack like All the Mods, and the gates, loot, and difficulty scale up to match.
+It's a complete adventure all on its own, and it evolves with the mods you add. Install Apotheosis, Ars Nouveau, Relics, or play it in a big kitchen-sink modpack, and the gates, loot, and difficulty scale up to match.
 
-> **Status:** in planning. Development starts in mid-October 2026. The first release targets Minecraft 1.21.1 (NeoForge), and it will be released on CurseForge. It works on its own or alongside other mods, and it's tested against big packs like All the Mods 10. A port to newer versions (for ATM11) comes once 1.21.1 is stable.
+> **Status:** 0.1.0-beta for Minecraft 1.21.1 (NeoForge). It works on its own or alongside other mods, and it's tested alongside large modpacks. A port to newer Minecraft versions will follow once 1.21.1 is stable.
 
 ---
 
