@@ -1,19 +1,41 @@
 # Changelog
 
-## Unreleased: post-S-rank endgame
+## 1.0.0 (2026-10-14)
 
-All of it can be tuned in the `[endgame]` section of the server config, and the content lives in datapack folders. See `docs/post-s-rank-endgame-plan.md`.
-- **Weekly modifiers:** each week A and S gates get 2 rotating modifiers that pay bonus XP and Rift Cores.
-- **Red gates:** a rare locked gate with a stronger boss and bigger rewards. **Dungeon breaks:** gates left alone too long spill their mobs into the world.
-- **Leaderboards:** `/khaosnexus top` for clear times, Spire floors, weekly clears and boss rush times.
-- **Infinite Spire:** +6% boss health and damage per floor past floor 10, with an affixed boss every 10th floor.
-- **Auras:** cosmetic particle auras unlocked by achievements, shown on the Hunter Card.
-- **Class mastery:** XP earned at S rank fills per-class mastery levels 1–50, each spent on sidegrade perks.
-- **SS and National ranks:** earned by achievements. They give a title, an aura, bonus skill points, and access to SS gates.
-- **Boss rush:** a timed chain of 5 bosses with one heal. It includes installed boss-mod bosses.
-- **Challenge gates:** a monthly authored fight. Solo, one life, sometimes class-locked, with a unique title.
-- **Second Awakening:** a National-level quest that unlocks an awakened ability (choose 1 of 2 per class). Cast it with sneak + the secondary ability key.
-- **Group raids:** multi-phase raid bosses for 4–8 hunters. Tanks hold aggro and Lifebinders cleanse curses. The party cap rises to 8.
+The first full release. Everything below is new since 0.1.2-beta and can be tuned in the server config (`[endgame]` and `[spire]`) and through datapack folders.
+
+### The Nexus Spire, rebuilt
+- The Spire is now a real place in its own dimension. Each **floor is 10 levels**, and each level is a themed arena with walls, pillars and lighting, plus its own guardian. The style changes floor by floor across 5 bundled themes (`khaosnexus_spire_themes`).
+- Beating a level's guardian lights its **rift-style gate**, animated and tinted by rank, which leads to the next level. After level 10 it leads to the next floor.
+- Every floor starts in a **safe town** with:
+  - an Alchemist (potions) and an Armorer (gear). Their stock and enchantments scale with your floor and rank (`khaosnexus_spire_vendors`).
+  - a repair **Smith** (Rift Cores or Nexus Tokens).
+  - a **checkpoint**.
+- **Endless scaling:** past floor 3, guardians gain +6% health and damage per floor (capped). Each floor's final guardian rolls an affix (Armored, Swift, Vampiric, Berserk, Titanic) for bonus Rift Cores.
+- Progress is tracked as floor and level. Leaderboards show F#-L#. Old saves convert automatically: 10 old floors become 1 new floor.
+- Flight and block breaking stay disabled in the Spire.
+
+### Post-S endgame
+- **Weekly modifiers** for A and S gates, with bonus XP and Rift Cores. See `/khaosnexus weekly`.
+- **Red Gates:** rare, locked until cleared, with a stronger boss, double XP, bonus cores and a title.
+- **Dungeon breaks:** gates left uncleared too long spill their mobs into the world.
+- **Leaderboards:** `/khaosnexus top`.
+- **Auras:** cosmetic particle auras unlocked by achievements. See `/khaosnexus aura`. They also show on the Hunter Card.
+- **Class mastery:** XP earned at S rank fills a mastery track per class, levels 1–50, spent on sidegrade perks. See `/khaosnexus mastery`.
+- **SS and National ranks:** earned by achievements. They grant a title, an aura and bonus skill points, and SS hunters can open **SS gates**. See `/khaosnexus prestige`.
+- Bosses tuned past vanilla's 1024 max health now take proportionally less damage, so their full health still counts.
+
+### Hunter Card
+- The rank line shows SS or National prestige.
+- The Spire line shows floor, level and floors cleared.
+- The equipped aura is shown.
+
+### Coming in 1.1 (included, off by default)
+Boss rush, monthly challenge gates, Second Awakening and 8-player group raids are in the jar but switched off. Server owners can try them with the `bossRush`, `challengeGates`, `secondAwakening` and `groupRaids` toggles.
+
+### Defaults changed
+- `[spire] checkpointInterval` is now 1 (every floor town is a checkpoint). Existing config files keep their saved value.
+- `[raids] maxParty` now allows up to 8 (the default stays 5).
 
 ## 0.1.2-beta (2026-10-13)
 

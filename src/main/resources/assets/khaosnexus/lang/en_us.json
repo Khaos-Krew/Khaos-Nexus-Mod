@@ -118,7 +118,7 @@
   "khaosnexus.title.hunter_s": "S-Rank Hunter",
   "khaosnexus.title.class_bound": "Class Bound",
   "khaosnexus.hud.rank": "Hunter %s  ·  %s XP",
-  "khaosnexus.hud.class": "%s  ·  Spire %s  ·  Party %s",
+  "khaosnexus.hud.class": "%s  ·  Spire F%s  ·  Party %s",
   "khaosnexus.hud.bounty": "Today: %s gates, %s raids",
   "khaosnexus.hud.no_class": "No class",
   "khaosnexus.compat.line": "%s: %s",
@@ -573,5 +573,6 @@
   "khaosnexus.spire.portal_town": "Floor %s Town",
   "khaosnexus.spire.portal_level": "Floor %s - Level %s",
   "khaosnexus.spire.boss2": "F%s-L%s Guardian",
-  "block.khaosnexus.spire_portal": "Spire Gate"
+  "block.khaosnexus.spire_portal": "Spire Gate",
+  "khaosnexus.card.spire_value2": "F%s-L%s  (floors cleared %s)"
 }

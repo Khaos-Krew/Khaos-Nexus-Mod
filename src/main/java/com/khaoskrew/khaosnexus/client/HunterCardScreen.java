@@ -200,7 +200,10 @@ public class HunterCardScreen extends Screen {
         HunterClass c = HunterClass.byId(p.classId);
         int lo = HunterRanks.threshold(rank);
         int hi = next == null ? lo : HunterRanks.threshold(next);
-        line(g, x, y, Component.translatable("khaosnexus.card.rank"), Component.translatable(rank.translationKey()));
+        int prestige = p.endgame.getInt("Prestige");
+        line(g, x, y, Component.translatable("khaosnexus.card.rank"), prestige <= 0 ? Component.translatable(rank.translationKey())
+                : Component.translatable(rank.translationKey()).copy().append("  ·  ")
+                        .append(Component.translatable(prestige >= 2 ? "khaosnexus.prestige.national" : "khaosnexus.prestige.ss")));
         line(g, x, y + 12, Component.translatable("khaosnexus.card.level"),
                 Component.translatable("khaosnexus.card.level_value", com.khaoskrew.khaosnexus.skill.SkillService.level(p.xp), p.xp, next == null ? "-" : String.valueOf(hi)));
         int bar = next == null ? 180 : (int) (180 * Math.max(0, Math.min(1, (p.xp - lo) / (double) Math.max(1, hi - lo))));
@@ -221,7 +224,7 @@ public class HunterCardScreen extends Screen {
         line(g, x, y + 114, Component.translatable("khaosnexus.card.gates_cleared"), Component.literal(String.valueOf(p.gatesCleared)));
         line(g, x, y + 126, Component.translatable("khaosnexus.card.raids_cleared"), Component.literal(String.valueOf(p.raidsCleared)));
         line(g, x, y + 138, Component.translatable("khaosnexus.card.spire"),
-                Component.translatable("khaosnexus.card.spire_value", p.spireFloor, p.spireBest));
+                Component.translatable("khaosnexus.card.spire_value2", p.spireFloor, Math.max(1, p.endgame.getInt("SpireLevel")), p.spireBest));
         line(g, x, y + 150, Component.translatable("khaosnexus.card.party"), Component.literal(String.valueOf(p.partySize)));
         String aura = p.endgame.getString("Aura");
         if (!aura.isEmpty()) {
