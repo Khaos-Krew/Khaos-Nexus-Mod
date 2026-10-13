@@ -54,3 +54,7 @@ Keys:
 
 ## Loot
 `compat.optionalLoot` and `compat.optionalLootChance` (0.2).
+
+## Curios
+
+With Curios installed, players get a `hunter_card` slot (data in `data/khaosnexus/curios/`, item tag `curios:hunter_card`). A card worn there counts as carried, so it binds and unlocks the HUD and UI. The **Open Hunter Card** key (default J) opens the card screen from that slot or from the inventory. Without Curios the data files are ignored and the code is reflection-only, so nothing loads.
