@@ -93,6 +93,9 @@ public class RiftMobRenderer extends GeoEntityRenderer<RiftMob> {
             this.getRenderer().reRender(model, pose, buffer, mob, glow, buffer.getBuffer(glow), partialTick,
                     0xF00000, OverlayTexture.NO_OVERLAY, color);
             float flare = flare(mob, partialTick);
+            if (mob instanceof com.khaoskrew.khaosnexus.mob.RiftBoss boss && boss.getPhase() > 0) {  // enraged: veins pulse
+                flare = Math.max(flare, 0.55F + 0.45F * (float) Math.sin((mob.tickCount + partialTick) * 0.25F));
+            }
             if (flare > 0.05F) {  // second additive pass: the orb (and runes) flare bright on attack
                 int a = (int) (255 * flare);
                 this.getRenderer().reRender(model, pose, buffer, mob, glow, buffer.getBuffer(glow), partialTick,

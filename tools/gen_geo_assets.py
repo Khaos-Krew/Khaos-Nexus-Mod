@@ -712,6 +712,52 @@ def anim_set(name, d, rig):
                 'right_forearm': {'rotation': kf([(0, [0, 0, 0]), (0.35, [-75, 0, 0]), (1.0, [0, 0, 0])])},
                 'chest': {'rotation': kf([(0, [0, 0, 0]), (0.35, [-4, -18, 0]), (1.0, [0, 0, 0])])},
                 'head': {'rotation': kf([(0, [0, 0, 0]), (0.4, [0, -20, 0]), (1.0, [0, 0, 0])])}})
+    def bones_of(spec):
+        out_ = {}
+        for bn, chans in spec.items():
+            if not has(bn): continue
+            out_[bn] = {ch: kf(v, smooth=sm) for ch, (v, sm) in chans.items()}
+        return out_
+    R0 = [0, 0, 0]
+    if name == 'rift_warden':
+        # SLAM: rise onto the toes with the greatsword overhead (0.75s), crash it down at 0.9s (impact tick 18), hold, recover
+        A['slam'] = dict(loop=False, length=1.6, bones=bones_of({
+            'right_arm': {'rotation': ([(0, R0), (0.75, [-178, 0, 12]), (0.9, [-30, 0, 0]), (1.2, [-35, 0, 0]), (1.6, R0)], True)},
+            'left_arm': {'rotation': ([(0, R0), (0.75, [-170, 0, -12]), (0.9, [-35, 0, 0]), (1.2, [-38, 0, 0]), (1.6, R0)], True)},
+            'chest': {'rotation': ([(0, R0), (0.75, [-18, 0, 0]), (0.9, [24, 0, 0]), (1.2, [20, 0, 0]), (1.6, R0)], True)},
+            'torso': {'rotation': ([(0, R0), (0.75, [-6, 0, 0]), (0.9, [12, 0, 0]), (1.6, R0)], True)},
+            'head': {'rotation': ([(0, R0), (0.75, [-15, 0, 0]), (0.9, [10, 0, 0]), (1.6, R0)], True)},
+            'right_leg': {'rotation': ([(0, R0), (0.75, [6, 0, 0]), (0.9, [-28, 0, 0]), (1.3, [-25, 0, 0]), (1.6, R0)], True)},
+            'left_leg': {'rotation': ([(0, R0), (0.9, [18, 0, 0]), (1.3, [15, 0, 0]), (1.6, R0)], True)},
+            'cape1': {'rotation': ([(0, [6, 0, 0]), (0.75, [-4, 0, 0]), (0.9, [45, 0, 0]), (1.6, [6, 0, 0])], True)},
+            'root': {'position': ([(0, R0), (0.75, [0, 1.5, 0]), (0.9, [0, -2.5, 0]), (1.25, [0, -2, 0]), (1.6, R0)], True)}}))
+        # LUNGE: crouch (0.45s), launch at 0.5s (tick 10) with the sword trailing, cleave forward mid-air, land
+        A['lunge'] = dict(loop=False, length=1.3, bones=bones_of({
+            'right_arm': {'rotation': ([(0, R0), (0.45, [35, 0, 15]), (0.6, [50, 0, 20]), (0.85, [-120, 0, 5]), (1.0, [-40, 0, 0]), (1.3, R0)], True)},
+            'left_arm': {'rotation': ([(0, R0), (0.45, [30, 0, -15]), (0.85, [-60, 0, 0]), (1.3, R0)], True)},
+            'chest': {'rotation': ([(0, R0), (0.45, [22, 0, 0]), (0.6, [-10, 0, 0]), (0.85, [18, 0, 0]), (1.3, R0)], True)},
+            'right_leg': {'rotation': ([(0, R0), (0.45, [-35, 0, 0]), (0.6, [25, 0, 0]), (0.9, [-20, 0, 0]), (1.3, R0)], True)},
+            'left_leg': {'rotation': ([(0, R0), (0.45, [-30, 0, 0]), (0.6, [30, 0, 0]), (0.9, [10, 0, 0]), (1.3, R0)], True)},
+            'right_shin': {'rotation': ([(0, R0), (0.45, [45, 0, 0]), (0.6, [10, 0, 0]), (1.3, R0)], True)},
+            'left_shin': {'rotation': ([(0, R0), (0.45, [40, 0, 0]), (0.6, [10, 0, 0]), (1.3, R0)], True)},
+            'cape1': {'rotation': ([(0, [6, 0, 0]), (0.6, [60, 0, 0]), (1.0, [30, 0, 0]), (1.3, [6, 0, 0])], True)},
+            'root': {'position': ([(0, R0), (0.45, [0, -3, 0]), (0.6, R0), (1.3, R0)], True)}}))
+    if name == 'spire_guardian':
+        # SPIN: wind the halberd back (0.5s), whirl a full turn (impact 0.7s = tick 14), settle
+        A['spin'] = dict(loop=False, length=1.4, bones=bones_of({
+            'root': {'rotation': ([(0, R0), (0.5, [0, 40, 0]), (0.62, [0, -60, 0]), (0.75, [0, -200, 0]), (0.9, [0, -330, 0]), (1.0, [0, -360, 0]), (1.4, [0, -360, 0])], False)},
+            'right_arm': {'rotation': ([(0, R0), (0.5, [-70, 0, 40]), (0.75, [-85, 0, 70]), (1.0, [-80, 0, 60]), (1.4, R0)], True)},
+            'left_arm': {'rotation': ([(0, R0), (0.5, [-60, 0, -20]), (0.75, [-80, 0, -50]), (1.0, [-70, 0, -40]), (1.4, R0)], True)},
+            'chest': {'rotation': ([(0, R0), (0.5, [-6, 25, 0]), (0.75, [8, -10, 0]), (1.4, R0)], True)},
+            'right_leg': {'rotation': ([(0, R0), (0.5, [-15, 0, 10]), (1.0, [-10, 0, 8]), (1.4, R0)], True)},
+            'left_leg': {'rotation': ([(0, R0), (0.5, [12, 0, -10]), (1.0, [8, 0, -8]), (1.4, R0)], True)}}))
+        # BARRIER: plant the halberd, arms wide, face up while the ward forms (tick 8)
+        A['barrier'] = dict(loop=False, length=1.2, bones=bones_of({
+            'right_arm': {'rotation': ([(0, R0), (0.4, [-150, 0, 35]), (0.9, [-150, 0, 38]), (1.2, R0)], True)},
+            'left_arm': {'rotation': ([(0, R0), (0.4, [-150, 0, -35]), (0.9, [-150, 0, -38]), (1.2, R0)], True)},
+            'head': {'rotation': ([(0, R0), (0.4, [-25, 0, 0]), (0.9, [-25, 0, 0]), (1.2, R0)], True)},
+            'chest': {'rotation': ([(0, R0), (0.4, [-10, 0, 0]), (1.2, R0)], True)},
+            'root': {'scale': ([(0, [1, 1, 1]), (0.4, [1.05, 1.05, 1.05]), (0.9, [1.05, 1.05, 1.05]), (1.2, [1, 1, 1])], True)}}))
     js = {'format_version': '1.8.0', 'animations': {}}
     for an, a in A.items():
         js['animations'][f'animation.{name}.{an}'] = {'loop': a['loop'], 'animation_length': a['length'], 'bones': a['bones']}
