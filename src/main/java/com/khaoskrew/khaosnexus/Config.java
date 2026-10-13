@@ -103,8 +103,8 @@ public final class Config {
             .defineInRange("secondaryCooldown", 160, 0, 72000);
     public static final ModConfigSpec.IntValue SKILL_XP_PER_LEVEL = SERVER_BUILDER
             .comment("Hunter XP per hunter level. Each level past 1 grants skillPointsPerLevel skill points.",
-                    "14 puts the level cap (25) just past rank S, so a full skill tree is finished around S rather than mid-A.")
-            .defineInRange("skillXpPerLevel", 14, 1, 100000);
+                    "13 puts the level cap (25) at 312 XP, just before rank S (320), so the last skill points arrive with S rather than mid-A.")
+            .defineInRange("skillXpPerLevel", 13, 1, 100000);
     public static final ModConfigSpec.IntValue SKILL_POINTS_PER_LEVEL = SERVER_BUILDER
             .comment("Skill points per hunter level. Every class has its own full pool.")
             .defineInRange("skillPointsPerLevel", 1, 0, 10);

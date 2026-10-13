@@ -3,7 +3,7 @@
 ## 0.1.2-beta (2026-10-13)
 
 ### Balance
-- Hunter XP per level: 10 → 14 (`skillXpPerLevel`). The level-25 cap now lands just after rank S (336 XP) instead of halfway through rank A, so the last skill points arrive with S rank. Existing servers keep the value already saved in their config.
+- Hunter XP per level: 10 → 13 (`skillXpPerLevel`). The level-25 cap now lands at 312 XP, just before rank S (320), instead of halfway through rank A, so the last skill points arrive as you reach S rank. Existing servers keep the value already saved in their config.
 - A-rank gate reward: 1 → 2 netherite scrap, so it clearly beats B rank's 2 diamonds.
 
 ### Cataclysm bosses
