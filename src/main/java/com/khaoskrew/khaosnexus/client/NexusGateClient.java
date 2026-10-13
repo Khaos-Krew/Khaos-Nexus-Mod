@@ -17,6 +17,8 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 public final class NexusGateClient {
     public NexusGateClient(IEventBus modEventBus) {
         modEventBus.addListener(NexusGateClient::registerRenderers);
+        modEventBus.addListener(com.khaoskrew.khaosnexus.client.mob.RiftMobClient::layers);
+        modEventBus.addListener(com.khaoskrew.khaosnexus.client.mob.RiftMobClient::renderers);
         modEventBus.addListener(NexusGateClient::registerKeys);
         modEventBus.addListener(NexusGateClient::registerHud);
     }

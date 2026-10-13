@@ -23,6 +23,7 @@ public class KhaosNexus {
     public KhaosNexus(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
         ModRegistries.register(modEventBus);
+        com.khaoskrew.khaosnexus.mob.ModEntities.register(modEventBus);
         ModAttachments.ATTACHMENT_TYPES.register(modEventBus);
         modEventBus.addListener(ModPayloads::register);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
