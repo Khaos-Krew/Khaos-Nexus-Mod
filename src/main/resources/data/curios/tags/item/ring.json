@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "khaosnexus:gatebreaker_band",
+      "required": false
+    }
+  ]
+}

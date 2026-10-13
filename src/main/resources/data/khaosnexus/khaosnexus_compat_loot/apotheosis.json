@@ -1,0 +1,94 @@
+{
+  "mod": "apotheosis",
+  "entries": [
+    {
+      "ranks": {
+        "D": 0.1,
+        "C": 0.12
+      },
+      "stack": {
+        "id": "apotheosis:gem",
+        "components": {
+          "apotheosis:gem": "khaosnexus:riftheart",
+          "apotheosis:purity": "chipped"
+        }
+      }
+    },
+    {
+      "ranks": {
+        "B": 0.12,
+        "A": 0.1
+      },
+      "stack": {
+        "id": "apotheosis:gem",
+        "components": {
+          "apotheosis:gem": "khaosnexus:riftheart",
+          "apotheosis:purity": "flawed"
+        }
+      }
+    },
+    {
+      "ranks": {
+        "A": 0.08,
+        "S": 0.12
+      },
+      "stack": {
+        "id": "apotheosis:gem",
+        "components": {
+          "apotheosis:gem": "khaosnexus:riftheart",
+          "apotheosis:purity": "flawless"
+        }
+      }
+    },
+    {
+      "ranks": {
+        "C": 0.08,
+        "B": 0.1
+      },
+      "stack": {
+        "id": "apotheosis:gem",
+        "components": {
+          "apotheosis:gem": "khaosnexus:voidglass",
+          "apotheosis:purity": "flawed"
+        }
+      }
+    },
+    {
+      "ranks": {
+        "S": 0.1
+      },
+      "stack": {
+        "id": "apotheosis:gem",
+        "components": {
+          "apotheosis:gem": "khaosnexus:voidglass",
+          "apotheosis:purity": "perfect"
+        }
+      }
+    },
+    {
+      "ranks": {
+        "B": 0.08,
+        "A": 0.1
+      },
+      "stack": {
+        "id": "apotheosis:gem",
+        "components": {
+          "apotheosis:gem": "khaosnexus:gatekeeper",
+          "apotheosis:purity": "normal"
+        }
+      }
+    },
+    {
+      "ranks": {
+        "S": 0.08
+      },
+      "stack": {
+        "id": "apotheosis:gem",
+        "components": {
+          "apotheosis:gem": "khaosnexus:gatekeeper",
+          "apotheosis:purity": "perfect"
+        }
+      }
+    }
+  ]
+}

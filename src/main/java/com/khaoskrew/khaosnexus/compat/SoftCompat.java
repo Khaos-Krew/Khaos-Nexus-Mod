@@ -39,7 +39,20 @@ public final class SoftCompat {
     public static final Hook FTB_QUESTS = new Hook("ftbquests", "FTB Quests", Config.COMPAT_FTB_QUESTS);
     public static final Hook CURIOS = new Hook("curios", "Curios", Config.COMPAT_CURIOS);
 
-    public static final Hook[] HOOKS = {ARS, IRONS, APOTHEOSIS, FTB_TEAMS, FTB_CHUNKS, FTB_QUESTS, CURIOS};
+    public static final Hook RELICS = new Hook("relics", "Relics", Config.COMPAT_RELICS);
+    public static final Hook ARTIFACTS = new Hook("artifacts", "Artifacts", Config.COMPAT_ARTIFACTS);
+
+    public static final Hook[] HOOKS = {ARS, IRONS, APOTHEOSIS, FTB_TEAMS, FTB_CHUNKS, FTB_QUESTS, CURIOS, RELICS, ARTIFACTS};
+
+    /** Hook by mod id (used by the data-driven compat loot files). */
+    public static Hook byMod(String modId) {
+        for (Hook h : HOOKS) {
+            if (h.modId().equals(modId)) {
+                return h;
+            }
+        }
+        return null;
+    }
 
     private SoftCompat() {}
 

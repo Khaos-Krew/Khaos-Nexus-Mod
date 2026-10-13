@@ -91,6 +91,7 @@ public final class ModRegistries {
                     .icon(() -> new ItemStack(NEXUS_GATE_ITEM.get()))
                     .displayItems((parameters, output) -> {
                         output.accept(NEXUS_GATE_ITEM.get());
+                        com.khaoskrew.khaosnexus.compat.items.CompatItems.ITEMS.getEntries().forEach(e -> output.accept(e.get()));
                         output.accept(NEXUS_TOKEN.get());
                         output.accept(com.khaoskrew.khaosnexus.card.HunterCard.CARD.get());
                         output.accept(com.khaoskrew.khaosnexus.card.HunterCard.GUILD_DESK_ITEM.get());

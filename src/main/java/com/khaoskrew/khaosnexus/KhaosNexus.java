@@ -25,6 +25,8 @@ public class KhaosNexus {
         ModRegistries.register(modEventBus);
         com.khaoskrew.khaosnexus.card.HunterCard.register(modEventBus);
         com.khaoskrew.khaosnexus.forge.HunterForge.register(modEventBus);
+        com.khaoskrew.khaosnexus.compat.items.CompatItems.register(modEventBus);
+        com.khaoskrew.khaosnexus.compat.items.CompatLootModifier.SERIALIZERS.register(modEventBus);
         com.khaoskrew.khaosnexus.material.MaterialLootModifier.SERIALIZERS.register(modEventBus);
         com.khaoskrew.khaosnexus.mob.ModEntities.register(modEventBus);
         ModAttachments.ATTACHMENT_TYPES.register(modEventBus);

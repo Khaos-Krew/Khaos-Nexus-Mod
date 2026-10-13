@@ -1,0 +1,57 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "apotheosis"
+    }
+  ],
+  "type": "apotheosis:gem",
+  "weights": {
+    "weight": 0,
+    "quality": 0.0
+  },
+  "bonuses": [
+    {
+      "type": "apotheosis:attribute",
+      "attribute": "minecraft:generic.attack_damage",
+      "gem_class": {
+        "key": "weapon",
+        "types": [
+          "apotheosis:melee_weapon",
+          "apotheosis:trident"
+        ]
+      },
+      "operation": "add_multiplied_base",
+      "values": {
+        "cracked": 0.03,
+        "chipped": 0.05,
+        "flawed": 0.07,
+        "normal": 0.09,
+        "flawless": 0.12,
+        "perfect": 0.15
+      }
+    },
+    {
+      "type": "apotheosis:attribute",
+      "attribute": "minecraft:generic.armor_toughness",
+      "gem_class": {
+        "key": "armor",
+        "types": [
+          "apotheosis:helmet",
+          "apotheosis:chestplate",
+          "apotheosis:leggings",
+          "apotheosis:boots"
+        ]
+      },
+      "operation": "add_value",
+      "values": {
+        "cracked": 0.5,
+        "chipped": 1,
+        "flawed": 1.5,
+        "normal": 2,
+        "flawless": 2.5,
+        "perfect": 3
+      }
+    }
+  ]
+}

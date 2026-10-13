@@ -312,6 +312,15 @@ public final class Config {
     public static final ModConfigSpec.BooleanValue COMPAT_CURIOS = SERVER_BUILDER
             .comment("Curios. Detection only.")
             .define("curios", true);
+    public static final ModConfigSpec.BooleanValue COMPAT_RELICS = SERVER_BUILDER
+            .comment("Relics: the Rift Hunter's Sigil relic (levels up by fighting rift mobs) drops from gate dungeons.")
+            .define("relics", true);
+    public static final ModConfigSpec.BooleanValue COMPAT_ARTIFACTS = SERVER_BUILDER
+            .comment("Artifacts: rift artifacts (curios) drop from gate dungeons.")
+            .define("artifacts", true);
+    public static final ModConfigSpec.DoubleValue COMPAT_LOOT_MULTIPLIER = SERVER_BUILDER
+            .comment("Multiplies every chance in data/<ns>/khaosnexus_compat_loot/*.json. 0 turns themed companion loot off.")
+            .defineInRange("compatLootMultiplier", 1.0D, 0.0D, 10.0D);
 
     static {
         SERVER_BUILDER.pop();
