@@ -1,0 +1,45 @@
+package com.khaoskrew.khaosnexus.network;
+
+import com.khaoskrew.khaosnexus.KhaosNexus;
+import com.khaoskrew.khaosnexus.hunter.ClassAbilities;
+import com.khaoskrew.khaosnexus.hunter.ClassService;
+
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+
+public record ActionPayload(int action, String id) implements CustomPacketPayload {
+    public static final Type<ActionPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "action"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, ActionPayload> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_INT, ActionPayload::action,
+            ByteBufCodecs.STRING_UTF8, ActionPayload::id,
+            ActionPayload::new);
+
+    public static final int PRIMARY = 0;
+    public static final int SECONDARY = 1;
+    public static final int EQUIP = 2;
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+
+    public static void handle(ActionPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            if (!(context.player() instanceof ServerPlayer player)) {
+                return;
+            }
+            if (payload.action() == PRIMARY) {
+                ClassAbilities.cast(player, true);
+            } else if (payload.action() == SECONDARY) {
+                ClassAbilities.cast(player, false);
+            } else if (payload.action() == EQUIP) {
+                ClassService.equip(player, payload.id());
+            }
+        });
+    }
+}
