@@ -12,6 +12,19 @@ Everything since 0.0.2-alpha.
 - New cooldown HUD for both class abilities, showing their keybinds and free skill points. It follows the Hunter Card UI scale and opacity.
 - Skill trees are data-driven (`data/<ns>/khaosnexus_skill_tree/<class>.json`) and synced from the server. New server config options: `skillXpPerLevel`, `skillPointsPerLevel`, `skillMaxLevel`, `skillRespecItem`, `skillRespecCount`.
 
+### Skill balance
+- Every rank of active power, cooldown and radius now gives +12% power, -8% cooldown or +15% radius.
+- Speed passives are now multiplicative (+2-3% per rank). Before, they added a flat amount to base speed, which was far too strong.
+- Unused luck nodes are replaced with useful stats.
+- Capstones (rank A, 3 points) are class-specific:
+  - Caster, Lifebinder and Necromancer: +25% power on both abilities.
+  - Ranger and Summoner: -20% cooldown on both abilities.
+  - Tank: +4 armor toughness.
+  - Assassin: +15% attack speed.
+  - Berserker: +15% attack damage.
+- XP curve: 10 XP per hunter level, level cap 25 (24 points). Finishing one tree (23 points) lands between rank A and rank S.
+- The Hunter Card's Info tab now shows the hunter level.
+
 ### Hunter Card, gear and progression
 - Hunter Card with a Guild Clerk villager and a Guild Desk. Hunter HUD and keys unlock with the card, and the card has profile, nearby gates, settings and forge tabs. Tabs scale with the UI. New open-card key (J).
 - Optional Curios `hunter_card` slot. A card in this slot counts as held.
@@ -44,4 +57,4 @@ Everything since 0.0.2-alpha.
 - `/khaosnexus compat check`.
 
 ### Tech
-- Game tests run headless in the build and in CI (18 tests), covering forge, materials, card, dungeons, themes, compat and skills.
+- Game tests run headless in the build and in CI (19 tests), covering forge, materials, card, dungeons, themes, compat and skills.
