@@ -160,6 +160,9 @@ public final class Config {
             .define("rewardItem", "minecraft:diamond", Config::isRegistryId);
     public static final ModConfigSpec.IntValue RAID_REWARD_COUNT = SERVER_BUILDER
             .defineInRange("rewardCount", 1, 1, 64);
+    public static final ModConfigSpec.IntValue RAID_LOCKOUT_DAYS = SERVER_BUILDER
+            .comment("Minecraft days before the same player can take raid loot again. 0 pays every clear.")
+            .defineInRange("lockoutDays", 7, 0, 365);
 
     static {
         SERVER_BUILDER.pop();
@@ -173,6 +176,9 @@ public final class Config {
     public static final ModConfigSpec.DoubleValue SPIRE_HEALTH_PER_FLOOR = SERVER_BUILDER
             .comment("Extra boss health added for each floor.")
             .defineInRange("healthPerFloor", 4.0D, 0.0D, 100.0D);
+    public static final ModConfigSpec.IntValue SPIRE_DEATH_WEAKNESS = SERVER_BUILDER
+            .comment("Weakness duration, in ticks, after dying in the Spire. 20 ticks is one second.")
+            .defineInRange("deathWeakness", 600, 0, 72000);
 
     static {
         SERVER_BUILDER.pop();

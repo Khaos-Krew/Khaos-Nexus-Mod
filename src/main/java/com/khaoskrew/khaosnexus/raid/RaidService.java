@@ -85,18 +85,21 @@ public final class RaidService {
         if (damage == null) {
             damage = Map.of();
         }
-        long week = level.getDayTime() / 24000L / 7L;
+        int lockoutDays = Config.RAID_LOCKOUT_DAYS.get();
+        long period = lockoutDays <= 0 ? -1L : level.getDayTime() / 24000L / lockoutDays;
         for (ServerPlayer player : level.getServer().getPlayerList().getPlayers()) {
             boolean dealt = damage.getOrDefault(player.getUUID(), 0.0F) > 0.0F || player == killer;
             if (!dealt) {
                 continue;
             }
             HunterProfile profile = HunterRanks.profile(player);
-            if (profile.raidWeek == week) {
+            if (lockoutDays > 0 && profile.raidWeek == period) {
                 player.displayClientMessage(Component.translatable("khaosnexus.raid.lockout"), false);
                 continue;
             }
-            profile.raidWeek = week;
+            if (lockoutDays > 0) {
+                profile.raidWeek = period;
+            }
             HunterRanks.sync(player);
             placeLoot(level, player);
             Bounties.onRaidClear(player);

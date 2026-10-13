@@ -134,7 +134,10 @@ public final class SpireService {
 
     public static void kickOnDeath(ServerPlayer player) {
         player.setHealth(Math.max(1.0F, player.getMaxHealth() * 0.5F));
-        player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 600, 0));
+        int weakness = Config.SPIRE_DEATH_WEAKNESS.get();
+        if (weakness > 0) {
+            player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, weakness, 0));
+        }
         player.displayClientMessage(Component.translatable("khaosnexus.spire.death"), false);
         leave(player);
     }
