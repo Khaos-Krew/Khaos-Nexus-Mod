@@ -59,6 +59,15 @@ public class RiftMobRenderer extends GeoEntityRenderer<RiftMob> {
         super.preRender(pose, mob, model, buffer, consumer, reRender, partialTick, light, overlay, color);
     }
 
+    /** No red hurt flash while a boss draws its weapon, so the draw never reads as a hit reaction. */
+    @Override
+    public int getPackedOverlay(RiftMob mob, float u, float partialTick) {
+        if (mob instanceof com.khaoskrew.khaosnexus.mob.RiftBoss boss && boss.isDrawing()) {
+            return OverlayTexture.pack(OverlayTexture.u(u), OverlayTexture.v(false));
+        }
+        return super.getPackedOverlay(mob, u, partialTick);
+    }
+
     /** 0..1 attack flare for the Void Caster's orb, driven by the synced melee swing. */
     static float flare(RiftMob mob, float partialTick) {
         if (mob.getType() != com.khaoskrew.khaosnexus.mob.ModEntities.VOID_CASTER.get()) {

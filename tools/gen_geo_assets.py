@@ -722,10 +722,16 @@ def anim_set(name, d, rig):
                'head': [(0, [0, 0, 0]), (0.6, [-10, 0, 0]), (0.85, [12, 0, 0]), (1.5, [0, 0, 0])],
                'cape1': [(0, [6, 0, 0]), (0.6, [30, 0, 0]), (0.85, [-5, 0, 0]), (1.5, [6, 0, 0])]}; L = 1.5
     elif name == 'spire_guardian':
-        atk = {'right_arm': [(0, [0, 0, 0]), (0.5, [-120, 60, -20]), (0.75, [-70, -70, 10]), (1.2, [0, 0, 0])],
-               'left_arm': [(0, [0, 0, 0]), (0.5, [-60, 30, 0]), (0.75, [-60, -30, 0]), (1.2, [0, 0, 0])],
-               'chest': [(0, [0, 0, 0]), (0.5, [0, 35, 0]), (0.75, [8, -40, 0]), (1.2, [0, 0, 0])],
-               'hips': [(0, [0, 0, 0]), (0.5, [0, 10, 0]), (0.75, [0, -10, 0]), (1.2, [0, 0, 0])]}; L = 1.2
+        # CHOP: both hands lift the halberd overhead (0.5s), chop it down in front (impact 0.7s = tick 14), recover.
+        # The halberd bone (child of right_hand via right_grip) pitches so the blade leads the swing instead of a fist.
+        atk = {'right_arm': [(0, [0, 0, 0]), (0.5, [-175, 0, 8]), (0.7, [-55, 0, 0]), (0.85, [-45, 0, 0]), (1.2, [0, 0, 0])],
+               'right_forearm': [(0, [0, 0, 0]), (0.5, [-35, 0, 0]), (0.7, [-5, 0, 0]), (1.2, [0, 0, 0])],
+               'left_arm': [(0, [0, 0, 0]), (0.5, [-165, 0, -25]), (0.7, [-60, 0, -22]), (0.85, [-50, 0, -18]), (1.2, [0, 0, 0])],
+               'left_forearm': [(0, [0, 0, 0]), (0.5, [-30, 0, 0]), (0.7, [-10, 0, 0]), (1.2, [0, 0, 0])],
+               'halberd': [(0, [0, 0, 0]), (0.5, [-30, 0, 0]), (0.7, [-75, 0, 0]), (0.85, [-70, 0, 0]), (1.2, [0, 0, 0])],
+               'chest': [(0, [0, 0, 0]), (0.5, [-14, 0, 0]), (0.7, [22, 0, 0]), (0.85, [18, 0, 0]), (1.2, [0, 0, 0])],
+               'head': [(0, [0, 0, 0]), (0.5, [-10, 0, 0]), (0.7, [10, 0, 0]), (1.2, [0, 0, 0])],
+               'hips': [(0, [0, 0, 0]), (0.7, [6, 0, 0]), (1.2, [0, 0, 0])]}; L = 1.2
     else:  # ghoul claw swipe
         atk = {'right_arm': [(0, [0, 0, 0]), (0.25, [-130, 0, -30]), (0.4, [-30, 0, 20]), (0.7, [0, 0, 0])],
                'left_arm': [(0, [0, 0, 0]), (0.35, [-130, 0, 30]), (0.5, [-30, 0, -20]), (0.8, [0, 0, 0])],
@@ -735,7 +741,7 @@ def anim_set(name, d, rig):
     # overshoot on recovery, and cloth/chains lagging behind the motion.
     # windup peak (arms fully raised) and impact frame (swing lands); RiftMob.strikeDelay() must match the impact
     TP = {'rift_brute': 0.45, 'void_caster': 0.35, 'rift_warden': 0.6, 'spire_guardian': 0.5}.get(name, 0.25)
-    TS = {'rift_brute': 0.6, 'void_caster': 0.5, 'rift_warden': 0.85, 'spire_guardian': 0.75}.get(name, 0.4)
+    TS = {'rift_brute': 0.6, 'void_caster': 0.5, 'rift_warden': 0.85, 'spire_guardian': 0.7}.get(name, 0.4)
     def arc(a_w, a_s, a_o):
         return [(0, [0, 0, 0]), (TP, a_w), (TS, a_s), (TS + (L - TS) * 0.45, a_o), (L, [0, 0, 0])]
     extra = {'torso': arc([-8, 0, 0], [12, 0, 0], [-3, 0, 0]),
@@ -766,13 +772,18 @@ def anim_set(name, d, rig):
         if has('sword_back'):  # STUB for the attack-animation pass: reach over the shoulder, pull, bring forward
             # draw: reach over the right shoulder (grab frame 0.4s = 8 ticks, where the renderer swaps the sword bones),
             # rip it free with a torso twist, swing it round in an arc and settle into guard
-            A['draw'] = dict(loop=False, length=1.1, bones={
-                'right_arm': {'rotation': kf([(0, [0, 0, 0]), (0.35, [-170, 0, 25]), (0.45, [-175, 0, 30]), (0.7, [-95, 0, -20]), (0.9, [-30, 0, -8]), (1.1, [0, 0, 0])])},
-                'right_forearm': {'rotation': kf([(0, [0, 0, 0]), (0.35, [-70, 0, 0]), (0.45, [-75, 0, 0]), (0.7, [-20, 0, 0]), (1.1, [0, 0, 0])])},
-                'chest': {'rotation': kf([(0, [0, 0, 0]), (0.35, [-6, -22, 0]), (0.7, [6, 18, 0]), (1.1, [0, 0, 0])])},
-                'head': {'rotation': kf([(0, [0, 0, 0]), (0.35, [0, -25, 0]), (0.7, [0, 10, 0]), (1.1, [0, 0, 0])])},
-                'left_arm': {'rotation': kf([(0, [0, 0, 0]), (0.35, [-20, 0, 20]), (0.8, [-10, 0, 8]), (1.1, [0, 0, 0])])},
-                'cape1': {'rotation': kf([(0, [6, 0, 0]), (0.45, [20, 0, 0]), (0.8, [28, 0, 0]), (1.1, [6, 0, 0])])}})
+            # Clean draw, no flinch: reach over the right shoulder (grab frame 0.4s = 8 ticks, where the renderer swaps the
+            # sword bones), pull the blade up out of the back sheath, bring it round in front and settle into a held ready
+            # stance (0.95-1.3s). The chest only twists and leans forward, never back, so it can't read as a hit reaction.
+            A['draw'] = dict(loop=False, length=1.3, bones={
+                'right_arm': {'rotation': kf([(0, [0, 0, 0]), (0.35, [-170, 0, 25]), (0.42, [-172, 0, 27]), (0.6, [-165, 0, 5]), (0.8, [-80, 0, -12]), (0.95, [-40, 0, -10]), (1.3, [-40, 0, -10])])},
+                'right_forearm': {'rotation': kf([(0, [0, 0, 0]), (0.35, [-70, 0, 0]), (0.42, [-72, 0, 0]), (0.6, [-25, 0, 0]), (0.95, [-30, 0, 0]), (1.3, [-30, 0, 0])])},
+                'left_arm': {'rotation': kf([(0, [0, 0, 0]), (0.4, [-10, 0, 10]), (0.95, [-30, 0, 12]), (1.3, [-30, 0, 12])])},
+                'chest': {'rotation': kf([(0, [0, 0, 0]), (0.35, [2, -18, 0]), (0.6, [3, -10, 0]), (0.95, [6, 8, 0]), (1.3, [6, 8, 0])])},
+                'head': {'rotation': kf([(0, [0, 0, 0]), (0.35, [0, -15, 0]), (0.95, [0, 6, 0]), (1.3, [0, 6, 0])])},
+                'right_leg': {'rotation': kf([(0, [0, 0, 0]), (0.95, [10, 0, 0]), (1.3, [10, 0, 0])])},
+                'left_leg': {'rotation': kf([(0, [0, 0, 0]), (0.95, [-10, 0, 0]), (1.3, [-10, 0, 0])])},
+                'cape1': {'rotation': kf([(0, [6, 0, 0]), (0.6, [14, 0, 0]), (1.3, [8, 0, 0])])}})
             A['sheathe'] = dict(loop=False, length=1.0, bones={
                 'right_arm': {'rotation': kf([(0, [0, 0, 0]), (0.35, [-175, 0, 30]), (0.5, [-170, 0, 25]), (1.0, [0, 0, 0])])},
                 'right_forearm': {'rotation': kf([(0, [0, 0, 0]), (0.35, [-75, 0, 0]), (1.0, [0, 0, 0])])},
@@ -798,25 +809,42 @@ def anim_set(name, d, rig):
             'cape1': {'rotation': ([(0, [6, 0, 0]), (0.75, [-4, 0, 0]), (0.9, [45, 0, 0]), (1.6, [6, 0, 0])], True)},
             'root': {'position': ([(0, R0), (0.75, [0, 1.5, 0]), (0.9, [0, -2.5, 0]), (1.25, [0, -2, 0]), (1.6, R0)], True)}}))
         # LUNGE: crouch (0.45s), launch at 0.5s (tick 10) with the sword trailing, cleave forward mid-air, land
+        # LUNGE: crouch (0.45s), launch at 0.5s (tick 10) leaning forward: shoulders and sword lead, legs trail behind,
+        # cleave down mid-air (0.85s), land. Positive chest/torso X leans forward (same sign as the attack's strike frame).
         A['lunge'] = dict(loop=False, length=1.3, bones=bones_of({
-            'right_arm': {'rotation': ([(0, R0), (0.45, [35, 0, 15]), (0.6, [50, 0, 20]), (0.85, [-120, 0, 5]), (1.0, [-40, 0, 0]), (1.3, R0)], True)},
-            'left_arm': {'rotation': ([(0, R0), (0.45, [30, 0, -15]), (0.85, [-60, 0, 0]), (1.3, R0)], True)},
-            'chest': {'rotation': ([(0, R0), (0.45, [22, 0, 0]), (0.6, [-10, 0, 0]), (0.85, [18, 0, 0]), (1.3, R0)], True)},
-            'right_leg': {'rotation': ([(0, R0), (0.45, [-35, 0, 0]), (0.6, [25, 0, 0]), (0.9, [-20, 0, 0]), (1.3, R0)], True)},
-            'left_leg': {'rotation': ([(0, R0), (0.45, [-30, 0, 0]), (0.6, [30, 0, 0]), (0.9, [10, 0, 0]), (1.3, R0)], True)},
-            'right_shin': {'rotation': ([(0, R0), (0.45, [45, 0, 0]), (0.6, [10, 0, 0]), (1.3, R0)], True)},
-            'left_shin': {'rotation': ([(0, R0), (0.45, [40, 0, 0]), (0.6, [10, 0, 0]), (1.3, R0)], True)},
+            'right_arm': {'rotation': ([(0, R0), (0.45, [-60, 0, 10]), (0.6, [-150, 0, 10]), (0.85, [-40, 0, 0]), (1.0, [-35, 0, 0]), (1.3, R0)], True)},
+            'left_arm': {'rotation': ([(0, R0), (0.45, [-40, 0, -15]), (0.6, [-120, 0, -10]), (0.85, [-40, 0, 0]), (1.3, R0)], True)},
+            'chest': {'rotation': ([(0, R0), (0.45, [18, 0, 0]), (0.6, [24, 0, 0]), (0.85, [32, 0, 0]), (1.0, [16, 0, 0]), (1.3, R0)], True)},
+            'torso': {'rotation': ([(0, R0), (0.45, [14, 0, 0]), (0.6, [18, 0, 0]), (0.85, [20, 0, 0]), (1.0, [8, 0, 0]), (1.3, R0)], True)},
+            'head': {'rotation': ([(0, R0), (0.45, [-14, 0, 0]), (0.85, [-18, 0, 0]), (1.3, R0)], True)},
+            'right_leg': {'rotation': ([(0, R0), (0.45, [-30, 0, 0]), (0.6, [35, 0, 0]), (0.85, [30, 0, 0]), (1.0, [-15, 0, 0]), (1.3, R0)], True)},
+            'left_leg': {'rotation': ([(0, R0), (0.45, [-25, 0, 0]), (0.6, [45, 0, 0]), (0.85, [38, 0, 0]), (1.0, [10, 0, 0]), (1.3, R0)], True)},
+            'right_shin': {'rotation': ([(0, R0), (0.45, [40, 0, 0]), (0.6, [30, 0, 0]), (1.0, [5, 0, 0]), (1.3, R0)], True)},
+            'left_shin': {'rotation': ([(0, R0), (0.45, [35, 0, 0]), (0.6, [35, 0, 0]), (1.0, [5, 0, 0]), (1.3, R0)], True)},
             'cape1': {'rotation': ([(0, [6, 0, 0]), (0.6, [60, 0, 0]), (1.0, [30, 0, 0]), (1.3, [6, 0, 0])], True)},
             'root': {'position': ([(0, R0), (0.45, [0, -3, 0]), (0.6, R0), (1.3, R0)], True)}}))
     if name == 'spire_guardian':
         # SPIN: wind the halberd back (0.5s), whirl a full turn (impact 0.7s = tick 14), settle
         A['spin'] = dict(loop=False, length=1.4, bones=bones_of({
             'root': {'rotation': ([(0, R0), (0.5, [0, 40, 0]), (0.62, [0, -60, 0]), (0.75, [0, -200, 0]), (0.9, [0, -330, 0]), (1.0, [0, -360, 0]), (1.4, [0, -360, 0])], False)},
-            'right_arm': {'rotation': ([(0, R0), (0.5, [-70, 0, 40]), (0.75, [-85, 0, 70]), (1.0, [-80, 0, 60]), (1.4, R0)], True)},
-            'left_arm': {'rotation': ([(0, R0), (0.5, [-60, 0, -20]), (0.75, [-80, 0, -50]), (1.0, [-70, 0, -40]), (1.4, R0)], True)},
+            'right_arm': {'rotation': ([(0, R0), (0.4, [-90, 0, 75]), (1.05, [-90, 0, 80]), (1.4, R0)], True)},
+            'right_forearm': {'rotation': ([(0, R0), (0.4, [0, 0, 0]), (1.4, R0)], True)},
+            'halberd': {'rotation': ([(0, R0), (0.4, [-80, 0, 0]), (1.05, [-80, 0, 0]), (1.4, R0)], True)},
+            'left_arm': {'rotation': ([(0, R0), (0.5, [-40, 0, -35]), (1.0, [-40, 0, -40]), (1.4, R0)], True)},
             'chest': {'rotation': ([(0, R0), (0.5, [-6, 25, 0]), (0.75, [8, -10, 0]), (1.4, R0)], True)},
             'right_leg': {'rotation': ([(0, R0), (0.5, [-15, 0, 10]), (1.0, [-10, 0, 8]), (1.4, R0)], True)},
             'left_leg': {'rotation': ([(0, R0), (0.5, [12, 0, -10]), (1.0, [8, 0, -8]), (1.4, R0)], True)}}))
+        # SWEEP: halberd swung flat and wide across the front, right to left (impact 0.7s = tick 14, same as the chop)
+        A['sweep'] = dict(loop=False, length=1.2, bones=bones_of({
+            'right_arm': {'rotation': ([(0, R0), (0.5, [-85, 0, 70]), (0.7, [-85, 0, -10]), (0.85, [-75, 0, -30]), (1.2, R0)], True)},
+            'right_forearm': {'rotation': ([(0, R0), (0.5, [-10, 0, 0]), (1.2, R0)], True)},
+            'halberd': {'rotation': ([(0, R0), (0.5, [-80, 0, 0]), (0.85, [-80, 0, 0]), (1.2, R0)], True)},
+            'left_arm': {'rotation': ([(0, R0), (0.5, [-50, 0, -30]), (0.7, [-60, 0, 10]), (1.2, R0)], True)},
+            'chest': {'rotation': ([(0, R0), (0.5, [-4, 40, 0]), (0.7, [6, -35, 0]), (0.85, [6, -42, 0]), (1.2, R0)], True)},
+            'hips': {'rotation': ([(0, R0), (0.5, [0, 12, 0]), (0.7, [0, -12, 0]), (1.2, R0)], True)},
+            'head': {'rotation': ([(0, R0), (0.5, [0, -20, 0]), (0.7, [0, 15, 0]), (1.2, R0)], True)},
+            'right_leg': {'rotation': ([(0, R0), (0.7, [-18, 0, 0]), (1.2, R0)], True)},
+            'left_leg': {'rotation': ([(0, R0), (0.7, [12, 0, 0]), (1.2, R0)], True)}}))
         # BARRIER: plant the halberd, arms wide, face up while the ward forms (tick 8)
         A['barrier'] = dict(loop=False, length=1.2, bones=bones_of({
             'right_arm': {'rotation': ([(0, R0), (0.4, [-150, 0, 35]), (0.9, [-150, 0, 38]), (1.2, R0)], True)},

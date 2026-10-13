@@ -116,7 +116,7 @@ public class RiftMob extends Monster implements GeoEntity {
                 action.triggerableAnim("draw", this.anim("draw", false)).triggerableAnim("sheathe", this.anim("sheathe", false))
                         .triggerableAnim("slam", this.anim("slam", false)).triggerableAnim("lunge", this.anim("lunge", false));
             } else {
-                action.triggerableAnim("spin", this.anim("spin", false)).triggerableAnim("barrier", this.anim("barrier", false));
+                action.triggerableAnim("spin", this.anim("spin", false)).triggerableAnim("sweep", this.anim("sweep", false)).triggerableAnim("barrier", this.anim("barrier", false));
             }
         }
         controllers.add(action);
@@ -155,7 +155,12 @@ public class RiftMob extends Monster implements GeoEntity {
         this.windup = this.strikeDelay();
         this.windupTarget = target;
         this.swing(net.minecraft.world.InteractionHand.MAIN_HAND);
-        this.triggerAnim("action", "attack");
+        this.triggerAnim("action", this.attackAnimName());
+    }
+
+    /** Which melee animation to play; the Spire Guardian alternates an overhead halberd chop and a wide sweep. */
+    protected String attackAnimName() {
+        return this.getType() == ModEntities.SPIRE_GUARDIAN.get() && this.random.nextBoolean() ? "sweep" : "attack";
     }
 
     @Override

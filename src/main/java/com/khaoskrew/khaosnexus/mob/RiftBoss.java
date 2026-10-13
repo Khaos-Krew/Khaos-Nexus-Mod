@@ -47,6 +47,14 @@ public class RiftBoss extends RiftMob {
 
     /** Client: game time when DRAWN last changed, so the renderer swaps sword bones mid-draw. */
     private long drawChangedAt = -100;
+    /** Length of the draw animation (1.3s); attacks and the roar wait until the ready stance. */
+    public static final int DRAW_TICKS = 26;
+    private int roarAt = -1;
+
+    /** Client: true while the draw animation plays (renderer hides the hurt tint so the draw never reads as a flinch). */
+    public boolean isDrawing() {
+        return this.isWeaponDrawn() && this.tickCount - this.drawChangedAt < DRAW_TICKS;
+    }
 
     @Override
     public void onSyncedDataUpdated(net.minecraft.network.syncher.EntityDataAccessor<?> key) {
@@ -64,7 +72,7 @@ public class RiftBoss extends RiftMob {
 
     @Override
     protected boolean canStartAttack() {
-        return this.isWeaponDrawn() && this.tickCount - this.drawChangedAt >= 18 && this.special == null;
+        return this.isWeaponDrawn() && this.tickCount - this.drawChangedAt >= DRAW_TICKS && this.special == null;
     }
 
     public int getPhase() {
@@ -130,6 +138,10 @@ public class RiftBoss extends RiftMob {
         if (!"lunge".equals(this.special)) this.getNavigation().stop();
         if ("lunge".equals(this.special) && t == impactTick("lunge") && target != null) {
             net.minecraft.world.phys.Vec3 dir = target.position().subtract(this.position());
+            float yaw = (float) (net.minecraft.util.Mth.atan2(dir.z, dir.x) * (180.0D / Math.PI)) - 90.0F;  // face the leap
+            this.setYRot(yaw);
+            this.yBodyRot = yaw;
+            this.yHeadRot = yaw;
             double h = Math.min(dir.horizontalDistance(), 14.0D);
             dir = new net.minecraft.world.phys.Vec3(dir.x, 0, dir.z).normalize().scale(h * 0.11D);
             this.setDeltaMovement(dir.x, 0.75D, dir.z);
@@ -250,6 +262,10 @@ public class RiftBoss extends RiftMob {
                 }
             }
         }
+        if (this.roarAt >= 0 && this.tickCount >= this.roarAt) {
+            this.roarAt = -1;
+            this.triggerAnim("action", "roar");
+        }
         if (this.special != null) {
             this.tickSpecial(target);
         } else if (target != null && target.isAlive() && this.isWeaponDrawn() && !this.isWindingUp() && --this.specialCooldown <= 0) {
@@ -300,8 +316,13 @@ public class RiftBoss extends RiftMob {
         boolean newTarget = target != null && this.getTarget() == null;
         super.setTarget(target);
         if (newTarget && !this.level().isClientSide) {
+            boolean wasDrawn = this.isWeaponDrawn();
             this.setWeaponDrawn(true);
-            this.triggerAnim("action", "roar");
+            if (wasDrawn) {
+                this.triggerAnim("action", "roar");
+            } else {
+                this.roarAt = this.tickCount + DRAW_TICKS;   // roar after the draw finishes, never over it
+            }
         }
     }
 }
