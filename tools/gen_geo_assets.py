@@ -17,8 +17,16 @@ class Rig:
     def __init__(self): self.bones = {}; self.order = []
     def bone(self, name, parent, pivot, rot=(0, 0, 0)):
         self.bones[name] = dict(name=name, parent=parent, pivot=list(pivot), rotation=list(rot), cubes=[]); self.order.append(name); return name
-    def cube(self, bone, origin, size, role, inflate=0.0):
-        self.bones[bone]['cubes'].append(dict(origin=list(origin), size=list(size), role=role, inflate=inflate))
+    def cube(self, bone, origin, size, role, inflate=0.0, rot=None, pivot=None):
+        c = dict(origin=list(origin), size=list(size), role=role, inflate=inflate)
+        if rot:
+            c['rot'] = list(rot)
+            c['pivot'] = list(pivot) if pivot else [origin[0] + size[0] / 2, origin[1] + size[1] / 2, origin[2] + size[2] / 2]
+        self.bones[bone]['cubes'].append(c)
+        return c
+    def box(self, bone, center, size, role, rot=None, pivot=None, inflate=0.0):
+        o = (center[0] - size[0] / 2, center[1] - size[1] / 2, center[2] - size[2] / 2)
+        return self.cube(bone, o, size, role, inflate, rot, pivot or center)
 
 def humanoid(r, L, hipx, leg, torso, hs, arm, sx, hand_h, hunch=0, hip_role='belt'):
     tw, th, td = torso; aw, ah, ad = arm; lw, ld = leg
@@ -115,32 +123,91 @@ def rig_brute():
     return r, d
 
 def rig_warden():
-    r = Rig(); d = humanoid(r, 30, 5, (10, 10), (20, 30, 10), 18, (10, 30, 10), 15, 8, hip_role='belt')
-    ny = d['ny']; sy = d['sy']
-    r.cube('head', (-10, ny + 4, -10), (20, 4, 20), 'helm')
-    r.cube('head', (-9.5, ny + 3, -10.5), (19, 6, 2), 'visorplate')
-    for i, (ox, h, w) in enumerate(((-8, 9, 3), (-4, 12, 3), (-1.5, 15, 3), (2, 12, 3), (6, 9, 3))):
-        r.cube('head', (ox - 0.5, ny + 18, -1.5), (w, h, w), 'crown')
-    r.cube('jaw', (-10, ny - 1, -10), (3, 6, 16), 'helm'); r.cube('jaw', (7, ny - 1, -10), (3, 6, 16), 'helm')
-    r.cube('chest', (-8, 47, -6.5), (16, 14, 2), 'breastplate'); r.cube('chest', (-3, 50, -7), (6, 7, 1), 'rune')
-    for t, (w, h, oy) in enumerate(((16, 6, 0), (14, 5, 4), (10, 4, 7))):
-        for side, s in (('right', -1), ('left', 1)):
-            x = s * 15; r.cube(f'{side}_arm', (x - w / 2, sy - 1 + oy, -w / 2), (w, h, w), 'pauldron')
+    """Khaos Warden of the Rift (v4, hand-laid): layered plate armour, flared pauldrons, horned crowned helm,
+    fanged visor, segmented gauntlets with fingers, tattered cape, tapered greatsword."""
+    r = Rig(); B = r.box
+    r.bone('root', None, (0, 0, 0))
     for side, s in (('right', -1), ('left', 1)):
-        x = s * 15; r.cube(f'{side}_arm', (x + s * 3 - 1.5, sy + 9, -1.5), (3, 7, 3), 'crown')
-        r.cube(f'{side}_hand', (x - 5.5, d['hand_y'] - 0.5, -5.5), (11, 9, 11), 'gauntlet')
-        r.cube(f'{side}_shin', (s * 5 - 5.5, 6, -5.5), (11, 7, 11), 'gauntlet')
-    for name, o, s in (('tasset_front', (-9, 18, -6), (18, 12, 1)), ('tasset_back', (-9, 18, 5), (18, 12, 1)),
-                       ('tasset_right', (-11, 18, -4), (1, 11, 8)), ('tasset_left', (10, 18, -4), (1, 11, 8))):
-        r.bone(name, 'hips', (0, 30, o[2])); r.cube(name, o, s, 'pauldron')
-    r.bone('cape1', 'chest', (0, 60, 5.5), (6, 0, 0)); r.cube('cape1', (-13, 45, 5.5), (26, 15, 1), 'cape')
-    r.bone('cape2', 'cape1', (0, 45, 5.5)); r.cube('cape2', (-13, 30, 5.5), (26, 15, 1), 'cape')
-    r.bone('cape3', 'cape2', (0, 30, 5.5)); r.cube('cape3', (-13, 16, 5.5), (26, 14, 1), 'capehem')
-    hy = d['hand_y']; x = -15
-    r.bone('sword', 'right_hand', (x, hy + 4, 0), (-12, 0, 0))
-    r.cube('sword', (x - 1.5, hy - 4, -1.5), (3, 12, 3), 'grip'); r.cube('sword', (x - 2, hy - 6, -2), (4, 2, 4), 'guard')
-    r.cube('sword', (x - 6, hy + 8, -2), (12, 3, 4), 'guard')
-    r.cube('sword', (x - 1, hy + 11, -4), (2, 52, 8), 'greatblade')
+        x = s * 5.5
+        r.bone(f'{side}_leg', 'root', (x, 30, 0))
+        B(f'{side}_leg', (x, 22.5, 0), (8, 15, 8), 'limb')
+        B(f'{side}_leg', (x, 24, -4.3), (9, 10, 1.5), 'plate', rot=(-4, 0, 0))
+        B(f'{side}_leg', (x + s * 4.3, 24, 0), (1.5, 11, 8), 'plate', rot=(0, 0, s * 4))
+        r.bone(f'{side}_shin', f'{side}_leg', (x, 15, 0))
+        B(f'{side}_shin', (x, 8, 0), (7.5, 15, 7.5), 'limb')
+        B(f'{side}_shin', (x, 8.5, -4.1), (8.5, 10, 1.5), 'gauntlet')
+        B(f'{side}_shin', (x, 15, -4.4), (6, 5, 3), 'gauntlet', rot=(-15, 0, 0))
+        B(f'{side}_shin', (x, 16.5, -6.3), (2, 4.5, 2), 'crown', rot=(-55, 0, 0))
+        B(f'{side}_shin', (x, 2, -1.5), (9, 4, 12), 'gauntlet')
+        B(f'{side}_shin', (x, 1.3, -8.3), (8, 2.6, 3.5), 'gauntlet', rot=(12, 0, 0))
+    r.bone('hips', 'root', (0, 30, 0))
+    B('hips', (0, 31, 0), (20, 4, 11), 'belt'); B('hips', (0, 31, -5.9), (4, 3.5, 1), 'rune')
+    r.bone('tasset_front', 'hips', (0, 31, -6))
+    r.bone('tasset_back', 'hips', (0, 31, 6))
+    for s in (-1, 1):
+        B('tasset_front', (s * 4.7, 27, -6.4), (9, 7, 1), 'pauldron', rot=(-8, 0, s * -5))
+        B('tasset_front', (s * 4.5, 21.5, -6.9), (8, 6, 1), 'pauldron', rot=(-12, 0, s * -7))
+        B('tasset_back', (s * 4.7, 26, 6.4), (9, 9, 1), 'pauldron', rot=(8, 0, s * 5))
+    for side, s in (('right', -1), ('left', 1)):
+        r.bone(f'tasset_{side}', 'hips', (s * 10.5, 31, 0))
+        B(f'tasset_{side}', (s * 11, 26, 0), (1, 10, 9), 'pauldron', rot=(0, 0, s * 10))
+    r.bone('torso', 'hips', (0, 30, 0))
+    for i, w in enumerate((17, 17.5, 18)):
+        B('torso', (0, 32.5 + i * 4, 0), (w, 4, 9 + i * 0.5), 'plate')
+    r.bone('chest', 'torso', (0, 43, 0))
+    B('chest', (0, 51.5, 0), (20, 17, 11), 'chest')
+    for s in (-1, 1):
+        B('chest', (s * 4.8, 53, -6), (10, 9, 2.5), 'breastplate', rot=(0, s * -12, 0))
+    B('chest', (0, 50, -7), (2, 13, 1.5), 'crown'); B('chest', (0, 47.5, -7.4), (5, 6, 1), 'rune')
+    B('chest', (0, 60, 0), (14, 4, 13), 'helm'); B('chest', (0, 52, 6.2), (18, 14, 2), 'plate')
+    for i in range(3): B('chest', (0, 46 + i * 5, 7.6), (2, 5, 2), 'crown', rot=(40, 0, 0))
+    B('chest', (0, 60.5, 5), (22, 4, 6), 'cape')
+    for side, s in (('right', -1), ('left', 1)):
+        x = s * 15
+        r.bone(f'{side}_arm', 'chest', (x, 58, 0))
+        B(f'{side}_arm', (x, 51, 0), (9, 14, 9), 'limb'); B(f'{side}_arm', (x, 52, 0), (10, 8, 10), 'gauntlet')
+        B(f'{side}_arm', (s * 16, 61, 0), (15, 6, 15), 'pauldron', rot=(0, 0, s * 18))
+        B(f'{side}_arm', (s * 18, 57.5, 0), (13, 5, 13), 'pauldron', rot=(0, 0, s * 28))
+        B(f'{side}_arm', (s * 19.5, 54.5, 0), (11, 4, 11), 'pauldron', rot=(0, 0, s * 38))
+        for j, z in enumerate((-4, 0, 4)):
+            B(f'{side}_arm', (s * (13 + j * 0.5), 66 + (1 if j == 1 else 0), z), (2.5, 8 + (2 if j == 1 else 0), 2.5), 'crown', rot=(0, 0, s * -18))
+        r.bone(f'{side}_forearm', f'{side}_arm', (x, 44, 0))
+        B(f'{side}_forearm', (x, 37, 0), (8.5, 14, 8.5), 'limb'); B(f'{side}_forearm', (x, 38, 0), (10, 9, 10), 'gauntlet')
+        B(f'{side}_forearm', (x, 33.5, 0), (11, 3, 11), 'gauntlet')
+        B(f'{side}_forearm', (x, 44, 4.5), (6, 6, 4), 'gauntlet', rot=(20, 0, 0))
+        B(f'{side}_forearm', (x, 44.5, 7.6), (2, 6, 2), 'crown', rot=(60, 0, 0))
+        r.bone(f'{side}_hand', f'{side}_forearm', (x, 32, 0))
+        B(f'{side}_hand', (x, 29, 0), (8, 6, 8), 'fist'); B(f'{side}_hand', (x, 30, -3.6), (9, 3, 3.5), 'gauntlet')
+        for i in range(4):
+            B(f'{side}_hand', (x + (i - 1.5) * 2.1, 25.5, -2.6), (1.8, 5, 2.2), 'gauntlet', rot=(-25, 0, 0))
+        B(f'{side}_hand', (x - s * 4.6, 28, -1.5), (2, 4.5, 2.2), 'gauntlet', rot=(0, 0, s * -30))
+    r.bone('head', 'chest', (0, 60, 0))
+    B('head', (0, 70, 0), (16, 16, 16), 'helm')
+    B('head', (0, 73.5, -7.6), (17, 3, 4), 'helmspire', rot=(-10, 0, 0))
+    B('head', (0, 69, -8.4), (15, 5, 1.5), 'visorplate')
+    for s in (-1, 1): B('head', (s * 8.6, 67, -1), (2, 11, 13), 'helm', rot=(0, s * -8, 0))
+    for xx, h in ((-6, 8), (-3, 11), (0, 15), (3, 11), (6, 8)):
+        B('head', (xx, 78 + h / 2, -1), (2.6, h, 2.6), 'crown', rot=(0, 0, -xx * 3))
+    for s in (-1, 1):
+        for (c, sz, rt) in (((s * 10, 75, 1), 3.6, (-30, 0, s * -20)), ((s * 12.5, 77.8, 3.2), 3.0, (-50, 0, s * -35)), ((s * 13.6, 81.2, 5.6), 2.2, (-70, 0, s * -50))):
+            B('head', c, (sz, sz, 6), 'spike', rot=rt)
+    r.bone('jaw', 'head', (0, 62, -2))
+    B('jaw', (0, 62.8, -3.5), (14, 5.5, 9), 'helm', rot=(8, 0, 0))
+    for i, xx in enumerate((-5, -3, -1, 1, 3, 5)):
+        B('jaw', (xx, 65.5 + (0.6 if i in (0, 5) else 0), -8.2), (1, 2.4 if i in (0, 5) else 1.6, 1), 'claw')
+    r.bone('cape1', 'chest', (0, 60, 6.5), (6, 0, 0)); B('cape1', (0, 52.5, 7), (24, 15, 1), 'cape')
+    r.bone('cape2', 'cape1', (0, 45, 7)); B('cape2', (0, 37.5, 7.2), (25, 15, 1), 'cape')
+    r.bone('cape3', 'cape2', (0, 30, 7.2)); B('cape3', (0, 23, 7.4), (26, 14, 1), 'capehem')
+    x = -15
+    r.bone('sword', 'right_hand', (x, 28, 0), (-12, 0, 0))
+    B('sword', (x, 30, -1.5), (2.5, 12, 2.5), 'grip'); B('sword', (x, 23, -1.5), (4, 3, 4), 'guard')
+    B('sword', (x, 37, -1.5), (14, 2.5, 4), 'guard')
+    for s in (-1, 1): B('sword', (x + s * 8, 38.5, -1.5), (4, 3, 3), 'guard', rot=(0, 0, s * 30))
+    B('sword', (x, 43, -1.5), (3, 9, 9), 'greatblade')
+    B('sword', (x, 65, -1.5), (2.4, 35, 8), 'greatblade')
+    for (yy, h, w) in ((85.5, 6, 6), (91, 5, 4), (95.5, 4, 2)):
+        B('sword', (x, yy, -1.5), (2.2, h, w), 'greatblade')
+    d = dict(L=30, th=30, hs=16, sy=58, ny=60, sx=15, aw=10, ah=30, tw=20, td=10, hand_y=26)
     return r, d
 
 def rig_guardian():
@@ -401,6 +468,9 @@ def geo(name, rig, k, ts, uvs):
             uv = {fn: {'uv': [f[0], f[1]], 'uv_size': [f[2], f[3]]} for fn, f in F.items() if f[2] > 0 and f[3] > 0}
             cb = {'origin': c['origin'], 'size': c['size'], 'uv': uv}
             if c['inflate']: cb['inflate'] = c['inflate']
+            if c.get('rot'):
+                cb['pivot'] = [-c['pivot'][0], c['pivot'][1], c['pivot'][2]]
+                cb['rotation'] = [-c['rot'][0], c['rot'][1], c['rot'][2]]
             cubes.append(cb)
         e = {'name': bn, 'pivot': [-b['pivot'][0], b['pivot'][1], b['pivot'][2]]}
         if b['parent']: e['parent'] = b['parent']
