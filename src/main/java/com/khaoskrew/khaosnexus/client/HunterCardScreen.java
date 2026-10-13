@@ -166,15 +166,15 @@ public class HunterCardScreen extends Screen {
             CardPayload.ForgeLine l = this.forge.get(i);
             int text = l.unlocked() ? 0xFFF2EEF8 : 0xFF6A5A7A;
             g.drawString(this.font, Component.translatable(l.name()), x, row + 1, text, false);
-            g.drawString(this.font, Component.literal("+" + l.level()), x + 70, row + 1, 0xFFB44BE6, false);
+            g.drawString(this.font, Component.literal("+" + l.level()), x + 62, row + 1, 0xFFB44BE6, false);
             GateRank r = GateRank.byName(l.rank());
-            g.fill(x + 92, row, x + 110, row + 10, 0xFF1A1024);
-            g.drawCenteredString(this.font, l.rank(), x + 101, row + 1, l.unlocked() ? 0xFF000000 | r.color() : 0xFF5A4A6A);
+            g.fill(x + 80, row, x + 96, row + 10, 0xFF1A1024);
+            g.drawCenteredString(this.font, l.rank(), x + 88, row + 1, l.unlocked() ? 0xFF000000 | r.color() : 0xFF5A4A6A);
             Component cost = Component.translatable("khaosnexus.card.forge_cost", l.count(), l.tier(), l.essence());
             if (l.core() > 0) {
-                cost = cost.copy().append(Component.translatable("khaosnexus.forge.cost_core", l.core()));
+                cost = cost.copy().append(Component.translatable("khaosnexus.card.forge_core", l.core()));
             }
-            g.drawString(this.font, cost, x + 118, row + 1, l.unlocked() ? 0xFFD0C0E0 : 0xFF6A5A7A, false);
+            g.drawString(this.font, cost, x + 102, row + 1, l.unlocked() ? 0xFFD0C0E0 : 0xFF6A5A7A, false);
             row += 12;
         }
     }

@@ -209,5 +209,6 @@
   "khaosnexus.card.tab.forge": "Forge",
   "khaosnexus.card.forge_header": "Hunter Forge levels. Grey ones need a higher rank.",
   "khaosnexus.card.no_forge": "No forge recipes loaded.",
-  "khaosnexus.card.forge_cost": "%s× %s-tier, %s essence"
+  "khaosnexus.card.forge_cost": "%s× %s-tier, %s essence",
+  "khaosnexus.card.forge_core": ", %s core"
 }
