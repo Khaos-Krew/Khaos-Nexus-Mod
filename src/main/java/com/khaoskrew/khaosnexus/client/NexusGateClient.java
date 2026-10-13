@@ -31,6 +31,7 @@ public final class NexusGateClient {
         event.register(ClassKeybinds.PRIMARY);
         event.register(ClassKeybinds.SECONDARY);
         event.register(ClassKeybinds.CLASS_MENU);
+        event.register(ClassKeybinds.OPEN_CARD);
     }
 
     private static void registerHud(RegisterGuiLayersEvent event) {

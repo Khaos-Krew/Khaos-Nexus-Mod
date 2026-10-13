@@ -60,6 +60,7 @@ public class HunterCardScreen extends Screen {
         int x = (int) (left() * k);
         int y = (int) ((top() - 22) * k);
         String[] tabs = {"khaosnexus.card.tab.info", "khaosnexus.card.tab.gates", "khaosnexus.card.tab.settings", "khaosnexus.card.tab.forge"};
+        int tw = (int) (W * k / tabs.length); // tabs span the scaled card width
         for (int i = 0; i < tabs.length; i++) {
             int t = i;
             Button b = Button.builder(Component.translatable(tabs[i]), btn -> {
@@ -67,7 +68,7 @@ public class HunterCardScreen extends Screen {
                 lastTab = t;
                 this.scroll = 0;
                 this.init();
-            }).bounds(x + i * 75, y, 73, 18).build();
+            }).bounds(x + i * tw, y, tw - 2, 18).build();
             b.active = i != this.tab;
             this.addRenderableWidget(b);
         }

@@ -66,6 +66,12 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
     private long dungeonGen;
     private long lastOccupied;
 
+    /** Game time the gate first ticked (0 = not yet). Drives the client crack-open animation. */
+    public long bornAt;
+    /** Client only: closed state seen last frame and when it flipped, for the collapse animation. */
+    public Boolean clientLastClosed;
+    public long clientClosedAt = Long.MIN_VALUE;
+
     public NexusGateBlockEntity(BlockPos pos, BlockState state) {
         super(ModRegistries.NEXUS_GATE_ENTITY.get(), pos, state);
     }
@@ -214,6 +220,11 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
     }
 
     private void tickServer(ServerLevel level) {
+        if (this.bornAt == 0L) { // first tick of a new gate: clients play the crack-open animation from here
+            this.bornAt = level.getGameTime();
+            this.setChanged();
+            level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
+        }
         if (!this.active || this.closed) {
             this.hideBossBar();
             return;
@@ -414,6 +425,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
+        tag.putLong("BornAt", this.bornAt);
         tag.putString("Rank", this.rank.name());
         tag.putBoolean("RankAssigned", this.rankAssigned);
         tag.putBoolean("Active", this.active);
@@ -445,6 +457,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
+        this.bornAt = tag.getLong("BornAt");
         this.rank = GateRank.byName(tag.getString("Rank"));
         this.rankAssigned = tag.getBoolean("RankAssigned");
         this.active = tag.getBoolean("Active");

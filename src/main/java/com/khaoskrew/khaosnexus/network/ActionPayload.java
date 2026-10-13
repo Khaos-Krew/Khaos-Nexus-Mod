@@ -22,6 +22,7 @@ public record ActionPayload(int action, String id) implements CustomPacketPayloa
     public static final int PRIMARY = 0;
     public static final int SECONDARY = 1;
     public static final int EQUIP = 2;
+    public static final int OPEN_CARD = 3;
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
@@ -39,6 +40,18 @@ public record ActionPayload(int action, String id) implements CustomPacketPayloa
                 ClassAbilities.cast(player, false);
             } else if (payload.action() == EQUIP) {
                 ClassService.equip(player, payload.id());
+            } else if (payload.action() == OPEN_CARD) {
+                net.minecraft.world.item.ItemStack card = com.khaoskrew.khaosnexus.compat.CuriosCompat.wornCard(player);
+                if (card.isEmpty()) {
+                    for (net.minecraft.world.item.ItemStack s : player.getInventory().items) {
+                        if (s.getItem() instanceof com.khaoskrew.khaosnexus.card.HunterCardItem) { card = s; break; }
+                    }
+                }
+                if (card.isEmpty()) {
+                    player.displayClientMessage(net.minecraft.network.chat.Component.translatable("khaosnexus.card.none_equipped"), true);
+                } else {
+                    com.khaoskrew.khaosnexus.card.HunterCardItem.open(player, card);
+                }
             }
         });
     }

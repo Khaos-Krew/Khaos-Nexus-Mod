@@ -44,7 +44,15 @@ public class NexusRiftRenderer extends GeoBlockRenderer<NexusGateBlockEntity> {
 
     @Override
     public void render(NexusGateBlockEntity gate, float partialTick, PoseStack pose, MultiBufferSource buffer, int light, int overlay) {
+        float[] k = openScale(gate, partialTick);
+        pose.pushPose();
+        if (k != null) {
+            pose.translate(0.5D, 3.0D, 0.5D);
+            pose.scale(k[0], k[1], k[0]);
+            pose.translate(-0.5D, -3.0D, -0.5D);
+        }
         super.render(gate, partialTick, pose, buffer, LightTexture.FULL_BRIGHT, overlay);
+        pose.popPose();
         Font font = Minecraft.getInstance().font;
         Component text = Component.translatable(gate.getRank().translationKey());
         pose.pushPose();
@@ -55,6 +63,70 @@ public class NexusRiftRenderer extends GeoBlockRenderer<NexusGateBlockEntity> {
         int color = gate.isClosed() ? 0xFF808080 : (0xFF000000 | gate.getRank().color());
         font.drawInBatch(text, -font.width(text) / 2.0F, 0.0F, color, true, matrix, buffer, Font.DisplayMode.NORMAL, 0x66000000, LightTexture.FULL_BRIGHT);
         pose.popPose();
+    }
+
+    static final int CRACK_TICKS = 44;
+    static final int COLLAPSE_TICKS = 24;
+
+    /**
+     * Crack-open: a hairline slit tears down the full height, then the rift bulges open (ease-out-back).
+     * Collapse: when the gate closes it pinches to a slit and snaps back as the dormant husk. Null = no scaling.
+     */
+    static float[] openScale(NexusGateBlockEntity gate, float partialTick) {
+        if (gate.getLevel() == null) {
+            return null;
+        }
+        double now = gate.getLevel().getGameTime() + partialTick;
+        boolean closed = gate.isClosed();
+        if (gate.clientLastClosed == null) {
+            gate.clientLastClosed = closed;
+        } else if (gate.clientLastClosed != closed) {
+            gate.clientLastClosed = closed;
+            gate.clientClosedAt = (long) now;
+        }
+        if (closed && now - gate.clientClosedAt < COLLAPSE_TICKS) {
+            float t = (float) ((now - gate.clientClosedAt) / COLLAPSE_TICKS);
+            float sx = t < 0.5F ? 1.0F - 0.94F * ease(t * 2) : 0.06F + 0.94F * ease((t - 0.5F) * 2);
+            spark(gate, t < 0.5F ? 3 : 0);
+            return new float[] {sx, 1.0F};
+        }
+        if (closed || gate.bornAt <= 0L) {
+            return null;
+        }
+        double age = now - gate.bornAt;
+        if (age < 0 || age >= CRACK_TICKS) {
+            return null;
+        }
+        float t = (float) (age / CRACK_TICKS);
+        float slit = 0.3F;
+        if (t < slit) {
+            spark(gate, 2);
+            return new float[] {0.05F, Math.max(0.02F, ease(t / slit))};
+        }
+        float u = (t - slit) / (1 - slit);
+        float c = 1.70158F;
+        float back = 1 + (c + 1) * (float) Math.pow(u - 1, 3) + c * (float) Math.pow(u - 1, 2);
+        spark(gate, u < 0.4F ? 4 : 0);
+        return new float[] {0.05F + 0.95F * back, 1.0F};
+    }
+
+    private static float ease(float t) {
+        t = Math.min(1, Math.max(0, t));
+        return t * t * (3 - 2 * t);
+    }
+
+    private static void spark(NexusGateBlockEntity gate, int n) {
+        var level = gate.getLevel();
+        if (n <= 0 || Minecraft.getInstance().isPaused()) {
+            return;
+        }
+        var p = gate.getBlockPos();
+        var r = level.getRandom();
+        for (int i = 0; i < n; i++) {
+            level.addParticle(r.nextBoolean() ? net.minecraft.core.particles.ParticleTypes.END_ROD : net.minecraft.core.particles.ParticleTypes.REVERSE_PORTAL,
+                    p.getX() + 0.5D + (r.nextDouble() - 0.5D) * 0.3D, p.getY() + 0.5D + r.nextDouble() * 5.5D, p.getZ() + 0.5D + (r.nextDouble() - 0.5D) * 0.3D,
+                    (r.nextDouble() - 0.5D) * 0.25D, (r.nextDouble() - 0.5D) * 0.1D, (r.nextDouble() - 0.5D) * 0.25D);
+        }
     }
 
     @Override

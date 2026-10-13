@@ -65,19 +65,7 @@ public class HunterCardItem extends Item {
         if (!(player instanceof ServerPlayer server)) {
             return InteractionResultHolder.success(stack);
         }
-        UUID owner = owner(stack);
-        if (owner == null) {
-            bind(stack, player);
-        } else if (!owner.equals(player.getUUID())) {
-            String name = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getString("OwnerName");
-            player.displayClientMessage(Component.translatable("khaosnexus.card.not_yours", name), true);
-            return InteractionResultHolder.fail(stack);
-        }
-        HunterCard.unlock(server);
-        int radius = Config.CARD_GATE_RADIUS.get();
-        PacketDistributor.sendToPlayer(server, new CardPayload(nearbyGates((ServerLevel) level, player.blockPosition(), radius), radius,
-                com.khaoskrew.khaosnexus.forge.ForgeRecipes.cardLines(server)));
-        return InteractionResultHolder.consume(stack);
+        return open(server, stack) ? InteractionResultHolder.consume(stack) : InteractionResultHolder.fail(stack);
     }
 
     /** Loaded Nexus Gates within the radius, nearest first. */
@@ -116,5 +104,22 @@ public class HunterCardItem extends Item {
                 ? Component.translatable("khaosnexus.card.unbound").withStyle(ChatFormatting.GRAY)
                 : Component.translatable("khaosnexus.card.bound", name).withStyle(ChatFormatting.DARK_PURPLE));
         tooltip.add(Component.translatable("khaosnexus.card.hint").withStyle(ChatFormatting.GRAY));
+    }
+
+    /** Bind if unowned, check ownership, unlock and send the card screen. Used by right-click and the open-card key. */
+    public static boolean open(ServerPlayer server, ItemStack stack) {
+        UUID owner = owner(stack);
+        if (owner == null) {
+            bind(stack, server);
+        } else if (!owner.equals(server.getUUID())) {
+            String name = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getString("OwnerName");
+            server.displayClientMessage(Component.translatable("khaosnexus.card.not_yours", name), true);
+            return false;
+        }
+        HunterCard.unlock(server);
+        int radius = Config.CARD_GATE_RADIUS.get();
+        PacketDistributor.sendToPlayer(server, new CardPayload(nearbyGates((ServerLevel) server.level(), server.blockPosition(), radius), radius,
+                com.khaoskrew.khaosnexus.forge.ForgeRecipes.cardLines(server)));
+        return true;
     }
 }
