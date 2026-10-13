@@ -50,6 +50,7 @@ public final class ClassService {
             player.setHealth(player.getMaxHealth());
         }
         profile.classId = hunterClass.id();
+        com.khaoskrew.khaosnexus.compat.ProgressHooks.classSelected(player, hunterClass.id());
         profile.swapReady = now + Config.CLASS_SWAP_COOLDOWN.get();
         HunterRanks.sync(player);
         player.displayClientMessage(Component.translatable("khaosnexus.class.equipped", Component.translatable(hunterClass.translationKey())), false);

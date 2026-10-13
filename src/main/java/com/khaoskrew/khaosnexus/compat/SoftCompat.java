@@ -46,6 +46,6 @@ public final class SoftCompat {
         for (Hook hook : HOOKS) {
             KhaosNexus.LOGGER.info("Optional companion {}: {}", hook.modId(), hook.installed() ? "present" : "absent");
         }
-        KhaosNexus.LOGGER.info("Companion hooks only detect mods. FTB Quests chapters are not included.");
+        KhaosNexus.LOGGER.info("Companion hooks only detect mods. FTB Quests chapters are not included; see docs/quest-integration.md for triggers and stages.");
     }
 }

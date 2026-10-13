@@ -71,6 +71,7 @@ public final class Bounties {
             return;
         }
         profile.bountyClaims |= bit;
+        com.khaoskrew.khaosnexus.compat.ProgressHooks.bountyCompleted(player, message.replace("khaosnexus.bounty.", "").replace("_done", ""));
         ItemStack reward = new ItemStack(ModRegistries.NEXUS_TOKEN.get(), tokens);
         if (!player.getInventory().add(reward)) {
             player.drop(reward, false);

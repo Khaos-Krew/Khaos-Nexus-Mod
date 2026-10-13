@@ -57,6 +57,7 @@ public final class HunterRanks {
         sync(player);
         if (after.ordinal() > before.ordinal()) {
             announceRankUp(player, after);
+            com.khaoskrew.khaosnexus.compat.ProgressHooks.rankUp(player, after.name(), after.ordinal());
             if (after == GateRank.S) {
                 Titles.unlock(player, Titles.HUNTER_S);
             }
@@ -81,6 +82,7 @@ public final class HunterRanks {
         HunterProfile profile = profile(player);
         profile.gatesCleared++;
         addXp(player, gateRank.tuning().hunterXp.get());
+        com.khaoskrew.khaosnexus.compat.ProgressHooks.gateCleared(player, gateRank.name());
         Bounties.onGateClear(player);
         Titles.unlock(player, Titles.GATE_BREAKER);
         player.displayClientMessage(Component.translatable(

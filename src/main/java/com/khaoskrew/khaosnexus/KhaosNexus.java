@@ -25,6 +25,7 @@ public class KhaosNexus {
         ModRegistries.register(modEventBus);
         com.khaoskrew.khaosnexus.mob.ModEntities.register(modEventBus);
         ModAttachments.ATTACHMENT_TYPES.register(modEventBus);
+        com.khaoskrew.khaosnexus.compat.ProgressHooks.register(modEventBus);
         modEventBus.addListener(ModPayloads::register);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         modContainer.registerConfig(ModConfig.Type.SERVER, Config.SERVER_SPEC);

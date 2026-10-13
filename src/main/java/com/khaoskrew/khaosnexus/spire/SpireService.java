@@ -116,6 +116,7 @@ public final class SpireService {
             profile.spireBest = Math.max(profile.spireBest, floor);
             if (floor >= profile.spireFloor) {
                 profile.spireFloor = floor + 1;
+                com.khaoskrew.khaosnexus.compat.ProgressHooks.spireFloor(player, floor);
                 int interval = Config.SPIRE_CHECKPOINT.get();
                 if (floor % interval == 0) {
                     profile.spireCheckpoint = floor;

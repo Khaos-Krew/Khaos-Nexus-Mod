@@ -22,6 +22,7 @@ public final class Titles {
             return;
         }
         profile.addTitle(id);
+        com.khaoskrew.khaosnexus.compat.ProgressHooks.titleEarned(player, id);
         if (profile.title.isEmpty()) {
             profile.title = id;
             apply(player);

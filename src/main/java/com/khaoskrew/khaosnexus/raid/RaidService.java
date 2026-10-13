@@ -101,6 +101,7 @@ public final class RaidService {
             }
             HunterRanks.sync(player);
             placeLoot(level, player);
+            com.khaoskrew.khaosnexus.compat.ProgressHooks.raidBossKilled(player, net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(boss.getType()).toString());
             Bounties.onRaidClear(player);
             Titles.unlock(player, Titles.RAID_VICTOR);
             player.displayClientMessage(Component.translatable("khaosnexus.raid.loot"), false);
