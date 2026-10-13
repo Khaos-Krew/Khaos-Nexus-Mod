@@ -29,6 +29,20 @@ public class RiftMobRenderer extends GeoEntityRenderer<RiftMob> {
         return ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "textures/entity/" + name + suffix + ".png");
     }
 
+    /** Warden: greatsword in hand while drawn, on the back (in its scabbard) while sheathed. */
+    @Override
+    public void preRender(PoseStack pose, RiftMob mob, BakedGeoModel model, MultiBufferSource buffer, VertexConsumer consumer,
+            boolean reRender, float partialTick, int light, int overlay, int color) {
+        if (mob instanceof com.khaoskrew.khaosnexus.mob.RiftBoss boss) {
+            boolean drawn = boss.isWeaponDrawn();
+            model.getBone("sword_back").ifPresent(b -> {
+                b.setHidden(drawn);
+                model.getBone("sword").ifPresent(h -> h.setHidden(!drawn));
+            });
+        }
+        super.preRender(pose, mob, model, buffer, consumer, reRender, partialTick, light, overlay, color);
+    }
+
     @Override
     public RenderType getRenderType(RiftMob mob, ResourceLocation texture, MultiBufferSource buffer, float partialTick) {
         return RenderType.entityCutoutNoCull(texture);

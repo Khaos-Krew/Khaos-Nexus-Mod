@@ -10,7 +10,13 @@ import net.minecraft.world.level.Level;
 
 /** A Rift mob with a boss bar (used by the raid Warden and the Spire Guardian). */
 public class RiftBoss extends RiftMob {
+    /** Weapon drawn (in hand) vs sheathed (on the back). Synced so the client shows the right sword bone. */
+    private static final net.minecraft.network.syncher.EntityDataAccessor<Boolean> DRAWN =
+            net.minecraft.network.syncher.SynchedEntityData.defineId(RiftBoss.class, net.minecraft.network.syncher.EntityDataSerializers.BOOLEAN);
+    /** Ticks without a target before the boss sheathes again. */
+    private static final int SHEATHE_DELAY = 100;
     private final ServerBossEvent bossEvent;
+    private int calmTicks;
 
     public RiftBoss(EntityType<? extends RiftBoss> type, Level level, BossEvent.BossBarColor color) {
         super(type, level);
@@ -28,8 +34,32 @@ public class RiftBoss extends RiftMob {
     }
 
     @Override
+    protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DRAWN, false);
+    }
+
+    public boolean isWeaponDrawn() {
+        return this.entityData.get(DRAWN);
+    }
+
+    private void setWeaponDrawn(boolean drawn) {
+        if (drawn != this.isWeaponDrawn()) {
+            this.entityData.set(DRAWN, drawn);
+            this.triggerAnim("action", drawn ? "draw" : "sheathe");
+        }
+    }
+
+    @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
+        net.minecraft.world.entity.LivingEntity target = this.getTarget();
+        if (target != null && target.isAlive()) {
+            this.calmTicks = 0;
+            this.setWeaponDrawn(true);
+        } else if (this.isWeaponDrawn() && ++this.calmTicks > SHEATHE_DELAY) {
+            this.setWeaponDrawn(false);
+        }
         this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
     }
 
@@ -67,6 +97,7 @@ public class RiftBoss extends RiftMob {
         boolean newTarget = target != null && this.getTarget() == null;
         super.setTarget(target);
         if (newTarget && !this.level().isClientSide) {
+            this.setWeaponDrawn(true);
             this.triggerAnim("action", "roar");
         }
     }

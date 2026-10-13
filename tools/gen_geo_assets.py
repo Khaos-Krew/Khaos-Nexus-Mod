@@ -2,7 +2,7 @@
 plus the animated Nexus Rift (gate) visuals. Specs: /workspace/khaos-nexus/mod-art/concepts/concepts.md.
 Units are model px (16 px = 1 block), y-up, feet at y=0, the model faces north (-Z).
 Every texture is painted per face in Python and saved as lossless PNG."""
-import json, math, os, random
+import json, math, os, random, sys
 from PIL import Image, ImageDraw, ImageFilter
 HERE = os.path.dirname(os.path.abspath(__file__))
 RES = os.path.join(HERE, '..', 'src', 'main', 'resources', 'assets', 'khaosnexus')
@@ -203,16 +203,30 @@ def rig_warden():
     r.bone('cape1', 'chest', (0, 60, 6.5), (6, 0, 0)); B('cape1', (0, 52.5, 7), (24, 15, 1), 'cape')
     r.bone('cape2', 'cape1', (0, 45, 7)); B('cape2', (0, 37.5, 7.2), (25, 15, 1), 'cape')
     r.bone('cape3', 'cape2', (0, 30, 7.2)); B('cape3', (0, 23, 7.4), (26, 14, 1), 'capehem')
+    def sword_parts(bone, x, g, z):
+        """Greatsword built around its grip centre (x, g, z); blade points +y."""
+        B(bone, (x, g, z), (2.4, 13, 2.4), 'grip'); B(bone, (x, g - 7.4, z), (3.6, 2.4, 3.6), 'guard')
+        B(bone, (x, g - 9.0, z), (2, 1.2, 2), 'rune')
+        B(bone, (x, g + 7.6, z), (13, 2.2, 4.2), 'guard'); B(bone, (x, g + 7.6, z), (3.4, 3.4, 4.6), 'rune')
+        for s_ in (-1, 1): B(bone, (x + s_ * 7.6, g + 9.2, z), (3.6, 2.6, 3), 'guard', rot=(0, 0, s_ * 32))
+        B(bone, (x, g + 13.5, z), (2.8, 9, 8.6), 'greatblade')
+        B(bone, (x, g + 35.5, z), (2.2, 35, 8), 'greatblade')
+        for (yy, h, w) in ((56, 6, 6), (61.5, 5, 4), (66, 4, 2)):
+            B(bone, (x, g + yy, z), (2.0, h, w), 'greatblade')
     x = -15
     r.bone('sword', 'right_hand', (x, 29, -0.5), (SWORD_TILT, 0, 6))
-    B('sword', (x, 29, -0.5), (2.4, 13, 2.4), 'grip'); B('sword', (x, 21.6, -0.5), (3.6, 2.4, 3.6), 'guard')
-    B('sword', (x, 20.0, -0.5), (2, 1.2, 2), 'rune')
-    B('sword', (x, 36.6, -0.5), (13, 2.2, 4.2), 'guard'); B('sword', (x, 36.6, -0.5), (3.4, 3.4, 4.6), 'rune')
-    for s_ in (-1, 1): B('sword', (x + s_ * 7.6, 38.2, -0.5), (3.6, 2.6, 3), 'guard', rot=(0, 0, s_ * 32))
-    B('sword', (x, 42.5, -0.5), (2.8, 9, 8.6), 'greatblade')
-    B('sword', (x, 64.5, -0.5), (2.2, 35, 8), 'greatblade')
-    for (yy, h, w) in ((85, 6, 6), (90.5, 5, 4), (95, 4, 2)):
-        B('sword', (x, yy, -0.5), (2.0, h, w), 'greatblade')
+    sword_parts('sword', x, 29, -0.5)
+    # sheathed on the back: grip over the right shoulder, tip toward the left hip
+    BACK_Z = 12.5; g = 52 - 30
+    r.bone('scabbard', 'chest', (0, 52, BACK_Z), (0, 0, 145))
+    B('scabbard', (0, g + 41, BACK_Z), (3.6, 50, 10), 'cape')
+    B('scabbard', (0, g + 16.5, BACK_Z), (4.4, 3, 10.8), 'guard')
+    B('scabbard', (0, g + 66.5, BACK_Z), (4.0, 3, 6), 'guard')
+    for yy in (g + 30, g + 50): B('scabbard', (0, yy, BACK_Z), (4.2, 1.6, 10.6), 'belt')
+    r.bone('sword_back', 'scabbard', (0, 52, BACK_Z))
+    sword_parts('sword_back', 0, g, BACK_Z)
+    B('chest', (0, 52, -6.6), (3, 30, 1), 'belt', rot=(0, 0, 38)); B('chest', (0, 52, 7.6), (3, 30, 1), 'belt', rot=(0, 0, -38))
+    B('chest', (0, 52, -7.2), (3.4, 3.4, 0.8), 'guard')
     for s_ in (-1, 1):  # fist wraps around the grip
         B('right_hand', (x, 29, -0.5 + s_ * 1.6), (6.4, 4.8, 0.9), 'gauntlet')
     d = dict(L=30, th=30, hs=16, sy=58, ny=60, sx=15, aw=10, ah=30, tw=20, td=10, hand_y=26)
@@ -245,9 +259,9 @@ def rig_guardian():
     return r, d
 
 MOBS = {
- 'rift_ghoul': dict(rig=rig_ghoul, k=4, ts=[256, 256], pal=dict(base='#25252E', dark='#110E13', accent='#6A3694'), glow='#C12F41', eye='#A45ADA', eyes='hollow'),
- 'rift_stalker': dict(rig=rig_stalker, k=4, ts=[256, 256], pal=dict(base='#25212E', dark='#0D0914', accent='#5E3F7C', robe='#2A1F3C'), glow='#C23346', eye='#E0485A', eyes='slit'),
- 'void_caster': dict(rig=rig_caster, k=4, ts=[256, 256], pal=dict(base='#261F2B', dark='#110B15', accent='#7520A1', robe='#301C35'), glow='#8E2745', eye='#B35AE0', orb='#CA59EE', eyes='dots'),
+ 'rift_ghoul': dict(rig=rig_ghoul, k=4, ts=[512, 512], pal=dict(base='#25252E', dark='#110E13', accent='#6A3694'), glow='#C12F41', eye='#A45ADA', eyes='hollow'),
+ 'rift_stalker': dict(rig=rig_stalker, k=4, ts=[512, 512], pal=dict(base='#25212E', dark='#0D0914', accent='#5E3F7C', robe='#2A1F3C'), glow='#C23346', eye='#E0485A', eyes='slit'),
+ 'void_caster': dict(rig=rig_caster, k=4, ts=[512, 512], pal=dict(base='#261F2B', dark='#110B15', accent='#7520A1', robe='#301C35'), glow='#8E2745', eye='#B35AE0', orb='#CA59EE', eyes='dots'),
  'rift_brute': dict(rig=rig_brute, k=2, ts=[256, 256], pal=dict(base='#2E212B', dark='#140B10', accent='#463442'), glow='#B13648', eye='#E04A5C', crystal='#8A45A0', eyes='dots'),
  'rift_warden': dict(rig=rig_warden, k=2, ts=[512, 512], boss=True, pal=dict(base='#2A2327', dark='#120D10', accent='#5C5053', cape='#4A141C'), trim='#6E5A3C', glow='#AD2530', eye='#FF3B47', crystal='#A15FC0', eyes='visor'),
  'spire_guardian': dict(rig=rig_guardian, k=2, ts=[512, 512], boss=True, pal=dict(base='#2D2528', dark='#120D0F', accent='#5A5054', cape='#4C151E'), glow='#962933', eye='#B04BE0', core='#7F18A9', eyes='visor'),
@@ -342,6 +356,13 @@ class Painter:
             side = fn not in ('up', 'down')
             if role in ('robe', 'hood', 'sleeve', 'collar'):
                 rc = P.get('robe', acc); s.fill(f, fn, mul(rc, 0.7), mul(rc, 1.2))
+                if s.mob.get('trim'):  # cloth weave + stitched seam
+                    for xx in range(fx, fx + fw):
+                        for yy in range(fy, fy + fh):
+                            if (xx + yy) % 2 == 0: s.dk(xx, yy, 0.9)
+                            if (xx // 2 + yy // 2) % 9 == 0: s.dk(xx, yy, 1.12)
+                    if side and fh > 3 * k:
+                        for xx in range(fx + 1, fx + fw - 1, 3): s.px(xx, fy + max(1, k // 2), mul(hx(s.mob['trim']), 1.3))
                 if side:
                     for xx in range(fx, fx + fw):
                         ph = ((xx - fx) / k) % 3
@@ -392,7 +413,7 @@ class Painter:
                     for xx in range(fx + k, fx + fw - k):
                         for yy in range(ey - k // 2, ey + k // 2 + 1): s.px(xx, yy, (6, 3, 6)); s.gl(xx, yy, s.ec, 1.0 if yy <= ey else 0.6)
             elif role in ('cape', 'capehem'):
-                cc = P['cape']; s.fill(f, fn, mul(cc, 0.65), mul(cc, 1.2), ao=False)
+                cc = P.get('cape', P.get('robe', P['accent'])); s.fill(f, fn, mul(cc, 0.65), mul(cc, 1.2), ao=False)
                 for xx in range(fx, fx + fw):  # cloth weave
                     for yy in range(fy, fy + fh):
                         if (xx + yy) % 2 == 0: s.dk(xx, yy, 0.9)
@@ -461,7 +482,9 @@ class Painter:
             else:  # stone/flesh: body, chest, limb, fist, foot, claw, skull, jaw
                 s.fill(f, fn, mul(dark, 1.1), mul(base, 1.3))
                 if role == 'claw': s.fill(f, fn, (78, 70, 80), (138, 126, 134))
-                if side: s.scratches(f, 2, 0.7)
+                if side: s.scratches(f, 2 if not s.mob.get('trim') else 5, 0.7)
+                if side and s.mob.get('trim') and fw > 2 * k:
+                    for xx in range(fx, fx + fw): s.dk(xx, fy, 1.35)
                 if role == 'chest' and fn == 'north':
                     cx = fx + fw // 2
                     for yy in range(fy + k, fy + fh - k): s.dk(cx, yy, 0.6)
@@ -607,6 +630,13 @@ def anim_set(name, d, rig):
         RB = {b: {'rotation': kf(v)} for b, v in R.items() if has(b)}
         RB['root'] = {'scale': kf([(0, [1, 1, 1]), (0.5, [1.04, 1.04, 1.04]), (1.8, [1.04, 1.04, 1.04]), (2.4, [1, 1, 1])])}
         A['roar'] = dict(loop=False, length=2.4, bones=RB)
+        if has('sword_back'):  # STUB for the attack-animation pass: reach over the shoulder, pull, bring forward
+            A['draw'] = dict(loop=False, length=0.9, bones={
+                'right_arm': {'rotation': kf([(0, [0, 0, 0]), (0.35, [-165, 0, 15]), (0.55, [-120, 0, 10]), (0.9, [0, 0, 0])])},
+                'right_forearm': {'rotation': kf([(0, [0, 0, 0]), (0.35, [-40, 0, 0]), (0.9, [0, 0, 0])])},
+                'chest': {'rotation': kf([(0, [0, 0, 0]), (0.35, [0, -15, 0]), (0.9, [0, 0, 0])])}})
+            A['sheathe'] = dict(loop=False, length=0.9, bones={
+                'right_arm': {'rotation': kf([(0, [0, 0, 0]), (0.45, [-165, 0, 15]), (0.9, [0, 0, 0])])}})
     js = {'format_version': '1.8.0', 'animations': {}}
     for an, a in A.items():
         js['animations'][f'animation.{name}.{an}'] = {'loop': a['loop'], 'animation_length': a['length'], 'bones': a['bones']}
@@ -707,6 +737,7 @@ def rift_geo():
     json.dump(js, open(out('animations', 'block', 'nexus_rift.animation.json'), 'w'), indent=1)
 
 if __name__ == '__main__':
+    import rigs_v4; rigs_v4.install(sys.modules[__name__])
     for name, m in MOBS.items():
         rig, d = m['rig']()
         uvs = pack(rig, m['k'], m['ts']); pt = Painter(name, m)  # pack first: it may grow m['ts']

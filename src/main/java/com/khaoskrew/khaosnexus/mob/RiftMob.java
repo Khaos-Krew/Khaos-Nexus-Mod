@@ -109,6 +109,9 @@ public class RiftMob extends Monster implements GeoEntity {
                 .triggerableAnim("attack", this.anim("attack", false));
         if (this instanceof RiftBoss) {
             action.triggerableAnim("roar", this.anim("roar", false));
+            if ("animation.rift_warden.".equals(this.animPrefix)) {
+                action.triggerableAnim("draw", this.anim("draw", false)).triggerableAnim("sheathe", this.anim("sheathe", false));
+            }
         }
         controllers.add(action);
     }

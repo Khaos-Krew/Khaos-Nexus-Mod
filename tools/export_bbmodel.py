@@ -3,6 +3,7 @@ Usage: export_bbmodel.py NAME [stage]   stages: body, armor, helm, cape, sword, 
 import base64, json, os, sys, uuid
 sys.path.insert(0, os.path.dirname(__file__))
 import gen_geo_assets as G
+import rigs_v4; rigs_v4.install(G)
 STAGES = ['body', 'armor', 'helm', 'cape', 'sword', 'texture']
 def stage_of(bone, role):
     if bone in ('sword', 'halberd') or 'blade' in bone: return 'sword'
