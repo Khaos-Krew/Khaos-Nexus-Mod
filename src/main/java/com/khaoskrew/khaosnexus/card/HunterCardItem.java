@@ -75,7 +75,8 @@ public class HunterCardItem extends Item {
         }
         HunterCard.unlock(server);
         int radius = Config.CARD_GATE_RADIUS.get();
-        PacketDistributor.sendToPlayer(server, new CardPayload(nearbyGates((ServerLevel) level, player.blockPosition(), radius), radius));
+        PacketDistributor.sendToPlayer(server, new CardPayload(nearbyGates((ServerLevel) level, player.blockPosition(), radius), radius,
+                com.khaoskrew.khaosnexus.forge.ForgeRecipes.cardLines(server)));
         return InteractionResultHolder.consume(stack);
     }
 

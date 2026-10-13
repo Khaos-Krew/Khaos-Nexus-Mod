@@ -1,0 +1,24 @@
+{
+  "name": "khaosnexus.forge.recipe.weapons",
+  "inputs": ["#minecraft:enchantable/weapon", "#minecraft:enchantable/trident", "#minecraft:enchantable/mace"],
+  "attribute": "minecraft:generic.attack_damage",
+  "slot": "mainhand",
+  "levels": [
+    {"rank": "E", "tier": "E", "count": 4,  "essence": 2,  "core": 0, "bonus": 0.5},
+    {"rank": "D", "tier": "D", "count": 6,  "essence": 4,  "core": 0, "bonus": 1.0},
+    {"rank": "C", "tier": "C", "count": 8,  "essence": 6,  "core": 1, "bonus": 1.75},
+    {"rank": "B", "tier": "B", "count": 8,  "essence": 10, "core": 2, "bonus": 2.5},
+    {"rank": "A", "tier": "A", "count": 10, "essence": 14, "core": 3, "bonus": 3.5},
+    {"rank": "S", "tier": "S", "count": 12, "essence": 20, "core": 5, "bonus": 5.0}
+  ],
+  "class_bonus": {
+    "tank":        {"attribute": "minecraft:generic.knockback_resistance", "per_level": 0.04},
+    "assassin":    {"attribute": "minecraft:generic.attack_speed", "per_level": 0.08},
+    "caster":      {"attribute": "irons_spellbooks:spell_power", "per_level": 0.03},
+    "ranger":      {"attribute": "minecraft:generic.movement_speed", "per_level": 0.003},
+    "lifebinder":  {"attribute": "minecraft:generic.max_health", "per_level": 1.0},
+    "berserker":   {"attribute": "minecraft:generic.attack_damage", "per_level": 0.4},
+    "summoner":    {"attribute": "minecraft:generic.luck", "per_level": 0.25},
+    "necromancer": {"attribute": "minecraft:generic.max_health", "per_level": 0.75}
+  }
+}

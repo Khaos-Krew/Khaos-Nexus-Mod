@@ -25,6 +25,7 @@ public class HunterCardScreen extends Screen {
     private static int lastTab;
     private final List<CardPayload.Gate> gates;
     private final int radius;
+    private final List<CardPayload.ForgeLine> forge;
     private int tab;
     private int scroll;
 
@@ -32,6 +33,7 @@ public class HunterCardScreen extends Screen {
         super(Component.translatable("khaosnexus.card.title"));
         this.gates = payload.gates();
         this.radius = payload.radius();
+        this.forge = payload.forge();
         this.tab = lastTab;
     }
 
@@ -57,7 +59,7 @@ public class HunterCardScreen extends Screen {
         float k = scale();
         int x = (int) (left() * k);
         int y = (int) ((top() - 22) * k);
-        String[] tabs = {"khaosnexus.card.tab.info", "khaosnexus.card.tab.gates", "khaosnexus.card.tab.settings"};
+        String[] tabs = {"khaosnexus.card.tab.info", "khaosnexus.card.tab.gates", "khaosnexus.card.tab.settings", "khaosnexus.card.tab.forge"};
         for (int i = 0; i < tabs.length; i++) {
             int t = i;
             Button b = Button.builder(Component.translatable(tabs[i]), btn -> {
@@ -65,7 +67,7 @@ public class HunterCardScreen extends Screen {
                 lastTab = t;
                 this.scroll = 0;
                 this.init();
-            }).bounds(x + i * 82, y, 80, 18).build();
+            }).bounds(x + i * 75, y, 73, 18).build();
             b.active = i != this.tab;
             this.addRenderableWidget(b);
         }
@@ -83,7 +85,8 @@ public class HunterCardScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mx, double my, double dx, double dy) {
-        this.scroll = Math.max(0, Math.min(Math.max(0, this.gates.size() - 12), this.scroll - (int) Math.signum(dy)));
+        int size = this.tab == 3 ? this.forge.size() : this.gates.size();
+        this.scroll = Math.max(0, Math.min(Math.max(0, size - 12), this.scroll - (int) Math.signum(dy)));
         return true;
     }
 
@@ -108,6 +111,8 @@ public class HunterCardScreen extends Screen {
             this.info(g, p, x + 8, y + 24);
         } else if (this.tab == 1) {
             this.gateList(g, x + 8, y + 24);
+        } else if (this.tab == 3) {
+            this.forgeList(g, x + 8, y + 24);
         } else {
             g.drawString(this.font, Component.translatable("khaosnexus.card.set.note"), x + 8, y + 20, 0xFFA898B8, false);
         }
@@ -148,6 +153,30 @@ public class HunterCardScreen extends Screen {
         line(g, x, y + 138, Component.translatable("khaosnexus.card.spire"),
                 Component.translatable("khaosnexus.card.spire_value", p.spireFloor, p.spireBest));
         line(g, x, y + 150, Component.translatable("khaosnexus.card.party"), Component.literal(String.valueOf(p.partySize)));
+    }
+
+    private void forgeList(GuiGraphics g, int x, int y) {
+        g.drawString(this.font, Component.translatable("khaosnexus.card.forge_header"), x, y, 0xFFA898B8, false);
+        if (this.forge.isEmpty()) {
+            g.drawString(this.font, Component.translatable("khaosnexus.card.no_forge"), x, y + 16, 0xFF8A7A9A, false);
+            return;
+        }
+        int row = y + 16;
+        for (int i = this.scroll; i < Math.min(this.forge.size(), this.scroll + 12); i++) {
+            CardPayload.ForgeLine l = this.forge.get(i);
+            int text = l.unlocked() ? 0xFFF2EEF8 : 0xFF6A5A7A;
+            g.drawString(this.font, Component.translatable(l.name()), x, row + 1, text, false);
+            g.drawString(this.font, Component.literal("+" + l.level()), x + 70, row + 1, 0xFFB44BE6, false);
+            GateRank r = GateRank.byName(l.rank());
+            g.fill(x + 92, row, x + 110, row + 10, 0xFF1A1024);
+            g.drawCenteredString(this.font, l.rank(), x + 101, row + 1, l.unlocked() ? 0xFF000000 | r.color() : 0xFF5A4A6A);
+            Component cost = Component.translatable("khaosnexus.card.forge_cost", l.count(), l.tier(), l.essence());
+            if (l.core() > 0) {
+                cost = cost.copy().append(Component.translatable("khaosnexus.forge.cost_core", l.core()));
+            }
+            g.drawString(this.font, cost, x + 118, row + 1, l.unlocked() ? 0xFFD0C0E0 : 0xFF6A5A7A, false);
+            row += 12;
+        }
     }
 
     private void gateList(GuiGraphics g, int x, int y) {

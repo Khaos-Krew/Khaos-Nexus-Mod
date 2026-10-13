@@ -134,6 +134,7 @@ public final class GateArena {
         }
         java.util.List<ItemStack> extras = new java.util.ArrayList<>(com.khaoskrew.khaosnexus.material.MaterialTiers.roll(rank, level.getRandom()));
         extras.addAll(com.khaoskrew.khaosnexus.compat.CompatPools.loot(rank, level.getRandom()));
+        com.khaoskrew.khaosnexus.forge.HunterForge.addRewards(rank, level.getRandom(), extras);
         for (ItemStack material : extras) {
             ItemEntity drop = new ItemEntity(level, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, material);
             drop.setDefaultPickUpDelay();

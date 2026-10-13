@@ -94,6 +94,9 @@ public final class ModRegistries {
                         output.accept(NEXUS_TOKEN.get());
                         output.accept(com.khaoskrew.khaosnexus.card.HunterCard.CARD.get());
                         output.accept(com.khaoskrew.khaosnexus.card.HunterCard.GUILD_DESK_ITEM.get());
+                        output.accept(com.khaoskrew.khaosnexus.forge.HunterForge.FORGE_ITEM.get());
+                        output.accept(com.khaoskrew.khaosnexus.forge.HunterForge.RIFT_ESSENCE.get());
+                        output.accept(com.khaoskrew.khaosnexus.forge.HunterForge.RIFT_CORE.get());
                         output.accept(SPIRE_GATE_ITEM.get());
                         output.accept(RAID_ALTAR_ITEM.get());
                         output.accept(PERSONAL_LOOT_ITEM.get());

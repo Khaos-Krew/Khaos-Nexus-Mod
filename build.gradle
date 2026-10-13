@@ -194,3 +194,11 @@ idea {
         downloadJavadoc = true
     }
 }
+
+// Game tests run headless as part of `check`, so CI's `./gradlew build` runs them too.
+// Skip locally with -PskipGameTests.
+tasks.named('check') {
+    if (!project.hasProperty('skipGameTests')) {
+        dependsOn tasks.named('runGameTestServer')
+    }
+}
