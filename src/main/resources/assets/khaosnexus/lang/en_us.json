@@ -144,6 +144,7 @@
   "entity.khaosnexus.bone_thrall": "Bone Thrall",
   "khaosnexus.dungeon.entered": "You step through the %s gate. Slay the dungeon boss to close it.",
   "khaosnexus.dungeon.boss_name": "%2$s, %1$s-Rank Gate Boss",
+  "khaosnexus.dungeon.collapsed": "The %s gate's dungeon stood empty too long and collapsed. The gate can be opened again.",
   "khaosnexus.dungeon.left": "You leave the dungeon. The gate stays open.",
   "khaosnexus.dungeon.not_inside": "You are not in a gate dungeon."
 }

@@ -120,12 +120,12 @@ public final class KhaosCommands {
                                     if (dungeon == null) {
                                         return 0;
                                     }
-                                    var origin = com.khaoskrew.khaosnexus.dungeon.DungeonService.allocate(dungeon);
-                                    var layout = com.khaoskrew.khaosnexus.dungeon.DungeonService.build(dungeon, rank, origin, player.getRandom());
+                                    var lease = com.khaoskrew.khaosnexus.dungeon.DungeonService.allocate(dungeon);
+                                    var layout = com.khaoskrew.khaosnexus.dungeon.DungeonService.build(dungeon, rank, lease.origin(), player.getRandom());
                                     if (layout == null) {
                                         return 0;
                                     }
-                                    com.khaoskrew.khaosnexus.dungeon.DungeonService.populate(dungeon, rank, layout, player.getRandom());
+                                    com.khaoskrew.khaosnexus.dungeon.DungeonService.populate(dungeon, rank, layout, player.getRandom(), lease);
                                     if (context.getInput().endsWith(" cutaway")) {
                                         com.khaoskrew.khaosnexus.dungeon.DungeonService.cutaway(dungeon, layout.box());
                                         var b0 = layout.box();
@@ -140,6 +140,17 @@ public final class KhaosCommands {
                                             + ", boss " + (layout.boss() == null ? "none" : layout.boss().toShortString())), false);
                                     return 1;
                                 })))
+                        .then(Commands.literal("instances").requires(source -> source.hasPermission(2)).executes(context -> {
+                            var dungeon = com.khaoskrew.khaosnexus.dungeon.DungeonService.level(context.getSource().getServer());
+                            if (dungeon == null) {
+                                return 0;
+                            }
+                            var d = com.khaoskrew.khaosnexus.dungeon.DungeonInstances.get(dungeon);
+                            context.getSource().sendSuccess(() -> net.minecraft.network.chat.Component.literal(
+                                    "Dungeon instances: " + d.liveCount() + " live, " + d.pendingResets() + " wiping, "
+                                    + d.freeCount() + " free, " + d.highWater() + " regions ever used"), false);
+                            return d.liveCount();
+                        }))
                         .then(Commands.literal("leave").executes(context -> {
                             ServerPlayer player = context.getSource().getPlayerOrException();
                             if (player.level().dimension() != com.khaoskrew.khaosnexus.dungeon.DungeonRules.GATE_DUNGEON

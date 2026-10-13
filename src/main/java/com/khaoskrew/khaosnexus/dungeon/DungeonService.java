@@ -39,7 +39,6 @@ import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.pools.alias.PoolAliasLookup;
 import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
-import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec3;
 
@@ -50,7 +49,6 @@ import net.minecraft.world.phys.Vec3;
 public final class DungeonService {
     public static final ResourceLocation DOOR = ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "door");
     public static final String RETURN = "khaosnexus_dungeon_return";
-    private static final int SPACING = 1024;
     private static final int ATTEMPTS = 24;
 
     private DungeonService() {}
@@ -74,12 +72,17 @@ public final class DungeonService {
         return server.getLevel(DungeonRules.GATE_DUNGEON);
     }
 
-    /** Next free instance origin. Instances are never reused, so old ones can't overlap a new one. */
-    public static BlockPos allocate(ServerLevel dungeon) {
-        Slots slots = dungeon.getDataStorage().computeIfAbsent(new SavedData.Factory<>(Slots::new, Slots::load, null), "khaosnexus_dungeon_slots");
-        int slot = slots.next++;
-        slots.setDirty();
-        return new BlockPos((slot % 64) * SPACING + 512, 64, (slot / 64) * SPACING + 512);
+    /** Leases a free instance region: a wiped, reused slot when one is available, else a new one. */
+    public static DungeonInstances.Lease allocate(ServerLevel dungeon) {
+        return DungeonInstances.get(dungeon).lease(dungeon.getGameTime());
+    }
+
+    /** Ends an instance: players out, then the region is wiped over the next ticks and goes back on the free list. */
+    public static void release(ServerLevel dungeon, DungeonInstances.Lease lease, @Nullable BoundingBox box) {
+        if (box != null) {
+            evacuate(dungeon, box);
+        }
+        DungeonInstances.get(dungeon).release(lease.slot(), lease.gen(), box);
     }
 
     @Nullable
@@ -181,7 +184,13 @@ public final class DungeonService {
 
     /** Fills chests, spawns mobs. Returns the boss, which the gate tracks for its clear. */
     @Nullable
-    public static Mob populate(ServerLevel level, GateRank rank, Layout layout, RandomSource random) {
+    public static Mob populate(ServerLevel level, GateRank rank, Layout layout, RandomSource random, DungeonInstances.Lease lease) {
+        DungeonInstances.get(level).setBox(lease.slot(), lease.gen(), layout.box());
+        // Leftovers from an older instance in this slot (an entity section that was unloaded during the wipe).
+        for (net.minecraft.world.entity.Entity old : level.getEntities((net.minecraft.world.entity.Entity) null,
+                net.minecraft.world.phys.AABB.of(layout.box()).inflate(16.0D), e -> !(e instanceof net.minecraft.world.entity.player.Player))) {
+            old.discard();
+        }
         ResourceKey<LootTable> table = ResourceKey.create(Registries.LOOT_TABLE,
                 ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "dungeon/" + rank.name().toLowerCase(java.util.Locale.ROOT)));
         for (BlockPos pos : layout.loot()) {
@@ -193,7 +202,12 @@ public final class DungeonService {
         for (BlockPos pos : layout.mobs()) {
             for (int i = 0; i < perSpot && !ids.isEmpty(); i++) {
                 EntityType.byString(ids.get(random.nextInt(ids.size())))
-                        .ifPresent(type -> GateArena.spawnMob(level, rank, type, pos, random.nextFloat() * 360.0F, 1.0D));
+                        .ifPresent(type -> {
+                            Mob mob = GateArena.spawnMob(level, rank, type, pos, random.nextFloat() * 360.0F, 1.0D);
+                            if (mob != null) {
+                                mob.getPersistentData().putLong(DungeonInstances.GEN_KEY, lease.gen());
+                            }
+                        });
             }
         }
         if (layout.boss() == null) {
@@ -206,6 +220,7 @@ public final class DungeonService {
         Mob boss = GateArena.spawnMob(level, rank, type, layout.boss(), 180.0F, custom ? 3.0D : 1.0D);
         if (boss != null) {
             boss.addTag("khaosnexus_dungeon_boss");
+            boss.getPersistentData().putLong(DungeonInstances.GEN_KEY, lease.gen());
             boss.setCustomName(net.minecraft.network.chat.Component.translatable("khaosnexus.dungeon.boss_name",
                     net.minecraft.network.chat.Component.translatable(rank.translationKey()), boss.getType().getDescription()));
         }
@@ -276,21 +291,5 @@ public final class DungeonService {
 
     private static String name(StructurePiece piece) {
         return piece instanceof PoolElementStructurePiece pool ? pool.getElement().toString() : "";
-    }
-
-    static final class Slots extends SavedData {
-        int next;
-
-        static Slots load(CompoundTag tag, HolderLookup.Provider registries) {
-            Slots slots = new Slots();
-            slots.next = tag.getInt("Next");
-            return slots;
-        }
-
-        @Override
-        public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
-            tag.putInt("Next", this.next);
-            return tag;
-        }
     }
 }

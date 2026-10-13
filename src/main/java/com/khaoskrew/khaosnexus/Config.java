@@ -197,6 +197,15 @@ public final class Config {
                     "khaosnexus:spire_guardian", "khaosnexus:spire_guardian", "khaosnexus:rift_warden"),
                     () -> "khaosnexus:rift_brute", o -> o instanceof String);
 
+    public static final ModConfigSpec.IntValue DUNGEON_ABANDON_MINUTES = SERVER_BUILDER
+            .comment("Minutes a gate dungeon can sit with nobody inside before it collapses. The gate reopens as new,",
+                    "and the dungeon's region is wiped and reused. 0 never collapses an instance that still has its gate.")
+            .defineInRange("abandonMinutes", 60, 0, 10080);
+
+    public static final ModConfigSpec.IntValue DUNGEON_RESET_BLOCKS_PER_TICK = SERVER_BUILDER
+            .comment("Blocks wiped per server tick when a finished dungeon's region is reset for reuse.")
+            .defineInRange("resetBlocksPerTick", 32768, 1024, 1048576);
+
     public static final ModConfigSpec.BooleanValue DUNGEON_NO_FLIGHT = SERVER_BUILDER
             .comment("Stop flight inside dungeons: creative-style mayfly, elytra gliding and modded flight are cancelled every tick.")
             .define("blockFlight", true);

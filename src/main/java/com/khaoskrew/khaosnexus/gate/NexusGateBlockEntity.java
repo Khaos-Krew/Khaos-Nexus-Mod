@@ -62,6 +62,9 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
     private float dungeonYaw = 180.0F;
     @Nullable
     private net.minecraft.world.level.levelgen.structure.BoundingBox dungeonBox;
+    private int dungeonSlot = -1;
+    private long dungeonGen;
+    private long lastOccupied;
 
     public NexusGateBlockEntity(BlockPos pos, BlockState state) {
         super(ModRegistries.NEXUS_GATE_ENTITY.get(), pos, state);
@@ -111,6 +114,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
                     Component.translatable(HunterRanks.rankOf(serverPlayer).translationKey())), false);
             return InteractionResult.FAIL;
         }
+        this.expireStaleDungeon(server);
         if (this.active && this.inDungeon && player instanceof ServerPlayer serverPlayer) {
             ServerLevel dungeon = com.khaoskrew.khaosnexus.dungeon.DungeonService.level(server.getServer());
             if (dungeon != null && this.dungeonSpawn != null) {
@@ -118,7 +122,8 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
                 return InteractionResult.SUCCESS;
             }
         }
-        if (!this.active && com.khaoskrew.khaosnexus.Config.GATE_DUNGEONS.get() && player instanceof ServerPlayer serverPlayer) {
+        if (!this.active && com.khaoskrew.khaosnexus.Config.GATE_DUNGEONS.get() && player instanceof ServerPlayer serverPlayer
+                && com.khaoskrew.khaosnexus.dungeon.DungeonService.level(server.getServer()) != null) {
             return this.openDungeon(server, serverPlayer);
         }
         if (this.active) {
@@ -149,13 +154,17 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
             player.displayClientMessage(Component.translatable("khaosnexus.gate.spawn_failed"), false);
             return InteractionResult.FAIL;
         }
-        BlockPos origin = com.khaoskrew.khaosnexus.dungeon.DungeonService.allocate(dungeon);
-        var layout = com.khaoskrew.khaosnexus.dungeon.DungeonService.build(dungeon, this.rank, origin, server.getRandom());
+        var lease = com.khaoskrew.khaosnexus.dungeon.DungeonService.allocate(dungeon);
+        var layout = com.khaoskrew.khaosnexus.dungeon.DungeonService.build(dungeon, this.rank, lease.origin(), server.getRandom());
         if (layout == null) {
+            com.khaoskrew.khaosnexus.dungeon.DungeonService.release(dungeon, lease, null);
             player.displayClientMessage(Component.translatable("khaosnexus.gate.spawn_failed"), false);
             return InteractionResult.FAIL;
         }
-        var boss = com.khaoskrew.khaosnexus.dungeon.DungeonService.populate(dungeon, this.rank, layout, server.getRandom());
+        var boss = com.khaoskrew.khaosnexus.dungeon.DungeonService.populate(dungeon, this.rank, layout, server.getRandom(), lease);
+        this.dungeonSlot = lease.slot();
+        this.dungeonGen = lease.gen();
+        this.lastOccupied = server.getGameTime();
         this.waveMobs.clear();
         this.waveAnchors.clear();
         if (boss != null) {
@@ -209,7 +218,13 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
             this.hideBossBar();
             return;
         }
-        if (this.waveMobs.isEmpty() || level.getGameTime() % 10L != 0L) {
+        if (level.getGameTime() % 10L != 0L) {
+            return;
+        }
+        if (this.inDungeon && this.tendDungeon(level)) {
+            return;
+        }
+        if (this.waveMobs.isEmpty()) {
             return;
         }
         ServerLevel gateLevel = level;
@@ -248,6 +263,53 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         }
     }
 
+    /**
+     * Keeps this gate's dungeon lease alive and collapses it when the party has been gone too long.
+     * True when the dungeon was collapsed (the gate is then open and inactive again).
+     */
+    private boolean tendDungeon(ServerLevel level) {
+        if (this.expireStaleDungeon(level)) {
+            return true;
+        }
+        ServerLevel dungeon = com.khaoskrew.khaosnexus.dungeon.DungeonService.level(level.getServer());
+        if (dungeon == null || this.dungeonSlot < 0) {
+            return false;
+        }
+        long now = level.getGameTime();
+        if (this.lastOccupied <= 0L) {
+            this.lastOccupied = now;
+        }
+        com.khaoskrew.khaosnexus.dungeon.DungeonInstances.get(dungeon).touch(this.dungeonSlot, this.dungeonGen, now);
+        var wide = this.dungeonBox.inflatedBy(16);
+        if (dungeon.players().stream().anyMatch(p -> wide.isInside(p.blockPosition()))) {
+            this.lastOccupied = now;
+            return false;
+        }
+        int minutes = com.khaoskrew.khaosnexus.Config.DUNGEON_ABANDON_MINUTES.get();
+        if (minutes > 0 && now - this.lastOccupied > minutes * 1200L) {
+            GateArena.announce(level, this.getBlockPos(), this.rankLine("khaosnexus.dungeon.collapsed"), false);
+            this.discardWave();
+            this.sync();
+            return true;
+        }
+        return false;
+    }
+
+    /** A gate whose instance was reclaimed (or that predates instance tracking) forgets it and can open fresh. */
+    private boolean expireStaleDungeon(ServerLevel level) {
+        if (!this.inDungeon) {
+            return false;
+        }
+        ServerLevel dungeon = com.khaoskrew.khaosnexus.dungeon.DungeonService.level(level.getServer());
+        if (dungeon != null && this.dungeonSlot >= 0
+                && com.khaoskrew.khaosnexus.dungeon.DungeonInstances.get(dungeon).isLive(this.dungeonSlot, this.dungeonGen)) {
+            return false;
+        }
+        this.discardWave();
+        this.sync();
+        return true;
+    }
+
     public void rememberMob(UUID id, BlockPos anchor) {
         this.waveMobs.add(id);
         this.waveAnchors.add(anchor);
@@ -283,12 +345,16 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         ServerLevel dungeon = com.khaoskrew.khaosnexus.dungeon.DungeonService.level(level.getServer());
         if (dungeon != null && this.dungeonBox != null) {
             com.khaoskrew.khaosnexus.dungeon.DungeonService.evacuate(dungeon, this.dungeonBox);
+            if (this.dungeonSlot >= 0) {
+                com.khaoskrew.khaosnexus.dungeon.DungeonInstances.get(dungeon).release(this.dungeonSlot, this.dungeonGen, this.dungeonBox);
+            }
         }
         ChunkPos chunk = new ChunkPos(this.getBlockPos());
         level.setChunkForced(chunk.x, chunk.z, false);
         this.inDungeon = false;
         this.dungeonSpawn = null;
         this.dungeonBox = null;
+        this.dungeonSlot = -1;
     }
 
     private void finishWave(ServerLevel level) {
@@ -369,6 +435,9 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
             tag.putFloat("DungeonYaw", this.dungeonYaw);
             var b = this.dungeonBox;
             tag.putIntArray("DungeonBox", new int[] {b.minX(), b.minY(), b.minZ(), b.maxX(), b.maxY(), b.maxZ()});
+            tag.putInt("DungeonSlot", this.dungeonSlot);
+            tag.putLong("DungeonGen", this.dungeonGen);
+            tag.putLong("DungeonSeen", this.lastOccupied);
         }
         tag.putLongArray("WaveAnchors", anchors);
     }
@@ -395,6 +464,9 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         int[] box = tag.getIntArray("DungeonBox");
         this.dungeonBox = box.length == 6 ? new net.minecraft.world.level.levelgen.structure.BoundingBox(box[0], box[1], box[2], box[3], box[4], box[5]) : null;
         this.inDungeon = this.inDungeon && this.dungeonBox != null;
+        this.dungeonSlot = tag.contains("DungeonSlot") ? tag.getInt("DungeonSlot") : -1;
+        this.dungeonGen = tag.getLong("DungeonGen");
+        this.lastOccupied = tag.getLong("DungeonSeen");
         this.waveMobs.clear();
         this.waveAnchors.clear();
         ListTag ids = tag.getList("WaveMobs", Tag.TAG_STRING);
