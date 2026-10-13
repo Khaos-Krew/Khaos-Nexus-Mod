@@ -386,5 +386,13 @@
   "item.khaosnexus.gatebreaker_band.effect": "+20% damage to rift creatures",
   "item.apotheosis.gem.khaosnexus:riftheart": "Riftheart Gem",
   "item.apotheosis.gem.khaosnexus:voidglass": "Voidglass Gem",
-  "item.apotheosis.gem.khaosnexus:gatekeeper": "Gatekeeper Gem"
+  "item.apotheosis.gem.khaosnexus:gatekeeper": "Gatekeeper Gem",
+  "khaosnexus.weekly.khaosnexus.glass_cannon": "Glass Cannon: everyone deals and takes 50% more damage",
+  "khaosnexus.weekly.khaosnexus.ironhide": "Ironhide: gate mobs have 60% more health",
+  "khaosnexus.weekly.khaosnexus.frenzy": "Frenzy: gate mobs are faster and hit harder",
+  "khaosnexus.weekly.khaosnexus.brittle_rift": "Brittle Rift: weaker mobs, but every hit hurts more",
+  "khaosnexus.weekly.khaosnexus.hunters_moon": "Hunter's Moon: mobs hit 30% harder, rewards are doubled up",
+  "khaosnexus.weekly.khaosnexus.overcharged": "Overcharged: everything is stronger, big rewards",
+  "khaosnexus.weekly.active": "This week in %1$s gates: %2$s",
+  "khaosnexus.weekly.none": "No weekly gate modifiers are active."
 }

@@ -170,6 +170,10 @@ public final class KhaosCommands {
                             player.displayClientMessage(net.minecraft.network.chat.Component.translatable("khaosnexus.dungeon.left"), false);
                             return 1;
                         })))
+                .then(Commands.literal("weekly").executes(context -> {
+                    context.getSource().sendSuccess(com.khaoskrew.khaosnexus.endgame.WeeklyModifiers::describe, false);
+                    return 1;
+                }))
                 .then(Commands.literal("raid")
                         .then(Commands.literal("start").executes(context -> {
                             ServerPlayer player = context.getSource().getPlayerOrException();

@@ -81,13 +81,14 @@ public final class HunterRanks {
         }
         HunterProfile profile = profile(player);
         profile.gatesCleared++;
-        addXp(player, gateRank.tuning().hunterXp.get());
+        int gained = com.khaoskrew.khaosnexus.endgame.WeeklyModifiers.scaleXp(gateRank, gateRank.tuning().hunterXp.get());
+        addXp(player, gained);
         com.khaoskrew.khaosnexus.compat.ProgressHooks.gateCleared(player, gateRank.name());
         Bounties.onGateClear(player);
         Titles.unlock(player, Titles.GATE_BREAKER);
         player.displayClientMessage(Component.translatable(
                 "khaosnexus.hunter.gate_xp",
-                gateRank.tuning().hunterXp.get(),
+                gained,
                 Component.translatable(rankOf(player).translationKey())), false);
     }
 

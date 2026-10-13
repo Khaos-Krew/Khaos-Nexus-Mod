@@ -1,0 +1,11 @@
+{
+  "weight": 10,
+  "effects": {
+    "damage_dealt": 1.5,
+    "damage_taken": 1.5
+  },
+  "rewards": {
+    "xp_multiplier": 1.25,
+    "rift_cores": 1
+  }
+}

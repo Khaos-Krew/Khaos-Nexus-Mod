@@ -423,6 +423,29 @@ public final class Config {
         SERVER_BUILDER.pop();
     }
 
+    static {
+        SERVER_BUILDER.comment("Post-S-rank endgame: weekly modifiers, red gates, leaderboards, Spire scaling and more.").push("endgame");
+    }
+    public static final ModConfigSpec.BooleanValue WEEKLY_ENABLED = SERVER_BUILDER
+            .comment("Weekly rotating gate modifiers (endgame). Modifiers are datapack files in data/<ns>/khaosnexus_gate_modifiers/.")
+            .define("weeklyModifiers", true);
+    public static final ModConfigSpec.IntValue WEEKLY_COUNT = SERVER_BUILDER
+            .comment("How many modifiers are active each week.")
+            .defineInRange("weeklyModifierCount", 2, 0, 10);
+    public static final ModConfigSpec.ConfigValue<String> WEEKLY_RANKS = SERVER_BUILDER
+            .comment("Gate ranks the weekly modifiers apply to, comma separated.")
+            .define("weeklyRanks", "A,S");
+    public static final ModConfigSpec.LongValue WEEKLY_SEED = SERVER_BUILDER
+            .comment("Change to reroll this server's weekly picks.")
+            .defineInRange("weeklySeed", 0L, Long.MIN_VALUE, Long.MAX_VALUE);
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> WEEKLY_FORCE = SERVER_BUILDER
+            .comment("Force these modifier ids instead of the weekly roll (empty = roll).")
+            .defineListAllowEmpty("weeklyForce", List.of(), () -> "khaosnexus:glass_cannon", o -> o instanceof String);
+    // endgame-config-end
+    static {
+        SERVER_BUILDER.pop();
+    }
+
     public static final ModConfigSpec SERVER_SPEC = SERVER_BUILDER.build();
 
     private Config() {}

@@ -106,6 +106,7 @@ public final class GateArena {
             return null;
         }
         scale(mob, tuning.healthMultiplier.get() * extraHealth, tuning.damageMultiplier.get());
+        com.khaoskrew.khaosnexus.endgame.WeeklyModifiers.applyToMob(mob, rank);
         if (mob instanceof com.khaoskrew.khaosnexus.mob.RiftMob rift) {
             rift.setGateRank(rank);
         }
@@ -145,6 +146,10 @@ public final class GateArena {
         java.util.List<ItemStack> extras = new java.util.ArrayList<>(com.khaoskrew.khaosnexus.material.MaterialTiers.roll(rank, level.getRandom()));
         extras.addAll(com.khaoskrew.khaosnexus.compat.CompatPools.loot(rank, level.getRandom()));
         com.khaoskrew.khaosnexus.forge.HunterForge.addRewards(rank, level.getRandom(), extras);
+        int cores = com.khaoskrew.khaosnexus.endgame.WeeklyModifiers.bonusCores(rank);
+        if (cores > 0) {
+            extras.add(new ItemStack(com.khaoskrew.khaosnexus.forge.HunterForge.RIFT_CORE.get(), cores));
+        }
         for (ItemStack material : extras) {
             ItemEntity drop = new ItemEntity(level, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, material);
             drop.setDefaultPickUpDelay();
