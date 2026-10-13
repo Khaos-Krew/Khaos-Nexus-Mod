@@ -52,11 +52,17 @@ public final class Prestige {
                 out.add(Component.translatable("khaosnexus.prestige.need_red"));
             }
             need(out, p.spireBest, Config.SS_SPIRE.get(), "khaosnexus.prestige.need_spire");
-            need(out, p.endgame.getInt(RUSH_WINS), Config.SS_RUSH.get(), "khaosnexus.prestige.need_rush");
+            if (Config.BOSS_RUSH.get()) {
+                need(out, p.endgame.getInt(RUSH_WINS), Config.SS_RUSH.get(), "khaosnexus.prestige.need_rush");
+            }
         } else if (lvl == SS) {
             need(out, p.spireBest, Config.NATIONAL_SPIRE.get(), "khaosnexus.prestige.need_spire");
-            need(out, p.endgame.getInt(RUSH_WINS), Config.NATIONAL_RUSH.get(), "khaosnexus.prestige.need_rush");
-            need(out, p.endgame.getInt(CHALLENGES), Config.NATIONAL_CHALLENGES.get(), "khaosnexus.prestige.need_challenge");
+            if (Config.BOSS_RUSH.get()) {
+                need(out, p.endgame.getInt(RUSH_WINS), Config.NATIONAL_RUSH.get(), "khaosnexus.prestige.need_rush");
+            }
+            if (Config.CHALLENGES.get()) {
+                need(out, p.endgame.getInt(CHALLENGES), Config.NATIONAL_CHALLENGES.get(), "khaosnexus.prestige.need_challenge");
+            }
         }
         return out;
     }

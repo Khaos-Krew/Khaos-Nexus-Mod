@@ -249,6 +249,15 @@ public class EndgameGameTests {
 
     @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
     public static void challengeGatesRules(GameTestHelper helper) {
+        Config.CHALLENGES.set(true);
+        try {
+            bodychallengeGatesRules(helper);
+        } finally {
+            Config.CHALLENGES.set(false);
+        }
+    }
+
+    private static void bodychallengeGatesRules(GameTestHelper helper) {
         helper.assertTrue(JsonPool.CHALLENGES.all().size() >= 4, "bundled challenges load");
         helper.assertTrue(Challenges.month(1_760_000_000_000L).equals("2025-10"), "UTC month key");
         ResourceLocation a = Challenges.active("2026-10");
@@ -281,6 +290,15 @@ public class EndgameGameTests {
     @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
     @SuppressWarnings("removal")
     public static void secondAwakeningQuestAndCast(GameTestHelper helper) {
+        Config.AWAKENING.set(true);
+        try {
+            bodysecondAwakeningQuestAndCast(helper);
+        } finally {
+            Config.AWAKENING.set(false);
+        }
+    }
+
+    private static void bodysecondAwakeningQuestAndCast(GameTestHelper helper) {
         for (var c : com.khaoskrew.khaosnexus.hunter.HunterClass.values()) {
             helper.assertTrue(Awakening.options(c.id()).size() == 2, "two awakening options for " + c.id());
         }
@@ -309,6 +327,15 @@ public class EndgameGameTests {
     @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
     @SuppressWarnings("removal")
     public static void groupRaidPhasesAggroAndCleanse(GameTestHelper helper) {
+        Config.GROUP_RAIDS.set(true);
+        try {
+            bodygroupRaidPhasesAggroAndCleanse(helper);
+        } finally {
+            Config.GROUP_RAIDS.set(false);
+        }
+    }
+
+    private static void bodygroupRaidPhasesAggroAndCleanse(GameTestHelper helper) {
         ResourceLocation id = ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "rift_sovereign");
         var def = JsonPool.RAID_BOSSES.get(id);
         helper.assertTrue(def != null && JsonPool.RAID_BOSSES.all().size() >= 2, "bundled raid bosses load");

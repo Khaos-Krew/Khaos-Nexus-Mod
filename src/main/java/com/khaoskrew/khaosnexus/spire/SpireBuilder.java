@@ -143,11 +143,8 @@ public final class SpireBuilder {
             }
         }
         // Eight pillars with light caps.
-        int[][] pillars = {{-9, -9}, {9, -9}, {-9, 9}, {9, 9}, {-11, 0}, {11, 0}, {0, 11}, {-4, -11}};
+        int[][] pillars = {{-9, -9}, {9, -9}, {-9, 9}, {9, 9}, {-11, 0}, {11, 0}, {-6, 11}, {5, 11}};
         for (int[] p : pillars) {
-            if (p[1] == -11) {
-                continue; // keep the portal approach clear
-            }
             fill(l, o.offset(p[0], 0, p[1]), o.offset(p[0] + 1, 5, p[1] + 1), t.pillar());
             fill(l, o.offset(p[0], 6, p[1]), o.offset(p[0] + 1, 6, p[1] + 1), t.light());
         }
