@@ -122,6 +122,30 @@ public class RiftMob extends Monster implements GeoEntity {
     }
 
     @Override
+    public void tick() {
+        super.tick();
+        if (this.level().isClientSide && this.getType() == ModEntities.RIFT_STALKER.get() && this.random.nextInt(3) == 0) {
+            // Rift Phantom: shadow wisps shed from its smoke tails.
+            this.level().addParticle(new net.minecraft.core.particles.DustParticleOptions(new org.joml.Vector3f(0.12F, 0.06F, 0.18F), 1.6F),
+                    this.getX() + this.random.nextGaussian() * 0.25D, this.getY() + 0.3D + this.random.nextDouble() * 0.6D,
+                    this.getZ() + this.random.nextGaussian() * 0.25D, 0, -0.02D, 0);
+            if (this.random.nextInt(4) == 0) {
+                this.level().addParticle(net.minecraft.core.particles.ParticleTypes.SMOKE, this.getX(), this.getY() + 0.4D, this.getZ(), 0, 0.01D, 0);
+            }
+        }
+        if (this.level().isClientSide && this.swinging && this.getType() == ModEntities.VOID_CASTER.get()) {
+            // Orb flare: void-purple sparks burst along the orb's orbit while the caster attacks.
+            double r = 0.7D;
+            for (int i = 0; i < 6; i++) {
+                double a = this.random.nextDouble() * Math.PI * 2;
+                double x = this.getX() + Math.cos(a) * r, y = this.getY() + 1.55D + this.random.nextGaussian() * 0.15D, z = this.getZ() + Math.sin(a) * r;
+                this.level().addParticle(new net.minecraft.core.particles.DustParticleOptions(new org.joml.Vector3f(0.79F, 0.35F, 0.93F), 1.4F), x, y, z, 0, 0.03D, 0);
+                this.level().addParticle(net.minecraft.core.particles.ParticleTypes.PORTAL, x, y, z, (this.random.nextDouble() - 0.5D) * 0.6D, 0.1D, (this.random.nextDouble() - 0.5D) * 0.6D);
+            }
+        }
+    }
+
+    @Override
     public boolean doHurtTarget(Entity target) {
         boolean hit = super.doHurtTarget(target);
         if (hit) {

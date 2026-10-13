@@ -6,7 +6,7 @@ def install(G):
     Rig, humanoid = G.Rig, G.humanoid
 
     def rig_ghoul():
-        r = Rig(); d = humanoid(r, 12, 2, (3.5, 3.5), (7, 12, 4), 7, (3, 17, 3), 5.5, 3, hunch=24, hip_role='body'); B = r.box
+        r = Rig(); d = humanoid(r, 12, 2, (3.5, 3.5), (7, 12, 4), 7, (3, 17, 3), 5.5, 3, hunch=-24, hip_role='body'); B = r.box
         ny, sy, hy = d['ny'], d['sy'], d['hand_y']
         for side, s in (('right', -1), ('left', 1)):
             x = s * 5.5
@@ -183,6 +183,7 @@ def install(G):
             r.box(bone, (x, y_top - h / 2, z), ((x1 - x0) / n * 0.85, h, 0.35), role, rot=(rnd.uniform(-6, 6), 0, rnd.uniform(-8, 8)))
 
     def more_ghoul(r, d):
+        r.bones['head']['rotation'] = [20, 0, 0]  # look ahead despite the hunch
         B = r.box; ny, sy, hy = d['ny'], d['sy'], d['hand_y']
         for side, s in (('right', -1), ('left', 1)):
             x = s * 5.5
@@ -273,6 +274,137 @@ def install(G):
         return w
     rig_ghoul = boost(rig_ghoul, more_ghoul); rig_stalker = boost(rig_stalker, more_stalker)
     rig_caster = boost(rig_caster, more_caster); rig_brute = boost(rig_brute, more_brute)
+
+    def shift(r, dy):
+        for b in r.bones.values():
+            if b['name'] == 'root': continue
+            b['pivot'][1] += dy
+            for c in b['cubes']:
+                c['origin'][1] += dy
+                if 'pivot' in c: c['pivot'][1] += dy
+
+    def pose(r, **rots):
+        for bn, rot in rots.items(): r.bones[bn]['rotation'] = list(rot)
+
+    def stalker_silhouette(r, d):
+        """Lean assassin: crouched, hunched forward, broad shoulders over a narrow waist, splayed bent legs."""
+        B = r.box
+        t = r.bones['torso']['cubes'][0]; t['size'][0] = 5.4; t['origin'][0] = -2.7      # narrow waist
+        B('chest', (0, 22.2, 0), (11.5, 4.2, 5.2), 'robe')                                # broad shoulders
+        for s in (-1, 1): B('chest', (s * 5.8, 23.6, 0), (3.2, 2.2, 5.6), 'gauntlet', rot=(0, 0, s * -20))
+        pose(r, torso=(26, 0, 0), head=(-18, 0, 9),
+             right_leg=(-30, 0, 14), left_leg=(-30, 0, -14), right_shin=(52, 0, 0), left_shin=(52, 0, 0),
+             right_arm=(-35, 0, 38), left_arm=(-35, 0, -38), right_forearm=(-35, 0, 0), left_forearm=(-35, 0, 0),
+             right_blade=(150, 0, 25), left_blade=(150, 0, -25),
+             robe_front=(-22, 0, 0), robe_back=(28, 0, 0), robe_right=(0, 0, 22), robe_left=(0, 0, -22),
+             scarf=(55, 0, 15), hood_tip=(-45, 0, 0))
+        for bn in ('right_arm', 'left_arm'):  # arms hang from the wider shoulders
+            s = -1 if bn.startswith('right') else 1
+            for b in (bn, bn.replace('arm', 'forearm'), bn.replace('arm', 'hand'), bn.replace('arm', 'blade')):
+                r.bones[b]['pivot'][0] += s * 1.2
+                for c in r.bones[b]['cubes']:
+                    c['origin'][0] += s * 1.2
+                    if 'pivot' in c: c['pivot'][0] += s * 1.2
+        for i, (xx, h) in enumerate(((-4, 7), (-1.5, 9), (1.5, 8), (4, 6))):           # ragged flared panel strips
+            B('robe_front', (xx, -3 - h / 2 + 2, -3.4), (2, h, 0.35), 'robe', rot=(-10, 0, xx * 3))
+            B('robe_back', (xx, -3 - h / 2 + 1, 3.4), (2.2, h + 2, 0.35), 'capehem', rot=(14, 0, xx * 3))
+        shift(r, -2.2)
+
+    def caster_silhouette(r, d):
+        """Hovering caster: tapered robe (narrow top, wide hem), no legs, wide drooping sleeves held out, head forward."""
+        B = r.box
+        for bn in ('right_leg', 'left_leg', 'right_shin', 'left_shin'): r.bones[bn]['cubes'] = []
+        r.bones['robe_upper']['cubes'][0].update(origin=[-4.5, 4, -3.5], size=[9, 9, 7])
+        for i, (w, dd, y) in enumerate(((11, 9, 3.5), (14, 11, 0.5), (17.5, 13.5, -2.5))):  # tiers flaring outward
+            B('robe_lower', (0, y, 0), (w, 3.2, dd), 'robe')
+        for i in range(10):
+            a = 2 * math.pi * i / 10
+            B('robe_lower', (math.sin(a) * 8.4, -4.2, math.cos(a) * 6.4), (3.4, 2.4, 0.4), 'capehem', rot=(18 * math.cos(a), math.degrees(a), 0))
+        for side, s in (('right', -1), ('left', 1)):
+            x = s * 5; sy = d['sy']
+            B(f'{side}_forearm', (x, sy - 9.5, -0.5), (8.5, 9, 8.5), 'sleeve')                       # wide drooping sleeve
+            B(f'{side}_forearm', (x, sy - 15, 1.6), (7.5, 4, 5), 'capehem', rot=(25, 0, 0))            # hanging sleeve tip
+            B(f'{side}_forearm', (x, sy - 14.4, -0.5), (9, 0.8, 9), 'collar')
+        pose(r, torso=(-20, 0, 0), head=(10, 0, 0), right_arm=(0, 0, 32), left_arm=(0, 0, -32), hood_cone=(-12, 0, 0))
+        for bn in ['orb'] + [f'orb_rune{i}' for i in range(4)]:   # rebuild the orb as a free-floating void pearl
+            del r.bones[bn]; r.order.remove(bn)
+        r.bone('orb_orbit', 'root', (0, 22, 0))
+        oy, oz = 22, -11
+        r.bone('orb', 'orb_orbit', (0, oy, oz))
+        B('orb', (0, oy, oz), (4, 4, 4), 'orb')
+        for sz in ((5, 3, 3), (3, 5, 3), (3, 3, 5)): B('orb', (0, oy, oz), sz, 'orb')
+        B('orb', (0, oy, oz), (5.2, 5.2, 5.2), 'orbshell')
+        r.bone('orb_band', 'orb', (0, oy, oz), (20, 0, 15))
+        for i in range(10):
+            a_ = 2 * math.pi * i / 10
+            B('orb_band', (math.cos(a_) * 3.2, oy, oz + math.sin(a_) * 3.2), (1.3, 0.7, 0.6), 'rune', rot=(0, -math.degrees(a_), 0))
+        for i in range(4):
+            a_ = i * math.pi / 2; bn = r.bone(f'orb_rune{i}', 'orb', (0, oy, oz))
+            B(bn, (math.cos(a_) * 4.6, oy + math.sin(a_) * 4.6, oz), (0.9, 1.4, 0.6), 'orbshell', rot=(0, 0, 45))
+        r.bone('sigil_ring', 'root', (0, 16, 0))
+        for i in range(6):
+            a = 2 * math.pi * i / 6
+            B('sigil_ring', (math.cos(a) * 13, 16 + (i % 2) * 5, math.sin(a) * 13), (2, 3, 0.4), 'rune', rot=(0, -math.degrees(a) + 90, 0))
+        shift(r, 3.0)
+
+    def phantom(r, d):
+        """Rift Phantom (entity id rift_stalker): solid hunched upper body with broad tattered shoulders, a cracked porcelain
+        mask, and below the waist only swaying shadow-smoke tails. Chain-blades trail from both wrists."""
+        B = r.box; ny, sy, hy = d['ny'], d['sy'], d['hand_y']
+        for bn in ('right_leg', 'left_leg', 'right_shin', 'left_shin', 'hood_tip', 'right_blade', 'left_blade', 'scarf'):
+            r.bones[bn]['cubes'] = []
+        r.bones['head']['cubes'] = [c for c in r.bones['head']['cubes'] if c['role'] not in ('hood', 'helm', 'visorplate')]
+        r.bones['hips']['cubes'] = [c for c in r.bones['hips']['cubes'] if c['role'] in ('belt', 'rune')]
+        # mask: porcelain plate with brow, cheek shards and a split chin
+        B('head', (0, ny + 4.2, -4.0), (7.2, 7.4, 0.9), 'mask')
+        B('head', (0, ny + 7.4, -4.4), (6.6, 1.2, 0.6), 'mask', rot=(-12, 0, 0))
+        for s in (-1, 1):
+            B('head', (s * 3.3, ny + 2.6, -3.9), (1.4, 3.4, 1), 'mask', rot=(0, s * -18, 0))
+            B('head', (s * 1.6, ny + 4.9, -4.5), (2.0, 0.6, 0.3), 'visorplate', rot=(0, 0, s * -8))   # slit eyes
+        B('head', (0, ny + 0.7, -3.8), (3, 1.4, 0.8), 'mask', rot=(8, 0, 0))
+        for i, (xx, h) in enumerate(((-3.6, 6), (-1.2, 8), (1.2, 7), (3.6, 5))):                 # ragged hair/shroud behind
+            B('head', (xx, ny + 6 - h / 2 + 2, 3.6), (2.2, h, 0.5), 'smoke', rot=(20, 0, xx * 4))
+        for s in (-1, 1):                                                                           # tattered mantle
+            for j in range(4):
+                B('chest', (s * (3.5 + j * 1.6), 23.4 - j * 0.6, 0), (2.4, 4 + j, 6), 'robe', rot=(0, 0, s * (-12 - j * 9)))
+                B('chest', (s * (3.8 + j * 1.6), 19.6 - j * 1.4, 2.9), (1.6, 3 + j, 0.4), 'capehem', rot=(10, 0, s * (-8 - j * 6)))
+        # smoke tails: layered translucent bones that sway (reuse the old robe bone names + chained wisps)
+        for name, (x, z, w) in (('robe_front', (0, -1.6, 6)), ('robe_back', (0, 1.8, 7)), ('robe_right', (-2.6, 0, 3.4)), ('robe_left', (2.6, 0, 3.4))):
+            r.bones[name]['cubes'] = []; r.bones[name]['pivot'] = [x, 12, z]
+            B(name, (x, 8.5, z), (w, 7, 3.5), 'smoke')
+            prev = name
+            for k_ in range(3):
+                wn = f'{name}_wisp{k_}'; y0 = 5 - k_ * 3.6
+                r.bone(wn, prev, (x, y0, z), (8 if 'back' in name else -6 if 'front' in name else 0, 0, 0))
+                B(wn, (x, y0 - 1.8, z), (w * (0.8 - k_ * 0.18), 3.8, 3.0 - k_ * 0.6), 'smoke')
+                prev = wn
+        # chain-blades from both wrists: 5 links then a curved blade
+        for side, sgn in (('right', -1), ('left', 1)):
+            x = sgn * 6.2; prev = f'{side}_hand'; y = hy + 0.5
+            B(prev, (x, hy + 1.6, 0), (4.2, 1.4, 4.2), 'guard')                                    # wrist shackle
+            for k_ in range(5):
+                cn = f'{side}_chain{k_}'
+                r.bone(cn, prev, (x, y, 0), (0, 0, 0))
+                B(cn, (x, y - 1.0, 0), (0.6 if k_ % 2 else 1.2, 2.1, 1.2 if k_ % 2 else 0.6), 'guard')
+                prev = cn; y -= 2.0
+            bn = f'{side}_chainblade'; r.bone(bn, prev, (x, y, 0), (0, 0, 0))
+            B(bn, (x, y - 0.6, 0), (1.6, 1.4, 1.6), 'grip')
+            for k_, (dy, dz, rx) in enumerate(((-3.4, -0.6, 10), (-7.0, -2.0, 30), (-9.8, -4.4, 55), (-11.2, -7.0, 75))):
+                B(bn, (x, y + dy, dz), (0.5, 4.2 - k_ * 0.6, 1.8 - k_ * 0.3), 'blade', rot=(rx, 0, 0))
+        pose(r, torso=(-28, 0, 0), head=(18, 0, 7), right_arm=(-20, 0, 22), left_arm=(-20, 0, -22),
+             right_forearm=(-25, 0, 0), left_forearm=(-25, 0, 0))
+        for bn in ('right_arm', 'left_arm'):
+            sg = -1 if bn.startswith('right') else 1
+            for b in (bn, bn.replace('arm', 'forearm'), bn.replace('arm', 'hand')):
+                r.bones[b]['pivot'][0] += sg * 1.2
+                for c in r.bones[b]['cubes']:
+                    c['origin'][0] += sg * 1.2
+                    if 'pivot' in c: c['pivot'][0] += sg * 1.2
+        t = r.bones['torso']['cubes'][0]; t['size'][0] = 5.4; t['origin'][0] = -2.7
+        B('chest', (0, 22.2, 0), (11.5, 4.2, 5.2), 'robe')
+        shift(r, 2.0)
+
+    rig_stalker = boost(rig_stalker, phantom); rig_caster = boost(rig_caster, caster_silhouette)
 
     for name, fn, trim in (('rift_ghoul', rig_ghoul, '#4A3A44'), ('rift_stalker', rig_stalker, '#5A3F6A'), ('void_caster', rig_caster, '#7A5A2E'),
                            ('rift_brute', rig_brute, '#4E3A30'), ('spire_guardian', rig_guardian, '#7A6040')):

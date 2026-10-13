@@ -412,6 +412,25 @@ class Painter:
                     ey = fy + fh // 2
                     for xx in range(fx + k, fx + fw - k):
                         for yy in range(ey - k // 2, ey + k // 2 + 1): s.px(xx, yy, (6, 3, 6)); s.gl(xx, yy, s.ec, 1.0 if yy <= ey else 0.6)
+            elif role == 'mask':
+                s.fill(f, fn, (196, 190, 186), (238, 234, 228))
+                if side or fn == 'up':
+                    x, y = fx + fw // 2, fy
+                    for _ in range(max(2, fw * fh // (24 * k * k))):   # cracks leaking rift light
+                        x = s.rnd.randrange(fx, fx + fw); y = s.rnd.randrange(fy, fy + fh)
+                        for i in range(s.rnd.randint(3, 4 + 2 * k)):
+                            if fx <= x < fx + fw and fy <= y < fy + fh:
+                                s.px(x, y, (60, 40, 70)); s.gl(x, y, s.gc, 0.9)
+                            x += s.rnd.choice((-1, 0, 1)); y += 1
+            elif role == 'smoke':
+                for yy in range(fy, fy + fh):
+                    t = (yy - fy) / max(1, fh - 1)
+                    for xx in range(fx, fx + fw):
+                        nz = s.n(xx, yy, 2)
+                        a = int(max(0, min(255, 255 * (1.05 - t * 0.8) * (0.55 + 0.6 * nz))))
+                        c = mix((10, 6, 16), (46, 26, 64), nz)
+                        s.px(xx, yy, c, a if fn not in ('up',) else 200)
+                        if nz > 0.82 and t < 0.7: s.gl(xx, yy, s.gc, 0.25)
             elif role in ('cape', 'capehem'):
                 cc = P.get('cape', P.get('robe', P['accent'])); s.fill(f, fn, mul(cc, 0.65), mul(cc, 1.2), ao=False)
                 for xx in range(fx, fx + fw):  # cloth weave
@@ -462,7 +481,13 @@ class Painter:
                 for xx in range(fx, fx + fw):
                     for yy in range(fy, fy + fh):
                         u, v = (xx - fx) / max(1, fw - 1) - 0.5, (yy - fy) / max(1, fh - 1) - 0.5; r = math.hypot(u, v)
-                        if role == 'orb': s.px(xx, yy, mul(oc, 0.6)); s.gl(xx, yy, mix(oc, (255, 255, 255), max(0, 0.6 - r)), 1.0)
+                        if role == 'orb':
+                            body = mix((38, 8, 52), mul(oc, 0.7), max(0, 0.7 - r))
+                            if s.rnd.random() < 0.12: body = mul(body, 1.6)
+                            s.px(xx, yy, body)
+                            crack = (abs(math.sin(u * 9 + v * 4)) < 0.12) or (abs(math.sin(v * 11 - u * 3)) < 0.1)
+                            if crack: s.gl(xx, yy, mix(oc, (255, 255, 255), 0.35), 1.0); s.dk(xx, yy, 0.4)
+                            elif r < 0.25: s.gl(xx, yy, oc, 0.45)
                         else:
                             a = 70 if r < 0.45 else 150; s.px(xx, yy, mul(oc, 0.35), a); s.gl(xx, yy, oc, 0.35 + 0.4 * r)
             elif role in ('spike', 'crown'):
@@ -564,6 +589,20 @@ def anim_set(name, d, rig):
         for i in range(4): B[f'orb_rune{i}'] = {'rotation': kf([(0, [0, 0, 0]), (2.0, [0, 0, 360])], smooth=False)}
     if name == 'void_caster':
         B['right_arm']['rotation'] = kf(wave(3.2, 3, 0, base=(-45, -20, 0))); B['left_arm']['rotation'] = kf(wave(3.2, 3, 0, phase=1, base=(-45, 20, 0)))
+    for bn in rig.order:
+        if '_wisp' in bn or '_chain' in bn:
+            amp = 6 if '_wisp' in bn else 7
+            B[bn] = {'rotation': kf(wave(2.4 if '_wisp' in bn else 2.0, amp, 0, phase=len(bn) + (2 if 'left' in bn else 0)))}
+    if has('robe_front_wisp0'):
+        B['root'] = {'position': kf(wave(3.2, 0.8, 1))}
+        for c in ('robe_front', 'robe_back', 'robe_left', 'robe_right'):
+            B[c] = {'rotation': kf(wave(3.2, 4, 0, phase=len(c)))}
+    if has('sigil_ring'):
+        B['sigil_ring'] = {'rotation': kf([(0, [0, 0, 0]), (3.2, [0, 360, 0])], smooth=False)}
+        B['root'] = {'position': kf(wave(3.2, 1.0, 1))}  # hover bob
+    if has('orb_orbit'):
+        B['orb_orbit'] = {'rotation': kf([(0, [0, 0, 0]), (3.2, [0, -360, 0])], smooth=False)}
+        B['orb_band'] = {'rotation': kf([(0, [20, 0, 15]), (3.2, [20, 360, 15])], smooth=False)}
     A['idle'] = dict(loop=True, length=3.2, bones=B)
     # walk: thigh/shin stride, counter arm swing, body bob + sway
     T = 1.0 if not MOBS[name].get('boss') and name != 'rift_brute' else 1.4
@@ -582,6 +621,16 @@ def anim_set(name, d, rig):
     for c in ('cape1', 'cape2', 'cape3', 'robe_front', 'robe_back', 'tasset_front', 'tasset_back'):
         if has(c): W[c] = {'rotation': kf(wave(T / 2, 5, 0, n=4, base=(14 if 'cape' in c or 'back' in c else -8, 0, 0)))}
     if name == 'rift_ghoul': W['chest']['rotation'] = kf(wave(T, 6, 2, base=(10, 0, 0)))
+    if has('robe_front_wisp0'):  # phantom glides: no legs, tails stream back, chains trail
+        for k_ in ('right_leg', 'left_leg', 'right_shin', 'left_shin'): W.pop(k_, None)
+        for bn in rig.order:
+            if '_wisp' in bn: W[bn] = {'rotation': kf(wave(T, 8, 0, base=(18, 0, 0)))}
+            if '_chain' in bn: W[bn] = {'rotation': kf(wave(T, 10, 0, base=(22, 0, 0)))}
+    if has('sigil_ring'):  # hovers instead of walking: glide forward-lean, sigils keep orbiting
+        for k_ in ('right_leg', 'left_leg', 'right_shin', 'left_shin'): W.pop(k_, None)
+        W['sigil_ring'] = {'rotation': kf([(0, [0, 0, 0]), (T, [0, 120, 0])], smooth=False)}
+        W['orb_orbit'] = {'rotation': kf([(0, [0, 0, 0]), (T, [0, -112.5, 0])], smooth=False)}
+        W['hips'] = {'rotation': kf(wave(T, 3, 0, base=(6, 0, 0)))}
     A['walk'] = dict(loop=True, length=T, bones=W)
     # attack: windup -> strike -> recover
     if name == 'rift_brute':

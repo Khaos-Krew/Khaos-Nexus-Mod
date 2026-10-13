@@ -20,7 +20,21 @@ import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 /** GeckoLib renderer for every Rift mob: geo/entity/NAME.geo.json, animations/entity/NAME.animation.json. */
 public class RiftMobRenderer extends GeoEntityRenderer<RiftMob> {
     public RiftMobRenderer(EntityRendererProvider.Context context, String name, float shadow) {
-        super(context, new DefaultedEntityGeoModel<RiftMob>(ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, name), true));
+        super(context, new DefaultedEntityGeoModel<RiftMob>(ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, name), true) {
+            @Override
+            public void setCustomAnimations(RiftMob mob, long instanceId, software.bernie.geckolib.animation.AnimationState<RiftMob> state) {
+                super.setCustomAnimations(mob, instanceId, state);
+                float flare = flare(mob, state.getPartialTick());
+                if (flare > 0.0F) {  // orb swells while it flares (applied after keyframes so it isn't overwritten)
+                    this.getBone("orb").ifPresent(b -> {
+                        float k = 1.0F + 0.7F * flare;
+                        b.setScaleX(k);
+                        b.setScaleY(k);
+                        b.setScaleZ(k);
+                    });
+                }
+            }
+        });
         this.shadowRadius = shadow;
         this.addRenderLayer(new Glow(this, tex(name, "_glow"), tex(name, "_glow_rank")));
     }
@@ -43,9 +57,20 @@ public class RiftMobRenderer extends GeoEntityRenderer<RiftMob> {
         super.preRender(pose, mob, model, buffer, consumer, reRender, partialTick, light, overlay, color);
     }
 
+    /** 0..1 attack flare for the Void Caster's orb, driven by the synced melee swing. */
+    static float flare(RiftMob mob, float partialTick) {
+        if (mob.getType() != com.khaoskrew.khaosnexus.mob.ModEntities.VOID_CASTER.get()) {
+            return 0.0F;
+        }
+        float a = mob.getAttackAnim(partialTick);
+        return a <= 0.0F ? 0.0F : (float) Math.sin(Math.PI * Math.min(1.0F, a));
+    }
+
     @Override
     public RenderType getRenderType(RiftMob mob, ResourceLocation texture, MultiBufferSource buffer, float partialTick) {
-        return RenderType.entityCutoutNoCull(texture);
+        // The Rift Phantom's smoke tails are translucent; everything else is cutout.
+        return mob.getType() == com.khaoskrew.khaosnexus.mob.ModEntities.RIFT_STALKER.get()
+                ? RenderType.entityTranslucent(texture) : RenderType.entityCutoutNoCull(texture);
     }
 
     /** Emissive eyes, veins and runes. Gate mobs glow in their gate's rank colour. */
@@ -67,6 +92,12 @@ public class RiftMobRenderer extends GeoEntityRenderer<RiftMob> {
             int color = rank == null ? 0xFFFFFFFF : (0xFF000000 | rank.color());
             this.getRenderer().reRender(model, pose, buffer, mob, glow, buffer.getBuffer(glow), partialTick,
                     0xF00000, OverlayTexture.NO_OVERLAY, color);
+            float flare = flare(mob, partialTick);
+            if (flare > 0.05F) {  // second additive pass: the orb (and runes) flare bright on attack
+                int a = (int) (255 * flare);
+                this.getRenderer().reRender(model, pose, buffer, mob, glow, buffer.getBuffer(glow), partialTick,
+                        0xF00000, OverlayTexture.NO_OVERLAY, (a << 24) | 0xFFFFFF);
+            }
         }
     }
 }

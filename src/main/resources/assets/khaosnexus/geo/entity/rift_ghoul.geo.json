@@ -1889,7 +1889,7 @@
      ],
      "parent": "hips",
      "rotation": [
-      -24,
+      24,
       0,
       0
      ],
@@ -3723,6 +3723,11 @@
       0
      ],
      "parent": "chest",
+     "rotation": [
+      -20,
+      0,
+      0
+     ],
      "cubes": [
       {
        "origin": [
