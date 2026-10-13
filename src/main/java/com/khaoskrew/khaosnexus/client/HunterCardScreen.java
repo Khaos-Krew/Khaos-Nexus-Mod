@@ -187,7 +187,7 @@ public class HunterCardScreen extends Screen {
             return;
         }
         int row = y + 16;
-        for (int i = this.scroll; i < Math.min(this.gates.size(), this.scroll + 8); i++) {
+        for (int i = this.scroll; i < Math.min(this.gates.size(), this.scroll + 7); i++) {
             CardPayload.Gate gate = this.gates.get(i);
             GateRank r = GateRank.byName(gate.rank());
             int color = 0xFF000000 | r.color();
