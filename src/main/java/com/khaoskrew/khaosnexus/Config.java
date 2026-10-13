@@ -19,7 +19,7 @@ public final class Config {
         SERVER_BUILDER.comment(
                 "Nexus Gate waves. A placed gate rolls a rank from E through S, and right-clicking it summons a wave of vanilla mobs.",
                 "Clearing the wave drops that rank's reward and closes the gate.",
-                "Mob and item ids are registry names such as minecraft:zombie. The defaults use only vanilla so the mod stays standalone.")
+                "Mob and item ids are registry names such as minecraft:zombie. The defaults mix the mod's own Rift mobs with vanilla mobs.")
                 .push("gates");
     }
 
@@ -52,17 +52,17 @@ public final class Config {
             .defineInRange("naturalSpawnInterval", 200, 20, 72000);
 
     public static final RankValues RANK_E = RankValues.define(SERVER_BUILDER, "E",
-            List.of("minecraft:zombie"), 3, 45, 1.0D, 1.0D, "minecraft:emerald", 2, 5, 8);
+            List.of("khaosnexus:rift_ghoul", "minecraft:zombie"), 3, 45, 1.0D, 1.0D, "minecraft:emerald", 2, 5, 8);
     public static final RankValues RANK_D = RankValues.define(SERVER_BUILDER, "D",
-            List.of("minecraft:zombie", "minecraft:skeleton"), 5, 25, 1.35D, 1.15D, "minecraft:emerald", 4, 12, 14);
+            List.of("khaosnexus:rift_ghoul", "khaosnexus:rift_stalker", "minecraft:skeleton"), 5, 25, 1.35D, 1.15D, "minecraft:emerald", 4, 12, 14);
     public static final RankValues RANK_C = RankValues.define(SERVER_BUILDER, "C",
-            List.of("minecraft:skeleton", "minecraft:spider"), 6, 15, 1.75D, 1.35D, "minecraft:diamond", 1, 24, 22);
+            List.of("khaosnexus:rift_stalker", "khaosnexus:void_caster", "minecraft:spider"), 6, 15, 1.75D, 1.35D, "minecraft:diamond", 1, 24, 22);
     public static final RankValues RANK_B = RankValues.define(SERVER_BUILDER, "B",
-            List.of("minecraft:pillager", "minecraft:husk"), 8, 8, 2.25D, 1.55D, "minecraft:diamond", 2, 40, 34);
+            List.of("khaosnexus:void_caster", "khaosnexus:rift_brute", "khaosnexus:rift_stalker", "minecraft:pillager"), 8, 8, 2.25D, 1.55D, "minecraft:diamond", 2, 40, 34);
     public static final RankValues RANK_A = RankValues.define(SERVER_BUILDER, "A",
-            List.of("minecraft:vindicator", "minecraft:witch"), 8, 5, 3.0D, 1.8D, "minecraft:netherite_scrap", 1, 65, 50);
+            List.of("khaosnexus:rift_brute", "khaosnexus:void_caster", "minecraft:vindicator", "minecraft:witch"), 8, 5, 3.0D, 1.8D, "minecraft:netherite_scrap", 1, 65, 50);
     public static final RankValues RANK_S = RankValues.define(SERVER_BUILDER, "S",
-            List.of("minecraft:evoker", "minecraft:ravager"), 6, 2, 4.0D, 2.0D, "minecraft:netherite_ingot", 1, 100, 80);
+            List.of("khaosnexus:rift_brute", "khaosnexus:void_caster", "minecraft:evoker", "minecraft:ravager"), 6, 2, 4.0D, 2.0D, "minecraft:netherite_ingot", 1, 100, 80);
 
     static {
         SERVER_BUILDER.pop();

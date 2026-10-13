@@ -74,6 +74,9 @@ public final class GateArena {
                 continue;
             }
             scale(mob, tuning.healthMultiplier.get(), tuning.damageMultiplier.get());
+            if (mob instanceof com.khaoskrew.khaosnexus.mob.RiftMob rift) {
+                rift.setGateRank(rank);
+            }
             mob.setPersistenceRequired();
             mob.setCustomName(Component.translatable("khaosnexus.gate.mob_name", Component.translatable(rank.translationKey())));
             if (!level.addFreshEntity(mob)) {

@@ -125,5 +125,9 @@
   "khaosnexus.compat.present": "installed, hook on",
   "khaosnexus.compat.absent": "not installed",
   "khaosnexus.compat.disabled": "turned off in config",
-  "khaosnexus.compat.note": "These hooks only detect the mod. They do not change gameplay, and FTB Quests chapters are not included."
+  "khaosnexus.compat.note": "These hooks only detect the mod. They do not change gameplay, and FTB Quests chapters are not included.",
+  "entity.khaosnexus.rift_ghoul": "Rift Ghoul",
+  "entity.khaosnexus.rift_stalker": "Rift Stalker",
+  "entity.khaosnexus.void_caster": "Void Caster",
+  "entity.khaosnexus.rift_brute": "Rift Brute"
 }
