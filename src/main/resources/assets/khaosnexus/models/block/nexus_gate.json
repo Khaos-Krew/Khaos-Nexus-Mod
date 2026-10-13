@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "khaosnexus:block/nexus_gate"
+    "all": "khaosnexus:block/nexus_gate_frame",
+    "particle": "khaosnexus:block/nexus_gate_frame"
   }
 }
