@@ -94,6 +94,7 @@ public final class ModRegistries {
                         output.accept(SPIRE_GATE_ITEM.get());
                         output.accept(RAID_ALTAR_ITEM.get());
                         output.accept(PERSONAL_LOOT_ITEM.get());
+                        com.khaoskrew.khaosnexus.mob.ModEntities.eggs().forEach(output::accept);
                     })
                     .build());
 

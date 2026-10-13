@@ -11,10 +11,8 @@ import com.khaoskrew.khaosnexus.registry.ModRegistries;
 import com.khaoskrew.khaosnexus.raid.RaidService;
 import com.khaoskrew.khaosnexus.spire.SpireService;
 
-import net.minecraft.world.entity.monster.Zombie;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.monster.Ravager;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.world.level.GameType;
@@ -119,7 +117,7 @@ public class HunterGameTests {
         if (!RaidService.start(player, pos)) {
             helper.fail("raid did not start");
         }
-        var bosses = helper.getLevel().getEntitiesOfClass(Ravager.class, new AABB(pos).inflate(6.0D));
+        var bosses = helper.getLevel().getEntitiesOfClass(com.khaoskrew.khaosnexus.mob.RiftBoss.class, new AABB(pos).inflate(6.0D));
         if (bosses.isEmpty()) {
             helper.fail("raid boss did not spawn");
         }
@@ -145,7 +143,7 @@ public class HunterGameTests {
         player.teleportTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
         SpireService.generate(helper.getLevel(), 1, 1);
         BlockPos bossPos = SpireService.origin(1, 1);
-        var bosses = helper.getLevel().getEntitiesOfClass(Zombie.class, new AABB(bossPos).inflate(8.0D));
+        var bosses = helper.getLevel().getEntitiesOfClass(com.khaoskrew.khaosnexus.mob.RiftBoss.class, new AABB(bossPos).inflate(8.0D));
         if (bosses.isEmpty()) {
             helper.fail("spire guardian did not spawn");
         }

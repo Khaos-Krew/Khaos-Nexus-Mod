@@ -155,13 +155,16 @@ public final class SpireService {
                 level.setBlockAndUpdate(origin.offset(dx, -1, dz), Blocks.STONE.defaultBlockState());
                 level.setBlockAndUpdate(origin.offset(dx, 0, dz), Blocks.AIR.defaultBlockState());
                 level.setBlockAndUpdate(origin.offset(dx, 1, dz), Blocks.AIR.defaultBlockState());
-                level.setBlockAndUpdate(origin.offset(dx, 2, dz), Blocks.AIR.defaultBlockState());
+                // The Spire Guardian is 4 blocks tall with a spire helm, so clear 6 blocks of headroom.
+                for (int dy = 2; dy <= 5; dy++) {
+                    level.setBlockAndUpdate(origin.offset(dx, dy, dz), Blocks.AIR.defaultBlockState());
+                }
             }
         }
         if (floor % Config.SPIRE_CHECKPOINT.get() == 0) {
             level.setBlockAndUpdate(origin.offset(-5, 0, -5), Blocks.GOLD_BLOCK.defaultBlockState());
         }
-        Mob boss = EntityType.ZOMBIE.create(level);
+        Mob boss = com.khaoskrew.khaosnexus.mob.ModEntities.SPIRE_GUARDIAN.get().create(level);
         if (boss == null) {
             return;
         }

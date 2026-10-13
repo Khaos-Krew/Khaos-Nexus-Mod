@@ -129,5 +129,13 @@
   "entity.khaosnexus.rift_ghoul": "Rift Ghoul",
   "entity.khaosnexus.rift_stalker": "Rift Stalker",
   "entity.khaosnexus.void_caster": "Void Caster",
-  "entity.khaosnexus.rift_brute": "Rift Brute"
+  "entity.khaosnexus.rift_brute": "Rift Brute",
+  "item.khaosnexus.rift_ghoul_spawn_egg": "Rift Ghoul Spawn Egg",
+  "item.khaosnexus.rift_stalker_spawn_egg": "Rift Stalker Spawn Egg",
+  "item.khaosnexus.void_caster_spawn_egg": "Void Caster Spawn Egg",
+  "item.khaosnexus.rift_brute_spawn_egg": "Rift Brute Spawn Egg",
+  "entity.khaosnexus.rift_warden": "Khaos Warden of the Rift",
+  "item.khaosnexus.rift_warden_spawn_egg": "Khaos Warden of the Rift Spawn Egg",
+  "entity.khaosnexus.spire_guardian": "Spire Guardian",
+  "item.khaosnexus.spire_guardian_spawn_egg": "Spire Guardian Spawn Egg"
 }

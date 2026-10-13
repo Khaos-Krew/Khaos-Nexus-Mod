@@ -12,6 +12,8 @@ public final class RiftMobClient {
     public static final ModelLayerLocation STALKER = layer("rift_stalker");
     public static final ModelLayerLocation CASTER = layer("void_caster");
     public static final ModelLayerLocation BRUTE = layer("rift_brute");
+    public static final ModelLayerLocation WARDEN = layer("rift_warden");
+    public static final ModelLayerLocation GUARDIAN = layer("spire_guardian");
 
     private RiftMobClient() {}
 
@@ -24,6 +26,8 @@ public final class RiftMobClient {
         event.registerLayerDefinition(STALKER, RiftMobLayers::createRiftStalker);
         event.registerLayerDefinition(CASTER, RiftMobLayers::createVoidCaster);
         event.registerLayerDefinition(BRUTE, RiftMobLayers::createRiftBrute);
+        event.registerLayerDefinition(WARDEN, RiftMobLayers::createRiftWarden);
+        event.registerLayerDefinition(GUARDIAN, RiftMobLayers::createSpireGuardian);
     }
 
     public static void renderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -32,5 +36,8 @@ public final class RiftMobClient {
         event.registerEntityRenderer(ModEntities.VOID_CASTER.get(), c -> new RiftMobRenderer(c, CASTER, "void_caster", 0.55F, 1.0F));
         // The brute's spec geometry is already ~1.5x humanoid (about 3 blocks), so no extra render scale.
         event.registerEntityRenderer(ModEntities.RIFT_BRUTE.get(), c -> new RiftMobRenderer(c, BRUTE, "rift_brute", 1.0F, 1.0F));
+        // Boss geometry is authored at full size (Warden ~2.5x, Guardian ~2x humanoid).
+        event.registerEntityRenderer(ModEntities.RIFT_WARDEN.get(), c -> new RiftMobRenderer(c, WARDEN, "rift_warden", 1.6F, 1.0F));
+        event.registerEntityRenderer(ModEntities.SPIRE_GUARDIAN.get(), c -> new RiftMobRenderer(c, GUARDIAN, "spire_guardian", 1.3F, 1.0F));
     }
 }
