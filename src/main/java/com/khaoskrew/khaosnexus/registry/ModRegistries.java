@@ -92,6 +92,8 @@ public final class ModRegistries {
                     .displayItems((parameters, output) -> {
                         output.accept(NEXUS_GATE_ITEM.get());
                         output.accept(NEXUS_TOKEN.get());
+                        output.accept(com.khaoskrew.khaosnexus.card.HunterCard.CARD.get());
+                        output.accept(com.khaoskrew.khaosnexus.card.HunterCard.GUILD_DESK_ITEM.get());
                         output.accept(SPIRE_GATE_ITEM.get());
                         output.accept(RAID_ALTAR_ITEM.get());
                         output.accept(PERSONAL_LOOT_ITEM.get());

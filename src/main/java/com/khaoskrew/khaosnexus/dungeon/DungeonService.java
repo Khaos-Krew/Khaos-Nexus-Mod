@@ -49,7 +49,7 @@ import net.minecraft.world.phys.Vec3;
 public final class DungeonService {
     public static final ResourceLocation DOOR = ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "door");
     public static final String RETURN = "khaosnexus_dungeon_return";
-    private static final int ATTEMPTS = 24;
+    private static final int ATTEMPTS = 48;
 
     private DungeonService() {}
 
@@ -112,7 +112,9 @@ public final class DungeonService {
             long bosses = bossRooms.size();
             // The boss should sit deep in the dungeon, not right behind the entrance.
             boolean deep = bosses == 1 && Math.sqrt(bossRooms.get(0).getBoundingBox().getCenter().distSqr(origin)) >= 24 + 8 * rank.ordinal();
-            int score = (bosses == 1 ? 1000 : 0) + (deep ? 500 : 0) + Math.min(pieces.size(), minPieces(rank) * 2);
+            // Size first: a boss chamber that capped the dungeon at 3 pieces must not beat a full layout.
+            boolean big = pieces.size() >= minPieces(rank);
+            int score = (big ? 2000 : 0) + (bosses == 1 ? 1000 : 0) + (deep ? 500 : 0) + Math.min(pieces.size(), minPieces(rank) * 2);
             if (score > bestScore) {
                 best = pieces;
                 bestScore = score;

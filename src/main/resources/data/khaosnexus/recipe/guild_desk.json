@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PBP",
+    "LLL"
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:paper"
+    },
+    "B": {
+      "item": "minecraft:book"
+    },
+    "L": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "result": {
+    "id": "khaosnexus:guild_desk",
+    "count": 1
+  }
+}

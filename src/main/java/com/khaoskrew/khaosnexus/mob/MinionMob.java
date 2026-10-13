@@ -91,10 +91,10 @@ public class MinionMob extends PathfinderMob implements GeoEntity {
         }
         if (this.level().isClientSide && this.random.nextInt(3) == 0) {
             if (this.familiar) {
-                this.level().addParticle(ParticleTypes.SOUL_FIRE_FLAME, this.getRandomX(0.5), this.getY() + 0.3 + this.random.nextDouble() * 0.6,
+                this.level().addParticle(new net.minecraft.core.particles.DustParticleOptions(new org.joml.Vector3f(0.64F, 0.29F, 0.88F), 0.9F), this.getRandomX(0.5), this.getY() + 0.3 + this.random.nextDouble() * 0.6,
                         this.getRandomZ(0.5), 0, 0.01, 0);
             } else {
-                this.level().addParticle(ParticleTypes.SOUL, this.getX(), this.getY() + 1.3, this.getZ(), 0, 0.02, 0);
+                this.level().addParticle(ParticleTypes.PORTAL, this.getX(), this.getY() + 1.3, this.getZ(), 0, 0.02, 0);
             }
         }
     }

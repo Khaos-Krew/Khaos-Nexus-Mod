@@ -121,5 +121,14 @@ def install(G):
         for s in (-1, 1):
             B('chest', (s * 3.9, 11.4, -4.0), (0.6, 4.2, 3.0), 'claw', rot=(0, s * 10, 0))
 
+    # v9 texture pass: every mob at 32 px per block (k=2) with one shared void-purple / rift-red palette.
+    for name, m in G.MOBS.items():
+        m['k'] = 2; m['ts'] = [512, 512] if name in ('rift_warden', 'spire_guardian', 'rift_brute') else [256, 256]
+        m['glow'] = '#C42E44'; m['crystal'] = '#8A45C0'
+        if name not in ('rift_warden', 'rift_brute'): m['eye'] = '#B44BE6'
+    G.MOBS['rift_familiar']['pal'] = dict(base='#2A2338', dark='#100C18', accent='#5A3A8A', cape='#3A2A5A', robe='#3A2A5A')
+    G.MOBS['rift_familiar']['glow'] = '#A24BE0'
+    G.MOBS['bone_thrall']['core'] = '#B44BE6'; G.MOBS['bone_thrall']['glow'] = '#A24BE0'
+
     wrap('rift_ghoul', ghoul); wrap('rift_stalker', phantom); wrap('void_caster', caster)
     wrap('bone_thrall', thrall); wrap('rift_familiar', familiar)

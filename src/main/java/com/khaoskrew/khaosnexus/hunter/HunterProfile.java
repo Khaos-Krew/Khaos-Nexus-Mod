@@ -29,10 +29,17 @@ public final class HunterProfile implements INBTSerializable<CompoundTag> {
     public int partySize = 1;
     public int gatesCleared;
     public int raidsCleared;
+    /** Set once the player has held a Hunter Card. Never cleared, so losing the card keeps the unlock. */
+    public boolean cardUnlocked;
 
     public static final StreamCodec<RegistryFriendlyByteBuf, HunterProfile> STREAM_CODEC = StreamCodec.of(
             HunterProfile::encode,
             HunterProfile::decode);
+
+    public boolean hasProgress() {
+        return this.xp > 0 || !this.classId.isEmpty() || this.gatesCleared > 0 || this.raidsCleared > 0
+                || this.spireBest > 0 || !this.titles.isEmpty();
+    }
 
     public boolean hasTitle(String id) {
         if (id == null || id.isEmpty() || this.titles.isEmpty()) {
@@ -75,6 +82,7 @@ public final class HunterProfile implements INBTSerializable<CompoundTag> {
         tag.putInt("PartySize", this.partySize);
         tag.putInt("GatesCleared", this.gatesCleared);
         tag.putInt("RaidsCleared", this.raidsCleared);
+        tag.putBoolean("CardUnlocked", this.cardUnlocked);
         return tag;
     }
 
@@ -99,6 +107,8 @@ public final class HunterProfile implements INBTSerializable<CompoundTag> {
         this.partySize = Math.max(1, tag.contains("PartySize") ? tag.getInt("PartySize") : 1);
         this.gatesCleared = tag.getInt("GatesCleared");
         this.raidsCleared = tag.getInt("RaidsCleared");
+        // Saves from before the Hunter Card: anyone who already made progress keeps their hunter UI.
+        this.cardUnlocked = tag.contains("CardUnlocked") ? tag.getBoolean("CardUnlocked") : this.hasProgress();
     }
 
     private static void encode(RegistryFriendlyByteBuf buf, HunterProfile profile) {
@@ -121,6 +131,7 @@ public final class HunterProfile implements INBTSerializable<CompoundTag> {
         buf.writeVarInt(profile.partySize);
         buf.writeVarInt(profile.gatesCleared);
         buf.writeVarInt(profile.raidsCleared);
+        buf.writeBoolean(profile.cardUnlocked);
     }
 
     private static HunterProfile decode(RegistryFriendlyByteBuf buf) {
@@ -144,6 +155,7 @@ public final class HunterProfile implements INBTSerializable<CompoundTag> {
         profile.partySize = buf.readVarInt();
         profile.gatesCleared = buf.readVarInt();
         profile.raidsCleared = buf.readVarInt();
+        profile.cardUnlocked = buf.readBoolean();
         return profile;
     }
 }

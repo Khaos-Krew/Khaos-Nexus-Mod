@@ -20,6 +20,13 @@ public final class ClientInput {
         if (minecraft.player == null || minecraft.screen != null) {
             return;
         }
+        if (!com.khaoskrew.khaosnexus.card.HunterCard.isUnlocked(minecraft.player)) {
+            // No Hunter Card yet: swallow the hunter keys so no hunter UI or ability fires.
+            while (ClassKeybinds.PRIMARY.consumeClick() || ClassKeybinds.SECONDARY.consumeClick() || ClassKeybinds.CLASS_MENU.consumeClick()) {
+                minecraft.player.displayClientMessage(net.minecraft.network.chat.Component.translatable("khaosnexus.card.need"), true);
+            }
+            return;
+        }
         while (ClassKeybinds.PRIMARY.consumeClick()) {
             PacketDistributor.sendToServer(new ActionPayload(ActionPayload.PRIMARY, ""));
         }

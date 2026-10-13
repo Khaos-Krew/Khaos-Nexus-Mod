@@ -4,17 +4,30 @@ OUT='/tmp/Khaos-Nexus-Mod/src/main/resources/assets/khaosnexus/textures/'
 S=4  # supersample
 def fin(img,size):
     img=img.resize((size,size),Image.LANCZOS)
-    return img.filter(ImageFilter.UnsharpMask(radius=1,percent=60,threshold=2))
+    return img.filter(ImageFilter.UnsharpMask(radius=1,percent=45,threshold=2))
 random.seed(7)
 # frame: dark obsidian stone with carved rune grooves
 def frame(glow=False):
     n=32*S; im=Image.new('RGBA',(n,n),(0,0,0,0) if glow else (28,22,38,255)); d=ImageDraw.Draw(im)
     if not glow:
-        for _ in range(900):
-            x,y=random.randrange(n),random.randrange(n); c=random.randint(18,52)
-            d.rectangle([x,y,x+S*2,y+S*2],fill=(c,c-6,c+14,255))
-        d.rectangle([0,0,n-1,n-1],outline=(12,10,18,255),width=S*2)
-        d.rectangle([S*3,S*3,n-1-S*3,n-1-S*3],outline=(58,50,74,255),width=S)
+        # hand-shaded obsidian blocks: 4 staggered stones, each with a lit top-left bevel, void-purple shadowed
+        # bottom-right bevel, mottled ramp fill and chipped corners
+        ramp=[(16,10,26),(26,18,38),(38,28,54),(54,42,74),(78,64,100),(112,96,134)]
+        bs=n//2; bev=S*2
+        for row in range(2):
+            off=(bs//2)*(row%2)
+            for col in range(-1,3):
+                x0=col*bs+off; y0=row*bs; x1=x0+bs-S; y1=y0+bs-S
+                for _ in range(260):
+                    x=random.randrange(x0,x1); y=random.randrange(y0,y1); c=ramp[random.choice((1,1,2,2,2,3))]
+                    d.rectangle([x,y,x+S*2,y+S],fill=c+(255,))
+                d.rectangle([x0,y0,x1,y0+bev],fill=ramp[4]+(255,)); d.rectangle([x0,y0,x0+bev,y1],fill=ramp[3]+(255,))
+                d.rectangle([x0,y1-bev,x1,y1],fill=ramp[0]+(255,)); d.rectangle([x1-bev,y0,x1,y1],fill=ramp[1]+(255,))
+                d.rectangle([x0,y0,x0+S,y0+S],fill=ramp[5]+(255,))
+                for _ in range(3):  # edge chips
+                    cx=random.randrange(x0,x1); d.rectangle([cx,y0,cx+S*2,y0+S],fill=ramp[0]+(255,))
+            d.rectangle([0,row*bs+bs-S,n,row*bs+bs],fill=(8,5,12,255))
+        d.rectangle([0,0,n-1,n-1],outline=(10,7,16,255),width=S)
     col=(255,255,255,255) if glow else (14,10,20,255)
     w=S*3
     c=n//2

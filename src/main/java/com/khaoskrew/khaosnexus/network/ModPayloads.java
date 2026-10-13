@@ -19,6 +19,14 @@ public final class ModPayloads {
         }
     }
 
+    private static void openCard(CardPayload payload) {
+        try {
+            Class.forName("com.khaoskrew.khaosnexus.client.HunterCardScreen").getMethod("open", CardPayload.class).invoke(null, payload);
+        } catch (ReflectiveOperationException ex) {
+            throw new IllegalStateException("Could not open the Hunter Card", ex);
+        }
+    }
+
     public static void sendFeedback(ServerPlayer player, String titleKey, String bodyKey, String argKey) {
         if (NetworkRegistry.hasChannel(player.connection, FeedbackPayload.TYPE.id())) {
             PacketDistributor.sendToPlayer(player, new FeedbackPayload(titleKey, bodyKey, argKey));
@@ -29,6 +37,8 @@ public final class ModPayloads {
         PayloadRegistrar registrar = event.registrar("1");
         registrar.playToClient(FeedbackPayload.TYPE, FeedbackPayload.STREAM_CODEC, (payload, context) ->
                 context.enqueueWork(() -> showFeedback(payload)));
+        registrar.playToClient(CardPayload.TYPE, CardPayload.STREAM_CODEC, (payload, context) ->
+                context.enqueueWork(() -> openCard(payload)));
         registrar.playToServer(ActionPayload.TYPE, ActionPayload.STREAM_CODEC, ActionPayload::handle);
     }
 }

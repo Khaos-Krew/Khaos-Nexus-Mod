@@ -12,6 +12,32 @@ def hx(h): return tuple(int(h[i:i + 2], 16) for i in (1, 3, 5))
 def mul(c, k): return tuple(max(0, min(255, int(q * k))) for q in c[:3])
 def mix(a, b, t): return tuple(int(a[i] + (b[i] - a[i]) * t) for i in range(3))
 
+VOID_SHADOW = (34, 12, 52); WARM_LIGHT = (255, 224, 206)
+def ramp(c, kk):
+    """Shading ramp: shadows shift toward void purple, lights toward a warm highlight instead of plain darken/brighten."""
+    c = mul(c, kk)
+    if kk < 1: return mix(c, VOID_SHADOW, min(0.55, (1 - kk) * 0.6))
+    return mix(c, WARM_LIGHT, min(0.3, (kk - 1) * 0.35))
+
+def downsample(name, mob, rig, hi, lo_k, hi_uvs, lo_uvs):
+    """Owner image rule: paint at full res, Lanczos each face down to the in-game density, light unsharp pass, lossless PNG."""
+    W, H = mob['ts']; base = Image.new('RGBA', (W, H), (0, 0, 0, 0)); glow = base.copy()
+    cs = [c for b in rig.order for c in rig.bones[b]['cubes']]
+    for (hu, hv), (lu, lv), c in zip(hi_uvs, lo_uvs, cs):
+        hf = faces(hu, hv, *cdims(c, hi.k)); lf = faces(lu, lv, *cdims(c, lo_k))
+        for fn, (x, y, w, h) in lf.items():
+            X, Y, Wd, Hd = hf[fn]
+            if w <= 0 or h <= 0 or Wd <= 0 or Hd <= 0: continue
+            b = hi.base.crop((X, Y, X + Wd, Y + Hd)).resize((w, h), Image.LANCZOS)
+            a = b.getchannel('A').point(lambda v: 255 if v >= 110 else 0)
+            rgb = b.convert('RGB').filter(ImageFilter.UnsharpMask(radius=1, percent=45, threshold=2)); rgb.putalpha(a)
+            base.paste(rgb, (x, y))
+            g = hi.glow.crop((X, Y, X + Wd, Y + Hd)).resize((w, h), Image.LANCZOS)
+            ga = g.getchannel('A').point(lambda v: 0 if v < 40 else min(255, int(v * 1.6)))
+            g.putalpha(ga); glow.paste(g, (x, y))
+    hi.base, hi.glow = base, glow; hi.bp, hi.gp = base.load(), glow.load()
+    hi.save(name)
+
 # ----------------------------------------------------------------------------- rigs
 class Rig:
     def __init__(self): self.bones = {}; self.order = []
@@ -316,7 +342,8 @@ class Painter:
         s.mob = mob; s.k = mob['k']; W, H = mob['ts']; s.rnd = random.Random(name + 'v3')
         s.base = Image.new('RGBA', (W, H), (0, 0, 0, 0)); s.glow = s.base.copy(); s.bp = s.base.load(); s.gp = s.glow.load()
         s.P = {k: hx(v) for k, v in mob['pal'].items()}; s.gc = hx(mob['glow']); s.ec = hx(mob['eye']); s.noise = {}
-    def n(s, x, y, sc=3):
+    def n(s, x, y, sc=None):
+        sc = sc or max(2, s.k // 2)
         key = (x // sc, y // sc)
         if key not in s.noise: s.noise[key] = s.rnd.random()
         return s.noise[key] * 0.55 + s.rnd.random() * 0.25 + 0.1
@@ -336,7 +363,15 @@ class Painter:
                     elif xx - fx < e: kk *= 1.12
                     elif fy + fh - 1 - yy < e: kk *= 0.6
                     elif fx + fw - 1 - xx < e: kk *= 0.8
-                s.px(xx, yy, mul(c, kk))
+                s.px(xx, yy, ramp(c, kk))
+        if fn not in ('up', 'down') and fw > 2 * e and fh > 2 * e:   # edge wear: bright chips on the top edge, dark nicks on the bottom
+            for xx in range(fx, fx + fw, e):
+                if s.rnd.random() < 0.18:
+                    for i in range(e):
+                        for j in range(e): s.dk(min(fx + fw - 1, xx + i), fy + j, 1.35)
+                if s.rnd.random() < 0.12:
+                    for i in range(e):
+                        for j in range(e): s.dk(min(fx + fw - 1, xx + i), fy + fh - 1 - j, 0.6)
     def scratches(s, f, n=3, k=1.25):
         fx, fy, fw, fh = f
         for _ in range(n):
@@ -836,7 +871,14 @@ def rift_textures():
                 g = int(255 * lum); p[x, y] = (g, g, g, al)
                 hot = max(0, 1 - edge / 0.05)
                 if hot > 0.05: cp[x, y] = (255, 255, 255, int(140 * hot))
-        im = im.resize((128, 256), Image.LANCZOS)
+        # fracture lines: thin dark cracks radiating from the rim give the tear a hand-drawn, shattered edge
+        dd = ImageDraw.Draw(im)
+        for k_ in range(7):
+            yy0 = int(m * (0.15 + 0.1 * k_)); xx0 = int(n * (0.5 + (0.3 if k_ % 2 else -0.3) * math.sin(math.pi * yy0 / m)))
+            pts = [(xx0, yy0)]
+            for _ in range(5): pts.append((pts[-1][0] + rnd.randint(-10, 10) * S // 2 + (8 if k_ % 2 == 0 else -8), pts[-1][1] + rnd.randint(-6, 10)))
+            dd.line(pts, fill=(40, 40, 40, 200), width=S)
+        im = im.resize((128, 256), Image.LANCZOS).filter(ImageFilter.UnsharpMask(radius=1, percent=40, threshold=2))
         cim = cim.resize((128, 256), Image.LANCZOS)
         base.paste(im, (0, f * RH)); core.paste(cim, (0, f * RH))
         # glow blob (64,0,64,64)
@@ -893,11 +935,13 @@ def rift_geo():
 
 if __name__ == '__main__':
     import rigs_v4, rigs_minions, rigs_v5; rigs_v4.install(sys.modules[__name__]); rigs_minions.install(sys.modules[__name__]); rigs_v5.install(sys.modules[__name__])
+    HI = 4  # paint at 4x the in-game density, then Lanczos down
     for name, m in MOBS.items():
         rig, d = m['rig']()
-        uvs = pack(rig, m['k'], m['ts']); pt = Painter(name, m)  # pack first: it may grow m['ts']
+        uvs = pack(rig, m['k'], m['ts'])  # pack first: it may grow m['ts']
+        hm = dict(m, k=m['k'] * HI, ts=[m['ts'][0] * HI, 256]); huvs = pack(rig, hm['k'], hm['ts']); pt = Painter(name, hm)
         cs = [c for b in rig.order for c in rig.bones[b]['cubes']]
-        for uv, c in zip(uvs, cs): pt.cube(uv, c)
-        pt.save(name); geo(name, rig, m['k'], m['ts'], uvs); anim_set(name, d, rig)
+        for uv, c in zip(huvs, cs): pt.cube(uv, c)
+        downsample(name, m, rig, pt, m['k'], huvs, uvs); geo(name, rig, m['k'], m['ts'], uvs); anim_set(name, d, rig)
         print(name, len(rig.order), 'bones', len(cs), 'cubes', m['ts'])
     rift_textures(); rift_geo(); print('rift ok')

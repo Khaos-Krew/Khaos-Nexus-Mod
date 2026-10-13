@@ -245,6 +245,23 @@ public final class Config {
         SERVER_BUILDER.pop();
     }
 
+    static {
+        SERVER_BUILDER.comment("Hunter Card: the item that unlocks the hunter HUD and screens.").push("hunterCard");
+    }
+
+    public static final ModConfigSpec.BooleanValue HUNTER_CARD_REQUIRED = SERVER_BUILDER
+            .comment("When true, the hunter HUD and screens stay hidden until a player has obtained a Hunter Card",
+                    "(sold by the Guild Clerk villager). When false, every player has them from the start.")
+            .define("required", true);
+
+    public static final ModConfigSpec.IntValue CARD_GATE_RADIUS = SERVER_BUILDER
+            .comment("Radius in blocks of the Hunter Card's nearby-gates list.")
+            .defineInRange("gateRadius", 256, 16, 2048);
+
+    static {
+        SERVER_BUILDER.pop();
+    }
+
     static final ModConfigSpec SERVER_SPEC = SERVER_BUILDER.build();
 
     private Config() {}
@@ -264,6 +281,15 @@ public final class Config {
     public static final ModConfigSpec.IntValue HUD_Y = CLIENT_BUILDER
             .comment("HUD panel top edge, in GUI pixels.")
             .defineInRange("hudY", 6, 0, 4000);
+
+    public static final ModConfigSpec.DoubleValue HUD_SCALE = CLIENT_BUILDER
+            .comment("Hunter HUD scale.").defineInRange("hudScale", 1.0D, 0.5D, 2.0D);
+    public static final ModConfigSpec.DoubleValue HUD_OPACITY = CLIENT_BUILDER
+            .comment("Hunter HUD background opacity.").defineInRange("hudOpacity", 0.55D, 0.0D, 1.0D);
+    public static final ModConfigSpec.DoubleValue UI_SCALE = CLIENT_BUILDER
+            .comment("Hunter Card screen scale.").defineInRange("uiScale", 1.0D, 0.6D, 1.6D);
+    public static final ModConfigSpec.DoubleValue UI_OPACITY = CLIENT_BUILDER
+            .comment("Hunter Card screen panel opacity.").defineInRange("uiOpacity", 0.85D, 0.2D, 1.0D);
 
     static final ModConfigSpec CLIENT_SPEC = CLIENT_BUILDER.build();
 
