@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.1.1-beta (2026-10-13)
+
+### Companion-mod items (each loads only when its mod is installed)
+- **Ars Nouveau:**
+  - Rift Source Shard, made by imbuement.
+  - New glyph, Rift Rend: double damage and Weakness against rift creatures. Works with Amplify and Dampen.
+- **Relics (needs Curios):** Rift Hunter's Sigil necklace. It levels up its Rift Bane and Gate Ward abilities by fighting rift creatures.
+- **Artifacts (needs Curios):**
+  - Rift Lantern (belt): night vision while rift creatures are near.
+  - Voidstep Anklet (feet): half fall damage.
+  - Gatebreaker Band (ring): +20% damage to rift creatures.
+- **Apotheosis:** three gems, Riftheart, Voidglass and Gatekeeper, that only drop in gate dungeons.
+- **Loot:** these items drop in dungeon chests based on gate rank. Drop rates are set in datapack files (`khaosnexus_compat_loot/`) and scaled by `compatLootMultiplier`. Each mod can be switched off in the config.
+
+### Cataclysm bosses in gates
+- Cataclysm bosses now only appear in S-rank gates. Turn on `cataclysmAnyRank` to allow them at lower ranks. The Ender Guardian moved from A to S.
+- **Weaker in gates:**
+  - Boss-mod bosses are weaker inside gates. `modBossHealthScale` now defaults to 0.5, and the new `modBossDamageScale` (0.6) applies once to every hit, including abilities and projectiles.
+  - `modBossScale` sets health and damage per boss. Defaults: Ender Guardian 0.5/0.5, Ignis 0.2/0.4, Harbinger 0.5/0.65, Netherite Monstrosity 0.35/0.4.
+  - New `modBossHealScale` (0.3) reduces how much these bosses heal from life steal and natural regeneration inside gates.
+- **Fair fights:**
+  - A 5-second grace period when the boss spawns (`modBossGraceSeconds`).
+  - The dungeon doesn't collapse while the boss is in a fight.
+  - +25% boss health per extra hunter nearby (`modBossPartyHealth`).
+  - Apotheosis doesn't upgrade these bosses.
+  - Bosses can't grief the arena, and hunters knocked into the void under the arena are put back.
+- New `cataclysmRiftPhase` setting, off by default. When on, the boss gets a void shield and summons rift mobs once at 30% health.
+
 ## 0.1.0-beta (2026-10-13)
 
 Everything since 0.0.2-alpha.

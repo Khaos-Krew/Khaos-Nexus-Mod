@@ -167,6 +167,43 @@ This puts every Cataclysm boss at 780–840 HP and 12–18 melee damage, slightl
 
 Each boss also needs a solo run as an S-rank hunter in run-compat before the defaults are final.
 
+
+### Built in 0.1.1-beta: final numbers and fight results
+**Test setup** (run-compat, solo, real S-rank boss room via `/khaosnexus dungeon preview S`):
+- **Hunter:** S-rank Berserker.
+- **Gear:** full netherite with Protection IV, a netherite sword with Sharpness V, and 8 golden apples (eaten at < 7 hearts).
+- **Effects:** Strength I, Fire Resistance, and Resistance I as a stand-in for dodging.
+
+**The player was a script, not a person.** It auto-aims at the boss, walks in and strafes, swings on cooldown, never blocks or dodges, and lands about 40% of its swings. It is a deliberately weak player. A person who dodges telegraphs and attacks from the flank should deal about 2–3× its damage and take much less.
+
+**Tuning goal:** the bot should get the boss to about half health or lower within 2–2.5 minutes, using all its apples. That points to a 1–3 minute fight for a person, with real risk of dying.
+
+Final defaults:
+- `modBossHealthScale` 0.5
+- `modBossDamageScale` 0.6
+- `modBossHealScale` 0.3 (new: the bosses' life steal and natural regeneration kept undoing the bot's damage)
+- `modBossGraceSeconds` 5
+- `modBossPartyHealth` 0.25
+- `cataclysmRiftPhase` false
+- `cataclysmAnyRank` false
+
+| Boss | modBossScale | HP in gate | Damage × base | Bot result (last trial) |
+|---|---|---|---|---|
+| Ender Guardian | 0.5, 0.5 | 666 | ×1.0 | At 0.6 health: boss 799 → 388 (−51%) in 130 s, bot died after 8 apples. Health lowered to 0.5. |
+| Ignis | 0.2, 0.4 | 360 | ×0.8 | At 0.25/0.4: 450 → ~295 (−34%) in 121 s, bot died. Ignis's shield blocks most of the bot's frontal swings, so health was lowered again to 0.2. A 0.2/0.4 trial has not been run yet. |
+| The Harbinger | 0.5, 0.65 | 780 | ×1.3 | At 0.5/0.7: 780 → 105 (−87%) in 151 s, bot died just short of the kill. Damage lowered a little to 0.65. |
+| Netherite Monstrosity | 0.35, 0.4 | 840 | ×0.8 | At 0.35/0.35: **bot won** in about 150 s with 6 of 8 apples (boss at 37 HP 2 s before it despawned on death). Damage raised to 0.4 to keep the risk. |
+
+**Bugs found while testing, all fixed:**
+- **Void deaths.** Ignis smashed through the arena floor and the hunter fell into the void. Boss-mod bosses can no longer break blocks in gates, and hunters who fall below the arena are teleported back.
+- **Boss healing.** Ignis healed back to full between exchanges. The new healing scale fixes this.
+- **Uneven damage scaling.** Before the change, only melee was rank-scaled. Now every hit, including abilities and projectiles, is scaled exactly once.
+
+**Not verified yet:**
+- No trials at the final values. Each final number was adjusted from its last trial, and no boss was re-run at the values that ship. That includes Ignis at 0.2/0.4.
+- No person has played these fights.
+- The Ender Guardian and Netherite Monstrosity deaths don't print a log line, so those results come from the health samples.
+
 ## 9. Mowzie's Mobs (1.8)
 ✔ Its bosses are already in our boss pool.
 

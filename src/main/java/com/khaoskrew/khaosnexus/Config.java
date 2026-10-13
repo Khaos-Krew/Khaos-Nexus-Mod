@@ -300,8 +300,8 @@ public final class Config {
     public static final ModConfigSpec.ConfigValue<List<? extends String>> MOD_BOSS_SCALE = SERVER_BUILDER
             .comment("Per-boss overrides: entity_id=health,damage. They replace modBossHealthScale and modBossDamageScale for that boss.")
             .defineListAllowEmpty("modBossScale", List.of(
-                    "cataclysm:ender_guardian=0.6,0.5", "cataclysm:ignis=0.45,0.55",
-                    "cataclysm:the_harbinger=0.5,0.7", "cataclysm:netherite_monstrosity=0.35,0.35"),
+                    "cataclysm:ender_guardian=0.5,0.5", "cataclysm:ignis=0.2,0.4",
+                    "cataclysm:the_harbinger=0.5,0.65", "cataclysm:netherite_monstrosity=0.35,0.4"),
                     () -> "modid:boss=0.5,0.6", o -> o instanceof String str && str.contains("=") && str.contains(","));
     public static final ModConfigSpec.BooleanValue CATACLYSM_ANY_RANK = SERVER_BUILDER
             .comment("Allow Cataclysm bosses in optionalBosses below S rank. Off: Cataclysm entries only spawn in S-rank gates.")
@@ -309,6 +309,10 @@ public final class Config {
     public static final ModConfigSpec.BooleanValue CATACLYSM_RIFT_PHASE = SERVER_BUILDER
             .comment("At 30% health, gate Cataclysm bosses gain a void shield (10% max health) and summon two rift mobs once.")
             .define("cataclysmRiftPhase", false);
+    public static final ModConfigSpec.DoubleValue MOD_BOSS_HEAL = SERVER_BUILDER
+            .comment("Multiplier for healing boss-mod bosses get in dungeons (life steal, natural regeneration).",
+                    "Cataclysm bosses heal fast enough to outpace a solo hunter; 0.3 keeps the mechanic but makes damage stick.")
+            .defineInRange("modBossHealScale", 0.3D, 0.0D, 1.0D);
     public static final ModConfigSpec.IntValue MOD_BOSS_GRACE = SERVER_BUILDER
             .comment("Seconds a boss-mod boss stays still and cannot be hurt after it spawns in a dungeon.")
             .defineInRange("modBossGraceSeconds", 5, 0, 60);

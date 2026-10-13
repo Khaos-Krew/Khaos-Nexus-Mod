@@ -33,6 +33,7 @@ import net.neoforged.neoforge.event.tick.EntityTickEvent;
 @EventBusSubscriber(modid = KhaosNexus.MODID)
 public final class ModBossTuning {
     public static final String TAG = "khaosnexus_mod_boss";
+    private static final boolean DEBUG = Boolean.getBoolean("khaosnexus.bossDebug");
     private static final String DATA = "khaosnexus.mod_boss";
 
     private ModBossTuning() {}
@@ -70,6 +71,7 @@ public final class ModBossTuning {
         int grace = Config.MOD_BOSS_GRACE.get() * 20;
         d.putLong("GraceUntil", now + grace);
         d.putBoolean("Graced", grace > 0);
+        d.putLong("Home", boss.blockPosition().asLong());
         boss.getPersistentData().put(DATA, d);
         boss.addTag(TAG);
         if (grace > 0) {
@@ -118,11 +120,49 @@ public final class ModBossTuning {
                 return;
             }
             d.putLong("EngagedUntil", now + 600L);
+            if (DEBUG) {
+                KhaosNexus.LOGGER.info("[bossdebug] boss incoming {} ({})", event.getAmount(), event.getSource().getMsgId());
+            }
+        }
+        if (DEBUG && event.getEntity() instanceof Player pl && !(source(event.getSource().getEntity(), event.getSource().getDirectEntity()) != null)) {
+            KhaosNexus.LOGGER.info("[bossdebug] untraced hit on {} for {} ({} / {})", pl.getName().getString(), event.getAmount(),
+                    event.getSource().getMsgId(), event.getSource().getEntity() == null ? "-" : EntityType.getKey(event.getSource().getEntity().getType()));
         }
         Mob boss = source(event.getSource().getEntity(), event.getSource().getDirectEntity());
         if (boss != null && boss != event.getEntity()) {
+            if (DEBUG) {
+                KhaosNexus.LOGGER.info("[bossdebug] {} hits {} for {} x {} ({} / {})", EntityType.getKey(boss.getType()),
+                        event.getEntity().getName().getString(), event.getAmount(), damageMultiplier(boss),
+                        event.getSource().getMsgId(), event.getSource().getDirectEntity() == null ? "-" : EntityType.getKey(event.getSource().getDirectEntity().getType()));
+            }
             event.setAmount((float) (event.getAmount() * damageMultiplier(boss)));
             boss.getPersistentData().getCompound(DATA).putLong("EngagedUntil", now + 600L);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onDamaged(net.neoforged.neoforge.event.entity.living.LivingDamageEvent.Post event) {
+        if (DEBUG && event.getEntity() instanceof Player pl) {
+            KhaosNexus.LOGGER.info("[bossdebug] {} took {} (hp {})", pl.getName().getString(), event.getNewDamage(), pl.getHealth());
+        }
+        if (DEBUG && tuned(event.getEntity())) {
+            KhaosNexus.LOGGER.info("[bossdebug] boss took {} (hp {})", event.getNewDamage(), event.getEntity().getHealth());
+        }
+    }
+
+    @SubscribeEvent
+    public static void onHeal(net.neoforged.neoforge.event.entity.living.LivingHealEvent event) {
+        if (tuned(event.getEntity())) {
+            event.setAmount((float) (event.getAmount() * Config.MOD_BOSS_HEAL.get()));
+        }
+    }
+
+    /** Boss-mod bosses must not break the dungeon floor (the void is below it). */
+    @SubscribeEvent
+    public static void onGrief(net.neoforged.neoforge.event.entity.EntityMobGriefingEvent event) {
+        Entity e = event.getEntity();
+        if (tuned(e) || source(e, e) != null) {
+            event.setCanGrief(false);
         }
     }
 
@@ -138,6 +178,9 @@ public final class ModBossTuning {
             boss.setNoAi(false);
             boss.setInvulnerable(false);
             applyParty(boss, level);
+        }
+        if (now % 10 == 0 && d.contains("Home")) {
+            rescue(boss, level, BlockPos.of(d.getLong("Home")));
         }
         if (Config.CATACLYSM_RIFT_PHASE.get() && !d.getBoolean("RiftPhase")
                 && "cataclysm".equals(EntityType.getKey(boss.getType()).getNamespace())
@@ -160,6 +203,15 @@ public final class ModBossTuning {
         }
         boss.getPersistentData().getCompound(DATA).putInt("Party", hunters);
         return hunters;
+    }
+
+    /** Some bosses smash blocks regardless of mobGriefing; hunters knocked into the void below the arena are put back. */
+    private static void rescue(Mob boss, ServerLevel level, BlockPos home) {
+        AABB column = new AABB(home).inflate(48.0D, 0.0D, 48.0D).setMinY(level.getMinBuildHeight() - 64).setMaxY(home.getY() - 10);
+        for (Player p : level.getEntitiesOfClass(Player.class, column, p -> p.isAlive() && !p.isSpectator())) {
+            p.teleportTo(home.getX() + 0.5D, home.getY() + 1, home.getZ() + 6.5D);
+            p.resetFallDistance();
+        }
     }
 
     private static void riftPhase(Mob boss, ServerLevel level, GateRank rank) {

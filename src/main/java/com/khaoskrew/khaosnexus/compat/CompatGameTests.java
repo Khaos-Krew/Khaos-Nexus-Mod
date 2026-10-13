@@ -147,8 +147,14 @@ public class CompatGameTests {
             Config.CATACLYSM_ANY_RANK.set(any);
         }
         helper.assertFalse(Config.CATACLYSM_RIFT_PHASE.get(), "rift phase is off by default");
-        double[] ignis = ModBossTuning.scales(cata);
-        helper.assertTrue(ignis[0] == 0.45D && ignis[1] == 0.55D, "per-boss override for Ignis");
+        List<? extends String> scale = Config.MOD_BOSS_SCALE.get();
+        try {
+            Config.MOD_BOSS_SCALE.set(List.of("cataclysm:ignis=0.2,0.4"));
+            double[] ignis = ModBossTuning.scales(cata);
+            helper.assertTrue(ignis[0] == 0.2D && ignis[1] == 0.4D, "per-boss override for Ignis");
+        } finally {
+            Config.MOD_BOSS_SCALE.set(scale);
+        }
         double[] other = ModBossTuning.scales(mowzie);
         helper.assertTrue(other[0] == Config.MOD_BOSS_HEALTH.get() && other[1] == Config.MOD_BOSS_DAMAGE.get(), "globals for unlisted bosses");
 
