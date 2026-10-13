@@ -135,6 +135,10 @@ public final class DungeonInstances extends SavedData {
         KhaosNexus.LOGGER.info("Gate dungeon slot {} released, wiping {} blocks", slot, volume(r.box));
     }
 
+    public boolean isFree(int slot) {
+        return this.free.contains(slot);
+    }
+
     public int liveCount() {
         return this.live.size();
     }

@@ -892,7 +892,7 @@ def rift_geo():
     json.dump(js, open(out('animations', 'block', 'nexus_rift.animation.json'), 'w'), indent=1)
 
 if __name__ == '__main__':
-    import rigs_v4, rigs_minions; rigs_v4.install(sys.modules[__name__]); rigs_minions.install(sys.modules[__name__])
+    import rigs_v4, rigs_minions, rigs_v5; rigs_v4.install(sys.modules[__name__]); rigs_minions.install(sys.modules[__name__]); rigs_v5.install(sys.modules[__name__])
     for name, m in MOBS.items():
         rig, d = m['rig']()
         uvs = pack(rig, m['k'], m['ts']); pt = Painter(name, m)  # pack first: it may grow m['ts']

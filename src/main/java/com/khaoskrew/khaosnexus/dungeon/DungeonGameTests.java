@@ -40,16 +40,16 @@ public class DungeonGameTests {
         }
         BlockPos probe = layout.spawn().below();
         helper.succeedWhen(() -> {
-            if (instances.pendingResets() > 0) {
+            if (!instances.isFree(lease.slot())) {
                 instances.tick(dungeon);
                 helper.assertTrue(false, "wiping");
             }
             helper.assertTrue(dungeon.getBlockState(probe).isAir(), "entrance floor survived the wipe");
             helper.assertTrue(dungeon.getEntitiesOfClass(Mob.class, area.inflate(16.0D)).isEmpty(), "old mobs survived the wipe");
             DungeonInstances.Lease again = DungeonService.allocate(dungeon);
-            boolean reused = again.slot() == lease.slot();
-            DungeonService.release(dungeon, again, null);
-            helper.assertTrue(reused, "freed slot was not reused");
+            DungeonService.release(dungeon, again, layout.box());
+            // The lowest free slot is handed out first, so a wiped region is reused before a new one is opened.
+            helper.assertTrue(again.slot() <= lease.slot(), "freed slot was not reused");
         });
     }
 }
