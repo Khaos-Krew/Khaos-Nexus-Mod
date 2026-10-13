@@ -49,6 +49,12 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
     private boolean rankAssigned;
     private boolean active;
     private boolean closed;
+    /** Red Gate: locked until cleared, stronger boss, bigger rewards. */
+    private boolean red;
+    /** Set once this gate broke open into the world. */
+    private boolean broken;
+    /** Game time the break clock started (set on first tick, so gates from older saves don't all break at once). */
+    private long breakStart;
     private int waveSize;
     @Nullable
     private UUID activator;
@@ -103,6 +109,36 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         return this.closed;
     }
 
+    public boolean isRed() {
+        return this.red;
+    }
+
+    public void setRed(boolean red) {
+        this.red = red;
+        this.setChanged();
+        this.sync();
+    }
+
+    public boolean isBroken() {
+        return this.broken;
+    }
+
+    /** True when this player is inside an active Red Gate's dungeon and may not walk out yet. */
+    public static boolean lockedIn(ServerPlayer player) {
+        if (!com.khaoskrew.khaosnexus.Config.RED_LOCK.get()) {
+            return false;
+        }
+        net.minecraft.nbt.CompoundTag back = player.getPersistentData().getCompound(com.khaoskrew.khaosnexus.dungeon.DungeonService.RETURN);
+        ResourceLocation dim = ResourceLocation.tryParse(back.getString("Dim"));
+        if (dim == null) {
+            return false;
+        }
+        ServerLevel from = player.server.getLevel(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.DIMENSION, dim));
+        BlockPos pos = BlockPos.of(back.getLong("Pos"));
+        return from != null && from.isLoaded(pos) && from.getBlockEntity(pos) instanceof NexusGateBlockEntity gate
+                && gate.red && gate.active && !gate.closed;
+    }
+
     public void setRank(GateRank rank) {
         this.rank = rank;
         this.rankAssigned = true;
@@ -115,6 +151,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
             return;
         }
         this.rank = GateRank.roll(random);
+        this.red = com.khaoskrew.khaosnexus.endgame.RedGates.rollRed(this.rank, random);
         this.rankAssigned = true;
         this.setChanged();
         this.sync();
@@ -169,6 +206,23 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         return InteractionResult.SUCCESS;
     }
 
+    /** Dungeon break: the ignored gate spills its wave into the world around it. */
+    public boolean breakOpen(ServerLevel level) {
+        this.broken = true;
+        if (!GateArena.spawnWave(level, this)) {
+            this.setChanged();
+            return false;
+        }
+        this.active = true;
+        this.waveSize = this.waveMobs.size();
+        this.setChanged();
+        this.sync();
+        this.updateBossBar(level, this.waveSize);
+        level.getServer().getPlayerList().broadcastSystemMessage(Component.translatable("khaosnexus.gate.break",
+                this.rankLabel(), this.getBlockPos().getX(), this.getBlockPos().getZ()), false);
+        return true;
+    }
+
     private InteractionResult openDungeon(ServerLevel server, ServerPlayer player) {
         ServerLevel dungeon = com.khaoskrew.khaosnexus.dungeon.DungeonService.level(server.getServer());
         if (dungeon == null) {
@@ -183,6 +237,9 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
             return InteractionResult.FAIL;
         }
         var boss = com.khaoskrew.khaosnexus.dungeon.DungeonService.populate(dungeon, this.rank, layout, server.getRandom(), lease);
+        if (this.red && boss != null) {
+            com.khaoskrew.khaosnexus.endgame.RedGates.empower(boss);
+        }
         this.dungeonSlot = lease.slot();
         this.dungeonGen = lease.gen();
         this.lastOccupied = server.getGameTime();
@@ -243,7 +300,20 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         if (this.bornAt == 0L) { // first tick of a new gate: clients play the crack-open animation from here
             this.bornAt = level.getGameTime();
             this.setChanged();
+            if (this.red) {
+                level.getServer().getPlayerList().broadcastSystemMessage(Component.translatable("khaosnexus.gate.red_appeared",
+                        this.rankLabel(), this.getBlockPos().getX(), this.getBlockPos().getZ()), false);
+            }
             level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
+        }
+        if (this.breakStart == 0L) {
+            this.breakStart = level.getGameTime();
+            this.setChanged();
+        }
+        if (!this.active && !this.closed && !this.broken && this.rankAssigned
+                && com.khaoskrew.khaosnexus.endgame.RedGates.canBreak(this.rank)
+                && level.getGameTime() - this.breakStart > com.khaoskrew.khaosnexus.endgame.RedGates.breakDelay(this.red)) {
+            this.breakOpen(level);
         }
         if (!this.active || this.closed) {
             this.hideBossBar();
@@ -406,6 +476,25 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         }
         this.sync();
         GateArena.dropReward(level, pos, cleared);
+        if (this.red && com.khaoskrew.khaosnexus.Config.RED_BONUS_CORES.get() > 0) {
+            net.minecraft.world.entity.item.ItemEntity cores = new net.minecraft.world.entity.item.ItemEntity(level, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D,
+                    new net.minecraft.world.item.ItemStack(com.khaoskrew.khaosnexus.forge.HunterForge.RIFT_CORE.get(), com.khaoskrew.khaosnexus.Config.RED_BONUS_CORES.get()));
+            level.addFreshEntity(cores);
+        }
+        net.minecraft.world.phys.Vec3 center = net.minecraft.world.phys.Vec3.atCenterOf(pos);
+        for (ServerPlayer near : level.players()) {
+            if (near.distanceToSqr(center) > 48.0D * 48.0D) {
+                continue;
+            }
+            if (this.red) {
+                int base = cleared.tuning().hunterXp.get();
+                HunterRanks.addXp(near, com.khaoskrew.khaosnexus.endgame.RedGates.scaleXp(base, true) - base);
+                com.khaoskrew.khaosnexus.title.Titles.unlock(near, com.khaoskrew.khaosnexus.endgame.RedGates.TITLE);
+            }
+            if (this.broken) {
+                com.khaoskrew.khaosnexus.title.Titles.unlock(near, com.khaoskrew.khaosnexus.endgame.RedGates.BREAK_TITLE);
+            }
+        }
         GateArena.announce(level, pos, Component.translatable("khaosnexus.gate.cleared", Component.translatable(cleared.translationKey())), false);
         HunterRanks.onGateCleared(level, pos, cleared, this.activator);
     }
@@ -415,7 +504,8 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
     }
 
     private Component rankLabel() {
-        return Component.translatable(this.rank.translationKey());
+        Component label = Component.translatable(this.rank.translationKey());
+        return this.red ? Component.translatable("khaosnexus.gate.red_label", label).withStyle(net.minecraft.ChatFormatting.DARK_RED) : label;
     }
 
     private int livingCount(ServerLevel level) {
@@ -454,6 +544,9 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         tag.putBoolean("RankAssigned", this.rankAssigned);
         tag.putBoolean("Active", this.active);
         tag.putBoolean("Closed", this.closed);
+        tag.putBoolean("Red", this.red);
+        tag.putBoolean("Broken", this.broken);
+        tag.putLong("BreakStart", this.breakStart);
         tag.putInt("WaveSize", this.waveSize);
         if (this.activator != null) {
             tag.putString("Activator", this.activator.toString());
@@ -487,6 +580,9 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         this.rankAssigned = tag.getBoolean("RankAssigned");
         this.active = tag.getBoolean("Active");
         this.closed = tag.getBoolean("Closed");
+        this.red = tag.getBoolean("Red");
+        this.broken = tag.getBoolean("Broken");
+        this.breakStart = tag.getLong("BreakStart");
         this.waveSize = tag.getInt("WaveSize");
         this.activator = null;
         if (tag.contains("Activator")) {

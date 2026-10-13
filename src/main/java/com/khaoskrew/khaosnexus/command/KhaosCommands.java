@@ -162,6 +162,11 @@ public final class KhaosCommands {
                         }))
                         .then(Commands.literal("leave").executes(context -> {
                             ServerPlayer player = context.getSource().getPlayerOrException();
+                            if (player.level().dimension() == com.khaoskrew.khaosnexus.dungeon.DungeonRules.GATE_DUNGEON
+                                    && com.khaoskrew.khaosnexus.gate.NexusGateBlockEntity.lockedIn(player)) {
+                                player.displayClientMessage(net.minecraft.network.chat.Component.translatable("khaosnexus.dungeon.red_locked"), false);
+                                return 0;
+                            }
                             if (player.level().dimension() != com.khaoskrew.khaosnexus.dungeon.DungeonRules.GATE_DUNGEON
                                     || !com.khaoskrew.khaosnexus.dungeon.DungeonService.sendBack(player)) {
                                 player.displayClientMessage(net.minecraft.network.chat.Component.translatable("khaosnexus.dungeon.not_inside"), false);

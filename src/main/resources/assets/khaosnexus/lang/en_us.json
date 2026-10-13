@@ -394,5 +394,11 @@
   "khaosnexus.weekly.khaosnexus.hunters_moon": "Hunter's Moon: mobs hit 30% harder, rewards are doubled up",
   "khaosnexus.weekly.khaosnexus.overcharged": "Overcharged: everything is stronger, big rewards",
   "khaosnexus.weekly.active": "This week in %1$s gates: %2$s",
-  "khaosnexus.weekly.none": "No weekly gate modifiers are active."
+  "khaosnexus.weekly.none": "No weekly gate modifiers are active.",
+  "khaosnexus.gate.red_appeared": "A %1$s Gate has opened at %2$s, %3$s. Once inside, there is no way out but through.",
+  "khaosnexus.gate.break": "Dungeon break! An ignored %1$s Gate at %2$s, %3$s spilled its monsters into the world.",
+  "khaosnexus.dungeon.red_locked": "This is a Red Gate. The way out only opens when the boss falls.",
+  "khaosnexus.title.red_gate_survivor": "Red Gate Survivor",
+  "khaosnexus.title.break_stopper": "Break Stopper",
+  "khaosnexus.gate.red_label": "Red %s"
 }

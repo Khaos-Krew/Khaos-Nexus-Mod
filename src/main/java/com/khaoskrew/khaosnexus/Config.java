@@ -441,6 +441,36 @@ public final class Config {
     public static final ModConfigSpec.ConfigValue<List<? extends String>> WEEKLY_FORCE = SERVER_BUILDER
             .comment("Force these modifier ids instead of the weekly roll (empty = roll).")
             .defineListAllowEmpty("weeklyForce", List.of(), () -> "khaosnexus:glass_cannon", o -> o instanceof String);
+    public static final ModConfigSpec.DoubleValue RED_GATE_CHANCE = SERVER_BUILDER
+            .comment("Chance a new gate of redGateRanks rolls as a Red Gate: locked until cleared, stronger boss, bigger rewards.")
+            .defineInRange("redGateChance", 0.03D, 0.0D, 1.0D);
+    public static final ModConfigSpec.ConfigValue<String> RED_GATE_RANKS = SERVER_BUILDER
+            .comment("Gate ranks that can roll as Red Gates, comma separated.")
+            .define("redGateRanks", "A,S");
+    public static final ModConfigSpec.DoubleValue RED_BOSS_HEALTH = SERVER_BUILDER
+            .comment("Red Gate boss health multiplier.")
+            .defineInRange("redBossHealth", 1.5D, 0.1D, 20.0D);
+    public static final ModConfigSpec.DoubleValue RED_BOSS_DAMAGE = SERVER_BUILDER
+            .comment("Red Gate boss damage multiplier.")
+            .defineInRange("redBossDamage", 1.25D, 0.1D, 20.0D);
+    public static final ModConfigSpec.IntValue RED_BONUS_CORES = SERVER_BUILDER
+            .comment("Extra Rift Cores dropped when a Red Gate is cleared.")
+            .defineInRange("redBonusCores", 3, 0, 64);
+    public static final ModConfigSpec.DoubleValue RED_XP = SERVER_BUILDER
+            .comment("Hunter XP multiplier for clearing a Red Gate.")
+            .defineInRange("redXpMultiplier", 2.0D, 0.0D, 20.0D);
+    public static final ModConfigSpec.BooleanValue RED_LOCK = SERVER_BUILDER
+            .comment("Hunters inside a Red Gate cannot leave until it is cleared (or the dungeon collapses).")
+            .define("redLockExit", true);
+    public static final ModConfigSpec.BooleanValue BREAKS_ENABLED = SERVER_BUILDER
+            .comment("Dungeon breaks: a gate left unopened too long spills its wave into the world around it.")
+            .define("dungeonBreaks", true);
+    public static final ModConfigSpec.IntValue BREAK_MINUTES = SERVER_BUILDER
+            .comment("Minutes an unopened gate waits before it breaks. Red Gates break in half the time.")
+            .defineInRange("dungeonBreakMinutes", 30, 1, 10080);
+    public static final ModConfigSpec.ConfigValue<String> BREAK_MIN_RANK = SERVER_BUILDER
+            .comment("Lowest gate rank that can break.")
+            .define("dungeonBreakMinRank", "C");
     // endgame-config-end
     static {
         SERVER_BUILDER.pop();

@@ -53,4 +53,41 @@ public class EndgameGameTests {
         helper.assertTrue(WeeklyModifiers.parse(ResourceLocation.parse("t:x"), new com.google.gson.JsonObject()).mobHealth() == 1.0D, "missing fields default to 1");
         helper.succeed();
     }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform", timeoutTicks = 100)
+    public static void redGatesAndDungeonBreaks(GameTestHelper helper) {
+        double chance = Config.RED_GATE_CHANCE.get();
+        try {
+            Config.RED_GATE_CHANCE.set(1.0D);
+            helper.assertTrue(RedGates.rollRed(GateRank.S, net.minecraft.util.RandomSource.create(1)), "S can roll red");
+            helper.assertFalse(RedGates.rollRed(GateRank.C, net.minecraft.util.RandomSource.create(1)), "C is not in redGateRanks");
+            Config.RED_GATE_CHANCE.set(0.0D);
+            helper.assertFalse(RedGates.rollRed(GateRank.S, net.minecraft.util.RandomSource.create(1)), "chance 0 never rolls red");
+        } finally {
+            Config.RED_GATE_CHANCE.set(chance);
+        }
+        helper.assertTrue(RedGates.breakDelay(true) * 2 == RedGates.breakDelay(false), "red gates break twice as fast");
+        helper.assertTrue(RedGates.canBreak(GateRank.S) && !RedGates.canBreak(GateRank.E), "break min rank");
+        helper.assertTrue(RedGates.scaleXp(80, true) == 160 && RedGates.scaleXp(80, false) == 80, "red xp multiplier");
+
+        Mob boss = GateArena.spawnMob(helper.getLevel(), GateRank.S, EntityType.ZOMBIE, helper.absolutePos(new BlockPos(1, 2, 1)), 0F, 1.0D, true);
+        float before = boss.getMaxHealth();
+        double dmg = boss.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE).getBaseValue();
+        RedGates.empower(boss);
+        helper.assertTrue(Math.abs(boss.getMaxHealth() - before * Config.RED_BOSS_HEALTH.get()) < 0.01D, "red boss health");
+        helper.assertTrue(Math.abs(boss.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE).getBaseValue()
+                - dmg * Config.RED_BOSS_DAMAGE.get()) < 1e-6, "red boss damage");
+        boss.discard();
+
+        BlockPos gatePos = new BlockPos(2, 2, 2);
+        helper.setBlock(gatePos, com.khaoskrew.khaosnexus.registry.ModRegistries.NEXUS_GATE.get());
+        com.khaoskrew.khaosnexus.gate.NexusGateBlockEntity gate = helper.getBlockEntity(gatePos);
+        gate.setRank(GateRank.D);
+        gate.setRed(true);
+        var tag = gate.saveWithoutMetadata(helper.getLevel().registryAccess());
+        helper.assertTrue(tag.getBoolean("Red"), "red flag is saved");
+        helper.assertTrue(gate.breakOpen(helper.getLevel()), "break spawns the wave in the world");
+        helper.assertTrue(gate.isBroken() && gate.isActive(), "broken gate is active");
+        helper.succeed();
+    }
 }
