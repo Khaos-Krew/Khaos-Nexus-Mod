@@ -59,7 +59,7 @@ public class RiftMob extends Monster implements GeoEntity {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(2, new WindupMeleeGoal(this));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.8D));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
@@ -121,9 +121,47 @@ public class RiftMob extends Monster implements GeoEntity {
         return this.geoCache;
     }
 
+    /** Ticks from the start of the attack animation to the strike frame, per mob (matches animation.json). */
+    protected int strikeDelay() {
+        return switch (EntityType.getKey(this.getType()).getPath()) {
+            case "rift_brute" -> 9;
+            case "void_caster" -> 7;
+            case "rift_warden" -> 12;
+            case "spire_guardian" -> 10;
+            default -> 5;
+        };
+    }
+
+    private int windup;
+    private net.minecraft.world.entity.LivingEntity windupTarget;
+
+    public boolean isWindingUp() {
+        return this.windup > 0;
+    }
+
+    /** Can this mob start an attack right now (bosses block it while drawing their weapon)? */
+    protected boolean canStartAttack() {
+        return true;
+    }
+
+    /** Starts the attack animation now; the hit lands when the animation reaches its strike frame. */
+    public void startWindup(net.minecraft.world.entity.LivingEntity target) {
+        this.windup = this.strikeDelay();
+        this.windupTarget = target;
+        this.swing(net.minecraft.world.InteractionHand.MAIN_HAND);
+        this.triggerAnim("action", "attack");
+    }
+
     @Override
     public void tick() {
         super.tick();
+        if (!this.level().isClientSide && this.windup > 0 && --this.windup == 0) {
+            net.minecraft.world.entity.LivingEntity t = this.windupTarget;
+            this.windupTarget = null;
+            if (t != null && t.isAlive() && this.isWithinMeleeAttackRange(t) && this.hasLineOfSight(t)) {
+                super.doHurtTarget(t);
+            }
+        }
         if (this.level().isClientSide && this.getType() == ModEntities.RIFT_STALKER.get() && this.random.nextInt(3) == 0) {
             // Rift Phantom: shadow wisps shed from its smoke tails.
             this.level().addParticle(new net.minecraft.core.particles.DustParticleOptions(new org.joml.Vector3f(0.12F, 0.06F, 0.18F), 1.6F),
@@ -147,10 +185,29 @@ public class RiftMob extends Monster implements GeoEntity {
 
     @Override
     public boolean doHurtTarget(Entity target) {
+        // Direct hits (e.g. from other code paths) still animate; the melee goal uses startWindup instead.
         boolean hit = super.doHurtTarget(target);
         if (hit) {
             this.triggerAnim("action", "attack");
         }
         return hit;
+    }
+
+    /** Melee goal that plays the windup first and lets the strike frame deal the damage. */
+    static final class WindupMeleeGoal extends MeleeAttackGoal {
+        private final RiftMob rift;
+
+        WindupMeleeGoal(RiftMob mob) {
+            super(mob, 1.0D, false);
+            this.rift = mob;
+        }
+
+        @Override
+        protected void checkAndPerformAttack(net.minecraft.world.entity.LivingEntity target) {
+            if (this.canPerformAttack(target) && !this.rift.isWindingUp() && this.rift.canStartAttack()) {
+                this.resetAttackCooldown();
+                this.rift.startWindup(target);
+            }
+        }
     }
 }

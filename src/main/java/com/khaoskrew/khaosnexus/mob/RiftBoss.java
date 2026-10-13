@@ -39,6 +39,28 @@ public class RiftBoss extends RiftMob {
         builder.define(DRAWN, false);
     }
 
+    /** Client: game time when DRAWN last changed, so the renderer swaps sword bones mid-draw. */
+    private long drawChangedAt = -100;
+
+    @Override
+    public void onSyncedDataUpdated(net.minecraft.network.syncher.EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if (DRAWN.equals(key)) {
+            this.drawChangedAt = this.tickCount;
+        }
+    }
+
+    /** Sword shown in hand? Swaps 8 ticks into the draw/sheathe animation (the grab frame). */
+    public boolean showSwordInHand() {
+        boolean switching = this.tickCount - this.drawChangedAt < 8;
+        return switching ? !this.isWeaponDrawn() : this.isWeaponDrawn();
+    }
+
+    @Override
+    protected boolean canStartAttack() {
+        return this.isWeaponDrawn() && this.tickCount - this.drawChangedAt >= 18;
+    }
+
     public boolean isWeaponDrawn() {
         return this.entityData.get(DRAWN);
     }
@@ -46,6 +68,7 @@ public class RiftBoss extends RiftMob {
     private void setWeaponDrawn(boolean drawn) {
         if (drawn != this.isWeaponDrawn()) {
             this.entityData.set(DRAWN, drawn);
+            this.drawChangedAt = this.tickCount;
             this.triggerAnim("action", drawn ? "draw" : "sheathe");
         }
     }

@@ -48,7 +48,7 @@ public class RiftMobRenderer extends GeoEntityRenderer<RiftMob> {
     public void preRender(PoseStack pose, RiftMob mob, BakedGeoModel model, MultiBufferSource buffer, VertexConsumer consumer,
             boolean reRender, float partialTick, int light, int overlay, int color) {
         if (mob instanceof com.khaoskrew.khaosnexus.mob.RiftBoss boss) {
-            boolean drawn = boss.isWeaponDrawn();
+            boolean drawn = boss.showSwordInHand();
             model.getBone("sword_back").ifPresent(b -> {
                 b.setHidden(drawn);
                 model.getBone("sword").ifPresent(h -> h.setHidden(!drawn));

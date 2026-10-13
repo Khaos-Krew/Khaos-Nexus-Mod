@@ -665,6 +665,22 @@ def anim_set(name, d, rig):
                'left_arm': [(0, [0, 0, 0]), (0.35, [-130, 0, 30]), (0.5, [-30, 0, -20]), (0.8, [0, 0, 0])],
                'chest': [(0, [12, 0, 0]), (0.25, [0, 15, 0]), (0.45, [20, -15, 0]), (0.8, [12, 0, 0])],
                'jaw': [(0, [0, 0, 0]), (0.3, [30, 0, 0]), (0.7, [0, 0, 0])]}; L = 0.8
+    # follow-through layer: anticipation lean, weight shift onto the front foot at the strike frame,
+    # overshoot on recovery, and cloth/chains lagging behind the motion.
+    TS = {'rift_brute': 0.45, 'void_caster': 0.35, 'rift_warden': 0.6, 'spire_guardian': 0.5}.get(name, 0.25)
+    def arc(a_w, a_s, a_o):
+        return [(0, [0, 0, 0]), (TS * 0.8, a_w), (TS, a_s), (TS + (L - TS) * 0.45, a_o), (L, [0, 0, 0])]
+    extra = {'torso': arc([-8, 0, 0], [12, 0, 0], [-3, 0, 0]),
+             'right_leg': arc([8, 0, 0], [-22, 0, 0], [-6, 0, 0]), 'left_leg': arc([-6, 0, 0], [14, 0, 0], [4, 0, 0]),
+             'right_shin': arc([4, 0, 0], [18, 0, 0], [5, 0, 0]),
+             'cape1': arc([10, 0, 0], [32, 0, 0], [4, 0, 0]), 'cape2': arc([6, 0, 0], [24, 0, 0], [2, 0, 0]),
+             'robe_front': arc([6, 0, 0], [-18, 0, 0], [4, 0, 0]), 'robe_back': arc([-6, 0, 0], [22, 0, 0], [-4, 0, 0]),
+             'tasset_front': arc([4, 0, 0], [-12, 0, 0], [3, 0, 0])}
+    for bn in rig.order:
+        if '_chain' in bn: extra[bn] = arc([-15, 0, 0], [35, 0, 0], [-8, 0, 0])
+        if '_wisp' in bn: extra[bn] = arc([8, 0, 0], [24, 0, 0], [-5, 0, 0])
+    for bn, v in extra.items():
+        if has(bn) and bn not in atk: atk[bn] = v
     AB = {b: {'rotation': kf(v)} for b, v in atk.items() if has(b)}
     if name == 'void_caster': AB['orb'] = {'position': kf(atkpos['orb'])}
     A['attack'] = dict(loop=False, length=L, bones=AB)
@@ -680,12 +696,20 @@ def anim_set(name, d, rig):
         RB['root'] = {'scale': kf([(0, [1, 1, 1]), (0.5, [1.04, 1.04, 1.04]), (1.8, [1.04, 1.04, 1.04]), (2.4, [1, 1, 1])])}
         A['roar'] = dict(loop=False, length=2.4, bones=RB)
         if has('sword_back'):  # STUB for the attack-animation pass: reach over the shoulder, pull, bring forward
-            A['draw'] = dict(loop=False, length=0.9, bones={
-                'right_arm': {'rotation': kf([(0, [0, 0, 0]), (0.35, [-165, 0, 15]), (0.55, [-120, 0, 10]), (0.9, [0, 0, 0])])},
-                'right_forearm': {'rotation': kf([(0, [0, 0, 0]), (0.35, [-40, 0, 0]), (0.9, [0, 0, 0])])},
-                'chest': {'rotation': kf([(0, [0, 0, 0]), (0.35, [0, -15, 0]), (0.9, [0, 0, 0])])}})
-            A['sheathe'] = dict(loop=False, length=0.9, bones={
-                'right_arm': {'rotation': kf([(0, [0, 0, 0]), (0.45, [-165, 0, 15]), (0.9, [0, 0, 0])])}})
+            # draw: reach over the right shoulder (grab frame 0.4s = 8 ticks, where the renderer swaps the sword bones),
+            # rip it free with a torso twist, swing it round in an arc and settle into guard
+            A['draw'] = dict(loop=False, length=1.1, bones={
+                'right_arm': {'rotation': kf([(0, [0, 0, 0]), (0.35, [-170, 0, 25]), (0.45, [-175, 0, 30]), (0.7, [-95, 0, -20]), (0.9, [-30, 0, -8]), (1.1, [0, 0, 0])])},
+                'right_forearm': {'rotation': kf([(0, [0, 0, 0]), (0.35, [-70, 0, 0]), (0.45, [-75, 0, 0]), (0.7, [-20, 0, 0]), (1.1, [0, 0, 0])])},
+                'chest': {'rotation': kf([(0, [0, 0, 0]), (0.35, [-6, -22, 0]), (0.7, [6, 18, 0]), (1.1, [0, 0, 0])])},
+                'head': {'rotation': kf([(0, [0, 0, 0]), (0.35, [0, -25, 0]), (0.7, [0, 10, 0]), (1.1, [0, 0, 0])])},
+                'left_arm': {'rotation': kf([(0, [0, 0, 0]), (0.35, [-20, 0, 20]), (0.8, [-10, 0, 8]), (1.1, [0, 0, 0])])},
+                'cape1': {'rotation': kf([(0, [6, 0, 0]), (0.45, [20, 0, 0]), (0.8, [28, 0, 0]), (1.1, [6, 0, 0])])}})
+            A['sheathe'] = dict(loop=False, length=1.0, bones={
+                'right_arm': {'rotation': kf([(0, [0, 0, 0]), (0.35, [-175, 0, 30]), (0.5, [-170, 0, 25]), (1.0, [0, 0, 0])])},
+                'right_forearm': {'rotation': kf([(0, [0, 0, 0]), (0.35, [-75, 0, 0]), (1.0, [0, 0, 0])])},
+                'chest': {'rotation': kf([(0, [0, 0, 0]), (0.35, [-4, -18, 0]), (1.0, [0, 0, 0])])},
+                'head': {'rotation': kf([(0, [0, 0, 0]), (0.4, [0, -20, 0]), (1.0, [0, 0, 0])])}})
     js = {'format_version': '1.8.0', 'animations': {}}
     for an, a in A.items():
         js['animations'][f'animation.{name}.{an}'] = {'loop': a['loop'], 'animation_length': a['length'], 'bones': a['bones']}
