@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "OYO",
+    "CXC",
+    "OYO"
+  ],
+  "key": {
+    "O": {
+      "item": "minecraft:crying_obsidian"
+    },
+    "Y": {
+      "item": "minecraft:ender_eye"
+    },
+    "C": {
+      "item": "khaosnexus:rift_core"
+    },
+    "X": {
+      "item": "khaosnexus:rift_essence"
+    }
+  },
+  "result": {
+    "id": "khaosnexus:spire_gate",
+    "count": 1
+  }
+}

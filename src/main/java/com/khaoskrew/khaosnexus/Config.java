@@ -210,6 +210,9 @@ public final class Config {
     public static final ModConfigSpec.IntValue SPIRE_DEATH_WEAKNESS = SERVER_BUILDER
             .comment("Weakness duration, in ticks, after dying in the Spire. 20 ticks is one second.")
             .defineInRange("deathWeakness", 600, 0, 72000);
+    public static final ModConfigSpec.ConfigValue<String> SPIRE_MIN_RANK = SERVER_BUILDER
+            .comment("Lowest hunter rank (E, D, C, B, A, S) that can enter the Spire. E lets everyone in.")
+            .define("minRank", "E");
 
     static {
         SERVER_BUILDER.pop();

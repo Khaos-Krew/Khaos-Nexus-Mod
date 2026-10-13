@@ -16,6 +16,8 @@ The first full release. Everything below is new since 0.1.2-beta and can be tune
 - Flight and block breaking stay disabled in the Spire.
 - A gate whose guardian still lives shows as a dim, rank-tinted rift with faint particles. Once the guardian falls, it lights up.
 - Mid-floor progress is saved on your hunter profile, so it survives server restarts. Re-entering the Spire resumes at your next unbeaten level, and the town gate skips levels you already beat.
+- **The Spire Gate is craftable:** 4 crying obsidian, 2 eyes of ender, 2 Rift Cores and 1 Rift Essence (crying obsidian in the corners, eyes top and bottom centre, cores at the sides, essence in the middle). The recipe unlocks when you pick up your first Rift Core. Place the gate anywhere and use it to enter the Spire.
+- New `[spire] minRank` setting (default `E`, so everyone can enter). Set it higher to require a minimum hunter rank to enter the Spire. Lower-ranked hunters get a clear message showing the required rank and their own.
 - Admin commands (op level 2): `/khaosnexus spire set <player> <floor> <level> <cleared>` and `/khaosnexus prestige set <player> <0-2>`.
 
 ### Post-S endgame

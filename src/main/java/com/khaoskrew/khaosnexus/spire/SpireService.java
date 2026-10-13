@@ -90,6 +90,12 @@ public final class SpireService {
             player.displayClientMessage(Component.translatable("khaosnexus.spire.missing"), false);
             return;
         }
+        if (!canEnter(player)) {
+            player.displayClientMessage(Component.translatable("khaosnexus.spire.rank_low",
+                    Component.translatable(minRank().translationKey()), Component.translatable(HunterRanks.rankOf(player).translationKey()))
+                    .withStyle(net.minecraft.ChatFormatting.RED), false);
+            return;
+        }
         SpireData data = SpireData.get(player.server.overworld());
         HunterProfile profile = HunterRanks.profile(player);
         migrate(profile);
@@ -106,6 +112,15 @@ public final class SpireService {
         goTo(player, spire, floor, resumeLevel(profile, floor), data.season);
         HunterRanks.sync(player);
         player.displayClientMessage(Component.translatable("khaosnexus.spire.entered", floor), false);
+    }
+
+    public static com.khaoskrew.khaosnexus.gate.GateRank minRank() {
+        return com.khaoskrew.khaosnexus.gate.GateRank.byName(Config.SPIRE_MIN_RANK.get().trim().toUpperCase(java.util.Locale.ROOT));
+    }
+
+    /** Creative players always pass; others need at least {@code [spire] minRank}. */
+    public static boolean canEnter(ServerPlayer player) {
+        return player.isCreative() || HunterRanks.rankOf(player).ordinal() >= minRank().ordinal();
     }
 
     public static void leave(ServerPlayer player) {

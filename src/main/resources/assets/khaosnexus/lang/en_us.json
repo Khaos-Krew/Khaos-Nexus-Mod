@@ -574,5 +574,6 @@
   "khaosnexus.spire.portal_level": "Floor %s - Level %s",
   "khaosnexus.spire.boss2": "F%s-L%s Guardian",
   "block.khaosnexus.spire_portal": "Spire Gate",
-  "khaosnexus.card.spire_value2": "F%s-L%s  (floors cleared %s)"
+  "khaosnexus.card.spire_value2": "F%s-L%s  (floors cleared %s)",
+  "khaosnexus.spire.rank_low": "The Spire only admits %s-rank hunters and above. You are %s-rank. Clear more gates to rank up."
 }

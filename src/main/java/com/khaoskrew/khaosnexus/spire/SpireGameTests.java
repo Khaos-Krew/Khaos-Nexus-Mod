@@ -135,4 +135,15 @@ public class SpireGameTests {
         helper.assertTrue(SpireService.resumeLevel(reloaded, 4) == 0, "a fresh floor starts in its town");
         helper.succeed();
     }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    public static void spireGateRecipeExists(GameTestHelper helper) {
+        var server = helper.getLevel().getServer();
+        var recipe = server.getRecipeManager().byKey(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "spire_gate"));
+        helper.assertTrue(recipe.isPresent(), "spire_gate recipe is loaded");
+        helper.assertTrue(recipe.get().value().getResultItem(helper.getLevel().registryAccess()).is(ModRegistries.SPIRE_GATE_ITEM.get()), "recipe makes a Spire Gate");
+        helper.assertTrue(server.getAdvancements().get(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "recipes/misc/spire_gate")) != null, "recipe unlock advancement");
+        helper.assertTrue(SpireService.minRank() == com.khaoskrew.khaosnexus.gate.GateRank.E, "rank gate is off by default");
+        helper.succeed();
+    }
 }
