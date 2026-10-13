@@ -184,4 +184,41 @@ public class EndgameGameTests {
         helper.assertTrue(player.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.ARMOR) == armor, "reset removes modifiers");
         helper.succeed();
     }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    @SuppressWarnings("removal")
+    public static void prestigeRanksAndSSGates(GameTestHelper helper) {
+        var player = helper.makeMockServerPlayerInLevel();
+        var p = com.khaoskrew.khaosnexus.hunter.HunterRanks.profile(player);
+        p.xp = com.khaoskrew.khaosnexus.hunter.HunterRanks.threshold(GateRank.S);
+        int basePoints = com.khaoskrew.khaosnexus.skill.SkillService.totalPoints(p);
+        helper.assertFalse(Prestige.tryPromote(player), "no SS without achievements");
+        p.addTitle(RedGates.TITLE);
+        p.spireBest = Config.SS_SPIRE.get();
+        p.endgame.putInt(Prestige.RUSH_WINS, Config.SS_RUSH.get());
+        helper.assertTrue(Prestige.tryPromote(player) && Prestige.level(p) == Prestige.SS, "promoted to SS");
+        helper.assertTrue(p.hasTitle(Prestige.TITLE_SS), "SS title");
+        helper.assertTrue(com.khaoskrew.khaosnexus.skill.SkillService.totalPoints(p) == basePoints + Config.PRESTIGE_SKILL_POINTS.get(), "bonus skill point");
+        helper.assertFalse(Prestige.missing(p).isEmpty(), "National needs more");
+        p.spireBest = Config.NATIONAL_SPIRE.get();
+        p.endgame.putInt(Prestige.RUSH_WINS, Config.NATIONAL_RUSH.get());
+        p.endgame.putInt(Prestige.CHALLENGES, Config.NATIONAL_CHALLENGES.get());
+        helper.assertTrue(Prestige.tryPromote(player) && Prestige.level(p) == Prestige.NATIONAL, "promoted to National");
+        helper.assertFalse(Prestige.tryPromote(player), "National is the top");
+        helper.assertTrue(Auras.unlockedIds(p).stream().anyMatch(r -> r.getPath().equals("national")), "National aura unlocks");
+        double chance = Config.SS_GATE_CHANCE.get();
+        try {
+            Config.SS_GATE_CHANCE.set(1.0D);
+            helper.assertTrue(Prestige.rollSS(GateRank.S, net.minecraft.util.RandomSource.create(2)), "S rolls SS");
+            helper.assertFalse(Prestige.rollSS(GateRank.A, net.minecraft.util.RandomSource.create(2)), "only S gates");
+        } finally {
+            Config.SS_GATE_CHANCE.set(chance);
+        }
+        Mob boss = GateArena.spawnMob(helper.getLevel(), GateRank.S, EntityType.ZOMBIE, helper.absolutePos(new BlockPos(1, 2, 1)), 0F, 1.0D, true);
+        float hp = boss.getMaxHealth();
+        Prestige.empowerSS(boss, net.minecraft.util.RandomSource.create(3));
+        helper.assertTrue(boss.getMaxHealth() >= hp * Config.SS_GATE_SCALE.get() * 0.5D && boss.getPersistentData().getBoolean("khaosnexus.ss"), "SS boss empowered");
+        boss.discard();
+        helper.succeed();
+    }
 }

@@ -52,6 +52,12 @@ public final class EndgameCommands {
                 .then(Commands.literal("pick").then(Commands.argument("id", StringArgumentType.word())
                         .suggests((c, b) -> SharedSuggestionProvider.suggest(JsonPool.MASTERY.all().keySet().stream().map(r -> r.getPath()), b))
                         .executes(c -> Mastery.command(c.getSource().getPlayerOrException(), StringArgumentType.getString(c, "id")) ? 1 : 0))));
+        root.then(Commands.literal("prestige").executes(c -> {
+            ServerPlayer p = c.getSource().getPlayerOrException();
+            Prestige.tryPromote(p);
+            p.displayClientMessage(Prestige.status(com.khaoskrew.khaosnexus.hunter.HunterRanks.profile(p)), false);
+            return 1;
+        }));
         // endgame-commands-end
         event.getDispatcher().register(root);
     }

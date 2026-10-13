@@ -451,5 +451,20 @@
   "khaosnexus.mastery.no_class": "Pick a class first.",
   "khaosnexus.mastery.status": "%s mastery: level %s/%s, %s unspent points. /khaosnexus mastery pick <id>",
   "khaosnexus.mastery.picked": "Mastery perk chosen: %s",
-  "khaosnexus.mastery.reset": "Mastery perks for your class were refunded."
+  "khaosnexus.mastery.reset": "Mastery perks for your class were refunded.",
+  "khaosnexus.prestige.need_s": "Reach hunter rank S",
+  "khaosnexus.prestige.need_red": "Clear a Red Gate",
+  "khaosnexus.prestige.need_spire": "Best Spire floor %s/%s",
+  "khaosnexus.prestige.need_rush": "Boss rush wins %s/%s",
+  "khaosnexus.prestige.need_challenge": "Challenge gate clears %s/%s",
+  "khaosnexus.prestige.promoted": "%s has been recognized as a %s hunter!",
+  "khaosnexus.prestige.national": "National-level",
+  "khaosnexus.prestige.ss": "SS-rank",
+  "khaosnexus.prestige.none": "None",
+  "khaosnexus.prestige.status": "Prestige rank: %s",
+  "khaosnexus.prestige.ready": "All requirements met. Promotion is applied automatically.",
+  "khaosnexus.prestige.ss_gate": "SS",
+  "khaosnexus.gate.ss_locked": "Only SS-rank or National-level hunters can open an SS gate.",
+  "khaosnexus.title.hunter_ss": "SS-Rank Hunter",
+  "khaosnexus.title.hunter_national": "National-Level Hunter"
 }

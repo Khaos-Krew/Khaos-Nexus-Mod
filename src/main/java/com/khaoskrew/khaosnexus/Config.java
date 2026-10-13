@@ -507,6 +507,45 @@ public final class Config {
     public static final ModConfigSpec.IntValue MASTERY_MAX_LEVEL = SERVER_BUILDER
             .comment("Highest mastery level per class. Each level is one perk point.")
             .defineInRange("masteryMaxLevel", 50, 1, 1000);
+    public static final ModConfigSpec.BooleanValue PRESTIGE = SERVER_BUILDER
+            .comment("Prestige ranks past S: SS, then National. Earned by achievements, not XP.")
+            .define("prestigeRanks", true);
+    public static final ModConfigSpec.BooleanValue SS_NEEDS_RED = SERVER_BUILDER
+            .comment("SS requires having cleared a Red Gate.")
+            .define("ssRequiresRedGate", true);
+    public static final ModConfigSpec.IntValue SS_SPIRE = SERVER_BUILDER
+            .comment("SS requires this best Spire floor.")
+            .defineInRange("ssSpireFloor", 50, 0, 100000);
+    public static final ModConfigSpec.IntValue SS_RUSH = SERVER_BUILDER
+            .comment("SS requires this many boss rush wins.")
+            .defineInRange("ssBossRushWins", 1, 0, 1000);
+    public static final ModConfigSpec.IntValue NATIONAL_SPIRE = SERVER_BUILDER
+            .comment("National requires this best Spire floor (and SS).")
+            .defineInRange("nationalSpireFloor", 100, 0, 100000);
+    public static final ModConfigSpec.IntValue NATIONAL_RUSH = SERVER_BUILDER
+            .comment("National requires this many boss rush wins.")
+            .defineInRange("nationalBossRushWins", 3, 0, 1000);
+    public static final ModConfigSpec.IntValue NATIONAL_CHALLENGES = SERVER_BUILDER
+            .comment("National requires this many challenge gate clears.")
+            .defineInRange("nationalChallengeClears", 1, 0, 1000);
+    public static final ModConfigSpec.IntValue PRESTIGE_SKILL_POINTS = SERVER_BUILDER
+            .comment("Extra skill points per prestige rank (SS = 1x, National = 2x).")
+            .defineInRange("prestigeSkillPoints", 1, 0, 100);
+    public static final ModConfigSpec.DoubleValue SS_GATE_CHANCE = SERVER_BUILDER
+            .comment("Chance a new S gate rolls as an SS gate (only SS and National hunters can open it).")
+            .defineInRange("ssGateChance", 0.1D, 0.0D, 1.0D);
+    public static final ModConfigSpec.DoubleValue SS_GATE_SCALE = SERVER_BUILDER
+            .comment("SS gate boss health and damage multiplier on top of S tuning.")
+            .defineInRange("ssGateScale", 1.3D, 0.1D, 20.0D);
+    public static final ModConfigSpec.BooleanValue SS_EXTRA_MODIFIER = SERVER_BUILDER
+            .comment("SS gate bosses also roll one extra modifier from the weekly modifier pool.")
+            .define("ssExtraModifier", true);
+    public static final ModConfigSpec.IntValue SS_BONUS_CORES = SERVER_BUILDER
+            .comment("Extra Rift Cores for clearing an SS gate.")
+            .defineInRange("ssBonusCores", 2, 0, 64);
+    public static final ModConfigSpec.DoubleValue SS_XP = SERVER_BUILDER
+            .comment("Hunter XP multiplier for clearing an SS gate.")
+            .defineInRange("ssXpMultiplier", 1.5D, 0.0D, 20.0D);
     // endgame-config-end
     static {
         SERVER_BUILDER.pop();

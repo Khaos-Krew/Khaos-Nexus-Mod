@@ -51,6 +51,8 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
     private boolean closed;
     /** Red Gate: locked until cleared, stronger boss, bigger rewards. */
     private boolean red;
+    /** SS gate: an S gate only SS/National hunters can open, with a stronger boss and an extra modifier. */
+    private boolean ss;
     /** Set once this gate broke open into the world. */
     private boolean broken;
     /** Game time the break clock started (set on first tick, so gates from older saves don't all break at once). */
@@ -115,6 +117,15 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         return this.red;
     }
 
+    public boolean isSS() {
+        return this.ss;
+    }
+
+    public void setSS(boolean ss) {
+        this.ss = ss;
+        this.setChanged();
+    }
+
     public void setRed(boolean red) {
         this.red = red;
         this.setChanged();
@@ -154,6 +165,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         }
         this.rank = GateRank.roll(random);
         this.red = com.khaoskrew.khaosnexus.endgame.RedGates.rollRed(this.rank, random);
+        this.ss = com.khaoskrew.khaosnexus.endgame.Prestige.rollSS(this.rank, random);
         this.rankAssigned = true;
         this.setChanged();
         this.sync();
@@ -172,6 +184,10 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
                     "khaosnexus.gate.rank_locked",
                     Component.translatable(this.rank.translationKey()),
                     Component.translatable(HunterRanks.rankOf(serverPlayer).translationKey())), false);
+            return InteractionResult.FAIL;
+        }
+        if (this.ss && player instanceof ServerPlayer sp && !com.khaoskrew.khaosnexus.endgame.Prestige.canOpenSS(sp)) {
+            player.displayClientMessage(Component.translatable("khaosnexus.gate.ss_locked"), false);
             return InteractionResult.FAIL;
         }
         this.expireStaleDungeon(server);
@@ -242,6 +258,9 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         var boss = com.khaoskrew.khaosnexus.dungeon.DungeonService.populate(dungeon, this.rank, layout, server.getRandom(), lease);
         if (this.red && boss != null) {
             com.khaoskrew.khaosnexus.endgame.RedGates.empower(boss);
+        }
+        if (this.ss && boss != null) {
+            com.khaoskrew.khaosnexus.endgame.Prestige.empowerSS(boss, server.getRandom());
         }
         this.dungeonSlot = lease.slot();
         this.dungeonGen = lease.gen();
@@ -485,6 +504,10 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
                     new net.minecraft.world.item.ItemStack(com.khaoskrew.khaosnexus.forge.HunterForge.RIFT_CORE.get(), com.khaoskrew.khaosnexus.Config.RED_BONUS_CORES.get()));
             level.addFreshEntity(cores);
         }
+        if (this.ss && com.khaoskrew.khaosnexus.Config.SS_BONUS_CORES.get() > 0) {
+            level.addFreshEntity(new net.minecraft.world.entity.item.ItemEntity(level, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D,
+                    new net.minecraft.world.item.ItemStack(com.khaoskrew.khaosnexus.forge.HunterForge.RIFT_CORE.get(), com.khaoskrew.khaosnexus.Config.SS_BONUS_CORES.get())));
+        }
         net.minecraft.world.phys.Vec3 center = net.minecraft.world.phys.Vec3.atCenterOf(pos);
         for (ServerPlayer near : level.players()) {
             if (near.distanceToSqr(center) > 48.0D * 48.0D) {
@@ -492,6 +515,10 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
             }
             if (this.startedAt > 0L && !this.broken) {
                 com.khaoskrew.khaosnexus.endgame.Leaderboards.recordClear(near, cleared, level.getGameTime() - this.startedAt);
+            }
+            if (this.ss) {
+                int base = cleared.tuning().hunterXp.get();
+                HunterRanks.addXp(near, com.khaoskrew.khaosnexus.endgame.Prestige.scaleXp(base) - base);
             }
             if (this.red) {
                 int base = cleared.tuning().hunterXp.get();
@@ -511,7 +538,8 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
     }
 
     private Component rankLabel() {
-        Component label = Component.translatable(this.rank.translationKey());
+        Component label = this.ss ? Component.translatable("khaosnexus.prestige.ss_gate").withStyle(net.minecraft.ChatFormatting.GOLD)
+                : Component.translatable(this.rank.translationKey());
         return this.red ? Component.translatable("khaosnexus.gate.red_label", label).withStyle(net.minecraft.ChatFormatting.DARK_RED) : label;
     }
 
@@ -552,6 +580,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         tag.putBoolean("Active", this.active);
         tag.putBoolean("Closed", this.closed);
         tag.putBoolean("Red", this.red);
+        tag.putBoolean("SS", this.ss);
         tag.putBoolean("Broken", this.broken);
         tag.putLong("BreakStart", this.breakStart);
         tag.putLong("StartedAt", this.startedAt);
@@ -589,6 +618,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         this.active = tag.getBoolean("Active");
         this.closed = tag.getBoolean("Closed");
         this.red = tag.getBoolean("Red");
+        this.ss = tag.getBoolean("SS");
         this.broken = tag.getBoolean("Broken");
         this.breakStart = tag.getLong("BreakStart");
         this.startedAt = tag.getLong("StartedAt");

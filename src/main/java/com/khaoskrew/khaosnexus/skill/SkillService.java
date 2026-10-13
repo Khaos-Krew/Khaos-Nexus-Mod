@@ -34,7 +34,8 @@ public final class SkillService {
     }
 
     public static int totalPoints(HunterProfile p) {
-        return (level(p.xp) - 1) * Config.SKILL_POINTS_PER_LEVEL.get();
+        return (level(p.xp) - 1) * Config.SKILL_POINTS_PER_LEVEL.get()
+                + com.khaoskrew.khaosnexus.endgame.Prestige.bonusSkillPoints(p);
     }
 
     /** Ranks for the given class only; keys in the profile are class.node. */
