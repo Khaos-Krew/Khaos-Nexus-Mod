@@ -68,5 +68,59 @@ def nexus_token():
     px[5, 4] = (255, 245, 210, 255); px[4, 5] = (250, 225, 160, 255)
     save('nexus_token', im)
 
+EGGS = {  # name: (shell, dark, spot, eye/glow, motif)
+    'rift_ghoul': ('#3A3A46', '#16141B', '#6A3694', '#C12F41', 'claws'),
+    'rift_stalker': ('#2A1F3C', '#0D0914', '#E8E2D8', '#E0485A', 'mask'),
+    'void_caster': ('#301C35', '#110B15', '#7520A1', '#E070FF', 'orb'),
+    'rift_brute': ('#463442', '#140B10', '#8A45A0', '#E04A5C', 'crystals'),
+    'rift_warden': ('#3A2E32', '#120D10', '#AD2530', '#FF3B47', 'visor'),
+    'spire_guardian': ('#4A4246', '#120D0F', '#7F18A9', '#B04BE0', 'spire'),
+}
+
+def egg(name, shell, dark, spot, glow, motif):
+    h = lambda c: tuple(int(c[i:i + 2], 16) for i in (1, 3, 5)) + (255,)
+    shell, dark, spot, glow = h(shell), h(dark), h(spot), h(glow)
+    im = Image.new('RGBA', (16, 16), (0, 0, 0, 0)); px = im.load()
+    rnd = __import__('random').Random(name)
+    for y in range(16):
+        for x in range(16):
+            dx = (x - 7.5) / 5.6; dy = (y - 8.6) / (7.2 if y >= 8.6 else 7.9)    # egg: narrower top
+            r = math.hypot(dx * (1 + max(0, -dy) * 0.18), dy)
+            if r > 1.0: continue
+            if r > 0.86: px[x, y] = dark; continue
+            lit = 1.0 + 0.35 * (-dx - dy) / 2
+            px[x, y] = tuple(min(255, int(c * lit)) for c in shell[:3]) + (255,)
+    for _ in range(7):                                                            # spots
+        x, y = rnd.randint(4, 11), rnd.randint(4, 13)
+        if px[x, y][3] and px[x, y] != dark: px[x, y] = spot
+    def P(x, y, c):
+        if px[x, y][3]: px[x, y] = c
+    if motif == 'claws':
+        for x in (6, 8, 10):
+            for k in range(3): P(x - k // 2, 9 + k, (200, 190, 200, 255))
+        P(6, 6, glow); P(9, 6, glow)
+    elif motif == 'mask':
+        for y in range(5, 10):
+            for x in range(6, 10): P(x, y, (232, 226, 216, 255))
+        P(6, 7, glow); P(9, 7, glow); P(8, 5, (60, 50, 60, 255)); P(7, 9, (60, 50, 60, 255))
+    elif motif == 'orb':
+        for y in range(7, 11):
+            for x in range(6, 10):
+                if math.hypot(x - 7.5, y - 8.5) < 2.1: P(x, y, glow)
+        P(7, 8, (255, 230, 255, 255))
+    elif motif == 'crystals':
+        for x, top in ((6, 6), (8, 4), (10, 7)):
+            for y in range(top, top + 4): P(x, y, spot)
+            P(x, top, glow)
+    elif motif == 'visor':
+        for x in range(5, 11): P(x, 8, glow)
+        for x in range(5, 11): P(x, 7, dark)
+    elif motif == 'spire':
+        for y in range(3, 9): P(7, y, glow if y < 5 else spot)
+        P(6, 8, spot); P(8, 8, spot)
+    px[5, 4] = (255, 255, 255, 180) if px[5, 4][3] else px[5, 4]
+    save(name + '_spawn_egg', im)
+
 if __name__ == '__main__':
     void_orb(); nexus_gate(); nexus_token()
+    for n, a in EGGS.items(): egg(n, *a)

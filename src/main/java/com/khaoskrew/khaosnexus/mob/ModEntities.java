@@ -43,12 +43,12 @@ public final class ModEntities {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(KhaosNexus.MODID);
     /** Render-only item for the Void Caster's spell projectile (not in the creative tab). */
     public static final DeferredItem<Item> VOID_ORB_ITEM = ITEMS.registerSimpleItem("void_orb");
-    public static final DeferredItem<DeferredSpawnEggItem> RIFT_GHOUL_EGG = egg("rift_ghoul", RIFT_GHOUL, 0x25252E, 0xC12F41);
-    public static final DeferredItem<DeferredSpawnEggItem> RIFT_STALKER_EGG = egg("rift_stalker", RIFT_STALKER, 0x2A1F3C, 0xC23346);
-    public static final DeferredItem<DeferredSpawnEggItem> VOID_CASTER_EGG = egg("void_caster", VOID_CASTER, 0x301C35, 0xCA59EE);
-    public static final DeferredItem<DeferredSpawnEggItem> RIFT_BRUTE_EGG = egg("rift_brute", RIFT_BRUTE, 0x463442, 0xB13648);
-    public static final DeferredItem<DeferredSpawnEggItem> RIFT_WARDEN_EGG = egg("rift_warden", RIFT_WARDEN, 0x4A141C, 0xAD2530);
-    public static final DeferredItem<DeferredSpawnEggItem> SPIRE_GUARDIAN_EGG = egg("spire_guardian", SPIRE_GUARDIAN, 0x5A5054, 0x7F18A9);
+    public static final DeferredItem<DeferredSpawnEggItem> RIFT_GHOUL_EGG = egg("rift_ghoul", RIFT_GHOUL, 0xFFFFFF, 0xFFFFFF);
+    public static final DeferredItem<DeferredSpawnEggItem> RIFT_STALKER_EGG = egg("rift_stalker", RIFT_STALKER, 0xFFFFFF, 0xFFFFFF);
+    public static final DeferredItem<DeferredSpawnEggItem> VOID_CASTER_EGG = egg("void_caster", VOID_CASTER, 0xFFFFFF, 0xFFFFFF);
+    public static final DeferredItem<DeferredSpawnEggItem> RIFT_BRUTE_EGG = egg("rift_brute", RIFT_BRUTE, 0xFFFFFF, 0xFFFFFF);
+    public static final DeferredItem<DeferredSpawnEggItem> RIFT_WARDEN_EGG = egg("rift_warden", RIFT_WARDEN, 0xFFFFFF, 0xFFFFFF);
+    public static final DeferredItem<DeferredSpawnEggItem> SPIRE_GUARDIAN_EGG = egg("spire_guardian", SPIRE_GUARDIAN, 0xFFFFFF, 0xFFFFFF);
 
     private ModEntities() {}
 
