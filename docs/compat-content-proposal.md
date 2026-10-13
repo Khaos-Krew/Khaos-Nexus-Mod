@@ -94,15 +94,78 @@ APIs marked ✔ were checked against the jars in run-compat or used in shipped c
 | 3 | **Bundled "Hunter's Path" chapter** | An optional default chapter that teaches the mod from E to S, with one branch per class. | M | – (uses item icons) |
 | 4 | **Raid board quests** | Weekly repeatable quests synced with our daily and raid bounty system. | S | – |
 
-## 8. L_Ender's Cataclysm (3.33)
-✔ Its bosses are already in our boss pool via `optionalBosses` (shipped).
+## 8. L_Ender's Cataclysm (3.33): S-rank only, toned down for gates
+✔ Bosses join through `optionalBosses`, are woken through `modBossWake`, and are scaled by `GateArena.spawnMob` (shipped). The base stats below were read from the installed `L_Ender's Cataclysm 1.21.1-3.33.jar` (`createAttributes` bytecode).
 
-| # | Addition | What it does | Work | Art |
+### Base stats (Cataclysm 3.33)
+| Boss | Max HP | Attack damage | Armor |
+|---|---|---|---|
+| `cataclysm:ender_guardian` | 333 | 16 | 20 |
+| `cataclysm:ignis` | 450 | 14 | 10 |
+| `cataclysm:the_harbinger` | 390 | 9 | 12 |
+| `cataclysm:netherite_monstrosity` | 600 | 25 | 12 (+5 toughness) |
+
+### What happens today (live defaults)
+`DungeonService` passes `modBossHealthScale` (default 1.0) as extra health, and `spawnMob` then applies the rank multipliers to the base `MAX_HEALTH` and `ATTACK_DAMAGE`. Rank A is ×3.0 health and ×1.8 damage; rank S is ×4.0 health and ×2.0 damage.
+
+| Boss (rank today) | HP in gate | Melee damage in gate |
+|---|---|---|
+| Ender Guardian (**A**) | 999 | 28.8 |
+| Ignis (S) | 1800 | 28 |
+| The Harbinger (S) | 1560 | 18 |
+| Netherite Monstrosity (S) | **2400** | **50** |
+
+For comparison, our own S-rank dungeon boss (Rift Brute, with ×3 extra health) has **720 HP and 20 damage**.
+
+The scaling is also uneven:
+- Only melee that reads `ATTACK_DAMAGE` is doubled.
+- Ability and projectile damage that Cataclysm computes from its own config is not scaled at all.
+
+`modBossWakeUp` only merges `is_Awaken:1` into the Netherite Monstrosity, so it fights instead of sitting dormant. It does not change stats. The other three are active on spawn.
+
+**Verdict: the live settings need tuning now.**
+- Cataclysm bosses have 2–3× our boss's HP.
+- Netherite Monstrosity melee (50) one-shots most S-rank kits.
+- The Ender Guardian appears in A gates.
+
+**Interim fix using only config (no code), for server owners today:**
+1. Move the Ender Guardian to S. Replace `"A=cataclysm:ender_guardian"` with `"S=cataclysm:ender_guardian"` in `optionalBosses`.
+2. Set `modBossHealthScale = 0.5`. This halves HP for **all** mod bosses, including Mowzie's.
+3. Optionally remove `"S=cataclysm:netherite_monstrosity"` until the damage scale below ships.
+
+### Proposed changes
+| # | Change | Details | Work | Art |
 |---|---|---|---|---|
-| 1 | **Cataclysm S-rank gates** | A themed gate variant (Ignis forge or Leviathan abyss palette) whose boss room spawns that Cataclysm boss with rank scaling and our boss bar. | M | tex (palette blocks reuse vanilla) |
-| 2 | **Rift-touched Cataclysm bosses** | A cataclysm boss spawned in a gate gains a rift phase at 30% HP: it summons rift mobs and gets a void shield, built on our `RiftBoss` phase hooks. | M | fx |
-| 3 | **Cross-forge** | Cataclysm boss materials (e.g. Ignitium) can be used at the Rift Forge to push gear past +10. | S | – |
-| 4 | **Hunter Card trophies** | Kills of Cataclysm bosses appear on the Card's boss page. | S | tex (icons) |
+| 1 | **S-rank only** | <ul><li>Default `optionalBosses` lists all four Cataclysm bosses under `S=` only.</li><li>`CompatPools.boss` ignores `cataclysm:*` entries for ranks below S unless `compat.cataclysmAnyRank = true`.</li><li>Covered by a game test.</li></ul> | S | – |
+| 2 | **Health scale** | Keep `compat.modBossHealthScale`, but change its default **1.0 → 0.5**. Add per-boss overrides in a new list `compat.modBossScale` (`"id=health,damage"`); an override replaces the global scale for that boss. | S | – |
+| 3 | **New `compat.modBossDamageScale`** (default **0.6**) | <ul><li>Apply it in a `LivingIncomingDamageEvent` handler to every damage source whose attacker, or the owner of the projectile or summon, is a gate-tagged mod boss. This covers abilities and projectiles, not just melee.</li><li>Effective multiplier = rank damage multiplier × scale.</li><li>Stop scaling `ATTACK_DAMAGE` on mod bosses so melee isn't scaled twice.</li></ul> | M | – |
+| 4 | **Optional rift phase** | New config `compat.cataclysmRiftPhase`, default **false**. When on, at 30% HP the boss gains a void shield (absorbs 10% max HP) and summons 2 rank-S rift mobs once. | M | fx |
+| 5 | **Fairness for matching-rank hunters** | <ul><li>Entry already requires S rank or a party (`highergatesneedrankorparty`).</li><li>Add a 5 s spawn grace period: the boss doesn't target anyone and takes no damage.</li><li>No gate collapse timer while the boss is engaged.</li><li>Scale boss HP +25% per extra party member instead of a flat bonus, so a solo S-rank hunter faces the base numbers.</li><li>Skip the Apotheosis affix-boss upgrades for these bosses (the exemption tag is already shipped).</li></ul> | S–M | – |
+| 6 | Cross-forge, Hunter Card trophies, themed S gates | As before: Cataclysm materials push Rift Forge gear past +10, kills show on the Card's boss page, and Ignis / Leviathan-themed S gates. | S–M | tex |
+
+### Proposed numbers (rank S: ×4.0 health, ×2.0 damage)
+| Boss | Override (health, damage) | HP in gate | Damage × base (melee) |
+|---|---|---|---|
+| Ender Guardian | 0.60, 0.50 | 799 | ×1.0 → 16 |
+| Ignis | 0.45, 0.55 | 810 | ×1.1 → 15.4 |
+| The Harbinger | 0.50, 0.70 | 780 | ×1.4 → 12.6 |
+| Netherite Monstrosity | 0.35, 0.35 | 840 | ×0.7 → 17.5 |
+| Any other mod boss (globals) | 0.50, 0.60 | rank × 0.5 | rank × 0.6 |
+
+Default `compat.modBossScale`:
+```
+["cataclysm:ender_guardian=0.6,0.5", "cataclysm:ignis=0.45,0.55",
+ "cataclysm:the_harbinger=0.5,0.7", "cataclysm:netherite_monstrosity=0.35,0.35"]
+```
+This puts every Cataclysm boss at 780–840 HP and 12–18 melee damage, slightly above our own S boss (720 / 20). That makes them feel like a step up without being a wall. Ability damage gets the same multiplier through the damage event.
+
+**Tests:**
+- Per-boss overrides parse correctly.
+- A Cataclysm id in an A pool is rejected.
+- The damage event scales a projectile from a tagged boss.
+- Rift phase off means no shield.
+
+Each boss also needs a solo run as an S-rank hunter in run-compat before the defaults are final.
 
 ## 9. Mowzie's Mobs (1.8)
 ✔ Its bosses are already in our boss pool.
