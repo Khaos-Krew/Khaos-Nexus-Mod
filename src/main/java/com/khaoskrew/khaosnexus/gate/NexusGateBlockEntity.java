@@ -36,7 +36,13 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class NexusGateBlockEntity extends BlockEntity {
+public class NexusGateBlockEntity extends BlockEntity implements software.bernie.geckolib.animatable.GeoBlockEntity {
+    private static final software.bernie.geckolib.animation.RawAnimation OPEN =
+            software.bernie.geckolib.animation.RawAnimation.begin().thenLoop("animation.nexus_rift.open");
+    private static final software.bernie.geckolib.animation.RawAnimation CLOSED_ANIM =
+            software.bernie.geckolib.animation.RawAnimation.begin().thenLoop("animation.nexus_rift.closed");
+    private final software.bernie.geckolib.animatable.instance.AnimatableInstanceCache geoCache =
+            software.bernie.geckolib.util.GeckoLibUtil.createInstanceCache(this);
     private GateRank rank = GateRank.E;
     private boolean rankAssigned;
     private boolean active;
@@ -353,5 +359,16 @@ public class NexusGateBlockEntity extends BlockEntity {
             this.bossEvent.removeAllPlayers();
             this.bossEvent = null;
         }
+    }
+
+    @Override
+    public void registerControllers(software.bernie.geckolib.animation.AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new software.bernie.geckolib.animation.AnimationController<>(this, "rift", 10,
+                state -> state.setAndContinue(this.isClosed() ? CLOSED_ANIM : OPEN)));
+    }
+
+    @Override
+    public software.bernie.geckolib.animatable.instance.AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.geoCache;
     }
 }

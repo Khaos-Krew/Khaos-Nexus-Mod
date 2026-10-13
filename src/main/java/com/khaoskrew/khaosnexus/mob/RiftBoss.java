@@ -61,4 +61,13 @@ public class RiftBoss extends RiftMob {
     public boolean removeWhenFarAway(double distance) {
         return false;
     }
+
+    @Override
+    public void setTarget(net.minecraft.world.entity.LivingEntity target) {
+        boolean newTarget = target != null && this.getTarget() == null;
+        super.setTarget(target);
+        if (newTarget && !this.level().isClientSide) {
+            this.triggerAnim("action", "roar");
+        }
+    }
 }

@@ -18,15 +18,27 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 /** Shared melee AI for the Rift gate mobs. The gate rank is synced so the client can tint the glow. */
-public class RiftMob extends Monster {
+public class RiftMob extends Monster implements GeoEntity {
+    protected static final RawAnimation IDLE = RawAnimation.begin().thenLoop("idle");
+    protected static final RawAnimation WALK = RawAnimation.begin().thenLoop("walk");
+    private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
+    private final String animPrefix;
     private static final EntityDataAccessor<Integer> RANK = SynchedEntityData.defineId(RiftMob.class, EntityDataSerializers.INT);
 
     public RiftMob(EntityType<? extends RiftMob> type, Level level) {
         super(type, level);
         this.xpReward = 8;
+        this.animPrefix = "animation." + EntityType.getKey(type).getPath() + ".";
     }
 
     public static AttributeSupplier.Builder attributes(double health, double damage, double speed, double knockbackResist) {
@@ -80,5 +92,38 @@ public class RiftMob extends Monster {
         if (tag.contains("GateRank")) {
             this.setGateRank(GateRank.byName(tag.getString("GateRank")));
         }
+    }
+
+    protected RawAnimation anim(String name, boolean loop) {
+        RawAnimation raw = RawAnimation.begin();
+        return loop ? raw.thenLoop(this.animPrefix + name) : raw.thenPlay(this.animPrefix + name);
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        RawAnimation idle = this.anim("idle", true);
+        RawAnimation walk = this.anim("walk", true);
+        controllers.add(new AnimationController<>(this, "movement", 6,
+                state -> state.setAndContinue(state.isMoving() ? walk : idle)));
+        AnimationController<RiftMob> action = new AnimationController<>(this, "action", 3, state -> software.bernie.geckolib.animation.PlayState.STOP)
+                .triggerableAnim("attack", this.anim("attack", false));
+        if (this instanceof RiftBoss) {
+            action.triggerableAnim("roar", this.anim("roar", false));
+        }
+        controllers.add(action);
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.geoCache;
+    }
+
+    @Override
+    public boolean doHurtTarget(Entity target) {
+        boolean hit = super.doHurtTarget(target);
+        if (hit) {
+            this.triggerAnim("action", "attack");
+        }
+        return hit;
     }
 }
