@@ -182,6 +182,33 @@ public final class Config {
 
     static {
         SERVER_BUILDER.pop();
+        SERVER_BUILDER.comment(
+                "Optional companion mods. A hook stays off unless that mod is installed and its toggle is true.",
+                "This build only detects those mods. It does not call their APIs, and FTB Quests chapters are not included.")
+                .push("compat");
+    }
+
+    public static final ModConfigSpec.BooleanValue COMPAT_ARS = SERVER_BUILDER
+            .comment("Ars Nouveau. Detection only.")
+            .define("arsNouveau", true);
+    public static final ModConfigSpec.BooleanValue COMPAT_APOTHEOSIS = SERVER_BUILDER
+            .comment("Apotheosis. Detection only.")
+            .define("apotheosis", true);
+    public static final ModConfigSpec.BooleanValue COMPAT_FTB_TEAMS = SERVER_BUILDER
+            .comment("FTB Teams. Detection only. Parties stay on the built-in system.")
+            .define("ftbTeams", true);
+    public static final ModConfigSpec.BooleanValue COMPAT_FTB_CHUNKS = SERVER_BUILDER
+            .comment("FTB Chunks. Detection only.")
+            .define("ftbChunks", true);
+    public static final ModConfigSpec.BooleanValue COMPAT_FTB_QUESTS = SERVER_BUILDER
+            .comment("FTB Quests. Detection only. Quest chapters are not shipped.")
+            .define("ftbQuests", true);
+    public static final ModConfigSpec.BooleanValue COMPAT_CURIOS = SERVER_BUILDER
+            .comment("Curios. Detection only.")
+            .define("curios", true);
+
+    static {
+        SERVER_BUILDER.pop();
     }
 
     static final ModConfigSpec SERVER_SPEC = SERVER_BUILDER.build();

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
 
+import com.khaoskrew.khaosnexus.compat.SoftCompat;
 import com.khaoskrew.khaosnexus.hunter.ModAttachments;
 import com.khaoskrew.khaosnexus.network.ModPayloads;
 import com.khaoskrew.khaosnexus.registry.ModRegistries;
@@ -31,5 +32,6 @@ public class KhaosNexus {
 
     private void commonSetup(FMLCommonSetupEvent event) {
         LOGGER.info("Khaos Nexus {} starting", MODID);
+        SoftCompat.logPresence();
     }
 }

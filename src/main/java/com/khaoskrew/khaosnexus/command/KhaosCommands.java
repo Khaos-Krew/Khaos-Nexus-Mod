@@ -3,6 +3,7 @@ package com.khaoskrew.khaosnexus.command;
 import java.util.Locale;
 
 import com.khaoskrew.khaosnexus.KhaosNexus;
+import com.khaoskrew.khaosnexus.compat.SoftCompat;
 import com.khaoskrew.khaosnexus.gate.GateRank;
 import com.khaoskrew.khaosnexus.bounty.Bounties;
 import com.khaoskrew.khaosnexus.party.PartyService;
@@ -148,7 +149,16 @@ public final class KhaosCommands {
                         .then(Commands.literal("clear").executes(context -> {
                             Titles.clear(context.getSource().getPlayerOrException());
                             return 1;
-                        }))));
+                        })))
+                .then(Commands.literal("compat").executes(context -> {
+                    CommandSourceStack source = context.getSource();
+                    for (SoftCompat.Hook hook : SoftCompat.HOOKS) {
+                        source.sendSuccess(() -> Component.translatable(
+                                "khaosnexus.compat.line", hook.label(), hook.status()), false);
+                    }
+                    source.sendSuccess(() -> Component.translatable("khaosnexus.compat.note"), false);
+                    return 1;
+                })));
     }
 
     private static int showClass(ServerPlayer player) {

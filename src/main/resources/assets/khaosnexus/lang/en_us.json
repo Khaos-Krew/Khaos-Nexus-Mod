@@ -120,5 +120,10 @@
   "khaosnexus.hud.rank": "Hunter %s  ·  %s XP",
   "khaosnexus.hud.class": "%s  ·  Spire %s  ·  Party %s",
   "khaosnexus.hud.bounty": "Today: %s gates, %s raids",
-  "khaosnexus.hud.no_class": "No class"
+  "khaosnexus.hud.no_class": "No class",
+  "khaosnexus.compat.line": "%s: %s",
+  "khaosnexus.compat.present": "installed, hook on",
+  "khaosnexus.compat.absent": "not installed",
+  "khaosnexus.compat.disabled": "turned off in config",
+  "khaosnexus.compat.note": "These hooks only detect the mod. They do not change gameplay, and FTB Quests chapters are not included."
 }
