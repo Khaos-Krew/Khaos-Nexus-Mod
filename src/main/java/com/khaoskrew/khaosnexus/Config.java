@@ -182,6 +182,20 @@ public final class Config {
 
     static {
         SERVER_BUILDER.pop();
+        SERVER_BUILDER.comment("Rules inside gate dungeons and the Spire. Creative and spectator players are never affected.")
+                .push("dungeons");
+    }
+
+    public static final ModConfigSpec.BooleanValue DUNGEON_NO_FLIGHT = SERVER_BUILDER
+            .comment("Stop flight inside dungeons: creative-style mayfly, elytra gliding and modded flight are cancelled every tick.")
+            .define("blockFlight", true);
+
+    public static final ModConfigSpec.BooleanValue DUNGEON_NO_BUILD = SERVER_BUILDER
+            .comment("Stop block breaking and placing inside dungeons. Doors, chests, levers and buttons still work.")
+            .define("blockBuilding", true);
+
+    static {
+        SERVER_BUILDER.pop();
         SERVER_BUILDER.comment(
                 "Optional companion mods. A hook stays off unless that mod is installed and its toggle is true.",
                 "This build only detects those mods. It does not call their APIs, and FTB Quests chapters are not included.")
