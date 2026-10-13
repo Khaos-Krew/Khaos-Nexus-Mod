@@ -1,4 +1,6 @@
 {
   "parent": "minecraft:item/generated",
-  "textures": { "layer0": "khaosnexus:item/nexus_gate" }
+  "textures": {
+    "layer0": "khaosnexus:item/nexus_gate"
+  }
 }
