@@ -6,15 +6,13 @@ import com.khaoskrew.khaosnexus.bounty.Bounties;
 import com.khaoskrew.khaosnexus.title.Titles;
 import com.khaoskrew.khaosnexus.Config;
 import com.khaoskrew.khaosnexus.gate.GateRank;
-import com.khaoskrew.khaosnexus.network.FeedbackPayload;
+import com.khaoskrew.khaosnexus.network.ModPayloads;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.network.PacketDistributor;
-
 public final class HunterRanks {
     private HunterRanks() {}
 
@@ -94,9 +92,10 @@ public final class HunterRanks {
     private static void announceRankUp(ServerPlayer player, GateRank rank) {
         Component label = Component.translatable(rank.translationKey());
         player.displayClientMessage(Component.translatable("khaosnexus.hunter.rank_up", label), false);
-        PacketDistributor.sendToPlayer(player, new FeedbackPayload(
+        ModPayloads.sendFeedback(
+                player,
                 "khaosnexus.hunter.rank_up_title",
                 "khaosnexus.hunter.rank_up",
-                rank.translationKey()));
+                rank.translationKey());
     }
 }

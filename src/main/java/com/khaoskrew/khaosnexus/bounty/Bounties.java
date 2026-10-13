@@ -3,14 +3,12 @@ package com.khaoskrew.khaosnexus.bounty;
 import com.khaoskrew.khaosnexus.Config;
 import com.khaoskrew.khaosnexus.hunter.HunterProfile;
 import com.khaoskrew.khaosnexus.hunter.HunterRanks;
-import com.khaoskrew.khaosnexus.network.FeedbackPayload;
+import com.khaoskrew.khaosnexus.network.ModPayloads;
 import com.khaoskrew.khaosnexus.registry.ModRegistries;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
-
 public final class Bounties {
     public static final int GATES = 1;
     public static final int RAIDS = 2;
@@ -78,6 +76,6 @@ public final class Bounties {
             player.drop(reward, false);
         }
         player.displayClientMessage(Component.translatable(message, tokens), false);
-        PacketDistributor.sendToPlayer(player, new FeedbackPayload("khaosnexus.bounty.toast", "khaosnexus.bounty.toast_body", ""));
+        ModPayloads.sendFeedback(player, "khaosnexus.bounty.toast", "khaosnexus.bounty.toast_body", "");
     }
 }

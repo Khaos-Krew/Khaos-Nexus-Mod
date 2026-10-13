@@ -1,6 +1,9 @@
 package com.khaoskrew.khaosnexus.network;
 
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.NetworkRegistry;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public final class ModPayloads {
@@ -13,6 +16,12 @@ public final class ModPayloads {
                     .invoke(null, payload);
         } catch (ReflectiveOperationException ex) {
             throw new IllegalStateException("Could not show Khaos Nexus feedback", ex);
+        }
+    }
+
+    public static void sendFeedback(ServerPlayer player, String titleKey, String bodyKey, String argKey) {
+        if (NetworkRegistry.hasChannel(player.connection, FeedbackPayload.TYPE.id())) {
+            PacketDistributor.sendToPlayer(player, new FeedbackPayload(titleKey, bodyKey, argKey));
         }
     }
 

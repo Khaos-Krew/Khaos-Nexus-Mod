@@ -2,11 +2,10 @@ package com.khaoskrew.khaosnexus.title;
 
 import com.khaoskrew.khaosnexus.hunter.HunterProfile;
 import com.khaoskrew.khaosnexus.hunter.HunterRanks;
-import com.khaoskrew.khaosnexus.network.FeedbackPayload;
+import com.khaoskrew.khaosnexus.network.ModPayloads;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 public final class Titles {
     public static final String GATE_BREAKER = "gate_breaker";
@@ -29,7 +28,7 @@ public final class Titles {
         }
         HunterRanks.sync(player);
         player.displayClientMessage(Component.translatable("khaosnexus.title.unlocked", Component.translatable("khaosnexus.title." + id)), false);
-        PacketDistributor.sendToPlayer(player, new FeedbackPayload("khaosnexus.title.toast", "khaosnexus.title." + id, ""));
+        ModPayloads.sendFeedback(player, "khaosnexus.title.toast", "khaosnexus.title." + id, "");
     }
 
     public static boolean equip(ServerPlayer player, String id) {
