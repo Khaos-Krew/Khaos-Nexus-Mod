@@ -69,19 +69,65 @@ public class CompatGameTests {
                 "{\"attribute\":\"irons_spellbooks:spell_power\",\"amount\":0.1,\"operation\":\"add_multiplied_base\"}").getAsJsonObject());
         helper.assertTrue(b.modId().equals("irons_spellbooks") && b.op() == net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_BASE,
                 "bonus json parses mod and operation");
-        helper.assertTrue(ApothCompat.forgeScale() == 1.0D, "forge bonus is unscaled without Apotheosis");
-        helper.assertFalse(ApothCompat.active(), "Apotheosis rules are inert without Apotheosis");
+        if (!net.neoforged.fml.ModList.get().isLoaded("apotheosis")) {
+            helper.assertTrue(ApothCompat.forgeScale() == 1.0D, "forge bonus is unscaled without Apotheosis");
+            helper.assertFalse(ApothCompat.active(), "Apotheosis rules are inert without Apotheosis");
+        }
         helper.assertTrue("pinnacle".equals(ApothCompat.tierFor(GateRank.S)) && "frontier".equals(ApothCompat.tierFor(GateRank.C)),
                 "default gate rank to world tier map");
         helper.assertTrue(ApothCompat.isTierModifier(net.minecraft.resources.ResourceLocation.parse("apotheosis:summit/armor")), "tier modifier ids");
         helper.assertFalse(ApothCompat.isTierModifier(net.minecraft.resources.ResourceLocation.parse("apotheosis:affix/armor")), "affix ids are not tier ids");
         var warden = com.khaoskrew.khaosnexus.mob.ModEntities.RIFT_WARDEN.get().create(helper.getLevel());
-        helper.assertTrue(warden != null && ApothCompat.isBoss(warden) && !ApothCompat.shielded(warden), "warden is tagged exempt, shield idle without Apotheosis");
+        helper.assertTrue(warden != null && ApothCompat.isBoss(warden) && (net.neoforged.fml.ModList.get().isLoaded("apotheosis") || !ApothCompat.shielded(warden)), "warden is tagged exempt, shield idle without Apotheosis");
         var ghoul = com.khaoskrew.khaosnexus.mob.ModEntities.RIFT_GHOUL.get().create(helper.getLevel());
         helper.assertTrue(ghoul != null && !ApothCompat.isBoss(ghoul), "regular gate mobs are not exempt");
         helper.assertFalse(CompatPools.wake(ghoul), "wake list ignores unlisted mobs");
         warden.discard();
         ghoul.discard();
+        helper.succeed();
+    }
+
+    /** Runs in both the plain and the compat test servers: checks per-mod presence branching of items and compat loot. */
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    public static void compatItemsAndLootFollowInstalledMods(GameTestHelper helper) {
+        var regs = helper.getLevel().registryAccess();
+        var items = net.minecraft.core.registries.BuiltInRegistries.ITEM;
+        java.util.function.Function<String, Boolean> has = n -> items.containsKey(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, n));
+        helper.assertTrue(has.apply("rift_source_shard") == com.khaoskrew.khaosnexus.compat.items.CompatItems.ars(), "Ars shard registered only with Ars");
+        helper.assertTrue(has.apply("glyph_rift_rend") == com.khaoskrew.khaosnexus.compat.items.CompatItems.ars(), "Ars glyph registered only with Ars");
+        helper.assertTrue(has.apply("rift_hunters_sigil") == com.khaoskrew.khaosnexus.compat.items.CompatItems.relics(), "sigil only with Relics + Curios");
+        for (String n : List.of("rift_lantern", "voidstep_anklet", "gatebreaker_band")) {
+            helper.assertTrue(has.apply(n) == com.khaoskrew.khaosnexus.compat.items.CompatItems.artifacts(), n + " only with Artifacts + Curios");
+        }
+        var entries = com.khaoskrew.khaosnexus.compat.items.CompatLootModifier.entries();
+        java.util.Set<String> mods = new java.util.HashSet<>();
+        for (var e : entries) {
+            mods.add(e.mod());
+            helper.assertFalse(e.chances().isEmpty(), "every compat loot entry has rank chances");
+            if (com.khaoskrew.khaosnexus.compat.items.CompatLootModifier.enabled(e.mod())) {
+                helper.assertFalse(com.khaoskrew.khaosnexus.compat.items.CompatLootModifier.stack(e, regs).isEmpty(), "installed-mod entry parses: " + e.stack());
+            }
+        }
+        helper.assertTrue(mods.containsAll(List.of("ars_nouveau", "relics", "artifacts", "apotheosis")), "loot files for all four mods load");
+        double mult = Config.COMPAT_LOOT_MULTIPLIER.get();
+        try {
+            Config.COMPAT_LOOT_MULTIPLIER.set(100.0D);
+            RandomSource random = RandomSource.create(7);
+            for (GateRank rank : GateRank.values()) {
+                for (int i = 0; i < 20; i++) {
+                    for (var s : com.khaoskrew.khaosnexus.compat.items.CompatLootModifier.roll(rank, random, regs)) {
+                        String ns = items.getKey(s.getItem()).getNamespace();
+                        helper.assertTrue(ns.equals(KhaosNexus.MODID) || net.neoforged.fml.ModList.get().isLoaded(ns), "rolled loot only from installed mods: " + s);
+                    }
+                }
+            }
+            boolean any = entries.stream().anyMatch(e -> com.khaoskrew.khaosnexus.compat.items.CompatLootModifier.enabled(e.mod()));
+            helper.assertTrue(any || com.khaoskrew.khaosnexus.compat.items.CompatLootModifier.roll(GateRank.S, random, regs).isEmpty(), "no companion mods means no compat loot");
+            Config.COMPAT_LOOT_MULTIPLIER.set(0.0D);
+            helper.assertTrue(com.khaoskrew.khaosnexus.compat.items.CompatLootModifier.roll(GateRank.S, random, regs).isEmpty(), "multiplier 0 disables compat loot");
+        } finally {
+            Config.COMPAT_LOOT_MULTIPLIER.set(mult);
+        }
         helper.succeed();
     }
 }

@@ -67,4 +67,11 @@ public class RiftRendEffect extends AbstractEffect {
     public String getBookDescription() {
         return "Tears at the target with rift energy. Rift creatures take double damage and are weakened.";
     }
+
+    @Override
+    public void addAugmentDescriptions(java.util.Map<AbstractAugment, String> map) {
+        super.addAugmentDescriptions(map);
+        map.put(AugmentAmplify.INSTANCE, "Increases the damage dealt.");
+        map.put(AugmentDampen.INSTANCE, "Decreases the damage dealt.");
+    }
 }

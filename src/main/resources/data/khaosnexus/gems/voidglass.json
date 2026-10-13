@@ -37,7 +37,7 @@
       "type": "apotheosis:attribute",
       "attribute": "minecraft:generic.attack_speed",
       "gem_class": {
-        "key": "weapon",
+        "key": "light_weapon",
         "types": [
           "apotheosis:melee_weapon",
           "apotheosis:trident"
