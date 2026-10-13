@@ -218,7 +218,7 @@ public final class Config {
         SERVER_BUILDER.pop();
         SERVER_BUILDER.comment(
                 "Optional companion mods. A hook stays off unless that mod is installed and its toggle is true.",
-                "This build only detects those mods. It does not call their APIs, and FTB Quests chapters are not included.")
+                "No compile-time dependency on any of them; hooks look up attributes, entities and stage providers by id at runtime.")
                 .push("compat");
     }
 
@@ -246,8 +246,29 @@ public final class Config {
             .defineListAllowEmpty("optionalLoot", List.of(
                     "B=#curios:charm", "A=#curios:ring", "A=#curios:necklace", "S=#curios:belt"),
                     () -> "A=modid:item", o -> o instanceof String str && str.contains("="));
+    public static final ModConfigSpec.DoubleValue OPTIONAL_LOOT_CHANCE = SERVER_BUILDER
+            .comment("Chance per optionalLoot entry per clear.")
+            .defineInRange("optionalLootChance", 0.2D, 0.0D, 1.0D);
+    public static final ModConfigSpec.DoubleValue MOD_BOSS_HEALTH = SERVER_BUILDER
+            .comment("Extra health multiplier for optional boss-mod bosses in dungeons, on top of the rank multiplier.",
+                    "Those bosses already have large health pools, so the default leaves them as their mod made them.")
+            .defineInRange("modBossHealthScale", 1.0D, 0.1D, 10.0D);
+    public static final ModConfigSpec.BooleanValue MOD_BOSS_WAKE = SERVER_BUILDER
+            .comment("Wake optional bosses that spawn dormant (Mowzie's Wroughtnaut and Frostmaw, Cataclysm's Netherite Monstrosity)",
+                    "so they fight in the boss room. Entries in modBossWake say how.")
+            .define("modBossWakeUp", true);
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> MOD_BOSS_WAKE_LIST = SERVER_BUILDER
+            .comment("entity_id=nbtKey:value entries merged into a dormant boss's NBT after it spawns in a dungeon.")
+            .defineListAllowEmpty("modBossWake", List.of(
+                    "mowziesmobs:ferrous_wroughtnaut=active:1", "mowziesmobs:frostmaw=active:1",
+                    "cataclysm:netherite_monstrosity=is_Awaken:1"),
+                    () -> "modid:boss=key:1", o -> o instanceof String str && str.contains("=") && str.contains(":"));
+    public static final ModConfigSpec.DoubleValue CLASS_BONUS_SCALE = SERVER_BUILDER
+            .comment("Multiplier for every companion-mod class bonus. The bonuses themselves are datapack values in",
+                    "data/<namespace>/khaosnexus_class_compat/<class>.json.")
+            .defineInRange("classBonusScale", 1.0D, 0.0D, 10.0D);
     public static final ModConfigSpec.BooleanValue COMPAT_APOTHEOSIS = SERVER_BUILDER
-            .comment("Apotheosis. Detection only.")
+            .comment("Apotheosis and Apothic Attributes: class bonuses on Apothic attributes, the forge scale below and the rift rules below.")
             .define("apotheosis", true);
     public static final ModConfigSpec.BooleanValue COMPAT_FTB_TEAMS = SERVER_BUILDER
             .comment("FTB Teams. Detection only. Parties stay on the built-in system.")
@@ -256,11 +277,39 @@ public final class Config {
             .comment("FTB Chunks. Detection only.")
             .define("ftbChunks", true);
     public static final ModConfigSpec.BooleanValue COMPAT_FTB_QUESTS = SERVER_BUILDER
-            .comment("FTB Quests. Detection only. Quest chapters are not shipped.")
+            .comment("FTB Quests: hunter progress grants stages through FTB Library's stage provider (tags, KubeJS or Game Stages). No chapters are shipped.")
             .define("ftbQuests", true);
     public static final ModConfigSpec.BooleanValue COMPAT_CURIOS = SERVER_BUILDER
             .comment("Curios. Detection only.")
             .define("curios", true);
+
+    static {
+        SERVER_BUILDER.pop();
+        SERVER_BUILDER.comment("Hunter Forge.").push("forge");
+    }
+
+    public static final ModConfigSpec.DoubleValue FORGE_APOTHEOSIS_SCALE = SERVER_BUILDER
+            .comment("Forge bonuses are multiplied by this while Apotheosis is installed, because Apotheosis affixes and gems",
+                    "(percent damage, crit) multiply the forge's flat bonus. 1.0 = no change.")
+            .defineInRange("apotheosisScale", 0.75D, 0.0D, 1.0D);
+
+    static {
+        SERVER_BUILDER.pop();
+        SERVER_BUILDER.comment("Rift mobs and other mods' spawn systems.").push("rift");
+    }
+
+    public static final ModConfigSpec.BooleanValue ALLOW_APOTH_BOSSES = SERVER_BUILDER
+            .comment("Let Apotheosis treat rift bosses (entity tag khaosnexus:apotheosis_exempt, plus every dungeon, raid and Spire boss)",
+                    "like ordinary monsters: world-tier stat augments and random affix gear. Off keeps bosses as tuned here.")
+            .define("allowApotheosisInvaderBosses", false);
+    public static final ModConfigSpec.BooleanValue APOTH_GATE_TIERS = SERVER_BUILDER
+            .comment("Regular gate and dungeon mobs use the Apotheosis world tier from apotheosisTierByRank instead of the",
+                    "nearest player's world tier. Off leaves Apotheosis's own behaviour.")
+            .define("apotheosisGateTiers", false);
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> APOTH_TIER_BY_RANK = SERVER_BUILDER
+            .comment("RANK=world_tier (haven, frontier, ascent, summit, pinnacle).")
+            .defineListAllowEmpty("apotheosisTierByRank", List.of("E=haven", "D=haven", "C=frontier", "B=ascent", "A=summit", "S=pinnacle"),
+                    () -> "S=pinnacle", o -> o instanceof String str && str.contains("="));
 
     static {
         SERVER_BUILDER.pop();

@@ -8,7 +8,7 @@ import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 /**
- * Presence checks for companion mods. Nothing here calls those mods' APIs; integrations look up attributes, entities and tags by id at runtime.
+ * Presence checks for companion mods. Integrations look up attributes, entities, attachments and tags by id at runtime.
  */
 public final class SoftCompat {
     public record Hook(String modId, String label, ModConfigSpec.BooleanValue toggle) {
@@ -47,6 +47,6 @@ public final class SoftCompat {
         for (Hook hook : HOOKS) {
             KhaosNexus.LOGGER.info("Optional companion {}: {}", hook.modId(), hook.installed() ? "present" : "absent");
         }
-        KhaosNexus.LOGGER.info("Companion hooks only detect mods. FTB Quests chapters are not included; see docs/quest-integration.md for triggers and stages.");
+        KhaosNexus.LOGGER.info("Companion hooks are soft: see docs/compat-tuning.md. Run /khaosnexus compat check in a modded world to verify them.");
     }
 }

@@ -171,6 +171,7 @@ public final class SpireService {
         }
         BlockPos spawn = origin.offset(0, 0, 3);
         boss.moveTo(spawn.getX() + 0.5D, spawn.getY(), spawn.getZ() + 0.5D, 180.0F, 0.0F);
+        boss.getPersistentData().putBoolean(com.khaoskrew.khaosnexus.compat.ApothCompat.BOSS_FLAG, true);
         EventHooks.finalizeMobSpawn(boss, level, level.getCurrentDifficultyAt(spawn), MobSpawnType.EVENT, null);
         AttributeInstance health = boss.getAttribute(Attributes.MAX_HEALTH);
         if (health != null) {

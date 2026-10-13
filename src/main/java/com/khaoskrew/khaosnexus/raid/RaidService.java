@@ -48,6 +48,7 @@ public final class RaidService {
         }
         BlockPos spawn = pos.above();
         boss.moveTo(spawn.getX() + 0.5D, spawn.getY(), spawn.getZ() + 0.5D, player.getYRot(), 0.0F);
+        boss.getPersistentData().putBoolean(com.khaoskrew.khaosnexus.compat.ApothCompat.BOSS_FLAG, true);
         EventHooks.finalizeMobSpawn(boss, level, level.getCurrentDifficultyAt(spawn), MobSpawnType.EVENT, null);
         AttributeInstance health = boss.getAttribute(Attributes.MAX_HEALTH);
         if (health != null) {

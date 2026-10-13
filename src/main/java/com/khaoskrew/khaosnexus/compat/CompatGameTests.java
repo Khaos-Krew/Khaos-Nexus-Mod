@@ -58,4 +58,30 @@ public class CompatGameTests {
         }
         helper.succeed();
     }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    public static void compatDataAndApotheosisRulesWithoutMods(GameTestHelper helper) {
+        for (HunterClass c : HunterClass.values()) {
+            helper.assertFalse(ClassCompat.bonuses(c).isEmpty(), "class compat datapack has bonuses for " + c.id());
+        }
+        helper.assertTrue(ClassCompat.brokenIds().isEmpty(), "no installed mod has a wrong attribute id");
+        ClassCompat.Bonus b = ClassCompat.parse(com.google.gson.JsonParser.parseString(
+                "{\"attribute\":\"irons_spellbooks:spell_power\",\"amount\":0.1,\"operation\":\"add_multiplied_base\"}").getAsJsonObject());
+        helper.assertTrue(b.modId().equals("irons_spellbooks") && b.op() == net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_BASE,
+                "bonus json parses mod and operation");
+        helper.assertTrue(ApothCompat.forgeScale() == 1.0D, "forge bonus is unscaled without Apotheosis");
+        helper.assertFalse(ApothCompat.active(), "Apotheosis rules are inert without Apotheosis");
+        helper.assertTrue("pinnacle".equals(ApothCompat.tierFor(GateRank.S)) && "frontier".equals(ApothCompat.tierFor(GateRank.C)),
+                "default gate rank to world tier map");
+        helper.assertTrue(ApothCompat.isTierModifier(net.minecraft.resources.ResourceLocation.parse("apotheosis:summit/armor")), "tier modifier ids");
+        helper.assertFalse(ApothCompat.isTierModifier(net.minecraft.resources.ResourceLocation.parse("apotheosis:affix/armor")), "affix ids are not tier ids");
+        var warden = com.khaoskrew.khaosnexus.mob.ModEntities.RIFT_WARDEN.get().create(helper.getLevel());
+        helper.assertTrue(warden != null && ApothCompat.isBoss(warden) && !ApothCompat.shielded(warden), "warden is tagged exempt, shield idle without Apotheosis");
+        var ghoul = com.khaoskrew.khaosnexus.mob.ModEntities.RIFT_GHOUL.get().create(helper.getLevel());
+        helper.assertTrue(ghoul != null && !ApothCompat.isBoss(ghoul), "regular gate mobs are not exempt");
+        helper.assertFalse(CompatPools.wake(ghoul), "wake list ignores unlisted mobs");
+        warden.discard();
+        ghoul.discard();
+        helper.succeed();
+    }
 }

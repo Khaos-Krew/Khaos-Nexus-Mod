@@ -1,0 +1,20 @@
+{
+  "class": "berserker",
+  "bonuses": [
+    {
+      "attribute": "apothic_attributes:life_steal",
+      "amount": 0.05,
+      "operation": "add_value"
+    },
+    {
+      "attribute": "apothic_attributes:armor_shred",
+      "amount": 0.1,
+      "operation": "add_value"
+    },
+    {
+      "attribute": "apothic_attributes:current_hp_damage",
+      "amount": 0.02,
+      "operation": "add_value"
+    }
+  ]
+}

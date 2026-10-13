@@ -1,68 +1,116 @@
 package com.khaoskrew.khaosnexus.compat;
 
+import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.khaoskrew.khaosnexus.Config;
 import com.khaoskrew.khaosnexus.KhaosNexus;
+import com.khaoskrew.khaosnexus.hunter.ClassService;
 import com.khaoskrew.khaosnexus.hunter.HunterClass;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 
 /**
- * Class passives on companion-mod attributes: Apotheosis (Apothic Attributes) for all 8 classes, light Iron's Spells
- * support and Ars Nouveau hooks for the magic classes. Attributes are looked up by id at runtime, so nothing loads
- * unless that mod is installed and its toggle is on; there is no compile-time dependency on any of them.
+ * Class passives on companion-mod attributes (Apothic Attributes, Iron's Spells, Ars Nouveau, or any mod). The bonuses
+ * are datapack values in {@code data/<ns>/khaosnexus_class_compat/<class>.json}:
+ * <pre>{"class": "caster", "bonuses": [{"attribute": "irons_spellbooks:spell_power", "amount": 0.1, "operation": "add_multiplied_base"}]}</pre>
+ * An entry only applies when its attribute is registered and the owning mod's compat toggle is on; amounts are scaled
+ * by {@code compat.classBonusScale}. There is no compile-time dependency on any of these mods.
  */
-public final class ClassCompat {
+@EventBusSubscriber(modid = KhaosNexus.MODID)
+public final class ClassCompat extends SimpleJsonResourceReloadListener {
     public static final ResourceLocation MODIFIER_ID = ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "class_compat");
 
-    record Bonus(String modId, String attribute, double amount, AttributeModifier.Operation op) {}
+    public record Bonus(String modId, ResourceLocation attribute, double amount, AttributeModifier.Operation op) {}
 
-    private static Bonus apoth(String attr, double amount) {
-        return new Bonus("apothic_attributes", "apothic_attributes:" + attr, amount, AttributeModifier.Operation.ADD_VALUE);
+    static final Map<HunterClass, List<Bonus>> BONUSES = new EnumMap<>(HunterClass.class);
+
+    public ClassCompat() {
+        super(new Gson(), "khaosnexus_class_compat");
     }
 
-    private static Bonus irons(String attr, double pct) {
-        return new Bonus("irons_spellbooks", "irons_spellbooks:" + attr, pct, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+    @Override
+    protected void apply(Map<ResourceLocation, JsonElement> files, ResourceManager manager, ProfilerFiller profiler) {
+        BONUSES.clear();
+        files.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(e -> {
+            try {
+                JsonObject json = e.getValue().getAsJsonObject();
+                HunterClass c = HunterClass.byId(GsonHelper.getAsString(json, "class"));
+                if (c == null) {
+                    throw new IllegalArgumentException("unknown class");
+                }
+                List<Bonus> list = BONUSES.computeIfAbsent(c, k -> new ArrayList<>());
+                if (GsonHelper.getAsBoolean(json, "replace", false)) {
+                    list.clear();
+                }
+                for (JsonElement el : GsonHelper.getAsJsonArray(json, "bonuses")) {
+                    list.add(parse(el.getAsJsonObject()));
+                }
+            } catch (RuntimeException ex) {
+                KhaosNexus.LOGGER.warn("Skipping class compat file {}: {}", e.getKey(), ex.getMessage());
+            }
+        });
+        KhaosNexus.LOGGER.info("Loaded companion class bonuses for {} classes", BONUSES.size());
     }
 
-    private static Bonus ars(String attr, double amount) {
-        return new Bonus("ars_nouveau", "ars_nouveau:ars_nouveau.perk." + attr, amount, AttributeModifier.Operation.ADD_VALUE);
+    public static Bonus parse(JsonObject o) {
+        ResourceLocation attr = ResourceLocation.parse(GsonHelper.getAsString(o, "attribute"));
+        String op = GsonHelper.getAsString(o, "operation", "add_value").toLowerCase(Locale.ROOT);
+        AttributeModifier.Operation operation = switch (op) {
+            case "add_multiplied_base" -> AttributeModifier.Operation.ADD_MULTIPLIED_BASE;
+            case "add_multiplied_total" -> AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL;
+            default -> AttributeModifier.Operation.ADD_VALUE;
+        };
+        return new Bonus(GsonHelper.getAsString(o, "mod", attr.getNamespace()), attr, GsonHelper.getAsDouble(o, "amount"), operation);
     }
 
-    static final Map<HunterClass, List<Bonus>> BONUSES = Map.of(
-            HunterClass.TANK, List.of(apoth("ghost_health", 4.0D), apoth("overheal", 0.05D)),
-            HunterClass.ASSASSIN, List.of(apoth("crit_chance", 0.08D), apoth("crit_damage", 0.15D), apoth("dodge_chance", 0.05D)),
-            HunterClass.CASTER, List.of(apoth("prot_pierce", 2.0D), irons("spell_power", 0.10D), irons("max_mana", 0.10D),
-                    irons("cooldown_reduction", 0.05D), ars("spell_damage", 1.0D), ars("max_mana", 25.0D)),
-            HunterClass.RANGER, List.of(apoth("arrow_damage", 0.10D), apoth("arrow_velocity", 0.10D), apoth("draw_speed", 0.10D)),
-            HunterClass.LIFEBINDER, List.of(apoth("healing_received", 0.15D), irons("holy_spell_power", 0.10D),
-                    irons("nature_spell_power", 0.05D), irons("mana_regen", 0.10D), ars("mana_regen", 1.0D)),
-            HunterClass.BERSERKER, List.of(apoth("life_steal", 0.05D), apoth("armor_shred", 0.10D), apoth("current_hp_damage", 0.02D)),
-            HunterClass.SUMMONER, List.of(apoth("ghost_health", 2.0D), irons("summon_damage", 0.15D), irons("evocation_spell_power", 0.05D),
-                    ars("max_mana", 15.0D)),
-            HunterClass.NECROMANCER, List.of(apoth("life_steal", 0.04D), irons("blood_spell_power", 0.10D), irons("summon_damage", 0.10D),
-                    ars("spell_damage", 0.5D)));
+    @SubscribeEvent
+    public static void onReload(AddReloadListenerEvent event) {
+        event.addListener(new ClassCompat());
+    }
 
-    private ClassCompat() {}
+    /** Re-apply after /reload so datapack edits take effect without relogging. */
+    @SubscribeEvent
+    public static void onSync(OnDatapackSyncEvent event) {
+        if (event.getPlayer() == null) { // a /reload; logins are handled by ClassEvents
+            event.getRelevantPlayers().forEach(ClassService::reapply);
+        }
+    }
 
-    private static boolean enabled(String modId) {
+    public static List<Bonus> bonuses(HunterClass c) {
+        return List.copyOf(BONUSES.getOrDefault(c, List.of()));
+    }
+
+    static boolean enabled(String modId) {
         ModConfigSpec.BooleanValue toggle = switch (modId) {
-            case "apothic_attributes" -> Config.COMPAT_APOTHEOSIS;
+            case "apothic_attributes", "apotheosis" -> Config.COMPAT_APOTHEOSIS;
             case "irons_spellbooks" -> Config.COMPAT_IRONS;
             case "ars_nouveau" -> Config.COMPAT_ARS;
             default -> null;
         };
-        return toggle != null && toggle.get() && ModList.get().isLoaded(modId);
+        return (toggle == null || toggle.get()) && ModList.get().isLoaded(modId);
     }
 
     /** Applies the companion bonuses for this class; removes all of them first. */
@@ -71,36 +119,43 @@ public final class ClassCompat {
         if (hunterClass == null) {
             return;
         }
+        double scale = Config.CLASS_BONUS_SCALE.get();
         for (Bonus bonus : BONUSES.getOrDefault(hunterClass, List.of())) {
-            AttributeInstance instance = instance(player, bonus);
+            AttributeInstance instance = instance(player, bonus.attribute());
             if (instance != null && enabled(bonus.modId())) {
-                instance.addOrReplacePermanentModifier(new AttributeModifier(MODIFIER_ID, bonus.amount(), bonus.op()));
+                // one modifier per attribute: sum duplicates of the same op
+                AttributeModifier old = instance.getModifier(MODIFIER_ID);
+                double amount = bonus.amount() * scale + (old != null && old.operation() == bonus.op() ? old.amount() : 0.0D);
+                instance.addOrReplacePermanentModifier(new AttributeModifier(MODIFIER_ID, amount, bonus.op()));
             }
         }
     }
 
     public static void clear(ServerPlayer player) {
-        for (List<Bonus> list : BONUSES.values()) {
-            for (Bonus bonus : list) {
-                AttributeInstance instance = instance(player, bonus);
-                if (instance != null) {
-                    instance.removeModifier(MODIFIER_ID);
-                }
+        for (Holder<Attribute> h : BuiltInRegistries.ATTRIBUTE.holders().toList()) {
+            AttributeInstance instance = player.getAttribute(h);
+            if (instance != null) {
+                instance.removeModifier(MODIFIER_ID);
             }
         }
     }
 
-    private static AttributeInstance instance(ServerPlayer player, Bonus bonus) {
-        ResourceLocation id = ResourceLocation.tryParse(bonus.attribute());
-        if (id == null) {
-            return null;
-        }
+    private static AttributeInstance instance(ServerPlayer player, ResourceLocation id) {
         return BuiltInRegistries.ATTRIBUTE.getHolder(id).map(h -> player.getAttribute((Holder<Attribute>) h)).orElse(null);
     }
 
     /** Count of bonuses that are live in this game, for the compat status command. */
     public static long activeCount() {
         return BONUSES.values().stream().flatMap(List::stream)
-                .filter(b -> enabled(b.modId()) && BuiltInRegistries.ATTRIBUTE.containsKey(ResourceLocation.parse(b.attribute()))).count();
+                .filter(b -> enabled(b.modId()) && BuiltInRegistries.ATTRIBUTE.containsKey(b.attribute())).count();
+    }
+
+    /** Bonuses whose mod is installed but whose attribute id does not exist: a wrong id in the datapack. */
+    public static List<String> brokenIds() {
+        List<String> out = new ArrayList<>();
+        BONUSES.forEach((c, list) -> list.stream()
+                .filter(b -> ModList.get().isLoaded(b.modId()) && !BuiltInRegistries.ATTRIBUTE.containsKey(b.attribute()))
+                .forEach(b -> out.add(c.id() + ": " + b.attribute())));
+        return out;
     }
 }

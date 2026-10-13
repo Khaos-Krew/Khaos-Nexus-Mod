@@ -49,7 +49,7 @@ public final class CompatPools {
     public static List<ItemStack> loot(GateRank rank, RandomSource random) {
         List<ItemStack> out = new ArrayList<>();
         for (String line : Config.OPTIONAL_LOOT.get()) {
-            if (!matches(line, rank, true) || random.nextFloat() >= 0.2F) {
+            if (!matches(line, rank, true) || random.nextDouble() >= Config.OPTIONAL_LOOT_CHANCE.get()) {
                 continue;
             }
             String ref = line.split("=", 2)[1].trim();
@@ -72,5 +72,36 @@ public final class CompatPools {
             }
         }
         return out;
+    }
+
+    /** Wakes a dormant boss-mod boss by merging the NBT from {@code compat.modBossWake}. Returns true if anything changed. */
+    public static boolean wake(net.minecraft.world.entity.Mob boss) {
+        if (!Config.MOD_BOSS_WAKE.get()) {
+            return false;
+        }
+        String id = EntityType.getKey(boss.getType()).toString();
+        net.minecraft.nbt.CompoundTag extra = new net.minecraft.nbt.CompoundTag();
+        for (String line : Config.MOD_BOSS_WAKE_LIST.get()) {
+            String[] p = line.split("=", 2);
+            int c = p.length == 2 ? p[1].lastIndexOf(':') : -1;
+            if (c > 0 && p[0].trim().equals(id)) {
+                String key = p[1].substring(0, c).trim();
+                String val = p[1].substring(c + 1).trim();
+                try {
+                    extra.putInt(key, Integer.parseInt(val));
+                } catch (NumberFormatException e) {
+                    extra.putString(key, val);
+                }
+            }
+        }
+        if (extra.isEmpty()) {
+            return false;
+        }
+        net.minecraft.nbt.CompoundTag tag = boss.saveWithoutId(new net.minecraft.nbt.CompoundTag());
+        tag.merge(extra);
+        java.util.UUID uuid = boss.getUUID();
+        boss.load(tag);
+        boss.setUUID(uuid);
+        return true;
     }
 }

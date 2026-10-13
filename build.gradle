@@ -77,6 +77,19 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
+        // Local compat instance: drop companion-mod jars into run-compat/mods (never committed, not used by CI).
+        compatClient {
+            client()
+            gameDirectory = project.file('run-compat')
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        compatGameTestServer {
+            type = "gameTestServer"
+            gameDirectory = project.file('run-compat-test')
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
         data {
             data()
             // example of overriding the workingDirectory set in configureEach above, uncomment if you want to use it

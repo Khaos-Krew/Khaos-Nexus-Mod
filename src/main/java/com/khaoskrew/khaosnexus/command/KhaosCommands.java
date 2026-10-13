@@ -125,7 +125,7 @@ public final class KhaosCommands {
                                     if (layout == null) {
                                         return 0;
                                     }
-                                    com.khaoskrew.khaosnexus.dungeon.DungeonService.populate(dungeon, rank, layout, player.getRandom(), lease);
+                                    var spawnedBoss = com.khaoskrew.khaosnexus.dungeon.DungeonService.populate(dungeon, rank, layout, player.getRandom(), lease);
                                     if (context.getInput().endsWith(" cutaway")) {
                                         com.khaoskrew.khaosnexus.dungeon.DungeonService.cutaway(dungeon, layout.box());
                                         var b0 = layout.box();
@@ -137,7 +137,8 @@ public final class KhaosCommands {
                                     var b = layout.box();
                                     context.getSource().sendSuccess(() -> net.minecraft.network.chat.Component.literal(
                                             "Dungeon " + rank + ": " + layout.pieces() + " pieces, box " + b.minX() + " " + b.minZ() + " to " + b.maxX() + " " + b.maxZ()
-                                            + ", boss " + (layout.boss() == null ? "none" : layout.boss().toShortString())), false);
+                                            + ", boss " + (layout.boss() == null ? "none" : layout.boss().toShortString())
+                                            + (spawnedBoss == null ? "" : " " + net.minecraft.world.entity.EntityType.getKey(spawnedBoss.getType()))), false);
                                     return 1;
                                 })))
                         .then(Commands.literal("instances").requires(source -> source.hasPermission(2)).executes(context -> {
@@ -201,7 +202,13 @@ public final class KhaosCommands {
                             Titles.clear(context.getSource().getPlayerOrException());
                             return 1;
                         })))
-                .then(Commands.literal("compat").executes(context -> {
+                .then(Commands.literal("compat")
+                        .then(Commands.literal("check").requires(source -> source.hasPermission(2)).executes(context -> {
+                            CommandSourceStack source = context.getSource();
+                            return com.khaoskrew.khaosnexus.compat.CompatSelfTest.run(source.getPlayerOrException(),
+                                    c -> source.sendSuccess(() -> c, false)) == 0 ? 1 : 0;
+                        }))
+                        .executes(context -> {
                     CommandSourceStack source = context.getSource();
                     for (SoftCompat.Hook hook : SoftCompat.HOOKS) {
                         source.sendSuccess(() -> Component.translatable(

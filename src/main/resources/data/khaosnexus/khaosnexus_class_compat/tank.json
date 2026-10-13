@@ -1,0 +1,15 @@
+{
+  "class": "tank",
+  "bonuses": [
+    {
+      "attribute": "apothic_attributes:ghost_health",
+      "amount": 4.0,
+      "operation": "add_value"
+    },
+    {
+      "attribute": "apothic_attributes:overheal",
+      "amount": 0.05,
+      "operation": "add_value"
+    }
+  ]
+}

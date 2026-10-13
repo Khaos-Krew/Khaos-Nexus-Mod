@@ -1,6 +1,5 @@
 package com.khaoskrew.khaosnexus.compat;
 
-import java.util.List;
 import java.util.Locale;
 
 import com.khaoskrew.khaosnexus.KhaosNexus;
@@ -42,8 +41,9 @@ public final class ProgressHooks {
 
     public static void classSelected(ServerPlayer p, String classId) {
         if (stagesActive()) {
-            List<String> old = p.getTags().stream().filter(t -> t.startsWith(PREFIX + "class.")).toList();
-            old.forEach(p::removeTag);
+            for (HunterClassId c : HunterClassId.values()) {
+                removeStage(p, PREFIX + "class." + c.id);
+            }
         }
         fire(p, "class_selected", classId, 0, "class." + classId, "class_chosen");
     }
@@ -76,8 +76,65 @@ public final class ProgressHooks {
         }
         for (String s : stages) {
             if (s != null) {
-                p.addTag(PREFIX + s.toLowerCase(Locale.ROOT));
+                addStage(p, PREFIX + s.toLowerCase(Locale.ROOT));
             }
+        }
+    }
+
+    private enum HunterClassId {
+        TANK, ASSASSIN, CASTER, RANGER, LIFEBINDER, BERSERKER, SUMMONER, NECROMANCER;
+        final String id = name().toLowerCase(Locale.ROOT);
+    }
+
+    /**
+     * Stages go through FTB Library's StageHelper so whichever provider the pack uses (player tags by default, or
+     * KubeJS / Game Stages when installed) sees them. Falls back to vanilla player tags.
+     */
+    private static Object provider() {
+        try {
+            Class<?> helper = Class.forName("dev.ftb.mods.ftblibrary.integration.stages.StageHelper");
+            Object instance = helper.getField("INSTANCE").get(null);
+            return helper.getMethod("getProvider").invoke(instance);
+        } catch (ReflectiveOperationException | LinkageError e) {
+            return null;
+        }
+    }
+
+    public static void addStage(ServerPlayer p, String stage) {
+        if (!call(provider(), "add", p, stage)) {
+            p.addTag(stage);
+        }
+    }
+
+    public static void removeStage(ServerPlayer p, String stage) {
+        if (!call(provider(), "remove", p, stage)) {
+            p.removeTag(stage);
+        }
+    }
+
+    public static boolean hasStage(ServerPlayer p, String stage) {
+        Object provider = provider();
+        if (provider != null) {
+            try {
+                return (Boolean) provider.getClass().getMethod("has", net.minecraft.world.entity.player.Player.class, String.class)
+                        .invoke(provider, p, stage);
+            } catch (ReflectiveOperationException | RuntimeException e) {
+                // fall through
+            }
+        }
+        return p.getTags().contains(stage);
+    }
+
+    private static boolean call(Object provider, String method, ServerPlayer p, String stage) {
+        if (provider == null) {
+            return false;
+        }
+        try {
+            provider.getClass().getMethod(method, ServerPlayer.class, String.class).invoke(provider, p, stage);
+            return true;
+        } catch (ReflectiveOperationException | RuntimeException e) {
+            KhaosNexus.LOGGER.debug("FTB stage provider call failed: {}", e.toString());
+            return false;
         }
     }
 }

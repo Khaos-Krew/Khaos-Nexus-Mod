@@ -210,12 +210,13 @@ public class ForgeRecipes extends SimpleJsonResourceReloadListener {
                 builder.add(e.attribute(), e.modifier(), e.slot());
             }
         }
-        double bonus = recipe.levels().get(level - 1).bonus();
+        double scale = com.khaoskrew.khaosnexus.compat.ApothCompat.forgeScale();
+        double bonus = recipe.levels().get(level - 1).bonus() * scale;
         attribute(recipe.attribute()).ifPresent(h -> builder.add(h, new AttributeModifier(modId, bonus, AttributeModifier.Operation.ADD_VALUE), group));
         ClassBonus cb = recipe.classBonus().get(boundClass);
         if (cb != null) {
             attribute(cb.attribute()).ifPresent(h -> builder.add(h,
-                    new AttributeModifier(classModId, cb.perLevel() * level, AttributeModifier.Operation.ADD_VALUE), group));
+                    new AttributeModifier(classModId, cb.perLevel() * level * scale, AttributeModifier.Operation.ADD_VALUE), group));
         }
         stack.set(DataComponents.ATTRIBUTE_MODIFIERS, builder.build());
     }

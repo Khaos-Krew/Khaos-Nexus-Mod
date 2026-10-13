@@ -80,6 +80,12 @@ public final class GateArena {
     /** Spawns one rank-scaled gate mob. Returns null when the type is not a mob or the spawn was cancelled. */
     @org.jetbrains.annotations.Nullable
     public static Mob spawnMob(ServerLevel level, GateRank rank, EntityType<?> type, BlockPos anchor, float yaw, double extraHealth) {
+        return spawnMob(level, rank, type, anchor, yaw, extraHealth, false);
+    }
+
+    /** {@code boss} marks the mob as a rift boss before spawn events fire (see ApothCompat). */
+    @org.jetbrains.annotations.Nullable
+    public static Mob spawnMob(ServerLevel level, GateRank rank, EntityType<?> type, BlockPos anchor, float yaw, double extraHealth, boolean boss) {
         Config.RankValues tuning = rank.tuning();
         Entity created = type.create(level);
         if (!(created instanceof Mob mob)) {
@@ -90,6 +96,10 @@ public final class GateArena {
             return null;
         }
         mob.moveTo(anchor.getX() + 0.5D, anchor.getY(), anchor.getZ() + 0.5D, yaw, 0.0F);
+        mob.getPersistentData().putString(com.khaoskrew.khaosnexus.compat.ApothCompat.RANK_FLAG, rank.name());
+        if (boss) {
+            mob.getPersistentData().putBoolean(com.khaoskrew.khaosnexus.compat.ApothCompat.BOSS_FLAG, true);
+        }
         EventHooks.finalizeMobSpawn(mob, level, level.getCurrentDifficultyAt(anchor), MobSpawnType.EVENT, null);
         if (mob.isSpawnCancelled()) {
             mob.discard();

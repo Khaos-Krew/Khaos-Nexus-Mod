@@ -1,0 +1,20 @@
+{
+  "class": "ranger",
+  "bonuses": [
+    {
+      "attribute": "apothic_attributes:arrow_damage",
+      "amount": 0.1,
+      "operation": "add_value"
+    },
+    {
+      "attribute": "apothic_attributes:arrow_velocity",
+      "amount": 0.1,
+      "operation": "add_value"
+    },
+    {
+      "attribute": "apothic_attributes:draw_speed",
+      "amount": 0.1,
+      "operation": "add_value"
+    }
+  ]
+}
