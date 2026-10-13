@@ -135,7 +135,7 @@ public class EndgameGameTests {
         boss.moveTo(helper.absoluteVec(new net.minecraft.world.phys.Vec3(1, 2, 1)));
         double hp = boss.getMaxHealth();
         InfiniteSpire.apply(boss, 1, from + 9);
-        helper.assertTrue(boss.getMaxHealth() > hp, "deep floors are tougher");
+        helper.assertTrue(BigHealth.effectiveMax(boss) > hp, "deep floors are tougher");
         boss.discard();
         helper.succeed();
     }
@@ -300,6 +300,38 @@ public class EndgameGameTests {
         helper.assertTrue(Awakening.cast(player), "cast");
         helper.assertTrue(target.getHealth() < hp, "awakened ability hits enemies");
         helper.assertFalse(Awakening.cast(player), "cooldown");
+        helper.succeed();
+    }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    @SuppressWarnings("removal")
+    public static void groupRaidPhasesAggroAndCleanse(GameTestHelper helper) {
+        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "rift_sovereign");
+        var def = JsonPool.RAID_BOSSES.get(id);
+        helper.assertTrue(def != null && JsonPool.RAID_BOSSES.all().size() >= 2, "bundled raid bosses load");
+        helper.assertTrue(GroupRaids.phaseFor(def, 1.0F) == 0 && GroupRaids.phaseFor(def, 0.5F) == 1 && GroupRaids.phaseFor(def, 0.1F) == 2, "phase thresholds");
+        helper.assertTrue(com.khaoskrew.khaosnexus.party.PartyService.maxSize() >= 8, "party cap allows 8");
+        Mob boss = helper.spawnWithNoFreeWill(com.khaoskrew.khaosnexus.mob.ModEntities.RIFT_WARDEN.get(), new BlockPos(2, 2, 2));
+        var st = GroupRaids.setup(boss, id, def, 8);
+        helper.assertTrue(Math.abs(BigHealth.effectiveMax(boss) - (800 + 7 * 200)) < 0.5D, "effective health scales with party past the 1024 cap");
+        var tank = helper.makeMockServerPlayerInLevel();
+        var healer = helper.makeMockServerPlayerInLevel();
+        com.khaoskrew.khaosnexus.hunter.HunterRanks.profile(tank).classId = "tank";
+        com.khaoskrew.khaosnexus.hunter.HunterRanks.profile(healer).classId = "lifebinder";
+        tank.moveTo(boss.position().add(3, 0, 0));
+        healer.moveTo(boss.position().add(-3, 0, 0));
+        st.party.add(tank.getUUID());
+        st.party.add(healer.getUUID());
+        var server = helper.getLevel().getServer();
+        boss.setHealth(boss.getMaxHealth() * 0.5F);
+        GroupRaids.tick(server, st, boss);
+        helper.assertTrue(st.phase() == 1, "boss moved to phase 2");
+        GroupRaids.aggro(server, st, boss);
+        helper.assertTrue(boss.getTarget() == tank, "tank holds aggro");
+        tank.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.WITHER, 200, 1));
+        helper.assertTrue(GroupRaids.onAbility(healer, com.khaoskrew.khaosnexus.hunter.HunterClass.LIFEBINDER) >= 1, "lifebinder cleanses");
+        helper.assertFalse(tank.hasEffect(net.minecraft.world.effect.MobEffects.WITHER), "curse removed");
+        boss.discard();
         helper.succeed();
     }
 }

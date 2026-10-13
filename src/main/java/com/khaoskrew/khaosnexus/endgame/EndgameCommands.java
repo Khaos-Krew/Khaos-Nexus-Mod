@@ -87,6 +87,9 @@ public final class EndgameCommands {
                                 com.khaoskrew.khaosnexus.hunter.HunterRanks.profile(c.getSource().getPlayerOrException()).classId)
                                 .stream().map(r -> r.getPath()), b))
                         .executes(c -> Awakening.command(c.getSource().getPlayerOrException(), StringArgumentType.getString(c, "id")) ? 1 : 0))));
+        root.then(Commands.literal("raid").then(Commands.literal("group").then(Commands.argument("boss", StringArgumentType.word())
+                .suggests((c, b) -> SharedSuggestionProvider.suggest(JsonPool.RAID_BOSSES.all().keySet().stream().map(r -> r.getPath()), b))
+                .executes(c -> GroupRaids.start(c.getSource().getPlayerOrException(), StringArgumentType.getString(c, "boss")) != null ? 1 : 0))));
         // endgame-commands-end
         event.getDispatcher().register(root);
     }

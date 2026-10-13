@@ -68,8 +68,8 @@ public final class PartyService {
             from.displayClientMessage(Component.translatable("khaosnexus.party.leader_only"), false);
             return;
         }
-        if (data.sizeOf(leader) >= Config.RAID_MAX_PARTY.get()) {
-            from.displayClientMessage(Component.translatable("khaosnexus.party.full", Config.RAID_MAX_PARTY.get()), false);
+        if (data.sizeOf(leader) >= maxSize()) {
+            from.displayClientMessage(Component.translatable("khaosnexus.party.full", maxSize()), false);
             return;
         }
         data.invite(to.getUUID(), leader);
@@ -84,8 +84,8 @@ public final class PartyService {
             player.displayClientMessage(Component.translatable("khaosnexus.party.no_invite"), false);
             return;
         }
-        if (data.sizeOf(leader) >= Config.RAID_MAX_PARTY.get()) {
-            player.displayClientMessage(Component.translatable("khaosnexus.party.full", Config.RAID_MAX_PARTY.get()), false);
+        if (data.sizeOf(leader) >= maxSize()) {
+            player.displayClientMessage(Component.translatable("khaosnexus.party.full", maxSize()), false);
             return;
         }
         data.leave(player.getUUID());
@@ -106,7 +106,7 @@ public final class PartyService {
             player.displayClientMessage(Component.translatable("khaosnexus.party.solo"), false);
             return;
         }
-        player.displayClientMessage(Component.translatable("khaosnexus.party.list", members.size(), Config.RAID_MAX_PARTY.get()), false);
+        player.displayClientMessage(Component.translatable("khaosnexus.party.list", members.size(), maxSize()), false);
     }
 
     public static void refresh(ServerPlayer any) {
@@ -237,5 +237,10 @@ public final class PartyService {
             tag.put("Parties", parties);
             return tag;
         }
+    }
+
+    /** Party cap: the raid cap, raised to the group-raid cap when group raids are on. */
+    public static int maxSize() {
+        return Config.GROUP_RAIDS.get() ? Math.max(Config.RAID_MAX_PARTY.get(), Config.GROUP_RAID_MAX.get()) : Config.RAID_MAX_PARTY.get();
     }
 }

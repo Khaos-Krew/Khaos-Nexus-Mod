@@ -167,7 +167,7 @@ public final class Config {
             .defineInRange("minParty", 1, 1, 5);
     public static final ModConfigSpec.IntValue RAID_MAX_PARTY = SERVER_BUILDER
             .comment("Largest raid party.")
-            .defineInRange("maxParty", 5, 1, 5);
+            .defineInRange("maxParty", 5, 1, 8);
     public static final ModConfigSpec.DoubleValue RAID_HEALTH_SCALE = SERVER_BUILDER
             .comment("Boss health multiplier added for each party member after the first.")
             .defineInRange("healthScale", 0.5D, 0.0D, 10.0D);
@@ -576,6 +576,21 @@ public final class Config {
     public static final ModConfigSpec.ConfigValue<List<? extends String>> AWAKENING_STEPS = SERVER_BUILDER
             .comment("Quest steps after reaching National, in order. Forms: stat:<EndgameKey>:<min>, spire:<floor>, title:<id>.")
             .defineListAllowEmpty("awakeningSteps", List.of("stat:SSClears:3", "spire:120", "stat:BossRushWins:5"), () -> "spire:120", o -> o instanceof String);
+    public static final ModConfigSpec.BooleanValue GROUP_RAIDS = SERVER_BUILDER
+            .comment("Group raids: multi-phase raid bosses for up to groupRaidMaxParty hunters, with tank aggro and healer cleanses. Bosses are datapack files in data/<ns>/khaosnexus_raid_bosses/.")
+            .define("groupRaids", true);
+    public static final ModConfigSpec.IntValue GROUP_RAID_MIN = SERVER_BUILDER
+            .comment("Smallest party for a group raid.")
+            .defineInRange("groupRaidMinParty", 4, 1, 8);
+    public static final ModConfigSpec.IntValue GROUP_RAID_MAX = SERVER_BUILDER
+            .comment("Largest party for a group raid (also raises the party cap).")
+            .defineInRange("groupRaidMaxParty", 8, 1, 8);
+    public static final ModConfigSpec.DoubleValue CLEANSE_RADIUS = SERVER_BUILDER
+            .comment("Radius in which a Lifebinder's ability cleanses raid curses from allies.")
+            .defineInRange("raidCleanseRadius", 10.0D, 0.0D, 64.0D);
+    public static final ModConfigSpec.IntValue GROUP_RAID_CORES = SERVER_BUILDER
+            .comment("Rift Cores each contributing hunter gets for a group raid kill (on top of personal raid loot).")
+            .defineInRange("groupRaidRewardCores", 6, 0, 64);
     // endgame-config-end
     static {
         SERVER_BUILDER.pop();

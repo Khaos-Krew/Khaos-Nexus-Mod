@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased: post-S-rank endgame
+
+All of it can be tuned in the `[endgame]` section of the server config, and the content lives in datapack folders. See `docs/post-s-rank-endgame-plan.md`.
+- **Weekly modifiers:** each week A and S gates get 2 rotating modifiers that pay bonus XP and Rift Cores.
+- **Red gates:** a rare locked gate with a stronger boss and bigger rewards. **Dungeon breaks:** gates left alone too long spill their mobs into the world.
+- **Leaderboards:** `/khaosnexus top` for clear times, Spire floors, weekly clears and boss rush times.
+- **Infinite Spire:** +6% boss health and damage per floor past floor 10, with an affixed boss every 10th floor.
+- **Auras:** cosmetic particle auras unlocked by achievements, shown on the Hunter Card.
+- **Class mastery:** XP earned at S rank fills per-class mastery levels 1–50, each spent on sidegrade perks.
+- **SS and National ranks:** earned by achievements. They give a title, an aura, bonus skill points, and access to SS gates.
+- **Boss rush:** a timed chain of 5 bosses with one heal. It includes installed boss-mod bosses.
+- **Challenge gates:** a monthly authored fight. Solo, one life, sometimes class-locked, with a unique title.
+- **Second Awakening:** a National-level quest that unlocks an awakened ability (choose 1 of 2 per class). Cast it with sneak + the secondary ability key.
+- **Group raids:** multi-phase raid bosses for 4–8 hunters. Tanks hold aggro and Lifebinders cleanse curses. The party cap rises to 8.
+
 ## 0.1.2-beta (2026-10-13)
 
 ### Balance

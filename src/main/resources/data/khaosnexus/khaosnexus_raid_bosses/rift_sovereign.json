@@ -1,0 +1,49 @@
+{
+  "entity": "khaosnexus:rift_warden",
+  "base_health": 800,
+  "health_per_player": 200,
+  "tank_aggro": true,
+  "phases": [
+    {
+      "at": 1.0
+    },
+    {
+      "at": 0.7,
+      "adds": [
+        "khaosnexus:rift_ghoul",
+        "khaosnexus:rift_ghoul",
+        "khaosnexus:void_caster",
+        "khaosnexus:void_caster"
+      ],
+      "curse": {
+        "effect": "minecraft:wither",
+        "amplifier": 1,
+        "seconds": 12,
+        "interval_seconds": 15,
+        "targets": 2
+      }
+    },
+    {
+      "at": 0.35,
+      "damage": 1.4,
+      "speed": 1.15,
+      "boss_effects": [
+        {
+          "id": "minecraft:resistance",
+          "amplifier": 0
+        }
+      ],
+      "adds": [
+        "khaosnexus:rift_brute",
+        "khaosnexus:rift_brute"
+      ],
+      "curse": {
+        "effect": "minecraft:wither",
+        "amplifier": 2,
+        "seconds": 10,
+        "interval_seconds": 10,
+        "targets": 3
+      }
+    }
+  ]
+}

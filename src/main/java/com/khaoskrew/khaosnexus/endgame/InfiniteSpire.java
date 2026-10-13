@@ -80,8 +80,10 @@ public final class InfiniteSpire {
             boss.setCustomName(Component.translatable("khaosnexus.spire.boss", floor).copy().append(" ")
                     .append(Component.translatable("khaosnexus.affix." + id.getNamespace() + "." + id.getPath())));
         }
-        mult(boss.getAttribute(Attributes.MAX_HEALTH), hp);
-        boss.setHealth(boss.getMaxHealth());
+        AttributeInstance health = boss.getAttribute(Attributes.MAX_HEALTH);
+        if (health != null && hp != 1.0D) {
+            BigHealth.set(boss, health.getBaseValue() * hp);
+        }
         mult(boss.getAttribute(Attributes.ATTACK_DAMAGE), dmg);
         mult(boss.getAttribute(Attributes.MOVEMENT_SPEED), speed);
     }

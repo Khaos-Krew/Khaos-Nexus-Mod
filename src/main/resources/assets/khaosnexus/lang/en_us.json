@@ -545,5 +545,15 @@
   "khaosnexus.awaken.chosen": "Awakened ability: %s. Sneak + secondary ability key (or /khaosnexus awaken use).",
   "khaosnexus.awaken.header": "Second Awakening quest:",
   "khaosnexus.awaken.pick": "The quest is complete. Choose one (permanent): /khaosnexus awaken choose <id>",
-  "khaosnexus.title.awakened": "The Awakened"
+  "khaosnexus.title.awakened": "The Awakened",
+  "khaosnexus.graid.khaosnexus.rift_sovereign": "Rift Sovereign",
+  "khaosnexus.graid.khaosnexus.abyssal_colossus": "Abyssal Colossus",
+  "khaosnexus.graid.unknown": "Unknown raid boss %s, or group raids are off.",
+  "khaosnexus.graid.size": "Group raids need a party of %s to %s hunters.",
+  "khaosnexus.graid.started": "Group raid: %s (%s hunters). Tanks hold aggro, Lifebinders cleanse curses!",
+  "khaosnexus.graid.cursed": "You are cursed! A Lifebinder's ability can cleanse it.",
+  "khaosnexus.graid.phase": "The raid boss enters phase %s!",
+  "khaosnexus.graid.cleansed": "Cleansed %s curses",
+  "khaosnexus.graid.won": "Raid boss %s defeated!",
+  "khaosnexus.title.raid_conqueror": "Raid Conqueror"
 }

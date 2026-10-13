@@ -28,3 +28,27 @@ The goal is to keep S-rank hunters engaged without endless stat inflation. This 
 - Rewards past S are mostly sidegrades, cosmetics and rank prestige, never a big damage multiplier.
 - Everything is datapack- and config-tunable.
 - Weekly and seasonal resets keep goals fresh, and a fallen leaderboard spot is always recoverable.
+
+## Implementation status (built)
+
+Everything below is in the `[endgame]` section of the server config, and each feature's content is a datapack folder you can override or extend.
+
+| # | Feature | Commands | Datapack folder | Key config |
+|---|---|---|---|---|
+| 1 | Weekly modifiers | `/khaosnexus weekly` | `khaosnexus_gate_modifiers` | `weeklyModifiers`, `weeklyModifierCount`, `weeklyRanks`, `weeklySeed`, `weeklyForce` |
+| 2 | Red gates and dungeon breaks | — | — | `redGateChance`, `redGateRanks`, `redBoss*`, `redLockExit`, `dungeonBreaks`, `dungeonBreakMinutes` |
+| 4 | Leaderboards | `/khaosnexus top <E..S\|spire\|weekly\|rush>` | — | `leaderboards`, `leaderboardSize` |
+| 3 | Infinite Spire | `/khaosnexus spire` | `khaosnexus_spire_affixes` | `spireInfinite`, `spireScaleFrom`, `spireScalePerFloor`, `spireScaleCap`, `spireBossInterval` |
+| 11 | Auras | `/khaosnexus aura [equip <id>\|clear]` | `khaosnexus_auras` | `auras`, `auraInterval` |
+| 5 | Mastery tracks | `/khaosnexus mastery [pick <id>\|reset]` | `khaosnexus_mastery` | `mastery`, `masteryXpPerLevel`, `masteryMaxLevel` |
+| 8 | SS / National rank, SS gates | `/khaosnexus prestige` | — | `prestigeRanks`, `ss*`, `national*`, `prestigeSkillPoints`, `ssGate*` |
+| 6 | Boss rush | `/khaosnexus bossrush start\|leave` | `khaosnexus_boss_rush` | `bossRush`, `bossRushRoster`, `bossRushMinRank`, `bossRushRewardCores` |
+| 7 | Challenge gates | `/khaosnexus challenge [start\|leave]` | `khaosnexus_challenges` | `challengeGates`, `challengeForce`, `challengeAttemptsPerMonth` |
+| 9 | Second Awakening | `/khaosnexus awaken [choose <id>\|use]`, sneak + secondary ability key | `khaosnexus_awakenings` | `secondAwakening`, `awakeningSteps` |
+| 10 | Group raids (8) | `/khaosnexus raid group <boss>` | `khaosnexus_raid_bosses` | `groupRaids`, `groupRaidMinParty`, `groupRaidMaxParty`, `raidCleanseRadius` |
+| 12 | Guilds | on hold (may overlap with the server's own setup) | | |
+
+Notes:
+- Bosses that need more than vanilla's 1024 max health keep a capped health bar and take proportionally less damage (`BigHealth`).
+- Boss rush and challenge runs happen on an arena platform in the Spire dimension. They are not saved across a server restart: players in a run when the server stops log back in where they were.
+- Mastery perks are attribute sidegrades (a gain paired with a cost), grouped so you pick one per group.

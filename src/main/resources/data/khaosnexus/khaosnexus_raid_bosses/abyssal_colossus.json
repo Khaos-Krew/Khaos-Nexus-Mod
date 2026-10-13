@@ -1,0 +1,50 @@
+{
+  "entity": "khaosnexus:spire_guardian",
+  "base_health": 1100,
+  "health_per_player": 250,
+  "tank_aggro": true,
+  "phases": [
+    {
+      "at": 1.0,
+      "curse": {
+        "effect": "minecraft:poison",
+        "amplifier": 1,
+        "seconds": 10,
+        "interval_seconds": 20,
+        "targets": 2
+      }
+    },
+    {
+      "at": 0.6,
+      "adds": [
+        "khaosnexus:rift_stalker",
+        "khaosnexus:rift_stalker",
+        "khaosnexus:rift_stalker"
+      ],
+      "curse": {
+        "effect": "minecraft:weakness",
+        "amplifier": 1,
+        "seconds": 15,
+        "interval_seconds": 15,
+        "targets": 3
+      }
+    },
+    {
+      "at": 0.25,
+      "damage": 1.5,
+      "boss_effects": [
+        {
+          "id": "minecraft:strength",
+          "amplifier": 0
+        }
+      ],
+      "curse": {
+        "effect": "minecraft:wither",
+        "amplifier": 2,
+        "seconds": 8,
+        "interval_seconds": 8,
+        "targets": 4
+      }
+    }
+  ]
+}
