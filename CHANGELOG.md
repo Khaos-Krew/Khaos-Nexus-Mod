@@ -14,6 +14,9 @@ The first full release. Everything below is new since 0.1.2-beta and can be tune
 - **Endless scaling:** past floor 3, guardians gain +6% health and damage per floor (capped). Each floor's final guardian rolls an affix (Armored, Swift, Vampiric, Berserk, Titanic) for bonus Rift Cores.
 - Progress is tracked as floor and level. Leaderboards show F#-L#. Old saves convert automatically: 10 old floors become 1 new floor.
 - Flight and block breaking stay disabled in the Spire.
+- A gate whose guardian still lives shows as a dim, rank-tinted rift with faint particles. Once the guardian falls, it lights up.
+- Mid-floor progress is saved on your hunter profile, so it survives server restarts. Re-entering the Spire resumes at your next unbeaten level, and the town gate skips levels you already beat.
+- Admin commands (op level 2): `/khaosnexus spire set <player> <floor> <level> <cleared>` and `/khaosnexus prestige set <player> <0-2>`.
 
 ### Post-S endgame
 - **Weekly modifiers** for A and S gates, with bonus XP and Rift Cores. See `/khaosnexus weekly`.
@@ -26,7 +29,7 @@ The first full release. Everything below is new since 0.1.2-beta and can be tune
 - Bosses tuned past vanilla's 1024 max health now take proportionally less damage, so their full health still counts.
 
 ### Hunter Card
-- The rank line shows SS or National prestige.
+- The rank line shows SS or National rank when you have one, in its own colour.
 - The Spire line shows floor, level and floors cleared.
 - The equipped aura is shown.
 

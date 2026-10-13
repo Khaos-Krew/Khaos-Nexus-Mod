@@ -90,6 +90,40 @@ public final class EndgameCommands {
         root.then(Commands.literal("raid").then(Commands.literal("group").then(Commands.argument("boss", StringArgumentType.word())
                 .suggests((c, b) -> SharedSuggestionProvider.suggest(JsonPool.RAID_BOSSES.all().keySet().stream().map(r -> r.getPath()), b))
                 .executes(c -> GroupRaids.start(c.getSource().getPlayerOrException(), StringArgumentType.getString(c, "boss")) != null ? 1 : 0))));
+        // Admin: set prestige or Spire progress directly (op level 2), for server owners fixing or migrating saves.
+        root.then(Commands.literal("prestige").then(Commands.literal("set").requires(src -> src.hasPermission(2))
+                .then(Commands.argument("player", net.minecraft.commands.arguments.EntityArgument.player())
+                        .then(Commands.argument("level", com.mojang.brigadier.arguments.IntegerArgumentType.integer(0, 2))
+                                .executes(c -> {
+                                    ServerPlayer p = net.minecraft.commands.arguments.EntityArgument.getPlayer(c, "player");
+                                    int lvl = com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(c, "level");
+                                    var prof = com.khaoskrew.khaosnexus.hunter.HunterRanks.profile(p);
+                                    prof.endgame.putInt(Prestige.KEY, lvl);
+                                    if (lvl >= Prestige.SS) com.khaoskrew.khaosnexus.title.Titles.unlock(p, Prestige.TITLE_SS);
+                                    if (lvl >= Prestige.NATIONAL) com.khaoskrew.khaosnexus.title.Titles.unlock(p, Prestige.TITLE_NATIONAL);
+                                    com.khaoskrew.khaosnexus.hunter.HunterRanks.sync(p);
+                                    c.getSource().sendSuccess(() -> Prestige.status(prof), true);
+                                    return 1;
+                                })))));
+        root.then(Commands.literal("spire").then(Commands.literal("set").requires(src -> src.hasPermission(2))
+                .then(Commands.argument("player", net.minecraft.commands.arguments.EntityArgument.player())
+                        .then(Commands.argument("floor", com.mojang.brigadier.arguments.IntegerArgumentType.integer(1))
+                                .then(Commands.argument("level", com.mojang.brigadier.arguments.IntegerArgumentType.integer(1))
+                                        .then(Commands.argument("cleared", com.mojang.brigadier.arguments.IntegerArgumentType.integer(0))
+                                                .executes(c -> {
+                                                    ServerPlayer p = net.minecraft.commands.arguments.EntityArgument.getPlayer(c, "player");
+                                                    var prof = com.khaoskrew.khaosnexus.hunter.HunterRanks.profile(p);
+                                                    com.khaoskrew.khaosnexus.spire.SpireService.migrate(prof);
+                                                    prof.spireFloor = com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(c, "floor");
+                                                    prof.endgame.putInt(com.khaoskrew.khaosnexus.spire.SpireService.LEVEL_KEY,
+                                                            Math.min(com.khaoskrew.khaosnexus.spire.SpireService.levels(), com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(c, "level")));
+                                                    prof.spireBest = com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(c, "cleared");
+                                                    prof.spireCheckpoint = prof.spireFloor;
+                                                    prof.spireSeason = com.khaoskrew.khaosnexus.spire.SpireData.get(p.server.overworld()).season;
+                                                    com.khaoskrew.khaosnexus.hunter.HunterRanks.sync(p);
+                                                    com.khaoskrew.khaosnexus.spire.SpireService.status(p);
+                                                    return 1;
+                                                })))))));
         // endgame-commands-end
         event.getDispatcher().register(root);
     }

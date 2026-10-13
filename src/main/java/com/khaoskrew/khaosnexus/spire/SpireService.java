@@ -103,7 +103,7 @@ public final class SpireService {
         for (ServerPlayer member : PartyService.onlineMembers(player)) {
             floor = Math.max(floor, HunterRanks.profile(member).spireCheckpoint);
         }
-        goTo(player, spire, floor, Config.SPIRE_TOWNS.get() ? 0 : 1, data.season);
+        goTo(player, spire, floor, resumeLevel(profile, floor), data.season);
         HunterRanks.sync(player);
         player.displayClientMessage(Component.translatable("khaosnexus.spire.entered", floor), false);
     }
@@ -124,6 +124,14 @@ public final class SpireService {
         HunterProfile profile = HunterRanks.profile(player);
         migrate(profile);
         goTo(player, spire, profile.spireCheckpoint, Config.SPIRE_TOWNS.get() ? 0 : 1, SpireData.get(player.server.overworld()).season);
+    }
+
+    /** Where re-entering a floor lands: the next unbeaten level when the hunter stopped mid-floor (saved on the profile, so it survives restarts), otherwise the town. */
+    public static int resumeLevel(HunterProfile profile, int floor) {
+        if (floor == profile.spireFloor && nextLevel(profile) > 1) {
+            return nextLevel(profile);
+        }
+        return Config.SPIRE_TOWNS.get() ? 0 : 1;
     }
 
     public static void newSeason(ServerPlayer admin) {
@@ -313,6 +321,9 @@ public final class SpireService {
         if (floor > p.spireFloor || (floor == p.spireFloor && level > nextLevel(p))) {
             p.spireFloor = floor;
             p.endgame.putInt(LEVEL_KEY, Math.max(1, level));
+        }
+        if (level == 1 && floor == p.spireFloor && nextLevel(p) > 1) {
+            level = nextLevel(p); // the town portal skips levels this hunter already beat
         }
         goTo(player, spire, floor, level, SpireData.get(player.server.overworld()).season);
     }

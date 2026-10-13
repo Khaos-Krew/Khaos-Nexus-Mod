@@ -21,7 +21,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class SpirePortalBlockEntity extends BlockEntity implements GeoBlockEntity {
     private static final RawAnimation OPEN = RawAnimation.begin().thenLoop("animation.nexus_rift.open");
-    private static final RawAnimation CLOSED = RawAnimation.begin().thenLoop("animation.nexus_rift.closed");
+    // Dormant gates keep the open rift shape (dimmed by the renderer) so they read clearly as a gate.
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private boolean lit;
     private GateRank rank = GateRank.E;
@@ -99,7 +99,7 @@ public class SpirePortalBlockEntity extends BlockEntity implements GeoBlockEntit
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "rift", 10, state -> state.setAndContinue(this.lit ? OPEN : CLOSED)));
+        controllers.add(new AnimationController<>(this, "rift", 10, state -> state.setAndContinue(OPEN)));
     }
 
     @Override

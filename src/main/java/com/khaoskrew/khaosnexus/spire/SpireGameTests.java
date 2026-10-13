@@ -119,4 +119,20 @@ public class SpireGameTests {
         helper.assertTrue(p.spireBest == 3, "migration runs once");
         helper.succeed();
     }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    public static void spireLevelProgressSurvivesRestart(GameTestHelper helper) {
+        HunterProfile p = new HunterProfile();
+        SpireService.migrate(p);
+        p.spireFloor = 4;
+        p.spireCheckpoint = 4;
+        p.endgame.putInt(SpireService.LEVEL_KEY, 7);
+        HunterProfile reloaded = new HunterProfile();
+        reloaded.deserializeNBT(helper.getLevel().registryAccess(), p.serializeNBT(helper.getLevel().registryAccess()));
+        helper.assertTrue(reloaded.spireFloor == 4 && SpireService.nextLevel(reloaded) == 7, "floor and level are saved with the profile");
+        helper.assertTrue(SpireService.resumeLevel(reloaded, 4) == 7, "re-entering mid-floor resumes at the next unbeaten level");
+        reloaded.endgame.putInt(SpireService.LEVEL_KEY, 1);
+        helper.assertTrue(SpireService.resumeLevel(reloaded, 4) == 0, "a fresh floor starts in its town");
+        helper.succeed();
+    }
 }

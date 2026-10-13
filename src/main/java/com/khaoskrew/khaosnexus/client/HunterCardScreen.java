@@ -202,8 +202,8 @@ public class HunterCardScreen extends Screen {
         int hi = next == null ? lo : HunterRanks.threshold(next);
         int prestige = p.endgame.getInt("Prestige");
         line(g, x, y, Component.translatable("khaosnexus.card.rank"), prestige <= 0 ? Component.translatable(rank.translationKey())
-                : Component.translatable(rank.translationKey()).copy().append("  ·  ")
-                        .append(Component.translatable(prestige >= 2 ? "khaosnexus.prestige.national" : "khaosnexus.prestige.ss")));
+                : Component.translatable(prestige >= 2 ? "khaosnexus.prestige.national" : "khaosnexus.prestige.ss").copy()
+                        .withStyle(prestige >= 2 ? net.minecraft.ChatFormatting.GOLD : net.minecraft.ChatFormatting.LIGHT_PURPLE));
         line(g, x, y + 12, Component.translatable("khaosnexus.card.level"),
                 Component.translatable("khaosnexus.card.level_value", com.khaoskrew.khaosnexus.skill.SkillService.level(p.xp), p.xp, next == null ? "-" : String.valueOf(hi)));
         int bar = next == null ? 180 : (int) (180 * Math.max(0, Math.min(1, (p.xp - lo) / (double) Math.max(1, hi - lo))));
