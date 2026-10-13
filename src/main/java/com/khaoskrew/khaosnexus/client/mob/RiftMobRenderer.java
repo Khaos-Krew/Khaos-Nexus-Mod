@@ -52,6 +52,8 @@ public class RiftMobRenderer extends GeoEntityRenderer<RiftMob> {
             model.getBone("sword_back").ifPresent(b -> {
                 b.setHidden(drawn);
                 model.getBone("sword").ifPresent(h -> h.setHidden(!drawn));
+                model.getBone("right_grip").ifPresent(h -> h.setHidden(!drawn));   // closed fist only around the sword
+                model.getBone("right_open").ifPresent(h -> h.setHidden(drawn));
             });
         }
         super.preRender(pose, mob, model, buffer, consumer, reRender, partialTick, light, overlay, color);

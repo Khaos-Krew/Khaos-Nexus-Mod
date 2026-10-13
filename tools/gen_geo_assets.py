@@ -237,6 +237,13 @@ def rig_warden():
     x = -15
     gb = grip_fist(r, 'right_hand', (x, 28.5, 0), (GRIP_TILT, 0, 0), 8.4, -1)
     r.bone('sword', gb, (x, 28.5, 0))
+    # open hand shown while the sword is sheathed (renderer swaps it with the grip fist)
+    ob = r.bone('right_open', 'right_hand', (x, 30, 0))
+    B(ob, (x, 28.2, 0), (7.6, 5.6, 8.4), 'fist'); B(ob, (x - 4.0, 28.4, 0), (0.8, 4.8, 7.4), 'gauntlet')
+    for i, zz in enumerate((-3.0, -1.0, 1.0, 3.0)):
+        B(ob, (x + 0.4, 23.6 - (0.6 if i in (1, 2) else 0), zz), (6.0, 4.6, 1.7), 'gauntlet', rot=(0, 0, 8))   # relaxed fingers
+        B(ob, (x + 0.6, 21.0 - (0.6 if i in (1, 2) else 0), zz), (5.0, 1.6, 1.5), 'crown', rot=(0, 0, 14))   # fingertips
+    B(ob, (x + 3.4, 26.4, -3.6), (1.8, 4.4, 2.0), 'gauntlet', rot=(0, 0, -25))                               # thumb
     sword_parts('sword', x, 28.5, 0)
     # sheathed on the back: grip over the right shoulder, tip toward the left hip
     BACK_Z = 12.5; g = 52 - 30
