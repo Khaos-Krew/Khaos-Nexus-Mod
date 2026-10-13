@@ -114,6 +114,7 @@ public final class SpireService {
             }
             HunterProfile profile = HunterRanks.profile(player);
             profile.spireBest = Math.max(profile.spireBest, floor);
+            com.khaoskrew.khaosnexus.endgame.Leaderboards.recordSpire(player, data.season, floor);
             if (floor >= profile.spireFloor) {
                 profile.spireFloor = floor + 1;
                 com.khaoskrew.khaosnexus.compat.ProgressHooks.spireFloor(player, floor);

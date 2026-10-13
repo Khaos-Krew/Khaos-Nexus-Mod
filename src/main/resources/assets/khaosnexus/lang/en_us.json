@@ -400,5 +400,10 @@
   "khaosnexus.dungeon.red_locked": "This is a Red Gate. The way out only opens when the boss falls.",
   "khaosnexus.title.red_gate_survivor": "Red Gate Survivor",
   "khaosnexus.title.break_stopper": "Break Stopper",
-  "khaosnexus.gate.red_label": "Red %s"
+  "khaosnexus.gate.red_label": "Red %s",
+  "khaosnexus.top.header.clear": "Fastest %s-rank clears",
+  "khaosnexus.top.header.spire": "Highest Spire floor (season %s)",
+  "khaosnexus.top.header.weekly": "Weekly-modifier clears (week %s)",
+  "khaosnexus.top.empty": "No entries yet.",
+  "khaosnexus.top.placed": "New leaderboard time: #%1$s for %2$s-rank clears!"
 }

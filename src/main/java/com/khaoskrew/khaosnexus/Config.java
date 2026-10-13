@@ -471,6 +471,12 @@ public final class Config {
     public static final ModConfigSpec.ConfigValue<String> BREAK_MIN_RANK = SERVER_BUILDER
             .comment("Lowest gate rank that can break.")
             .define("dungeonBreakMinRank", "C");
+    public static final ModConfigSpec.BooleanValue LEADERBOARDS = SERVER_BUILDER
+            .comment("Server leaderboards: fastest clear per gate rank, Spire floor per season, weekly-modifier clears.")
+            .define("leaderboards", true);
+    public static final ModConfigSpec.IntValue LEADERBOARD_SIZE = SERVER_BUILDER
+            .comment("Entries shown by /khaosnexus top.")
+            .defineInRange("leaderboardSize", 10, 1, 50);
     // endgame-config-end
     static {
         SERVER_BUILDER.pop();

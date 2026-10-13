@@ -90,4 +90,33 @@ public class EndgameGameTests {
         helper.assertTrue(gate.isBroken() && gate.isActive(), "broken gate is active");
         helper.succeed();
     }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    public static void leaderboardsRankAndKeepBest(GameTestHelper helper) {
+        Leaderboards lb = new Leaderboards();
+        String clear = Leaderboards.clearBoard(GateRank.S);
+        java.util.UUID a = java.util.UUID.randomUUID();
+        java.util.UUID b = java.util.UUID.randomUUID();
+        lb.submit(clear, a, "Alpha", 2400);
+        lb.submit(clear, b, "Beta", 1800);
+        lb.submit(clear, a, "Alpha", 3000);
+        helper.assertTrue(lb.top(clear, 10).get(0).name().equals("Beta"), "fastest time first");
+        helper.assertTrue(lb.top(clear, 10).get(1).value() == 2400, "a slower run does not replace a best time");
+        String spire = Leaderboards.spireBoard(1);
+        lb.submit(spire, a, "Alpha", 12);
+        lb.submit(spire, b, "Beta", 30);
+        helper.assertTrue(lb.top(spire, 1).get(0).name().equals("Beta"), "highest floor first");
+        String weekly = Leaderboards.weeklyBoard(5);
+        lb.increment(weekly, a, "Alpha");
+        lb.increment(weekly, a, "Alpha");
+        helper.assertTrue(lb.top(weekly, 1).get(0).value() == 2, "weekly counter");
+        var tag = lb.save(new net.minecraft.nbt.CompoundTag(), helper.getLevel().registryAccess());
+        helper.assertTrue(tag.getCompound("Boards").getList(clear, 10).size() == 2, "boards save");
+        for (int i = 0; i < 60; i++) {
+            lb.submit(clear, java.util.UUID.randomUUID(), "P" + i, 5000 + i);
+        }
+        helper.assertTrue(lb.top(clear, 100).size() == 50, "boards trim to 50");
+        helper.assertTrue(Leaderboards.format(clear, lb.top(clear, 2)).getString().contains("1:30"), "times print as m:ss");
+        helper.succeed();
+    }
 }

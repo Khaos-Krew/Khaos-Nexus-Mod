@@ -175,6 +175,26 @@ public final class KhaosCommands {
                             player.displayClientMessage(net.minecraft.network.chat.Component.translatable("khaosnexus.dungeon.left"), false);
                             return 1;
                         })))
+                .then(Commands.literal("top")
+                        .then(Commands.argument("board", StringArgumentType.word())
+                                .suggests((c, b) -> net.minecraft.commands.SharedSuggestionProvider.suggest(
+                                        java.util.List.of("E", "D", "C", "B", "A", "S", "spire", "weekly"), b))
+                                .executes(context -> {
+                                    String arg = StringArgumentType.getString(context, "board");
+                                    var server = context.getSource().getServer();
+                                    String board = switch (arg.toLowerCase(Locale.ROOT)) {
+                                        case "spire" -> com.khaoskrew.khaosnexus.endgame.Leaderboards.spireBoard(
+                                                com.khaoskrew.khaosnexus.spire.SpireData.get(server.overworld()).season);
+                                        case "weekly" -> com.khaoskrew.khaosnexus.endgame.Leaderboards.weeklyBoard(
+                                                com.khaoskrew.khaosnexus.endgame.WeeklyModifiers.currentWeek());
+                                        default -> com.khaoskrew.khaosnexus.endgame.Leaderboards.clearBoard(
+                                                com.khaoskrew.khaosnexus.gate.GateRank.byName(arg.toUpperCase(Locale.ROOT)));
+                                    };
+                                    var top = com.khaoskrew.khaosnexus.endgame.Leaderboards.get(server)
+                                            .top(board, com.khaoskrew.khaosnexus.Config.LEADERBOARD_SIZE.get());
+                                    context.getSource().sendSuccess(() -> com.khaoskrew.khaosnexus.endgame.Leaderboards.format(board, top), false);
+                                    return top.size();
+                                })))
                 .then(Commands.literal("weekly").executes(context -> {
                     context.getSource().sendSuccess(com.khaoskrew.khaosnexus.endgame.WeeklyModifiers::describe, false);
                     return 1;

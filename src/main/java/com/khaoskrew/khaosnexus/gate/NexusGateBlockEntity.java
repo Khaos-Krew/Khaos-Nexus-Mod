@@ -55,6 +55,8 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
     private boolean broken;
     /** Game time the break clock started (set on first tick, so gates from older saves don't all break at once). */
     private long breakStart;
+    /** Game time this gate's fight began (activation, dungeon entry or break), for clear-time leaderboards. */
+    private long startedAt;
     private int waveSize;
     @Nullable
     private UUID activator;
@@ -198,6 +200,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
             this.activator = serverPlayer.getUUID();
         }
         this.active = true;
+        this.startedAt = server.getGameTime();
         this.waveSize = this.waveMobs.size();
         this.setChanged();
         this.sync();
@@ -254,6 +257,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         this.dungeonBox = layout.box();
         this.activator = player.getUUID();
         this.active = true;
+        this.startedAt = server.getGameTime();
         this.waveSize = Math.max(1, this.waveMobs.size());
         // Keep the gate ticking while everyone is inside the dungeon.
         ChunkPos chunk = new ChunkPos(this.getBlockPos());
@@ -486,6 +490,9 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
             if (near.distanceToSqr(center) > 48.0D * 48.0D) {
                 continue;
             }
+            if (this.startedAt > 0L && !this.broken) {
+                com.khaoskrew.khaosnexus.endgame.Leaderboards.recordClear(near, cleared, level.getGameTime() - this.startedAt);
+            }
             if (this.red) {
                 int base = cleared.tuning().hunterXp.get();
                 HunterRanks.addXp(near, com.khaoskrew.khaosnexus.endgame.RedGates.scaleXp(base, true) - base);
@@ -547,6 +554,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         tag.putBoolean("Red", this.red);
         tag.putBoolean("Broken", this.broken);
         tag.putLong("BreakStart", this.breakStart);
+        tag.putLong("StartedAt", this.startedAt);
         tag.putInt("WaveSize", this.waveSize);
         if (this.activator != null) {
             tag.putString("Activator", this.activator.toString());
@@ -583,6 +591,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         this.red = tag.getBoolean("Red");
         this.broken = tag.getBoolean("Broken");
         this.breakStart = tag.getLong("BreakStart");
+        this.startedAt = tag.getLong("StartedAt");
         this.waveSize = tag.getInt("WaveSize");
         this.activator = null;
         if (tag.contains("Activator")) {
