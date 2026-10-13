@@ -1,0 +1,18 @@
+{
+  "class": "ranger",
+  "min_level": 1,
+  "cost": 1,
+  "modifiers": [
+    {
+      "attribute": "minecraft:generic.attack_speed",
+      "amount": 0.3,
+      "operation": "add_value"
+    },
+    {
+      "attribute": "minecraft:generic.armor",
+      "amount": -1,
+      "operation": "add_value"
+    }
+  ],
+  "group": "ranger_a"
+}

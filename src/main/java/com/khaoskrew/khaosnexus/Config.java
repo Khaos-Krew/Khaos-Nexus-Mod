@@ -498,6 +498,15 @@ public final class Config {
     public static final ModConfigSpec.IntValue AURA_INTERVAL = SERVER_BUILDER
             .comment("Ticks between aura particle bursts.")
             .defineInRange("auraInterval", 10, 1, 200);
+    public static final ModConfigSpec.BooleanValue MASTERY = SERVER_BUILDER
+            .comment("Class mastery: hunter XP earned at rank S also fills a per-class mastery track. Perks are datapack files in data/<ns>/khaosnexus_mastery/.")
+            .define("mastery", true);
+    public static final ModConfigSpec.IntValue MASTERY_XP_PER_LEVEL = SERVER_BUILDER
+            .comment("Mastery XP per mastery level.")
+            .defineInRange("masteryXpPerLevel", 40, 1, 100000);
+    public static final ModConfigSpec.IntValue MASTERY_MAX_LEVEL = SERVER_BUILDER
+            .comment("Highest mastery level per class. Each level is one perk point.")
+            .defineInRange("masteryMaxLevel", 50, 1, 1000);
     // endgame-config-end
     static {
         SERVER_BUILDER.pop();

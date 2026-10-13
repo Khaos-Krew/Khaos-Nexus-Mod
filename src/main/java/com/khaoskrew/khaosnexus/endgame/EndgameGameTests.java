@@ -156,4 +156,32 @@ public class EndgameGameTests {
         }
         helper.succeed();
     }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    @SuppressWarnings("removal")
+    public static void masteryTracksAndSidegrades(GameTestHelper helper) {
+        var p = new com.khaoskrew.khaosnexus.hunter.HunterProfile();
+        p.classId = "tank";
+        Mastery.onXp(p, GateRank.A, 500);
+        helper.assertTrue(Mastery.level(p, "tank") == 0, "XP below S does not count");
+        Mastery.onXp(p, GateRank.S, Config.MASTERY_XP_PER_LEVEL.get() * 2);
+        helper.assertTrue(Mastery.level(p, "tank") == 2, "S-rank XP fills mastery");
+        Mastery.onXp(p, GateRank.S, 10_000_000);
+        helper.assertTrue(Mastery.level(p, "tank") == Config.MASTERY_MAX_LEVEL.get(), "mastery caps");
+        ResourceLocation bulwark = ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "tank_bulwark");
+        helper.assertTrue(Mastery.pick(p, ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "assassin_ghost")) != null, "other class perk refused");
+        helper.assertTrue(Mastery.pick(p, bulwark) == null, "pick perk");
+        helper.assertTrue("khaosnexus.mastery.group".equals(Mastery.pick(p, ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "tank_vanguard"))), "one perk per group");
+        var player = helper.makeMockServerPlayerInLevel();
+        com.khaoskrew.khaosnexus.hunter.HunterProfile live = com.khaoskrew.khaosnexus.hunter.HunterRanks.profile(player);
+        live.classId = "tank";
+        live.endgame = p.endgame.copy();
+        double armor = player.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.ARMOR);
+        Mastery.apply(player);
+        helper.assertTrue(player.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.ARMOR) == armor + 3, "perk modifiers applied");
+        Mastery.reset(live);
+        Mastery.apply(player);
+        helper.assertTrue(player.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.ARMOR) == armor, "reset removes modifiers");
+        helper.succeed();
+    }
 }

@@ -35,6 +35,23 @@ public final class EndgameCommands {
                                 Auras.unlockedIds(com.khaoskrew.khaosnexus.hunter.HunterRanks.profile(c.getSource().getPlayerOrException()))
                                         .stream().map(r -> r.getPath()), b))
                         .executes(c -> Auras.equip(c.getSource().getPlayerOrException(), StringArgumentType.getString(c, "id")) ? 1 : 0))));
+        root.then(Commands.literal("mastery")
+                .executes(c -> {
+                    ServerPlayer p = c.getSource().getPlayerOrException();
+                    p.displayClientMessage(Mastery.status(com.khaoskrew.khaosnexus.hunter.HunterRanks.profile(p)), false);
+                    return 1;
+                })
+                .then(Commands.literal("reset").executes(c -> {
+                    ServerPlayer p = c.getSource().getPlayerOrException();
+                    Mastery.reset(com.khaoskrew.khaosnexus.hunter.HunterRanks.profile(p));
+                    Mastery.apply(p);
+                    com.khaoskrew.khaosnexus.hunter.HunterRanks.sync(p);
+                    p.displayClientMessage(net.minecraft.network.chat.Component.translatable("khaosnexus.mastery.reset"), false);
+                    return 1;
+                }))
+                .then(Commands.literal("pick").then(Commands.argument("id", StringArgumentType.word())
+                        .suggests((c, b) -> SharedSuggestionProvider.suggest(JsonPool.MASTERY.all().keySet().stream().map(r -> r.getPath()), b))
+                        .executes(c -> Mastery.command(c.getSource().getPlayerOrException(), StringArgumentType.getString(c, "id")) ? 1 : 0))));
         // endgame-commands-end
         event.getDispatcher().register(root);
     }

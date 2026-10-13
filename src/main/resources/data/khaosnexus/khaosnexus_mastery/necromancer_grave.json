@@ -1,0 +1,18 @@
+{
+  "class": "necromancer",
+  "min_level": 1,
+  "cost": 1,
+  "modifiers": [
+    {
+      "attribute": "minecraft:generic.armor_toughness",
+      "amount": 2,
+      "operation": "add_value"
+    },
+    {
+      "attribute": "minecraft:generic.movement_speed",
+      "amount": -0.04,
+      "operation": "add_multiplied_base"
+    }
+  ],
+  "group": "necromancer_a"
+}

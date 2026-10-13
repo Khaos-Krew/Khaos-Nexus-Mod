@@ -1,0 +1,12 @@
+{
+  "class": "any",
+  "min_level": 25,
+  "cost": 1,
+  "modifiers": [
+    {
+      "attribute": "minecraft:generic.luck",
+      "amount": 1,
+      "operation": "add_value"
+    }
+  ]
+}

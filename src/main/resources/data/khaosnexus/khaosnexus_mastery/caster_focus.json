@@ -1,0 +1,18 @@
+{
+  "class": "caster",
+  "min_level": 1,
+  "cost": 1,
+  "modifiers": [
+    {
+      "attribute": "minecraft:generic.luck",
+      "amount": 2,
+      "operation": "add_value"
+    },
+    {
+      "attribute": "minecraft:generic.movement_speed",
+      "amount": -0.03,
+      "operation": "add_multiplied_base"
+    }
+  ],
+  "group": "caster_a"
+}

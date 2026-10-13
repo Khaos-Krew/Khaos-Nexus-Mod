@@ -1,0 +1,18 @@
+{
+  "class": "lifebinder",
+  "min_level": 1,
+  "cost": 1,
+  "modifiers": [
+    {
+      "attribute": "minecraft:generic.max_health",
+      "amount": 4,
+      "operation": "add_value"
+    },
+    {
+      "attribute": "minecraft:generic.attack_damage",
+      "amount": -1,
+      "operation": "add_value"
+    }
+  ],
+  "group": "lifebinder_a"
+}

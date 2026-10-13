@@ -68,6 +68,7 @@ public final class HunterRanks {
         if (amount == 0) {
             return;
         }
+        com.khaoskrew.khaosnexus.endgame.Mastery.onXp(profile(player), rankOf(player), amount);
         setXp(player, profile(player).xp + amount);
     }
 
