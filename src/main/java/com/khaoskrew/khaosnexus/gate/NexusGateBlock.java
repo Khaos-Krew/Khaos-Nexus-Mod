@@ -44,7 +44,8 @@ public class NexusGateBlock extends BaseEntityBlock {
 
     @Override
     protected RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
+        // The whole frame (including this block's stone) is drawn by NexusGateRenderer.
+        return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
     @Override

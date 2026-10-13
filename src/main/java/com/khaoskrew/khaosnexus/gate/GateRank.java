@@ -8,12 +8,12 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.BossEvent;
 
 public enum GateRank {
-    E(0xFFB5B5B5, BossEvent.BossBarColor.WHITE, Config.RANK_E),
-    D(0xFF3DDC6A, BossEvent.BossBarColor.GREEN, Config.RANK_D),
-    C(0xFF3D8BFF, BossEvent.BossBarColor.BLUE, Config.RANK_C),
-    B(0xFFB44DFF, BossEvent.BossBarColor.PURPLE, Config.RANK_B),
-    A(0xFFFFC14D, BossEvent.BossBarColor.YELLOW, Config.RANK_A),
-    S(0xFFFF4D4D, BossEvent.BossBarColor.RED, Config.RANK_S);
+    E(0xFFE6E5E5, BossEvent.BossBarColor.WHITE, Config.RANK_E),
+    D(0xFF6CBB48, BossEvent.BossBarColor.GREEN, Config.RANK_D),
+    C(0xFF1973D2, BossEvent.BossBarColor.BLUE, Config.RANK_C),
+    B(0xFF9137CB, BossEvent.BossBarColor.PURPLE, Config.RANK_B),
+    A(0xFFDD8723, BossEvent.BossBarColor.YELLOW, Config.RANK_A),
+    S(0xFFCC3144, BossEvent.BossBarColor.RED, Config.RANK_S);
 
     private final int color;
     private final BossEvent.BossBarColor barColor;
