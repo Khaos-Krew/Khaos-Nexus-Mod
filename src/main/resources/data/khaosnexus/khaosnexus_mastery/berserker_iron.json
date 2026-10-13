@@ -1,0 +1,18 @@
+{
+  "class": "berserker",
+  "min_level": 1,
+  "cost": 1,
+  "modifiers": [
+    {
+      "attribute": "minecraft:generic.max_health",
+      "amount": 4,
+      "operation": "add_value"
+    },
+    {
+      "attribute": "minecraft:generic.attack_speed",
+      "amount": -0.2,
+      "operation": "add_value"
+    }
+  ],
+  "group": "berserker_a"
+}

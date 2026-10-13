@@ -1,0 +1,16 @@
+{
+  "floor": "minecraft:polished_blackstone",
+  "accent": "minecraft:gilded_blackstone",
+  "wall": "minecraft:nether_bricks",
+  "pillar": "minecraft:red_nether_bricks",
+  "light": "minecraft:shroomlight",
+  "trim": "minecraft:chiseled_polished_blackstone",
+  "rank": "A",
+  "bosses": [
+    "minecraft:blaze",
+    "khaosnexus:rift_brute",
+    "minecraft:wither_skeleton",
+    "minecraft:piglin_brute"
+  ],
+  "final_boss": "khaosnexus:rift_warden"
+}

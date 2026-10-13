@@ -1,0 +1,18 @@
+{
+  "class": "berserker",
+  "min_level": 1,
+  "cost": 1,
+  "modifiers": [
+    {
+      "attribute": "minecraft:generic.attack_damage",
+      "amount": 2,
+      "operation": "add_value"
+    },
+    {
+      "attribute": "minecraft:generic.armor",
+      "amount": -3,
+      "operation": "add_value"
+    }
+  ],
+  "group": "berserker_a"
+}

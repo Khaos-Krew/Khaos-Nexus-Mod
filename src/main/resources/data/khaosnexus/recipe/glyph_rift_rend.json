@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ars_nouveau"
+    }
+  ],
+  "type": "ars_nouveau:glyph",
+  "exp": 55,
+  "inputs": [
+    {
+      "item": "khaosnexus:rift_source_shard"
+    },
+    {
+      "item": "khaosnexus:rift_essence"
+    },
+    {
+      "item": "ars_nouveau:abjuration_essence"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "khaosnexus:glyph_rift_rend"
+  }
+}

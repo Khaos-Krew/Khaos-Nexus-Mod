@@ -1,0 +1,11 @@
+{
+  "weight": 10,
+  "effects": {
+    "mob_speed": 1.25,
+    "mob_damage": 1.15
+  },
+  "rewards": {
+    "xp_multiplier": 1.25,
+    "rift_cores": 1
+  }
+}

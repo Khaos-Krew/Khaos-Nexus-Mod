@@ -1,0 +1,20 @@
+{
+  "class": "assassin",
+  "bonuses": [
+    {
+      "attribute": "apothic_attributes:crit_chance",
+      "amount": 0.08,
+      "operation": "add_value"
+    },
+    {
+      "attribute": "apothic_attributes:crit_damage",
+      "amount": 0.15,
+      "operation": "add_value"
+    },
+    {
+      "attribute": "apothic_attributes:dodge_chance",
+      "amount": 0.05,
+      "operation": "add_value"
+    }
+  ]
+}

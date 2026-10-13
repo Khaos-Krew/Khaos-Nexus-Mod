@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ars_nouveau"
+    }
+  ],
+  "type": "ars_nouveau:imbuement",
+  "input": {
+    "item": "minecraft:amethyst_shard"
+  },
+  "output": {
+    "count": 1,
+    "id": "khaosnexus:rift_source_shard"
+  },
+  "pedestalItems": [
+    {
+      "item": "khaosnexus:rift_essence"
+    },
+    {
+      "item": "ars_nouveau:source_gem"
+    }
+  ],
+  "source": 500
+}

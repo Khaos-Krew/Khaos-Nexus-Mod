@@ -1,0 +1,14 @@
+{
+  "radius": 8,
+  "heal_allies": 16,
+  "self_effects": [
+    {
+      "id": "minecraft:regeneration",
+      "amplifier": 2,
+      "seconds": 8
+    }
+  ],
+  "cooldown_seconds": 90,
+  "particle": "minecraft:heart",
+  "class": "lifebinder"
+}

@@ -1,0 +1,7 @@
+{
+  "radius": 6,
+  "damage": 22,
+  "cooldown_seconds": 65,
+  "particle": "minecraft:sweep_attack",
+  "class": "berserker"
+}

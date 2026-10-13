@@ -1,0 +1,14 @@
+{
+  "radius": 9,
+  "damage": 12,
+  "enemy_effects": [
+    {
+      "id": "minecraft:glowing",
+      "amplifier": 0,
+      "seconds": 10
+    }
+  ],
+  "cooldown_seconds": 55,
+  "particle": "minecraft:crit",
+  "class": "ranger"
+}

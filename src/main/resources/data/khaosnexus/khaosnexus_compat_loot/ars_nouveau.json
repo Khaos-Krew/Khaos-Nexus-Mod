@@ -1,0 +1,29 @@
+{
+  "mod": "ars_nouveau",
+  "entries": [
+    {
+      "ranks": {
+        "E": 0.15,
+        "D": 0.2,
+        "C": 0.25,
+        "B": 0.3,
+        "A": 0.35,
+        "S": 0.4
+      },
+      "stack": {
+        "id": "khaosnexus:rift_source_shard",
+        "count": 2
+      }
+    },
+    {
+      "ranks": {
+        "B": 0.04,
+        "A": 0.06,
+        "S": 0.1
+      },
+      "stack": {
+        "id": "khaosnexus:glyph_rift_rend"
+      }
+    }
+  ]
+}

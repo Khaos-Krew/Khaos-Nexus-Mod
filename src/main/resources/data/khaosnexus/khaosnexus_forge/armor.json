@@ -1,0 +1,18 @@
+{
+  "name": "khaosnexus.forge.recipe.armor",
+  "inputs": ["#minecraft:enchantable/armor"],
+  "attribute": "minecraft:generic.armor",
+  "slot": "armor",
+  "levels": [
+    {"rank": "E", "tier": "E", "count": 3,  "essence": 2,  "core": 0, "bonus": 0.5},
+    {"rank": "D", "tier": "D", "count": 5,  "essence": 3,  "core": 0, "bonus": 1.0},
+    {"rank": "C", "tier": "C", "count": 6,  "essence": 5,  "core": 1, "bonus": 1.5},
+    {"rank": "B", "tier": "B", "count": 6,  "essence": 8,  "core": 1, "bonus": 2.0},
+    {"rank": "A", "tier": "A", "count": 8,  "essence": 12, "core": 2, "bonus": 2.75},
+    {"rank": "S", "tier": "S", "count": 10, "essence": 16, "core": 4, "bonus": 3.5}
+  ],
+  "class_bonus": {
+    "tank":       {"attribute": "minecraft:generic.armor_toughness", "per_level": 0.5},
+    "lifebinder": {"attribute": "minecraft:generic.max_health", "per_level": 0.5}
+  }
+}

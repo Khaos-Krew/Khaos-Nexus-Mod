@@ -1,0 +1,32 @@
+{
+  "display_name": {"translate": "theme.khaosnexus.frostbound_crypt"},
+  "weight": 10,
+  "min_rank": "E",
+  "max_rank": "S",
+  "biome_weights": [
+    {"biomes": "#c:is_snowy", "multiplier": 4.0},
+    {"biomes": "#c:is_icy", "multiplier": 4.0},
+    {"biomes": "#minecraft:is_mountain", "multiplier": 2.0}
+  ],
+  "palette": {
+    "minecraft:polished_blackstone_bricks": "minecraft:packed_ice",
+    "minecraft:cracked_polished_blackstone_bricks": "minecraft:cracked_stone_bricks",
+    "minecraft:chiseled_polished_blackstone": "minecraft:chiseled_stone_bricks",
+    "minecraft:gilded_blackstone": "minecraft:snow_block",
+    "minecraft:deepslate_tiles": "minecraft:polished_diorite",
+    "minecraft:cracked_deepslate_tiles": "minecraft:calcite",
+    "minecraft:deepslate_bricks": "minecraft:stone_bricks",
+    "minecraft:obsidian": "minecraft:blue_ice",
+    "minecraft:crying_obsidian": "minecraft:smooth_quartz",
+    "minecraft:amethyst_block": "minecraft:sea_lantern",
+    "minecraft:amethyst_cluster": "minecraft:large_amethyst_bud",
+    "minecraft:purple_stained_glass": "minecraft:light_blue_stained_glass",
+    "minecraft:magma_block": "minecraft:blue_ice",
+    "minecraft:polished_blackstone_pressure_plate": "minecraft:stone_pressure_plate"
+  },
+  "decor": [
+    {"block": "minecraft:snow", "on": "floor", "chance": 0.18},
+    {"block": "minecraft:cobweb", "on": "ceiling", "chance": 0.015}
+  ],
+  "hazards": [{"type": "khaosnexus:chill"}]
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "khaosnexus:item/rift_ghoul_spawn_egg"
+  }
+}

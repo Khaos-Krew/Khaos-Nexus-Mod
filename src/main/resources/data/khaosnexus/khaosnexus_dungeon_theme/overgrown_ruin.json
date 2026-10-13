@@ -1,0 +1,36 @@
+{
+  "display_name": {"translate": "theme.khaosnexus.overgrown_ruin"},
+  "weight": 10,
+  "min_rank": "E",
+  "max_rank": "S",
+  "biome_weights": [
+    {"biomes": "#minecraft:is_jungle", "multiplier": 4.0},
+    {"biomes": "#c:is_swamp", "multiplier": 3.0},
+    {"biomes": "#minecraft:is_forest", "multiplier": 2.0},
+    {"biomes": "minecraft:lush_caves", "multiplier": 4.0}
+  ],
+  "palette": {
+    "minecraft:polished_blackstone_bricks": "minecraft:mossy_stone_bricks",
+    "minecraft:cracked_polished_blackstone_bricks": "minecraft:cracked_stone_bricks",
+    "minecraft:chiseled_polished_blackstone": "minecraft:chiseled_stone_bricks",
+    "minecraft:gilded_blackstone": "minecraft:mossy_cobblestone",
+    "minecraft:deepslate_tiles": "minecraft:mud_bricks",
+    "minecraft:cracked_deepslate_tiles": "minecraft:moss_block",
+    "minecraft:deepslate_bricks": "minecraft:mossy_cobblestone",
+    "minecraft:obsidian": "minecraft:jungle_log",
+    "minecraft:crying_obsidian": "minecraft:rooted_dirt",
+    "minecraft:amethyst_block": "minecraft:shroomlight",
+    "minecraft:amethyst_cluster": "minecraft:fern",
+    "minecraft:soul_lantern": "minecraft:lantern",
+    "minecraft:purple_stained_glass": "minecraft:green_stained_glass",
+    "minecraft:magma_block": "minecraft:moss_block",
+    "minecraft:polished_blackstone_pressure_plate": "minecraft:mangrove_pressure_plate"
+  },
+  "decor": [
+    {"block": "minecraft:moss_carpet", "on": "floor", "chance": 0.22},
+    {"block": "minecraft:short_grass", "on": "floor", "chance": 0.04},
+    {"block": "minecraft:cave_vines", "on": "ceiling", "chance": 0.05},
+    {"block": "minecraft:spore_blossom", "on": "ceiling", "chance": 0.006}
+  ],
+  "hazards": [{"type": "khaosnexus:thorns"}]
+}

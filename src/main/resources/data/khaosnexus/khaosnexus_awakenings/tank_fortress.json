@@ -1,0 +1,25 @@
+{
+  "self_effects": [
+    {
+      "id": "minecraft:resistance",
+      "amplifier": 2,
+      "seconds": 8
+    },
+    {
+      "id": "minecraft:absorption",
+      "amplifier": 3,
+      "seconds": 15
+    }
+  ],
+  "radius": 6,
+  "enemy_effects": [
+    {
+      "id": "minecraft:slowness",
+      "amplifier": 1,
+      "seconds": 6
+    }
+  ],
+  "cooldown_seconds": 90,
+  "particle": "minecraft:wax_on",
+  "class": "tank"
+}

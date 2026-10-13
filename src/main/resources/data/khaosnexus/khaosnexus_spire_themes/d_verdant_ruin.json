@@ -1,0 +1,16 @@
+{
+  "floor": "minecraft:moss_block",
+  "accent": "minecraft:mossy_stone_bricks",
+  "wall": "minecraft:mossy_cobblestone",
+  "pillar": "minecraft:stripped_jungle_log",
+  "light": "minecraft:ochre_froglight",
+  "trim": "minecraft:chiseled_stone_bricks",
+  "rank": "D",
+  "bosses": [
+    "khaosnexus:rift_ghoul",
+    "minecraft:vindicator",
+    "khaosnexus:rift_brute",
+    "minecraft:evoker"
+  ],
+  "final_boss": "khaosnexus:rift_warden"
+}

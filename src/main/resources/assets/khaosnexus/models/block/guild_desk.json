@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "khaosnexus:block/guild_desk_top",
+    "side": "khaosnexus:block/guild_desk_side",
+    "bottom": "khaosnexus:block/guild_desk_bottom"
+  }
+}

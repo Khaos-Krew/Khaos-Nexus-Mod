@@ -1,0 +1,28 @@
+{
+  "rules": {
+    "solo": true,
+    "class": "any",
+    "min_rank": "S",
+    "time_limit_seconds": 600
+  },
+  "stages": [
+    [
+      "khaosnexus:rift_ghoul",
+      "khaosnexus:rift_ghoul",
+      "khaosnexus:rift_ghoul",
+      "khaosnexus:rift_ghoul"
+    ],
+    [
+      "khaosnexus:rift_brute",
+      "khaosnexus:void_caster",
+      "khaosnexus:void_caster"
+    ],
+    [
+      "khaosnexus:rift_warden"
+    ]
+  ],
+  "health_scale": 1.0,
+  "heal_after": 2,
+  "title": "challenge_wardens_trial",
+  "rift_cores": 4
+}

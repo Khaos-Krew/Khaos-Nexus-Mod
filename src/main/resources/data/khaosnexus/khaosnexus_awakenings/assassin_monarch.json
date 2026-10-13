@@ -1,0 +1,22 @@
+{
+  "self_effects": [
+    {
+      "id": "minecraft:invisibility",
+      "amplifier": 0,
+      "seconds": 6
+    },
+    {
+      "id": "minecraft:speed",
+      "amplifier": 2,
+      "seconds": 6
+    },
+    {
+      "id": "minecraft:strength",
+      "amplifier": 1,
+      "seconds": 6
+    }
+  ],
+  "cooldown_seconds": 75,
+  "particle": "minecraft:smoke",
+  "class": "assassin"
+}

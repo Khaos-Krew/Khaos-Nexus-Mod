@@ -1,0 +1,15 @@
+{
+  "mod": "relics",
+  "entries": [
+    {
+      "ranks": {
+        "B": 0.03,
+        "A": 0.06,
+        "S": 0.1
+      },
+      "stack": {
+        "id": "khaosnexus:rift_hunters_sigil"
+      }
+    }
+  ]
+}

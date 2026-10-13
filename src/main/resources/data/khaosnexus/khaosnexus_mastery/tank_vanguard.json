@@ -1,0 +1,18 @@
+{
+  "class": "tank",
+  "min_level": 1,
+  "cost": 1,
+  "modifiers": [
+    {
+      "attribute": "minecraft:generic.knockback_resistance",
+      "amount": 0.3,
+      "operation": "add_value"
+    },
+    {
+      "attribute": "minecraft:generic.max_health",
+      "amount": -2,
+      "operation": "add_value"
+    }
+  ],
+  "group": "tank_a"
+}

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": ["IAI", "OTO", "OOO"],
+  "key": {
+    "I": {"item": "minecraft:iron_block"},
+    "A": {"item": "minecraft:amethyst_shard"},
+    "T": {"item": "minecraft:smithing_table"},
+    "O": {"item": "minecraft:obsidian"}
+  },
+  "result": {"id": "khaosnexus:hunter_forge", "count": 1}
+}

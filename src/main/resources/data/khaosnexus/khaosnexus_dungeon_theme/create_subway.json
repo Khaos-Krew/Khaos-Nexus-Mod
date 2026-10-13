@@ -1,0 +1,29 @@
+{
+  "display_name": {"translate": "theme.khaosnexus.create_subway"},
+  "weight": 8,
+  "min_rank": "D",
+  "max_rank": "S",
+  "required_mods": ["create"],
+  "pools": {
+    "linear": "khaosnexus:dungeon/create_subway/linear/start",
+    "branching": "khaosnexus:dungeon/create_subway/branching/start"
+  },
+  "palette": {
+    "minecraft:polished_blackstone_bricks": "create:cut_andesite_bricks",
+    "minecraft:cracked_polished_blackstone_bricks": "create:cut_andesite",
+    "minecraft:chiseled_polished_blackstone": "create:andesite_casing",
+    "minecraft:gilded_blackstone": "create:industrial_iron_block",
+    "minecraft:deepslate_tiles": "create:polished_cut_andesite",
+    "minecraft:cracked_deepslate_tiles": "create:railway_casing",
+    "minecraft:deepslate_bricks": "create:cut_andesite_bricks",
+    "minecraft:obsidian": "create:industrial_iron_block",
+    "minecraft:crying_obsidian": "create:andesite_casing",
+    "minecraft:amethyst_block": "minecraft:ochre_froglight",
+    "minecraft:purple_stained_glass": "create:framed_glass",
+    "minecraft:magma_block": "create:railway_casing"
+  },
+  "decor": [
+    {"block": "minecraft:chain", "on": "ceiling", "chance": 0.03},
+    {"block": "minecraft:cobweb", "on": "ceiling", "chance": 0.02}
+  ]
+}

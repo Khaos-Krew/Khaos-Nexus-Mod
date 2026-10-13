@@ -1,0 +1,14 @@
+{
+  "radius": 8,
+  "damage": 20,
+  "enemy_effects": [
+    {
+      "id": "minecraft:slowness",
+      "amplifier": 1,
+      "seconds": 4
+    }
+  ],
+  "cooldown_seconds": 70,
+  "particle": "minecraft:flame",
+  "class": "caster"
+}

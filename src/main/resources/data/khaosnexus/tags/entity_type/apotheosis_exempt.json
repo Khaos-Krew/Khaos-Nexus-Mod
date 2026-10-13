@@ -1,0 +1,23 @@
+{
+  "replace": false,
+  "values": [
+    "khaosnexus:rift_warden",
+    "khaosnexus:spire_guardian",
+    {
+      "id": "cataclysm:ender_guardian",
+      "required": false
+    },
+    {
+      "id": "cataclysm:ignis",
+      "required": false
+    },
+    {
+      "id": "cataclysm:the_harbinger",
+      "required": false
+    },
+    {
+      "id": "cataclysm:netherite_monstrosity",
+      "required": false
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "mod": "artifacts",
+  "entries": [
+    {
+      "ranks": {
+        "D": 0.05,
+        "C": 0.07,
+        "B": 0.08
+      },
+      "stack": {
+        "id": "khaosnexus:rift_lantern",
+        "components": {
+          "curios:attribute_modifiers": {
+            "modifiers": [
+              {
+                "type": "minecraft:generic.luck",
+                "id": "khaosnexus:rift_lantern",
+                "amount": 1.0,
+                "operation": "add_value",
+                "slot": "belt"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "ranks": {
+        "C": 0.05,
+        "B": 0.07,
+        "A": 0.08
+      },
+      "stack": {
+        "id": "khaosnexus:voidstep_anklet",
+        "components": {
+          "curios:attribute_modifiers": {
+            "modifiers": [
+              {
+                "type": "minecraft:generic.movement_speed",
+                "id": "khaosnexus:voidstep_anklet",
+                "amount": 0.08,
+                "operation": "add_multiplied_base",
+                "slot": "feet"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "ranks": {
+        "B": 0.04,
+        "A": 0.06,
+        "S": 0.09
+      },
+      "stack": {
+        "id": "khaosnexus:gatebreaker_band",
+        "components": {
+          "curios:attribute_modifiers": {
+            "modifiers": [
+              {
+                "type": "minecraft:generic.attack_damage",
+                "id": "khaosnexus:gatebreaker_band",
+                "amount": 2.0,
+                "operation": "add_value",
+                "slot": "ring"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

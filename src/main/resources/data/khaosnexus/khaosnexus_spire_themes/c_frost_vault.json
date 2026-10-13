@@ -1,0 +1,16 @@
+{
+  "floor": "minecraft:packed_ice",
+  "accent": "minecraft:blue_ice",
+  "wall": "minecraft:snow_block",
+  "pillar": "minecraft:prismarine_bricks",
+  "light": "minecraft:sea_lantern",
+  "trim": "minecraft:dark_prismarine",
+  "rank": "B",
+  "bosses": [
+    "minecraft:stray",
+    "khaosnexus:void_caster",
+    "khaosnexus:rift_stalker",
+    "minecraft:vindicator"
+  ],
+  "final_boss": "khaosnexus:spire_guardian"
+}

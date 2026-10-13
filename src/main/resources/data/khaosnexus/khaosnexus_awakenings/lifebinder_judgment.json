@@ -1,0 +1,8 @@
+{
+  "radius": 7,
+  "damage": 12,
+  "heal_allies": 6,
+  "cooldown_seconds": 70,
+  "particle": "minecraft:end_rod",
+  "class": "lifebinder"
+}

@@ -1,0 +1,18 @@
+{
+  "class": "lifebinder",
+  "min_level": 1,
+  "cost": 1,
+  "modifiers": [
+    {
+      "attribute": "minecraft:generic.movement_speed",
+      "amount": 0.05,
+      "operation": "add_multiplied_base"
+    },
+    {
+      "attribute": "minecraft:generic.max_health",
+      "amount": -2,
+      "operation": "add_value"
+    }
+  ],
+  "group": "lifebinder_a"
+}

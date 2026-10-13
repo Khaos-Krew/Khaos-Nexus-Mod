@@ -1,0 +1,119 @@
+{
+  "class": "tank",
+  "nodes": [
+    {
+      "id": "primary_power",
+      "kind": "primary",
+      "stat": "power",
+      "per_rank": 0.12,
+      "max_rank": 3,
+      "cost": 1,
+      "min_rank": "E",
+      "requires": [],
+      "x": 0,
+      "y": 0
+    },
+    {
+      "id": "primary_cooldown",
+      "kind": "primary",
+      "stat": "cooldown",
+      "per_rank": 0.08,
+      "max_rank": 3,
+      "cost": 1,
+      "min_rank": "E",
+      "requires": [
+        "primary_power"
+      ],
+      "x": 0,
+      "y": 1
+    },
+    {
+      "id": "secondary_power",
+      "kind": "secondary",
+      "stat": "power",
+      "per_rank": 0.12,
+      "max_rank": 3,
+      "cost": 1,
+      "min_rank": "E",
+      "requires": [],
+      "x": 1,
+      "y": 0
+    },
+    {
+      "id": "secondary_cooldown",
+      "kind": "secondary",
+      "stat": "cooldown",
+      "per_rank": 0.08,
+      "max_rank": 3,
+      "cost": 1,
+      "min_rank": "E",
+      "requires": [
+        "secondary_power"
+      ],
+      "x": 1,
+      "y": 1
+    },
+    {
+      "id": "secondary_radius",
+      "kind": "secondary",
+      "stat": "radius",
+      "per_rank": 0.15,
+      "max_rank": 2,
+      "cost": 1,
+      "min_rank": "C",
+      "requires": [
+        "secondary_power"
+      ],
+      "x": 1,
+      "y": 2
+    },
+    {
+      "id": "passive_a",
+      "kind": "passive",
+      "stat": "attribute",
+      "per_rank": 2,
+      "max_rank": 3,
+      "cost": 1,
+      "min_rank": "E",
+      "requires": [],
+      "x": 2,
+      "y": 0,
+      "attribute": "minecraft:generic.max_health",
+      "operation": "add_value"
+    },
+    {
+      "id": "passive_b",
+      "kind": "passive",
+      "stat": "attribute",
+      "per_rank": 1.5,
+      "max_rank": 3,
+      "cost": 1,
+      "min_rank": "D",
+      "requires": [
+        "passive_a"
+      ],
+      "x": 2,
+      "y": 1,
+      "attribute": "minecraft:generic.armor",
+      "operation": "add_value"
+    },
+    {
+      "id": "capstone",
+      "kind": "capstone",
+      "stat": "attribute",
+      "per_rank": 4,
+      "max_rank": 1,
+      "cost": 3,
+      "min_rank": "A",
+      "requires": [
+        "primary_power",
+        "secondary_power",
+        "passive_a"
+      ],
+      "x": 1,
+      "y": 3,
+      "attribute": "minecraft:generic.armor_toughness",
+      "operation": "add_value"
+    }
+  ]
+}

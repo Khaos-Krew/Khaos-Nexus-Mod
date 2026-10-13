@@ -1,0 +1,18 @@
+{
+  "class": "any",
+  "min_level": 10,
+  "cost": 1,
+  "modifiers": [
+    {
+      "attribute": "minecraft:generic.movement_speed",
+      "amount": 0.04,
+      "operation": "add_multiplied_base"
+    },
+    {
+      "attribute": "minecraft:generic.armor",
+      "amount": -1,
+      "operation": "add_value"
+    }
+  ],
+  "group": "any_b"
+}

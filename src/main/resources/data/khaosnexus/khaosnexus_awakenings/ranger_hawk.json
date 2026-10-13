@@ -1,0 +1,22 @@
+{
+  "self_effects": [
+    {
+      "id": "minecraft:speed",
+      "amplifier": 2,
+      "seconds": 10
+    },
+    {
+      "id": "minecraft:jump_boost",
+      "amplifier": 2,
+      "seconds": 10
+    },
+    {
+      "id": "minecraft:strength",
+      "amplifier": 0,
+      "seconds": 10
+    }
+  ],
+  "cooldown_seconds": 70,
+  "particle": "minecraft:cloud",
+  "class": "ranger"
+}

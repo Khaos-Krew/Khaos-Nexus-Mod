@@ -1,0 +1,30 @@
+{
+  "rules": {
+    "solo": true,
+    "class": "any",
+    "min_rank": "S",
+    "time_limit_seconds": 720
+  },
+  "stages": [
+    [
+      "khaosnexus:void_caster",
+      "khaosnexus:void_caster",
+      "khaosnexus:void_caster",
+      "khaosnexus:void_caster"
+    ],
+    [
+      "khaosnexus:void_caster",
+      "khaosnexus:void_caster",
+      "minecraft:evoker",
+      "minecraft:evoker"
+    ],
+    [
+      "khaosnexus:spire_guardian",
+      "khaosnexus:void_caster"
+    ]
+  ],
+  "health_scale": 1.0,
+  "heal_after": 2,
+  "title": "challenge_void_choir",
+  "rift_cores": 4
+}

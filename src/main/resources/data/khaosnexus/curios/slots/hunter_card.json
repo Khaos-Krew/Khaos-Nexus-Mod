@@ -1,0 +1,6 @@
+{
+  "size": 1,
+  "order": 5,
+  "icon": "khaosnexus:slot/hunter_card",
+  "validators": ["curios:tag"]
+}

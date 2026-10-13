@@ -1,0 +1,18 @@
+{
+  "class": "tank",
+  "min_level": 1,
+  "cost": 1,
+  "modifiers": [
+    {
+      "attribute": "minecraft:generic.armor",
+      "amount": 3,
+      "operation": "add_value"
+    },
+    {
+      "attribute": "minecraft:generic.movement_speed",
+      "amount": -0.05,
+      "operation": "add_multiplied_base"
+    }
+  ],
+  "group": "tank_a"
+}

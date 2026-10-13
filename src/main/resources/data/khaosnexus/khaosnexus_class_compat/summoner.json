@@ -1,0 +1,25 @@
+{
+  "class": "summoner",
+  "bonuses": [
+    {
+      "attribute": "apothic_attributes:ghost_health",
+      "amount": 2.0,
+      "operation": "add_value"
+    },
+    {
+      "attribute": "irons_spellbooks:summon_damage",
+      "amount": 0.15,
+      "operation": "add_multiplied_base"
+    },
+    {
+      "attribute": "irons_spellbooks:evocation_spell_power",
+      "amount": 0.05,
+      "operation": "add_multiplied_base"
+    },
+    {
+      "attribute": "ars_nouveau:ars_nouveau.perk.max_mana",
+      "amount": 15.0,
+      "operation": "add_value"
+    }
+  ]
+}

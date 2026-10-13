@@ -1,0 +1,26 @@
+{
+  "radius": 8,
+  "enemy_effects": [
+    {
+      "id": "minecraft:weakness",
+      "amplifier": 1,
+      "seconds": 8
+    },
+    {
+      "id": "minecraft:glowing",
+      "amplifier": 0,
+      "seconds": 8
+    }
+  ],
+  "self_effects": [
+    {
+      "id": "minecraft:resistance",
+      "amplifier": 1,
+      "seconds": 8
+    }
+  ],
+  "heal_allies": 6,
+  "cooldown_seconds": 75,
+  "particle": "minecraft:enchant",
+  "class": "summoner"
+}

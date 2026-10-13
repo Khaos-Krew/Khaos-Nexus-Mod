@@ -1,0 +1,16 @@
+{
+  "length": 5,
+  "heal_after": 3,
+  "health_scale": 1.0,
+  "shuffle": true,
+  "bosses": [
+    "khaosnexus:rift_warden",
+    "khaosnexus:spire_guardian",
+    "minecraft:ravager",
+    "minecraft:evoker",
+    "cataclysm:ender_guardian",
+    "cataclysm:ignis",
+    "cataclysm:the_harbinger",
+    "cataclysm:netherite_monstrosity"
+  ]
+}

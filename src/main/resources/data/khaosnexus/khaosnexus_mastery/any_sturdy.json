@@ -1,0 +1,18 @@
+{
+  "class": "any",
+  "min_level": 10,
+  "cost": 1,
+  "modifiers": [
+    {
+      "attribute": "minecraft:generic.max_health",
+      "amount": 2,
+      "operation": "add_value"
+    },
+    {
+      "attribute": "minecraft:generic.movement_speed",
+      "amount": -0.02,
+      "operation": "add_multiplied_base"
+    }
+  ],
+  "group": "any_b"
+}

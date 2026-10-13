@@ -1,0 +1,10 @@
+{
+  "weight": 8,
+  "effects": {
+    "mob_health": 0.8,
+    "damage_taken": 1.35
+  },
+  "rewards": {
+    "xp_multiplier": 1.15
+  }
+}
