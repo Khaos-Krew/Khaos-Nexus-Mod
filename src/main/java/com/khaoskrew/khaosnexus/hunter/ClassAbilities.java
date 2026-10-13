@@ -52,12 +52,13 @@ public final class ClassAbilities {
             case RANGER -> primary ? shot(player, level) : effect(player, new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 160, 1));
             case LIFEBINDER -> primary ? mend(player) : effect(player, new MobEffectInstance(MobEffects.REGENERATION, 160, 0));
             case BERSERKER -> primary ? effect(player, new MobEffectInstance(MobEffects.DAMAGE_BOOST, 160, 1)) : rage(player);
-            case SUMMONER -> primary ? summon(player, level, EntityType.WOLF, true) : healMinions(player, level);
-            case NECROMANCER -> primary ? summon(player, level, EntityType.ZOMBIE, false) : wither(player, level);
+            case SUMMONER -> primary ? summon(player, level, com.khaoskrew.khaosnexus.mob.ModEntities.RIFT_FAMILIAR.get(), true) : healMinions(player, level);
+            case NECROMANCER -> primary ? summon(player, level, com.khaoskrew.khaosnexus.mob.ModEntities.BONE_THRALL.get(), false) : wither(player, level);
         };
         if (!used) {
             return;
         }
+        AbilityVfx.play(player, level, hunterClass, primary);
         int cooldown = primary ? Config.ABILITY_COOLDOWN.get() : Config.ABILITY_ALT_COOLDOWN.get();
         if (primary) {
             profile.abilityReady = now + cooldown;

@@ -572,8 +572,12 @@ def wave(period, amp, axis, n=8, phase=0.0, base=(0, 0, 0)):
         t = period * i / n; s = math.sin(2 * math.pi * i / n + phase) * amp
         v = list(base); v[axis] += round(s, 3); res.append((t, v))
     return res
+CUSTOM_ANIMS = {}
+
 def anim_set(name, d, rig):
     has = lambda b: b in rig.bones
+    if name in CUSTOM_ANIMS:
+        return write_anims(name, CUSTOM_ANIMS[name](name, rig))
     A = {}
     # idle: breathing chest, head drift, arms sway, cloth drift
     B = {'chest': {'rotation': kf(wave(3.2, 2.2, 0, phase=0)), 'scale': kf([(t, [1 + 0.012 * math.sin(2 * math.pi * t / 3.2)] * 3) for t in [i * 0.4 for i in range(9)]])},
@@ -758,6 +762,9 @@ def anim_set(name, d, rig):
             'head': {'rotation': ([(0, R0), (0.4, [-25, 0, 0]), (0.9, [-25, 0, 0]), (1.2, R0)], True)},
             'chest': {'rotation': ([(0, R0), (0.4, [-10, 0, 0]), (1.2, R0)], True)},
             'root': {'scale': ([(0, [1, 1, 1]), (0.4, [1.05, 1.05, 1.05]), (0.9, [1.05, 1.05, 1.05]), (1.2, [1, 1, 1])], True)}}))
+    write_anims(name, A)
+
+def write_anims(name, A):
     js = {'format_version': '1.8.0', 'animations': {}}
     for an, a in A.items():
         js['animations'][f'animation.{name}.{an}'] = {'loop': a['loop'], 'animation_length': a['length'], 'bones': a['bones']}
@@ -858,7 +865,7 @@ def rift_geo():
     json.dump(js, open(out('animations', 'block', 'nexus_rift.animation.json'), 'w'), indent=1)
 
 if __name__ == '__main__':
-    import rigs_v4; rigs_v4.install(sys.modules[__name__])
+    import rigs_v4, rigs_minions; rigs_v4.install(sys.modules[__name__]); rigs_minions.install(sys.modules[__name__])
     for name, m in MOBS.items():
         rig, d = m['rig']()
         uvs = pack(rig, m['k'], m['ts']); pt = Painter(name, m)  # pack first: it may grow m['ts']

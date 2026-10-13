@@ -139,5 +139,7 @@
   "entity.khaosnexus.spire_guardian": "Spire Guardian",
   "item.khaosnexus.spire_guardian_spawn_egg": "Spire Guardian Spawn Egg",
   "item.khaosnexus.void_orb": "Void Orb",
-  "entity.khaosnexus.void_orb": "Void Orb"
+  "entity.khaosnexus.void_orb": "Void Orb",
+  "entity.khaosnexus.rift_familiar": "Rift Familiar",
+  "entity.khaosnexus.bone_thrall": "Bone Thrall"
 }

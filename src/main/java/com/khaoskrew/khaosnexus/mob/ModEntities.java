@@ -33,6 +33,13 @@ public final class ModEntities {
             () -> EntityType.Builder.<VoidOrb>of(VoidOrb::new, MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(6).updateInterval(2)
                     .build(KhaosNexus.MODID + ":void_orb"));
 
+    public static final DeferredHolder<EntityType<?>, EntityType<MinionMob>> RIFT_FAMILIAR = ENTITIES.register("rift_familiar",
+            () -> EntityType.Builder.<MinionMob>of(MinionMob::new, MobCategory.CREATURE).sized(0.8F, 1.0F).clientTrackingRange(10)
+                    .build(KhaosNexus.MODID + ":rift_familiar"));
+    public static final DeferredHolder<EntityType<?>, EntityType<MinionMob>> BONE_THRALL = ENTITIES.register("bone_thrall",
+            () -> EntityType.Builder.<MinionMob>of(MinionMob::new, MobCategory.CREATURE).sized(0.6F, 1.9F).clientTrackingRange(10)
+                    .build(KhaosNexus.MODID + ":bone_thrall"));
+
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(KhaosNexus.MODID);
     /** Render-only item for the Void Caster's spell projectile (not in the creative tab). */
     public static final DeferredItem<Item> VOID_ORB_ITEM = ITEMS.registerSimpleItem("void_orb");
@@ -73,6 +80,8 @@ public final class ModEntities {
         event.put(VOID_CASTER.get(), RiftMob.attributes(22.0D, 3.0D, 0.26D, 0.0D).build());
         event.put(RIFT_BRUTE.get(), RiftMob.attributes(60.0D, 10.0D, 0.24D, 0.6D).build());
         event.put(RIFT_WARDEN.get(), RiftMob.attributes(300.0D, 16.0D, 0.27D, 1.0D).add(Attributes.ARMOR, 10.0D).build());
+        event.put(RIFT_FAMILIAR.get(), MinionMob.attributes(20.0D, 4.0D, 0.33D).build());
+        event.put(BONE_THRALL.get(), MinionMob.attributes(24.0D, 5.0D, 0.26D).build());
         event.put(SPIRE_GUARDIAN.get(), RiftMob.attributes(80.0D, 8.0D, 0.25D, 0.8D).add(Attributes.ARMOR, 6.0D).build());
     }
 }
