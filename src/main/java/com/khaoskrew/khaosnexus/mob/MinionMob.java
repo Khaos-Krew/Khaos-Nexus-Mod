@@ -82,6 +82,13 @@ public class MinionMob extends PathfinderMob implements GeoEntity {
     @Override
     public void tick() {
         super.tick();
+        if (!this.level().isClientSide && this.tickCount % 20 == 0) {
+            long exp = this.getPersistentData().getLong(ClassAbilities.MINION_EXPIRES);
+            if (exp > 0 && this.level().getGameTime() > exp) {
+                ((net.minecraft.server.level.ServerLevel) this.level()).sendParticles(ParticleTypes.SOUL, this.getX(), this.getY() + 0.8, this.getZ(), 16, 0.3, 0.5, 0.3, 0.02);
+                this.discard();
+            }
+        }
         if (this.level().isClientSide && this.random.nextInt(3) == 0) {
             if (this.familiar) {
                 this.level().addParticle(ParticleTypes.SOUL_FIRE_FLAME, this.getRandomX(0.5), this.getY() + 0.3 + this.random.nextDouble() * 0.6,

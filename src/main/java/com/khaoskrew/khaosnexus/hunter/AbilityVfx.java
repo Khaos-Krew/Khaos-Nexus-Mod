@@ -31,14 +31,14 @@ public final class AbilityVfx {
                 if (primary) {
                     LivingEntity t = target(p, level, 12);
                     Vec3 from = p.getEyePosition().add(p.getLookAngle().scale(0.6)).subtract(0, 0.3, 0);
-                    if (t != null) { trail(level, from, t.position().add(0, t.getBbHeight() / 2, 0), ParticleTypes.ELECTRIC_SPARK, 40); trail(level, from, t.position().add(0, t.getBbHeight() / 2, 0), ParticleTypes.WITCH, 20); burst(level, t.position().add(0, t.getBbHeight() / 2, 0), ParticleTypes.END_ROD, 20, 0.15); }
+                    if (t != null) { trail(level, from, t.position().add(0, t.getBbHeight() / 2, 0), dust(0xB050FF), 60); trail(level, from, t.position().add(0, t.getBbHeight() / 2, 0), ParticleTypes.ELECTRIC_SPARK, 40); trail(level, from, t.position().add(0, t.getBbHeight() / 2, 0), ParticleTypes.WITCH, 20); burst(level, t.position().add(0, t.getBbHeight() / 2, 0), ParticleTypes.END_ROD, 20, 0.15); }
                     sound(level, p, SoundEvents.ILLUSIONER_CAST_SPELL, 1.0F, 1.3F);
                 } else { ring(level, p.position(), 1.0, 0.1, ParticleTypes.CLOUD, 20); sound(level, p, SoundEvents.PHANTOM_FLAP, 1.0F, 1.2F); }
             }
             case RANGER -> {
                 if (primary) {
                     LivingEntity t = target(p, level, 24);
-                    if (t != null) { trail(level, p.getEyePosition(), t.position().add(0, t.getBbHeight() / 2, 0), ParticleTypes.CRIT, 50); burst(level, t.position().add(0, t.getBbHeight() / 2, 0), ParticleTypes.FIREWORK, 16, 0.1); }
+                    if (t != null) { trail(level, p.getEyePosition().subtract(0, 0.2, 0), t.position().add(0, t.getBbHeight() / 2, 0), dust(0xFFE070), 60); trail(level, p.getEyePosition(), t.position().add(0, t.getBbHeight() / 2, 0), ParticleTypes.CRIT, 50); burst(level, t.position().add(0, t.getBbHeight() / 2, 0), ParticleTypes.FIREWORK, 16, 0.1); }
                     sound(level, p, SoundEvents.CROSSBOW_SHOOT, 1.0F, 0.9F);
                 } else { ring(level, p.position(), 0.8, 0.1, ParticleTypes.CLOUD, 16); sound(level, p, SoundEvents.ARMOR_EQUIP_LEATHER.value(), 1.0F, 1.4F); }
             }
@@ -55,7 +55,14 @@ public final class AbilityVfx {
             case SUMMONER -> {
                 Vec3 at = p.position().add(Vec3.directionFromRotation(0, p.getYRot()).scale(1.5));
                 if (primary) { ring(level, at, 1.4, 0.05, ParticleTypes.END_ROD, 32); column(level, at, ParticleTypes.SOUL_FIRE_FLAME, 30); sound(level, p, SoundEvents.EVOKER_PREPARE_SUMMON, 1.0F, 1.4F); }
-                else { ring(level, p.position(), 3, 0.3, ParticleTypes.HAPPY_VILLAGER, 32); sound(level, p, SoundEvents.BEACON_POWER_SELECT, 1.0F, 1.6F); }
+                else {
+                    ring(level, p.position(), 3, 0.3, ParticleTypes.HAPPY_VILLAGER, 32);
+                    for (Mob m : level.getEntitiesOfClass(Mob.class, p.getBoundingBox().inflate(48), m -> ClassAbilities.isOwnedMinion(p, m))) {
+                        trail(level, p.position().add(0, 1.2, 0), m.position().add(0, m.getBbHeight() / 2, 0), ParticleTypes.END_ROD, 24);
+                        burst(level, m.position().add(0, m.getBbHeight(), 0), ParticleTypes.HEART, 5, 0.4);
+                    }
+                    sound(level, p, SoundEvents.BEACON_POWER_SELECT, 1.0F, 1.6F);
+                }
             }
             case NECROMANCER -> {
                 Vec3 at = p.position().add(Vec3.directionFromRotation(0, p.getYRot()).scale(1.5));

@@ -25,6 +25,7 @@ import net.neoforged.neoforge.event.EventHooks;
 public final class ClassAbilities {
     public static final String MINION = "khaosnexus_minion";
     public static final String MINION_OWNER = "khaosnexus_minion_owner";
+    public static final String MINION_EXPIRES = "khaosnexus_minion_expires";
 
     private ClassAbilities() {}
 
@@ -154,19 +155,14 @@ public final class ClassAbilities {
         created.getPersistentData().putString(MINION_OWNER, player.getStringUUID());
         created.setCustomName(Component.translatable("khaosnexus.ability.minion_name", player.getName()));
         created.setPersistenceRequired();
+        // lifetime is enforced by MinionMob.tick (a server TickTask can run early when the server is idle)
+        created.getPersistentData().putLong(MINION_EXPIRES, level.getGameTime() + 600L);
         if (tame && created instanceof Wolf wolf) {
             wolf.tame(player);
         }
         if (!level.addFreshEntity(created)) {
             return false;
         }
-        MinecraftServer server = level.getServer();
-        Mob minion = created;
-        server.tell(new TickTask(server.getTickCount() + 600, () -> {
-            if (minion.isAlive()) {
-                minion.discard();
-            }
-        }));
         return true;
     }
 
