@@ -191,4 +191,28 @@ public class SagaGameTests {
         h.assertTrue(w.isInvulnerable() && !w.isPushable(), "wisp cannot be hurt or pushed");
         h.runAfterDelay(3, () -> { h.assertTrue(w.isRemoved(), "ownerless wisp is removed"); h.succeed(); });
     }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform", timeoutTicks = 200)
+    public static void gateMimicSleepsWakesAndDropsLoot(GameTestHelper h) {
+        var lvl = h.getLevel();
+        h.assertTrue(com.khaoskrew.khaosnexus.dungeon.GateMimic.chance(com.khaoskrew.khaosnexus.gate.GateRank.D) == 0.0D
+                && com.khaoskrew.khaosnexus.dungeon.GateMimic.chance(com.khaoskrew.khaosnexus.gate.GateRank.C) > 0.0D, "mimics only in C+ dungeons");
+        net.minecraft.core.BlockPos at = h.absolutePos(new net.minecraft.core.BlockPos(2, 2, 2));
+        var m = com.khaoskrew.khaosnexus.dungeon.DungeonService.placeMimic(lvl, com.khaoskrew.khaosnexus.gate.GateRank.B, at, 0L);
+        h.assertTrue(m != null && !m.isAwake() && m.getCustomName() == null, "dormant mimic with no telltale name");
+        double x = m.getX(), z = m.getZ();
+        h.runAfterDelay(20, () -> {
+            h.assertTrue(!m.isAwake() && Math.abs(m.getX() - x) < 1e-3 && Math.abs(m.getZ() - z) < 1e-3, "dormant mimic does not move");
+            m.wake(null);
+            h.assertTrue(m.isAwake(), "wakes");
+            m.hurt(lvl.damageSources().generic(), 10000F);
+        });
+        h.runAfterDelay(80, () -> {
+            var drops = lvl.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, new net.minecraft.world.phys.AABB(at).inflate(4));
+            h.assertTrue(m.isRemoved(), "removed after its death animation");
+            h.assertTrue(!drops.isEmpty(), "mimic drops dungeon loot");
+            drops.forEach(net.minecraft.world.entity.Entity::discard);
+            h.succeed();
+        });
+    }
 }

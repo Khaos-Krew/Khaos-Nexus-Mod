@@ -107,3 +107,4 @@ if __name__ == '__main__':
     for n, f in (('helmet', choir_helmet), ('chestplate', choir_chestplate), ('leggings', choir_leggings), ('boots', choir_boots)): save(f(), 'choir_' + n)
     for n, f in (('helmet', vestment_helmet), ('chestplate', vestment_chestplate), ('leggings', vestment_leggings), ('boots', vestment_boots)): save(f(), 'vestment_' + n)
     save(egg('iron', 'rift', 'rift'), 'general_blade_spawn_egg'); save(egg('teal', 'night', 'teal'), 'general_arcanist_spawn_egg')
+    save(egg('leather', 'gold', 'amber'), 'gate_mimic_spawn_egg')

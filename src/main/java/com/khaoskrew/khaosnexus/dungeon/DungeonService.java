@@ -213,7 +213,14 @@ public final class DungeonService {
         }
         ResourceKey<LootTable> table = ResourceKey.create(Registries.LOOT_TABLE,
                 ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "dungeon/" + rank.name().toLowerCase(java.util.Locale.ROOT)));
+        // C+ dungeons: one loot chest may be a Gate Mimic instead (never the only chest).
+        BlockPos mimicAt = layout.loot().size() >= 2 && random.nextDouble() < GateMimic.chance(rank)
+                ? layout.loot().get(random.nextInt(layout.loot().size())) : null;
         for (BlockPos pos : layout.loot()) {
+            if (pos.equals(mimicAt)) {
+                placeMimic(level, rank, pos, lease.gen());
+                continue;
+            }
             level.setBlock(pos, Blocks.CHEST.defaultBlockState(), Block.UPDATE_ALL);
             RandomizableContainer.setBlockEntityLootTable(level, random, pos, table);
         }
@@ -319,5 +326,16 @@ public final class DungeonService {
 
     private static String name(StructurePiece piece) {
         return piece instanceof PoolElementStructurePiece pool ? pool.getElement().toString() : "";
+    }
+
+    /** Spawns a dormant Gate Mimic where a chest would stand, facing the way a placed chest faces (north). */
+    @Nullable
+    public static GateMimic placeMimic(ServerLevel level, GateRank rank, BlockPos pos, long gen) {
+        Mob mob = GateArena.spawnMob(level, rank, com.khaoskrew.khaosnexus.mob.ModEntities.GATE_MIMIC.get(), pos, 180.0F, 1.0D);
+        if (!(mob instanceof GateMimic mimic)) return null;
+        mimic.setCustomName(null);
+        mimic.rest(180.0F);
+        mimic.getPersistentData().putLong(DungeonInstances.GEN_KEY, gen);
+        return mimic;
     }
 }

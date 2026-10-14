@@ -25,6 +25,7 @@ public final class RiftMobClient {
         event.registerEntityRenderer(ModEntities.FALLEN_HIEROPHANT.get(), c -> new RiftMobRenderer(c, "fallen_hierophant", 1.4F));
         event.registerEntityRenderer(ModEntities.RIFT_WISP.get(), WispRenderer::new);
         event.registerEntityRenderer(ModEntities.GENERAL_BLADE.get(), c -> new RiftMobRenderer(c, "general_blade", 1.25F));
+        event.registerEntityRenderer(ModEntities.GATE_MIMIC.get(), MimicRenderer::new);
         event.registerEntityRenderer(ModEntities.GENERAL_ARCANIST.get(), c -> new RiftMobRenderer(c, "general_arcanist", 1.25F));
     }
 }

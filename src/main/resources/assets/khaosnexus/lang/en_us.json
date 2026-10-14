@@ -699,5 +699,7 @@
   "item.khaosnexus.wisp_bell.desc": "Ring to call a Rift Wisp. It gathers drops and mends you in a fight.",
   "entity.khaosnexus.rift_wisp": "Rift Wisp",
   "khaosnexus.wisp.called": "A Rift Wisp answers the bell.",
-  "khaosnexus.wisp.dismissed": "The Rift Wisp fades."
+  "khaosnexus.wisp.dismissed": "The Rift Wisp fades.",
+  "entity.khaosnexus.gate_mimic": "Gate Mimic",
+  "item.khaosnexus.gate_mimic_spawn_egg": "Gate Mimic Spawn Egg"
 }

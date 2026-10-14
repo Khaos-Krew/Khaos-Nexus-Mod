@@ -4,6 +4,8 @@ specs = {
  'fallen_hierophant': (['staff'], ['head', 'chest', 'torso', 'hips', 'mitre0', 'right_leg', 'left_leg', 'right_shin', 'left_shin', 'tabard', 'left_arm', 'left_forearm'], ['idle', 'walk', 'idle_combat', 'walk_combat', 'attack', 'spin', 'sweep', 'barrier', 'roar']),
  'general_blade': (['staff'], ['head', 'chest', 'torso', 'hips', 'mitre0', 'right_leg', 'left_leg', 'right_shin', 'left_shin', 'tabard', 'left_arm', 'left_forearm'], ['idle', 'walk', 'idle_combat', 'walk_combat', 'attack', 'spin', 'sweep', 'barrier', 'roar']),
  'general_arcanist': (['staff'], ['head', 'chest', 'torso', 'hips', 'mitre0', 'right_leg', 'left_leg', 'right_shin', 'left_shin', 'tabard', 'left_arm', 'left_forearm'], ['idle', 'walk', 'idle_combat', 'walk_combat', 'attack', 'spin', 'sweep', 'barrier', 'roar', 'volley']),
+ # tongue/lid nest in the maw by design; only legs are checked against the chest body
+ 'gate_mimic': ([f'leg_{n}' for n in ('rf', 'rb', 'lf', 'lb')] + [f'shin_{n}' for n in ('rf', 'rb', 'lf', 'lb')], ['base'], ['dormant', 'idle', 'walk', 'attack', 'roar', 'death']),
 }
 total = 0
 for name in sys.argv[1:] or specs:
