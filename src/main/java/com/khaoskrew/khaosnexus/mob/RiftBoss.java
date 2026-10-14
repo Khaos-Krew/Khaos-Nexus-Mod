@@ -34,6 +34,14 @@ public class RiftBoss extends RiftMob {
         return new RiftBoss(type, level, BossEvent.BossBarColor.RED);
     }
 
+    public static RiftBoss vaelith(EntityType<? extends RiftBoss> type, Level level) {
+        return new RiftBoss(type, level, BossEvent.BossBarColor.BLUE);
+    }
+
+    public static RiftBoss hierophant(EntityType<? extends RiftBoss> type, Level level) {
+        return new RiftBoss(type, level, BossEvent.BossBarColor.PURPLE);
+    }
+
     public static RiftBoss guardian(EntityType<? extends RiftBoss> type, Level level) {
         return new RiftBoss(type, level, BossEvent.BossBarColor.PURPLE);
     }
@@ -101,6 +109,7 @@ public class RiftBoss extends RiftMob {
             case "slam" -> 18;
             case "lunge" -> 10;
             case "spin" -> 14;
+            case "volley" -> 12;
             default -> 8;
         };
     }
@@ -110,6 +119,7 @@ public class RiftBoss extends RiftMob {
             case "slam" -> 32;
             case "lunge" -> 26;
             case "spin" -> 28;
+            case "volley" -> 22;
             default -> 24;
         };
     }
@@ -130,7 +140,9 @@ public class RiftBoss extends RiftMob {
             else if (enraged && d < 16.0D && this.hasLineOfSight(target)) this.startSpecial("lunge");
             else return;
         } else {
+            boolean vaelith = this.getType() == ModEntities.VAELITH.get();
             if (enraged && this.barrierTicks <= 0 && this.random.nextBoolean()) this.startSpecial("barrier");
+            else if (vaelith && d >= 5.0D && d < 20.0D && this.hasLineOfSight(target)) this.startSpecial("volley");
             else if (d < 4.5D) this.startSpecial("spin");
             else return;
         }
@@ -161,6 +173,7 @@ public class RiftBoss extends RiftMob {
             switch (this.special) {
                 case "slam" -> this.aoe(4.5D, 1.6F, 0.9D, true);
                 case "spin" -> this.aoe(3.8D, 1.1F, 1.4D, false);
+                case "volley" -> this.volley(target);
                 case "barrier" -> {
                     this.barrierTicks = 120;
                     this.playSound(net.minecraft.sounds.SoundEvents.BEACON_ACTIVATE, 1.5F, 1.4F);
@@ -169,6 +182,20 @@ public class RiftBoss extends RiftMob {
             }
         }
         if (t >= duration(this.special)) this.special = null;
+    }
+
+    /** Vaelith: three glass shards fanned at the target (one aimed, two 12 degrees off), each a normal void orb hit. */
+    private void volley(net.minecraft.world.entity.LivingEntity target) {
+        if (target == null) return;
+        net.minecraft.world.phys.Vec3 from = this.position().add(0, 3.0, 0).add(this.getLookAngle().scale(1.2));
+        net.minecraft.world.phys.Vec3 aim = target.getEyePosition().subtract(0, 0.4, 0).subtract(from);
+        for (int i = -1; i <= 1; i++) {
+            VoidOrb orb = new VoidOrb(this.level(), this, aim.yRot((float) Math.toRadians(12 * i)));
+            orb.setPos(from);
+            this.level().addFreshEntity(orb);
+        }
+        this.playSound(net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_RESONATE, 1.6F, 1.3F);
+        this.playSound(net.minecraft.sounds.SoundEvents.GLASS_BREAK, 1.0F, 1.6F);
     }
 
     /** Hits every non-rift living thing in radius for attack damage * mult, with a shockwave of particles. */

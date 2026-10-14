@@ -255,7 +255,8 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
             player.displayClientMessage(Component.translatable("khaosnexus.gate.spawn_failed"), false);
             return InteractionResult.FAIL;
         }
-        var boss = com.khaoskrew.khaosnexus.dungeon.DungeonService.populate(dungeon, this.rank, layout, server.getRandom(), lease);
+        var boss = com.khaoskrew.khaosnexus.saga.SagaBosses.sealSwap(dungeon, this,
+                com.khaoskrew.khaosnexus.dungeon.DungeonService.populate(dungeon, this.rank, layout, server.getRandom(), lease));
         if (this.red && boss != null) {
             com.khaoskrew.khaosnexus.endgame.RedGates.empower(boss);
         }

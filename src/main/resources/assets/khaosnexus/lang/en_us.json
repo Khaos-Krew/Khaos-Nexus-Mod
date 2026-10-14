@@ -643,5 +643,20 @@
   "khaosnexus.seal.locked": "The seal does not answer. It needs a Paragon hunter and the seals before it broken.",
   "khaosnexus.seal.opened": "The seal cracks and a rift tears open.",
   "khaosnexus.shards.deposited": "Deposited %s Crown Shards. Crown Shards: %s",
-  "item.khaosnexus.crown_shard.desc": "Use on a Spire Gate to enter the Underthrone. Sneak-use to bank it for Oaths."
+  "item.khaosnexus.crown_shard.desc": "Use on a Spire Gate to enter the Underthrone. Sneak-use to bank it for Oaths.",
+  "entity.khaosnexus.vaelith": "Vaelith, the Glass Choir",
+  "entity.khaosnexus.fallen_hierophant": "The Fallen Hierophant",
+  "item.khaosnexus.vaelith_spawn_egg": "Vaelith Spawn Egg",
+  "item.khaosnexus.fallen_hierophant_spawn_egg": "Fallen Hierophant Spawn Egg",
+  "khaosnexus.seal.broken": "%s is broken. The way deeper opens.",
+  "item.khaosnexus.vaelith_choir_mask": "Vaelith's Choir Mask",
+  "item.khaosnexus.vaelith_choir_mask.desc.0": "Trophy of the Glass Choir.",
+  "item.khaosnexus.vaelith_choir_mask.desc.1": "Hold it to your ear and it is still singing.",
+  "item.khaosnexus.singing_glass": "Singing Glass",
+  "item.khaosnexus.singing_glass.desc.0": "Resonant crystal from the Choir. A saga material.",
+  "item.khaosnexus.hierophant_censer": "The Hierophant's Censer",
+  "item.khaosnexus.hierophant_censer.desc.0": "Trophy of the Fallen Hierophant.",
+  "item.khaosnexus.hierophant_censer.desc.1": "The ash inside still prays to an empty throne.",
+  "item.khaosnexus.profane_sigil": "Profane Sigil",
+  "item.khaosnexus.profane_sigil.desc.0": "A seal of the broken crown. A saga material."
 }

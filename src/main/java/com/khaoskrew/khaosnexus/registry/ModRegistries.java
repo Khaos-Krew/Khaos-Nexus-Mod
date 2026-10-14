@@ -85,6 +85,10 @@ public final class ModRegistries {
     public static final DeferredBlock<com.khaoskrew.khaosnexus.saga.SealGateBlock> SEAL_GATE = BLOCKS.registerBlock("seal_gate", com.khaoskrew.khaosnexus.saga.SealGateBlock::new,
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).strength(-1.0F, 3600000.0F).lightLevel(state -> 12).sound(SoundType.AMETHYST).noLootTable());
     public static final DeferredItem<BlockItem> SEAL_GATE_ITEM = ITEMS.registerSimpleBlockItem(SEAL_GATE);
+    public static final DeferredItem<Item> VAELITH_CHOIR_MASK = ITEMS.registerItem("vaelith_choir_mask", p -> new com.khaoskrew.khaosnexus.saga.LoreItem(p, 2), new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC).stacksTo(1));
+    public static final DeferredItem<Item> SINGING_GLASS = ITEMS.registerItem("singing_glass", p -> new com.khaoskrew.khaosnexus.saga.LoreItem(p, 1), new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE));
+    public static final DeferredItem<Item> HIEROPHANT_CENSER = ITEMS.registerItem("hierophant_censer", p -> new com.khaoskrew.khaosnexus.saga.LoreItem(p, 2), new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC).stacksTo(1));
+    public static final DeferredItem<Item> PROFANE_SIGIL = ITEMS.registerItem("profane_sigil", p -> new com.khaoskrew.khaosnexus.saga.LoreItem(p, 1), new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE));
     public static final DeferredItem<com.khaoskrew.khaosnexus.saga.CrownShardItem> CROWN_SHARD = ITEMS.registerItem("crown_shard",
             com.khaoskrew.khaosnexus.saga.CrownShardItem::new, new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC));
     public static final DeferredItem<BlockItem> SPIRE_GATE_ITEM = ITEMS.registerSimpleBlockItem(SPIRE_GATE);
@@ -123,6 +127,8 @@ public final class ModRegistries {
                         output.accept(SPIRE_GATE_ITEM.get());
                         output.accept(SEAL_GATE_ITEM.get());
                         output.accept(CROWN_SHARD.get());
+                        output.accept(VAELITH_CHOIR_MASK.get()); output.accept(SINGING_GLASS.get());
+                        output.accept(HIEROPHANT_CENSER.get()); output.accept(PROFANE_SIGIL.get());
                         output.accept(RAID_ALTAR_ITEM.get());
                         output.accept(PERSONAL_LOOT_ITEM.get());
                         com.khaoskrew.khaosnexus.mob.ModEntities.eggs().forEach(output::accept);

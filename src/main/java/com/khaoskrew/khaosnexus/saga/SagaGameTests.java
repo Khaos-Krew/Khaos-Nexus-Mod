@@ -86,4 +86,42 @@ public class SagaGameTests {
         h.assertTrue(id("hollow_crown").equals(SealGateBlock.nextSeal(p)), "replay the last seal when all are broken");
         h.succeed();
     }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform", timeoutTicks = 200)
+    public static void sealGuardiansSpawnWithBossStats(GameTestHelper h) {
+        h.assertTrue(SagaBosses.guardianFor(id("crystal_cavern")) == com.khaoskrew.khaosnexus.mob.ModEntities.VAELITH.get(), "crystal -> Vaelith");
+        h.assertTrue(SagaBosses.guardianFor(id("corrupted_cathedral")) == com.khaoskrew.khaosnexus.mob.ModEntities.FALLEN_HIEROPHANT.get(), "cathedral -> Hierophant");
+        var l = h.getLevel();
+        var at = h.absolutePos(new net.minecraft.core.BlockPos(1, 2, 1));
+        for (var type : java.util.List.of(com.khaoskrew.khaosnexus.mob.ModEntities.VAELITH.get(), com.khaoskrew.khaosnexus.mob.ModEntities.FALLEN_HIEROPHANT.get())) {
+            var m = com.khaoskrew.khaosnexus.gate.GateArena.spawnMob(l, GateRank.C, type, at, 0, 1.0D, true);
+            h.assertTrue(m instanceof com.khaoskrew.khaosnexus.mob.RiftBoss, "is a rift boss");
+            var warden = com.khaoskrew.khaosnexus.gate.GateArena.spawnMob(l, GateRank.C, com.khaoskrew.khaosnexus.mob.ModEntities.RIFT_WARDEN.get(), at, 0, 1.0D, true);
+            h.assertTrue(m.getMaxHealth() > 200 && m.getMaxHealth() < warden.getMaxHealth(), "a real fight but under the Warden: " + m.getMaxHealth() + " vs " + warden.getMaxHealth());
+            m.discard(); warden.discard();
+        }
+        h.succeed();
+    }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    public static void sealGuardianLootTablesDropTrophies(GameTestHelper h) {
+        var l = h.getLevel();
+        for (String[] e : new String[][] {{"vaelith", "vaelith_choir_mask"}, {"fallen_hierophant", "hierophant_censer"}}) {
+            var key = net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.LOOT_TABLE, id("entities/" + e[0]));
+            var table = l.getServer().reloadableRegistries().getLootTable(key);
+            h.assertTrue(table != net.minecraft.world.level.storage.loot.LootTable.EMPTY, "loot table " + e[0]);
+            var player = h.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+            var mob = (e[0].equals("vaelith") ? com.khaoskrew.khaosnexus.mob.ModEntities.VAELITH : com.khaoskrew.khaosnexus.mob.ModEntities.FALLEN_HIEROPHANT).get().create(l);
+            var params = new net.minecraft.world.level.storage.loot.LootParams.Builder(l)
+                    .withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.THIS_ENTITY, mob)
+                    .withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.ORIGIN, mob.position())
+                    .withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.DAMAGE_SOURCE, l.damageSources().playerAttack(player))
+                    .withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.LAST_DAMAGE_PLAYER, player)
+                    .create(net.minecraft.world.level.storage.loot.parameters.LootContextParamSets.ENTITY);
+            var drops = table.getRandomItems(params);
+            h.assertTrue(drops.stream().anyMatch(s -> net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(s.getItem()).getPath().equals(e[1])), "trophy drops: " + drops);
+            mob.discard();
+        }
+        h.succeed();
+    }
 }

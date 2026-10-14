@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "khaosnexus:item/fallen_hierophant_spawn_egg"
+  }
+}

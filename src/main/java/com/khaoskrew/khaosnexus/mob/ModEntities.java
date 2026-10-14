@@ -29,6 +29,12 @@ public final class ModEntities {
             () -> EntityType.Builder.<RiftBoss>of(RiftBoss::guardian, MobCategory.MONSTER).sized(1.3F, 4.0F).clientTrackingRange(12)
                     .build(KhaosNexus.MODID + ":spire_guardian"));
 
+    public static final DeferredHolder<EntityType<?>, EntityType<RiftBoss>> VAELITH = ENTITIES.register("vaelith",
+            () -> EntityType.Builder.<RiftBoss>of(RiftBoss::vaelith, MobCategory.MONSTER).sized(1.4F, 4.4F).clientTrackingRange(12)
+                    .fireImmune().build(KhaosNexus.MODID + ":vaelith"));
+    public static final DeferredHolder<EntityType<?>, EntityType<RiftBoss>> FALLEN_HIEROPHANT = ENTITIES.register("fallen_hierophant",
+            () -> EntityType.Builder.<RiftBoss>of(RiftBoss::hierophant, MobCategory.MONSTER).sized(1.4F, 4.6F).clientTrackingRange(12)
+                    .build(KhaosNexus.MODID + ":fallen_hierophant"));
     public static final DeferredHolder<EntityType<?>, EntityType<VoidOrb>> VOID_ORB = ENTITIES.register("void_orb",
             () -> EntityType.Builder.<VoidOrb>of(VoidOrb::new, MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(6).updateInterval(2)
                     .build(KhaosNexus.MODID + ":void_orb"));
@@ -49,6 +55,8 @@ public final class ModEntities {
     public static final DeferredItem<DeferredSpawnEggItem> RIFT_BRUTE_EGG = egg("rift_brute", RIFT_BRUTE, 0xFFFFFF, 0xFFFFFF);
     public static final DeferredItem<DeferredSpawnEggItem> RIFT_WARDEN_EGG = egg("rift_warden", RIFT_WARDEN, 0xFFFFFF, 0xFFFFFF);
     public static final DeferredItem<DeferredSpawnEggItem> SPIRE_GUARDIAN_EGG = egg("spire_guardian", SPIRE_GUARDIAN, 0xFFFFFF, 0xFFFFFF);
+    public static final DeferredItem<DeferredSpawnEggItem> VAELITH_EGG = egg("vaelith", VAELITH, 0x334A78, 0x8AF0FF);
+    public static final DeferredItem<DeferredSpawnEggItem> FALLEN_HIEROPHANT_EGG = egg("fallen_hierophant", FALLEN_HIEROPHANT, 0x3A1620, 0xB848FF);
 
     private ModEntities() {}
 
@@ -82,6 +90,9 @@ public final class ModEntities {
         event.put(RIFT_WARDEN.get(), RiftMob.attributes(300.0D, 16.0D, 0.27D, 1.0D).add(Attributes.ARMOR, 10.0D).build());
         event.put(RIFT_FAMILIAR.get(), MinionMob.attributes(20.0D, 4.0D, 0.33D).build());
         event.put(BONE_THRALL.get(), MinionMob.attributes(24.0D, 5.0D, 0.26D).build());
+        // Act I seal guardians: S gate tuning multiplies these. Between the Guardian and the Warden: a real fight, not a wall.
+        event.put(VAELITH.get(), RiftMob.attributes(220.0D, 11.0D, 0.27D, 0.6D).add(Attributes.ARMOR, 6.0D).build());
+        event.put(FALLEN_HIEROPHANT.get(), RiftMob.attributes(260.0D, 13.0D, 0.24D, 0.9D).add(Attributes.ARMOR, 10.0D).build());
         event.put(SPIRE_GUARDIAN.get(), RiftMob.attributes(80.0D, 8.0D, 0.25D, 0.8D).add(Attributes.ARMOR, 6.0D).build());
     }
 }

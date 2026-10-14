@@ -21,5 +21,7 @@ public final class RiftMobClient {
         event.registerEntityRenderer(ModEntities.RIFT_BRUTE.get(), c -> new RiftMobRenderer(c, "rift_brute", 1.0F));
         event.registerEntityRenderer(ModEntities.RIFT_WARDEN.get(), c -> new RiftMobRenderer(c, "rift_warden", 1.6F));
         event.registerEntityRenderer(ModEntities.SPIRE_GUARDIAN.get(), c -> new RiftMobRenderer(c, "spire_guardian", 1.3F));
+        event.registerEntityRenderer(ModEntities.VAELITH.get(), c -> new RiftMobRenderer(c, "vaelith", 1.2F));
+        event.registerEntityRenderer(ModEntities.FALLEN_HIEROPHANT.get(), c -> new RiftMobRenderer(c, "fallen_hierophant", 1.4F));
     }
 }

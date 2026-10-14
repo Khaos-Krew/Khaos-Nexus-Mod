@@ -123,6 +123,7 @@ public class RiftMob extends Monster implements GeoEntity {
                         .triggerableAnim("slam", this.anim("slam", false)).triggerableAnim("lunge", this.anim("lunge", false));
             } else {
                 action.triggerableAnim("spin", this.anim("spin", false)).triggerableAnim("sweep", this.anim("sweep", false)).triggerableAnim("barrier", this.anim("barrier", false));
+                if ("animation.vaelith.".equals(this.animPrefix)) action.triggerableAnim("volley", this.anim("volley", false));
             }
         }
         controllers.add(action);
@@ -139,7 +140,7 @@ public class RiftMob extends Monster implements GeoEntity {
             case "rift_brute" -> 11;
             case "void_caster" -> 9;
             case "rift_warden" -> 16;
-            case "spire_guardian" -> 14;
+            case "spire_guardian", "vaelith", "fallen_hierophant" -> 14;
             default -> 7;
         };
     }
@@ -166,7 +167,7 @@ public class RiftMob extends Monster implements GeoEntity {
 
     /** Which melee animation to play; the Spire Guardian alternates an overhead halberd chop and a wide sweep. */
     protected String attackAnimName() {
-        return this.getType() == ModEntities.SPIRE_GUARDIAN.get() && this.random.nextBoolean() ? "sweep" : "attack";
+        return (this.getType() == ModEntities.SPIRE_GUARDIAN.get() || this.getType() == ModEntities.FALLEN_HIEROPHANT.get()) && this.random.nextBoolean() ? "sweep" : "attack";
     }
 
     @Override
