@@ -44,4 +44,32 @@ public class CardGameTests {
         }
         helper.succeed();
     }
+
+    @SuppressWarnings("removal")
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    public static void starterCardOnce(GameTestHelper helper) {
+        boolean required = Config.HUNTER_CARD_REQUIRED.get();
+        boolean starter = Config.STARTER_CARD.get();
+        try {
+            Config.HUNTER_CARD_REQUIRED.set(true);
+            Config.STARTER_CARD.set(true);
+            ServerPlayer player = helper.makeMockServerPlayerInLevel(); // joining runs the login handler
+            HunterCard.welcome(player);
+            helper.assertTrue(player.getInventory().countItem(HunterCard.CARD.get()) == 1, "first join gives one card");
+            HunterCard.welcome(player);
+            helper.assertTrue(player.getInventory().countItem(HunterCard.CARD.get()) == 1, "second join gives nothing");
+            for (var id : HunterCard.RECIPES) {
+                helper.assertTrue(player.getRecipeBook().contains(id), "recipe unlocked: " + id);
+                helper.assertTrue(player.server.getRecipeManager().byKey(id).isPresent(), "recipe exists: " + id);
+            }
+            Config.STARTER_CARD.set(false);
+            ServerPlayer other = helper.makeMockServerPlayerInLevel();
+            HunterCard.welcome(other);
+            helper.assertTrue(other.getInventory().countItem(HunterCard.CARD.get()) == 0, "config off: no starter card");
+        } finally {
+            Config.HUNTER_CARD_REQUIRED.set(required);
+            Config.STARTER_CARD.set(starter);
+        }
+        helper.succeed();
+    }
 }

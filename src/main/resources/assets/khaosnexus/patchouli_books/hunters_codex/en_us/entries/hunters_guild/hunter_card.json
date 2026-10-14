@@ -1,0 +1,18 @@
+{
+  "name": "Hunter Card and Guild Clerk",
+  "icon": "khaosnexus:hunter_card",
+  "category": "khaosnexus:hunters_guild",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Your $(l)Hunter Card$() unlocks the hunter HUD and screens. New hunters get one on their first join. Use it (or press J) to open your profile.$(br2)Lost it? Craft a new one from a $(l)book$(), $(l)paper$() and an $(l)emerald$()."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "khaosnexus:hunter_card",
+      "recipe2": "khaosnexus:guild_desk",
+      "text": "Place a $(l)Guild Desk$() next to an unemployed villager to make a $(l)Guild Clerk$(). Clerks sell cards for one emerald and trade guild goods."
+    }
+  ]
+}
