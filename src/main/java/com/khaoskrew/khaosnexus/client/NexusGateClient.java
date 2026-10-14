@@ -19,6 +19,7 @@ public final class NexusGateClient {
         modEventBus.addListener(NexusGateClient::registerRenderers);
         modEventBus.addListener(com.khaoskrew.khaosnexus.client.mob.RiftMobClient::layers);
         modEventBus.addListener(com.khaoskrew.khaosnexus.client.mob.RiftMobClient::renderers);
+        modEventBus.addListener(com.khaoskrew.khaosnexus.client.saga.UnderthroneSky::register);
         modEventBus.addListener(NexusGateClient::registerKeys);
         modEventBus.addListener(NexusGateClient::registerHud);
     }

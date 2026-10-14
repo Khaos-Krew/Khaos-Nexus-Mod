@@ -76,9 +76,16 @@ public final class ExileCamp {
         for (Direction d : Direction.Plane.HORIZONTAL) set(l, o.relative(d, 2).above(), Blocks.SOUL_LANTERN.defaultBlockState());
         for (int[] t : new int[][] {{-14, -7}, {14, -7}, {-14, 7}, {14, 7}}) tent(l, o.offset(t[0], 0, t[1]), t[0] < 0 ? Direction.EAST : Direction.WEST, t[1] < 0);
         for (int[] p : new int[][] {{-4, 12}, {4, 12}, {-4, -12}, {4, -12}, {-11, 0}, {11, 0}, {-19, -1}, {19, 1}}) post(l, o.offset(p[0], 0, p[1]));
+        plazaLights(l, o);
+        for (int[] m : new int[][] {{-8, 11, 1}, {8, 11, -1}, {-21, 5, 1}, {21, -5, -1}, {-21, -5, 1}, {21, 5, -1}}) stall(l, o.offset(m[0], 0, m[1]), m[2], h(m[0], m[1]));
+        for (int[] f : new int[][] {{-9, -10}, {9, -10}, {0, 21}}) hearth(l, o.offset(f[0], 0, f[1]));
+        for (int[] c : new int[][] {{17, -17}, {-18, -15}, {-17, 18}, {18, 17}, {24, -9}, {-24, 9}, {6, -23}, {-7, 23}}) crystal(l, o.offset(c[0], 0, c[1]), h(c[0], c[1]));
         sealArch(l, o.offset(0, 0, -17));
         exitDais(l, o.offset(0, 0, 16));
         throne(l, o.offset(0, 6, -46));
+        banners(l, o);
+        underside(l, o);
+        fillLight(l, o);
         // vendors on the plaza (same spots as Spire towns)
         SpireVendors.spawn(l, o, 50, GateRank.S);
     }
@@ -90,6 +97,108 @@ public final class ExileCamp {
             else if (s.is(Blocks.SOUL_SOIL) && r < 1) set(l, g.above(), Blocks.SOUL_FIRE.defaultBlockState());
             else if (s.is(Blocks.COARSE_DIRT) && r < 10) set(l, g.above(), Blocks.DEAD_BUSH.defaultBlockState());
             else if (s.is(Blocks.TUFF) && r < 3) { set(l, g.above(), Blocks.AMETHYST_CLUSTER.defaultBlockState()); }
+            else if (s.is(Blocks.COARSE_DIRT) && r < 40) {   // moss and azalea pockets soften the rock
+                set(l, g, Blocks.MOSS_BLOCK.defaultBlockState());
+                int q = h(z * 5, x * 13);
+                set(l, g.above(), (q < 35 ? Blocks.MOSS_CARPET : q < 50 ? Blocks.FERN : q < 58 ? Blocks.AZALEA : q < 63 ? Blocks.FLOWERING_AZALEA : Blocks.AIR).defaultBlockState());
+            }
+        }
+    }
+
+    static BlockState lit(net.minecraft.world.level.block.Block b) { return b.defaultBlockState(); }
+
+    /** Invisible light sources (level 11) on a grid, so the whole camp stays readable in the eternal night. */
+    static void fillLight(ServerLevel l, BlockPos o) {
+        BlockState light = Blocks.LIGHT.defaultBlockState().setValue(net.minecraft.world.level.block.LightBlock.LEVEL, 11);
+        for (int x = -RADIUS; x <= RADIUS; x += 5) for (int z = -RADIUS; z <= RADIUS; z += 5) {
+            if (x * x + z * z > (RADIUS - 2) * (RADIUS - 2)) continue;
+            BlockPos p = o.offset(x, 3, z);
+            if (l.getBlockState(p).isAir() && !l.getBlockState(o.offset(x, -1, z)).isAir()) set(l, p, light);
+        }
+    }
+
+    /** A ring of lantern strings around the plaza: corner posts with chains slung between them. */
+    static void plazaLights(ServerLevel l, BlockPos o) {
+        for (int[] c : new int[][] {{-7, -7}, {7, -7}, {-7, 7}, {7, 7}}) {
+            BlockPos p = o.offset(c[0], 0, c[1]);
+            set(l, p, Blocks.POLISHED_BLACKSTONE_WALL.defaultBlockState());
+            for (int y = 1; y <= 3; y++) set(l, p.above(y), Blocks.DARK_OAK_FENCE.defaultBlockState());
+            set(l, p.above(4), Blocks.LANTERN.defaultBlockState());
+        }
+        for (int i = -6; i <= 6; i++) for (int side : new int[] {-7, 7}) {
+            set(l, o.offset(i, 4, side), Blocks.CHAIN.defaultBlockState().setValue(net.minecraft.world.level.block.ChainBlock.AXIS, Direction.Axis.X));
+            set(l, o.offset(side, 4, i), Blocks.CHAIN.defaultBlockState().setValue(net.minecraft.world.level.block.ChainBlock.AXIS, Direction.Axis.Z));
+            if (Math.floorMod(i, 3) == 0) {
+                set(l, o.offset(i, 3, side), (i % 2 == 0 ? Blocks.LANTERN : Blocks.SOUL_LANTERN).defaultBlockState().setValue(LanternBlock.HANGING, true));
+                set(l, o.offset(side, 3, i), (i % 2 == 0 ? Blocks.SOUL_LANTERN : Blocks.LANTERN).defaultBlockState().setValue(LanternBlock.HANGING, true));
+            }
+        }
+        // the N-S road posts get a string too
+        for (int z : new int[] {12, -12}) for (int x = -3; x <= 3; x++) {
+            set(l, o.offset(x, 4, z), Blocks.CHAIN.defaultBlockState().setValue(net.minecraft.world.level.block.ChainBlock.AXIS, Direction.Axis.X));
+            if (x % 2 == 0) set(l, o.offset(x, 3, z), Blocks.LANTERN.defaultBlockState().setValue(LanternBlock.HANGING, true));
+        }
+    }
+
+    /** A market stall: fence frame, striped wool awning, barrel counter, stacked crates, a hanging lantern and a banner. */
+    static void stall(ServerLevel l, BlockPos c, int face, int seed) {
+        net.minecraft.world.level.block.Block[][] awn = {{Blocks.PURPLE_WOOL, Blocks.WHITE_WOOL}, {Blocks.CYAN_WOOL, Blocks.BLACK_WOOL}, {Blocks.RED_WOOL, Blocks.YELLOW_WOOL}, {Blocks.MAGENTA_WOOL, Blocks.GRAY_WOOL}};
+        net.minecraft.world.level.block.Block[] a = awn[seed % awn.length];
+        for (int x = -1; x <= 1; x++) for (int z = -2; z <= 2; z++) set(l, c.offset(x, -1, z), Blocks.SPRUCE_PLANKS.defaultBlockState());
+        for (int[] k : new int[][] {{-1, -2}, {1, -2}, {-1, 2}, {1, 2}}) for (int y = 0; y <= 2; y++) set(l, c.offset(k[0], y, k[1]), Blocks.SPRUCE_FENCE.defaultBlockState());
+        for (int x = -1; x <= 1; x++) for (int z = -2; z <= 2; z++) set(l, c.offset(x, 3, z), a[Math.floorMod(z, 2)].defaultBlockState());
+        for (int z = -2; z <= 2; z++) set(l, c.offset(face * 2, 3, z), (z % 2 == 0 ? Blocks.SPRUCE_TRAPDOOR : a[0]).defaultBlockState());   // awning lip over the front
+        for (int z = -1; z <= 1; z++) set(l, c.offset(face, 0, z), (z == 0 ? Blocks.BARREL : Blocks.SPRUCE_SLAB).defaultBlockState());
+        set(l, c.offset(face, 1, -1), Blocks.FLOWER_POT.defaultBlockState()); set(l, c.offset(face, 1, 1), Blocks.CANDLE.defaultBlockState().setValue(net.minecraft.world.level.block.CandleBlock.LIT, true).setValue(net.minecraft.world.level.block.CandleBlock.CANDLES, 3));
+        set(l, c.offset(-face, 0, -1), Blocks.BARREL.defaultBlockState()); set(l, c.offset(-face, 1, -1), Blocks.BARREL.defaultBlockState());
+        set(l, c.offset(-face, 0, 1), Blocks.CHEST.defaultBlockState()); set(l, c.offset(-face, 0, 0), Blocks.COMPOSTER.defaultBlockState());
+        set(l, c.offset(0, 2, 0), Blocks.LANTERN.defaultBlockState().setValue(LanternBlock.HANGING, true));
+        set(l, c.offset(face * 2, 0, 2), Blocks.PURPLE_BANNER.defaultBlockState());
+    }
+
+    /** A small open campfire ringed by log benches. */
+    static void hearth(ServerLevel l, BlockPos c) {
+        set(l, c.below(), Blocks.MUD_BRICKS.defaultBlockState());
+        set(l, c, Blocks.CAMPFIRE.defaultBlockState().setValue(CampfireBlock.LIT, true).setValue(CampfireBlock.SIGNAL_FIRE, false));
+        set(l, c.offset(2, 0, 0), Blocks.STRIPPED_SPRUCE_LOG.defaultBlockState().setValue(net.minecraft.world.level.block.RotatedPillarBlock.AXIS, Direction.Axis.Z));
+        set(l, c.offset(-2, 0, 0), Blocks.STRIPPED_SPRUCE_LOG.defaultBlockState().setValue(net.minecraft.world.level.block.RotatedPillarBlock.AXIS, Direction.Axis.Z));
+        set(l, c.offset(0, 0, 2), Blocks.STRIPPED_SPRUCE_LOG.defaultBlockState().setValue(net.minecraft.world.level.block.RotatedPillarBlock.AXIS, Direction.Axis.X));
+        set(l, c.offset(1, 0, -2), Blocks.BARREL.defaultBlockState());
+        set(l, c.offset(-1, 0, -2), Blocks.CAULDRON.defaultBlockState());
+    }
+
+    /** A glowing crystal outcrop: amethyst spires with clusters and a hidden light. */
+    static void crystal(ServerLevel l, BlockPos c, int seed) {
+        int tall = 3 + seed % 4;
+        for (int y = 0; y < tall; y++) set(l, c.above(y), (y == 0 ? Blocks.BUDDING_AMETHYST : Blocks.AMETHYST_BLOCK).defaultBlockState());
+        set(l, c.above(tall), Blocks.AMETHYST_CLUSTER.defaultBlockState());
+        for (Direction d : Direction.Plane.HORIZONTAL) {
+            int hh = 1 + (seed + d.get2DDataValue() * 7) % Math.max(1, tall - 1);
+            for (int y = 0; y < hh; y++) set(l, c.relative(d).above(y), Blocks.AMETHYST_BLOCK.defaultBlockState());
+            set(l, c.relative(d).above(hh), Blocks.LARGE_AMETHYST_BUD.defaultBlockState());
+            set(l, c.relative(d, 2), Blocks.MEDIUM_AMETHYST_BUD.defaultBlockState().setValue(net.minecraft.world.level.block.AmethystClusterBlock.FACING, Direction.UP));
+        }
+        set(l, c.offset(1, tall, 1), Blocks.LIGHT.defaultBlockState().setValue(net.minecraft.world.level.block.LightBlock.LEVEL, 13));
+        set(l, c.offset(-1, 1, -1), Blocks.SEA_LANTERN.defaultBlockState());
+    }
+
+    /** Hanging purple banners on the arch pillars and tents. */
+    static void banners(ServerLevel l, BlockPos o) {
+        for (int x : new int[] {-4, 4}) set(l, o.offset(x, 6, -16), Blocks.PURPLE_WALL_BANNER.defaultBlockState().setValue(net.minecraft.world.level.block.WallBannerBlock.FACING, Direction.SOUTH));
+        for (int[] t : new int[][] {{-14, -7}, {14, -7}, {-14, 7}, {14, 7}}) set(l, o.offset(t[0], 3, t[1] + (t[1] < 0 ? -5 : 5)), Blocks.BLACK_BANNER.defaultBlockState());
+    }
+
+    /** Glowing life under the rock: spore blossoms and lit cave vines hang into the void. */
+    static void underside(ServerLevel l, BlockPos o) {
+        for (int x = -RADIUS + 4; x <= RADIUS - 4; x += 3) for (int z = -RADIUS + 4; z <= RADIUS - 4; z += 3) {
+            if (h(x * 7, z * 3) > 30) continue;
+            BlockPos p = o.offset(x, -1, z);
+            while (!l.getBlockState(p).isAir() && p.getY() > o.getY() - 30) p = p.below();
+            if (p.getY() <= o.getY() - 30) continue;
+            if (h(x, z * 9) < 12) { set(l, p, Blocks.SPORE_BLOSSOM.defaultBlockState()); continue; }
+            int len = 2 + h(z, x) % 5;
+            for (int i = 0; i < len; i++) set(l, p.below(i), (i == len - 1 ? Blocks.CAVE_VINES : Blocks.CAVE_VINES_PLANT).defaultBlockState()
+                    .setValue(net.minecraft.world.level.block.CaveVines.BERRIES, (i + x) % 2 == 0));
         }
     }
 
