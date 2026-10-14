@@ -14,7 +14,7 @@ import net.minecraft.world.item.TooltipFlag;
  * from the curios:attribute_modifiers component set in the loot file, and the special effect from {@link RiftArtifacts}.
  */
 public class RiftArtifactItem extends Item {
-    public enum Kind { LANTERN, ANKLET, BAND }
+    public enum Kind { LANTERN, ANKLET, BAND, CHAIN, PLUME, COIN }
 
     public final Kind kind;
 

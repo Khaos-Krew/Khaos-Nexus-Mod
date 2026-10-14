@@ -1,0 +1,37 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "apotheosis"
+    }
+  ],
+  "type": "apotheosis:gem",
+  "weights": {
+    "weight": 0,
+    "quality": 0.0
+  },
+  "bonuses": [
+    {
+      "type": "apotheosis:attribute",
+      "attribute": "minecraft:generic.armor",
+      "gem_class": {
+        "key": "armor",
+        "types": [
+          "apotheosis:helmet",
+          "apotheosis:chestplate",
+          "apotheosis:leggings",
+          "apotheosis:boots"
+        ]
+      },
+      "operation": "add_value",
+      "values": {
+        "cracked": 1,
+        "chipped": 1.5,
+        "flawed": 2,
+        "normal": 2.5,
+        "flawless": 3,
+        "perfect": 4
+      }
+    }
+  ]
+}

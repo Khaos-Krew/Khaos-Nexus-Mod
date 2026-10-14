@@ -22,6 +22,9 @@ public final class CompatItems {
     public static DeferredItem<Item> RIFT_LANTERN;
     public static DeferredItem<Item> VOIDSTEP_ANKLET;
     public static DeferredItem<Item> GATEBREAKER_BAND;
+    public static DeferredItem<Item> WARDENS_BROKEN_CHAIN;
+    public static DeferredItem<Item> GUARDIANS_PLUME;
+    public static DeferredItem<Item> HUNTERS_LUCKY_COIN;
 
     private CompatItems() {}
 
@@ -41,6 +44,9 @@ public final class CompatItems {
             RIFT_LANTERN = ITEMS.register("rift_lantern", () -> new RiftArtifactItem(RiftArtifactItem.Kind.LANTERN));
             VOIDSTEP_ANKLET = ITEMS.register("voidstep_anklet", () -> new RiftArtifactItem(RiftArtifactItem.Kind.ANKLET));
             GATEBREAKER_BAND = ITEMS.register("gatebreaker_band", () -> new RiftArtifactItem(RiftArtifactItem.Kind.BAND));
+            WARDENS_BROKEN_CHAIN = ITEMS.register("wardens_broken_chain", () -> new RiftArtifactItem(RiftArtifactItem.Kind.CHAIN));
+            GUARDIANS_PLUME = ITEMS.register("guardians_plume", () -> new RiftArtifactItem(RiftArtifactItem.Kind.PLUME));
+            HUNTERS_LUCKY_COIN = ITEMS.register("hunters_lucky_coin", () -> new RiftArtifactItem(RiftArtifactItem.Kind.COIN));
         }
         ITEMS.register(bus);
     }

@@ -565,8 +565,8 @@ public final class Config {
             .comment("Hunter XP multiplier for clearing an SS gate.")
             .defineInRange("ssXpMultiplier", 1.5D, 0.0D, 20.0D);
     public static final ModConfigSpec.BooleanValue BOSS_RUSH = SERVER_BUILDER
-            .comment("PREVIEW (planned for 1.1, off by default). Boss rush: a timed chain of bosses with one heal. Rosters are datapack files in data/<ns>/khaosnexus_boss_rush/.")
-            .define("bossRush", false);
+            .comment("On by default since 1.1. Boss rush: a timed chain of bosses with one heal. Rosters are datapack files in data/<ns>/khaosnexus_boss_rush/.")
+            .define("bossRush", true);
     public static final ModConfigSpec.ConfigValue<String> BOSS_RUSH_ROSTER = SERVER_BUILDER
             .comment("Roster id used by /khaosnexus bossrush start.")
             .define("bossRushRoster", "khaosnexus:default");
@@ -580,8 +580,8 @@ public final class Config {
             .comment("Ticks between one boss dying and the next spawning.")
             .defineInRange("bossRushDelay", 60, 0, 1200);
     public static final ModConfigSpec.BooleanValue CHALLENGES = SERVER_BUILDER
-            .comment("PREVIEW (planned for 1.1, off by default). Monthly challenge gates: authored encounters with fixed rules. Files in data/<ns>/khaosnexus_challenges/.")
-            .define("challengeGates", false);
+            .comment("On by default since 1.1. Monthly challenge gates: authored encounters with fixed rules. Files in data/<ns>/khaosnexus_challenges/.")
+            .define("challengeGates", true);
     public static final ModConfigSpec.ConfigValue<String> CHALLENGE_FORCE = SERVER_BUILDER
             .comment("Force this challenge id instead of the monthly pick (empty = monthly).")
             .define("challengeForce", "");
@@ -589,17 +589,17 @@ public final class Config {
             .comment("Attempts per player per month (0 = unlimited). A challenge allows one life per attempt.")
             .defineInRange("challengeAttemptsPerMonth", 3, 0, 1000);
     public static final ModConfigSpec.BooleanValue AWAKENING = SERVER_BUILDER
-            .comment("PREVIEW (planned for 1.1, off by default). Second Awakening: a one-time quest at National level that unlocks an awakened ability (sneak + secondary ability key). Options are datapack files in data/<ns>/khaosnexus_awakenings/.")
-            .define("secondAwakening", false);
+            .comment("On by default since 1.1. Second Awakening: a one-time quest at National level that unlocks an awakened ability (sneak + secondary ability key). Options are datapack files in data/<ns>/khaosnexus_awakenings/.")
+            .define("secondAwakening", true);
     public static final ModConfigSpec.ConfigValue<List<? extends String>> AWAKENING_STEPS = SERVER_BUILDER
             .comment("Quest steps after reaching National, in order. Forms: stat:<EndgameKey>:<min>, spire:<floor>, title:<id>.")
             .defineListAllowEmpty("awakeningSteps", List.of("stat:SSClears:3", "spire:12", "stat:BossRushWins:5"), () -> "spire:12", o -> o instanceof String);
     public static final ModConfigSpec.BooleanValue GROUP_RAIDS = SERVER_BUILDER
-            .comment("PREVIEW (planned for 1.1, off by default). Group raids: multi-phase raid bosses for up to groupRaidMaxParty hunters, with tank aggro and healer cleanses. Bosses are datapack files in data/<ns>/khaosnexus_raid_bosses/.")
-            .define("groupRaids", false);
+            .comment("On by default since 1.1. Group raids: multi-phase raid bosses for up to groupRaidMaxParty hunters, with tank aggro and healer cleanses. Bosses are datapack files in data/<ns>/khaosnexus_raid_bosses/.")
+            .define("groupRaids", true);
     public static final ModConfigSpec.IntValue GROUP_RAID_MIN = SERVER_BUILDER
             .comment("Smallest party for a group raid.")
-            .defineInRange("groupRaidMinParty", 4, 1, 8);
+            .defineInRange("groupRaidMinParty", 2, 1, 8);
     public static final ModConfigSpec.IntValue GROUP_RAID_MAX = SERVER_BUILDER
             .comment("Largest party for a group raid (also raises the party cap).")
             .defineInRange("groupRaidMaxParty", 8, 1, 8);

@@ -52,4 +52,40 @@ public final class RiftArtifacts {
             event.setNewDamage(event.getNewDamage() * 1.2F);
         }
     }
+
+    /** Warden's Broken Chain: the Rift Warden's hits deal 25% less and can't slow the wearer. */
+    @SubscribeEvent
+    public static void chain(LivingDamageEvent.Pre event) {
+        if (event.getSource().getEntity() instanceof com.khaoskrew.khaosnexus.mob.RiftBoss b
+                && b.getType() == com.khaoskrew.khaosnexus.mob.ModEntities.RIFT_WARDEN.get()
+                && worn(event.getEntity(), CompatItems.WARDENS_BROKEN_CHAIN)) {
+            event.setNewDamage(event.getNewDamage() * 0.75F);
+            event.getEntity().removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
+        }
+    }
+
+    /** Guardian's Plume: no knockback from the Spire Guardian (its spin). */
+    @SubscribeEvent
+    public static void plume(net.neoforged.neoforge.event.entity.living.LivingKnockBackEvent event) {
+        LivingEntity e = event.getEntity();
+        if (e.getLastHurtByMob() != null && e.getLastHurtByMob().getType() == com.khaoskrew.khaosnexus.mob.ModEntities.SPIRE_GUARDIAN.get()
+                && worn(e, CompatItems.GUARDIANS_PLUME)) {
+            event.setCanceled(true);
+        }
+    }
+
+    /** Boss trophies: the Warden and the Guardian each drop their trophy 20% of the time (party-killed or solo). */
+    @SubscribeEvent
+    public static void trophies(net.neoforged.neoforge.event.entity.living.LivingDropsEvent event) {
+        if (!CompatItems.artifacts() || !SoftCompat.ARTIFACTS.active() || !(event.getSource().getEntity() instanceof Player)) {
+            return;
+        }
+        LivingEntity dead = event.getEntity();
+        net.neoforged.neoforge.registries.DeferredItem<Item> drop =
+                dead.getType() == com.khaoskrew.khaosnexus.mob.ModEntities.RIFT_WARDEN.get() ? CompatItems.WARDENS_BROKEN_CHAIN
+                : dead.getType() == com.khaoskrew.khaosnexus.mob.ModEntities.SPIRE_GUARDIAN.get() ? CompatItems.GUARDIANS_PLUME : null;
+        if (drop != null && dead.getRandom().nextFloat() < 0.2F) {
+            event.getDrops().add(new net.minecraft.world.entity.item.ItemEntity(dead.level(), dead.getX(), dead.getY(), dead.getZ(), new net.minecraft.world.item.ItemStack(drop.get())));
+        }
+    }
 }

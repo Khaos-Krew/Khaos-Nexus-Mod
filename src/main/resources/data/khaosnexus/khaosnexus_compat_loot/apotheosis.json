@@ -89,6 +89,118 @@
           "apotheosis:purity": "perfect"
         }
       }
+    },
+    {
+      "ranks": {
+        "B": 0.03,
+        "A": 0.04,
+        "S": 0.05
+      },
+      "stack": {
+        "id": "apotheosis:gem",
+        "components": {
+          "apotheosis:gem": "khaosnexus:bulwark",
+          "apotheosis:purity": "flawed"
+        }
+      }
+    },
+    {
+      "ranks": {
+        "B": 0.03,
+        "A": 0.04,
+        "S": 0.05
+      },
+      "stack": {
+        "id": "apotheosis:gem",
+        "components": {
+          "apotheosis:gem": "khaosnexus:shadowfang",
+          "apotheosis:purity": "flawed"
+        }
+      }
+    },
+    {
+      "ranks": {
+        "B": 0.03,
+        "A": 0.04,
+        "S": 0.05
+      },
+      "stack": {
+        "id": "apotheosis:gem",
+        "components": {
+          "apotheosis:gem": "khaosnexus:arcanum",
+          "apotheosis:purity": "flawed"
+        }
+      }
+    },
+    {
+      "ranks": {
+        "B": 0.03,
+        "A": 0.04,
+        "S": 0.05
+      },
+      "stack": {
+        "id": "apotheosis:gem",
+        "components": {
+          "apotheosis:gem": "khaosnexus:hawkeye",
+          "apotheosis:purity": "flawed"
+        }
+      }
+    },
+    {
+      "ranks": {
+        "B": 0.03,
+        "A": 0.04,
+        "S": 0.05
+      },
+      "stack": {
+        "id": "apotheosis:gem",
+        "components": {
+          "apotheosis:gem": "khaosnexus:lifethread",
+          "apotheosis:purity": "flawed"
+        }
+      }
+    },
+    {
+      "ranks": {
+        "B": 0.03,
+        "A": 0.04,
+        "S": 0.05
+      },
+      "stack": {
+        "id": "apotheosis:gem",
+        "components": {
+          "apotheosis:gem": "khaosnexus:bloodrage",
+          "apotheosis:purity": "flawed"
+        }
+      }
+    },
+    {
+      "ranks": {
+        "B": 0.03,
+        "A": 0.04,
+        "S": 0.05
+      },
+      "stack": {
+        "id": "apotheosis:gem",
+        "components": {
+          "apotheosis:gem": "khaosnexus:legion",
+          "apotheosis:purity": "flawed"
+        }
+      }
+    },
+    {
+      "ranks": {
+        "B": 0.03,
+        "A": 0.04,
+        "S": 0.05
+      },
+      "stack": {
+        "id": "apotheosis:gem",
+        "components": {
+          "apotheosis:gem": "khaosnexus:phylactery",
+          "apotheosis:purity": "flawed"
+        }
+      }
     }
   ]
 }

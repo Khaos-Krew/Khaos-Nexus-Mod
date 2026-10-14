@@ -253,7 +253,7 @@ public class EndgameGameTests {
         try {
             bodychallengeGatesRules(helper);
         } finally {
-            Config.CHALLENGES.set(false);
+            Config.CHALLENGES.set(true);
         }
     }
 
@@ -294,7 +294,7 @@ public class EndgameGameTests {
         try {
             bodysecondAwakeningQuestAndCast(helper);
         } finally {
-            Config.AWAKENING.set(false);
+            Config.AWAKENING.set(true);
         }
     }
 
@@ -331,7 +331,7 @@ public class EndgameGameTests {
         try {
             bodygroupRaidPhasesAggroAndCleanse(helper);
         } finally {
-            Config.GROUP_RAIDS.set(false);
+            Config.GROUP_RAIDS.set(true);
         }
     }
 
