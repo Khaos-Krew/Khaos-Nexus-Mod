@@ -95,6 +95,7 @@ public final class HunterCard {
             if (!profile.cardUnlocked && profile.hasProgress()) {
                 unlock(player);
             }
+            welcome(player);
         }
     }
 
@@ -112,5 +113,37 @@ public final class HunterCard {
                 new ItemStack(Items.MAP), 12, 5, 0.05F));
         event.getTrades().get(3).add((trader, random) -> new MerchantOffer(new ItemCost(Items.EMERALD, 12),
                 new ItemStack(com.khaoskrew.khaosnexus.registry.ModRegistries.NEXUS_TOKEN.get()), 6, 10, 0.05F));
+    }
+
+    public static final String STARTER_TAG = "khaosnexus_starter_card";
+    static final java.util.List<net.minecraft.resources.ResourceLocation> RECIPES = java.util.List.of(
+            net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "guild_desk"),
+            net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "hunter_card"));
+
+    private static boolean starterOn() {
+        try {
+            return Config.STARTER_CARD.get();
+        } catch (IllegalStateException notLoaded) {
+            return true;
+        }
+    }
+
+    /** Unlocks the Guild Desk / Hunter Card recipes and, once per player, hands out the starter card with a hint. */
+    public static void welcome(ServerPlayer player) {
+        java.util.List<net.minecraft.world.item.crafting.RecipeHolder<?>> rs = new java.util.ArrayList<>();
+        for (var id : RECIPES) player.server.getRecipeManager().byKey(id).ifPresent(rs::add);
+        player.awardRecipes(rs);
+        net.minecraft.nbt.CompoundTag keep = player.getPersistentData().getCompound(net.minecraft.world.entity.player.Player.PERSISTED_NBT_TAG);
+        if (keep.getBoolean(STARTER_TAG)) {
+            return;
+        }
+        keep.putBoolean(STARTER_TAG, true);
+        player.getPersistentData().put(net.minecraft.world.entity.player.Player.PERSISTED_NBT_TAG, keep);
+        boolean give = starterOn() && required() && !player.getData(ModAttachments.HUNTER).cardUnlocked;
+        if (give && !player.getInventory().add(new ItemStack(CARD.get()))) {
+            player.drop(new ItemStack(CARD.get()), false);
+        }
+        player.displayClientMessage(net.minecraft.network.chat.Component.translatable(
+                give ? "khaosnexus.card.welcome_given" : "khaosnexus.card.welcome").withStyle(net.minecraft.ChatFormatting.GOLD), false);
     }
 }

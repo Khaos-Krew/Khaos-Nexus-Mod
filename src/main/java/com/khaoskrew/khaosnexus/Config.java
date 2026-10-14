@@ -434,6 +434,10 @@ public final class Config {
                     "(sold by the Guild Clerk villager). When false, every player has them from the start.")
             .define("required", true);
 
+    public static final ModConfigSpec.BooleanValue STARTER_CARD = SERVER_BUILDER
+            .comment("Give every player one unbound Hunter Card the first time they join (once per player, tracked in player data).")
+            .define("starterCard", true);
+
     public static final ModConfigSpec.IntValue CARD_GATE_RADIUS = SERVER_BUILDER
             .comment("Radius in blocks of the Hunter Card's nearby-gates list.")
             .defineInRange("gateRadius", 256, 16, 2048);
