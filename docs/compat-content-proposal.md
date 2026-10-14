@@ -232,7 +232,7 @@ All four fights last 2.5–3.5 minutes for the script, which wins or nearly wins
 | 2 | **Fan processing: "Rift Bathing"** | A new fan type (air passing through a Rift Core block) that turns ores into rift-infused variants with double essence yield. | M | fx, tex |
 | 3 | **Crushing & milling recipes** | Rift ores and boss drops crush into essence and dust; pure data. | S | – |
 | 4 | **Sequenced assembly: S-rank Forge Core** | A multi-step assembly that makes the endgame Forge Core, as an alternative to boss drops. | S | tex (intermediate item) |
-| 5 | **Gate Siphon** (kinetic generator) | A rotating drill placed in a cleared gate's remnant that slowly outputs essence while spun. | M | model |
+| 5 | **Gate Siphon** (kinetic generator) | A rotating drill placed in a cleacrimson rift's remnant that slowly outputs essence while spun. | M | model |
 
 ## 11. JEI / EMI
 | # | Addition | Work | Art |

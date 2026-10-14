@@ -23,7 +23,7 @@ import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 import software.bernie.geckolib.util.Color;
 
-/** The Nexus Gate as a floating anime rift: layered, rank-tinted energy planes plus a white-hot core pass. */
+/** The Nexus Gate as a floating energy rift: layered, rank-tinted energy planes plus a white-hot core pass. */
 public class NexusRiftRenderer extends GeoBlockRenderer<NexusGateBlockEntity> {
     private static final ResourceLocation CORE = ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "textures/block/nexus_rift_core.png");
 

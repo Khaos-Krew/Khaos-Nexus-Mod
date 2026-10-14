@@ -10,14 +10,14 @@ The goal is to keep S-rank hunters engaged without endless stat inflation. This 
 | # | Idea | What it is | Fun | Effort | Priority |
 |---|---|---|---|---|---|
 | 1 | **Weekly rotating modifiers** | Every week S gates roll 2 modifiers from a datapack list, for example "Void-touched: mobs blink", "Glass cannon: everyone deals and takes ×1.5" or "No healing items". Clears under the modifiers give bonus Rift Cores. | 5 | S–M | ★★★★★ |
-| 2 | **Red gates / dungeon breaks** | A rare gate (about 1 in 40 S gates) that locks its entrance until cleared, with no leaving and a stronger boss. Ignoring an open gate for 30 minutes causes a "break": the mobs spill into the overworld around the gate, and the server is warned. | 5 | M | ★★★★★ |
+| 2 | **Red gates / rift overflows** | A rare gate (about 1 in 40 S gates) that locks its entrance until cleared, with no leaving and a stronger boss. Ignoring an open gate for 30 minutes causes a "break": the mobs spill into the overworld around the gate, and the server is warned. | 5 | M | ★★★★★ |
 | 3 | **Infinite Spire floors** | After the authored floors, floors are procedural with +6% health and damage per floor. Every 10th floor is a boss floor with an affix. Personal-best floor is shown on the Hunter Card. | 5 | M | ★★★★☆ |
 | 4 | **Leaderboards** | Server boards for fastest clear per rank, highest Spire floor this season and weekly-modifier clears. Shown on a Hunter Card tab and in `/khaosnexus top`. Seasons reset with `spire newseason`. | 4 | S–M | ★★★★☆ |
 | 5 | **Mastery tracks** (per class) | XP past S rank goes into class mastery levels 1–50. Each level gives a small sidegrade choice, for example "Shadow Step leaves a decoy" or "+1 summon, −10% summon HP". This is horizontal growth rather than raw stats. | 4 | M | ★★★★☆ |
 | 6 | **Boss rush** | A chain of 5 gate bosses (ours plus installed boss-mod bosses) with one heal between fights. Timed, with leaderboard support. | 4 | M | ★★★☆☆ |
 | 7 | **Challenge gates** (handcrafted) | A monthly authored dungeon with fixed rules: solo only, one life, class-locked. It rewards a unique title. | 4 | M | ★★★☆☆ |
-| 8 | **Prestige / National-level rank** (SS, then National) | Tied to achievements rather than XP grind: clear a red gate, reach Spire floor 50 and win a boss rush. It grants a title, an aura, a +1 skill point cap and access to SS gates (S tuning ×1.3 with an extra modifier). | 4 | M | ★★★☆☆ |
-| 9 | **Second Awakening** | A one-time quest chain at National level that unlocks a second active ability per class, chosen from 2 options. Big hype moment with an animation and a screen effect. | 5 | L | ★★★☆☆ |
+| 8 | **Prestige / Paragon rank** (SS, then Paragon) | Tied to achievements rather than XP grind: clear a crimson rift, reach Spire floor 50 and win a boss rush. It grants a title, an aura, a +1 skill point cap and access to SS gates (S tuning ×1.3 with an extra modifier). | 4 | M | ★★★☆☆ |
+| 9 | **Ascension** | A one-time quest chain at Paragon level that unlocks a second active ability per class, chosen from 2 options. Big hype moment with an animation and a screen effect. | 5 | L | ★★★☆☆ |
 | 10 | **Group raids (8 players)** | Multi-phase raid bosses with role mechanics (tank aggro, healer cleanse), using the existing raid and party system. Personal loot already exists. | 5 | L | ★★★☆☆ |
 | 11 | **Cosmetic titles and auras** | Titles exist already. Add particle auras by achievement (red-gate survivor, Spire 100, boss-rush champion), shown in third person and on the Hunter Card. | 3 | S | ★★★☆☆ |
 | 12 | **Guilds** | Persistent parties with a guild level, a guild bank and guild-only weekly gates. | 3 | L | ★★☆☆☆ |
@@ -36,15 +36,15 @@ Everything below is in the `[endgame]` section of the server config, and each fe
 | # | Feature | Commands | Datapack folder | Key config |
 |---|---|---|---|---|
 | 1 | Weekly modifiers | `/khaosnexus weekly` | `khaosnexus_gate_modifiers` | `weeklyModifiers`, `weeklyModifierCount`, `weeklyRanks`, `weeklySeed`, `weeklyForce` |
-| 2 | Red gates and dungeon breaks | — | — | `redGateChance`, `redGateRanks`, `redBoss*`, `redLockExit`, `dungeonBreaks`, `dungeonBreakMinutes` |
+| 2 | Red gates and rift overflows | — | — | `redGateChance`, `redGateRanks`, `redBoss*`, `redLockExit`, `dungeonBreaks`, `dungeonBreakMinutes` |
 | 4 | Leaderboards | `/khaosnexus top <E..S\|spire\|weekly\|rush>` | — | `leaderboards`, `leaderboardSize` |
 | 3 | Infinite Spire | `/khaosnexus spire` | `khaosnexus_spire_affixes` | `spireInfinite`, `spireScaleFrom`, `spireScalePerFloor`, `spireScaleCap`, `spireBossInterval` |
 | 11 | Auras | `/khaosnexus aura [equip <id>\|clear]` | `khaosnexus_auras` | `auras`, `auraInterval` |
 | 5 | Mastery tracks | `/khaosnexus mastery [pick <id>\|reset]` | `khaosnexus_mastery` | `mastery`, `masteryXpPerLevel`, `masteryMaxLevel` |
-| 8 | SS / National rank, SS gates | `/khaosnexus prestige` | — | `prestigeRanks`, `ss*`, `national*`, `prestigeSkillPoints`, `ssGate*` |
+| 8 | SS / Paragon rank, SS gates | `/khaosnexus prestige` | — | `prestigeRanks`, `ss*`, `national*`, `prestigeSkillPoints`, `ssGate*` |
 | 6 | Boss rush | `/khaosnexus bossrush start\|leave` | `khaosnexus_boss_rush` | `bossRush`, `bossRushRoster`, `bossRushMinRank`, `bossRushRewardCores` |
 | 7 | Challenge gates | `/khaosnexus challenge [start\|leave]` | `khaosnexus_challenges` | `challengeGates`, `challengeForce`, `challengeAttemptsPerMonth` |
-| 9 | Second Awakening | `/khaosnexus awaken [choose <id>\|use]`, sneak + secondary ability key | `khaosnexus_awakenings` | `secondAwakening`, `awakeningSteps` |
+| 9 | Ascension | `/khaosnexus awaken [choose <id>\|use]`, sneak + secondary ability key | `khaosnexus_awakenings` | `secondAwakening`, `awakeningSteps` |
 | 10 | Group raids (8) | `/khaosnexus raid group <boss>` | `khaosnexus_raid_bosses` | `groupRaids`, `groupRaidMinParty`, `groupRaidMaxParty`, `raidCleanseRadius` |
 | 12 | Guilds | on hold (may overlap with the server's own setup) | | |
 

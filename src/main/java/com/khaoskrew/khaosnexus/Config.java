@@ -443,7 +443,7 @@ public final class Config {
     }
 
     static {
-        SERVER_BUILDER.comment("Post-S-rank endgame: weekly modifiers, red gates, leaderboards, Spire scaling and more.").push("endgame");
+        SERVER_BUILDER.comment("Post-S-rank endgame: weekly modifiers, crimson rifts, leaderboards, Spire scaling and more.").push("endgame");
     }
     public static final ModConfigSpec.BooleanValue WEEKLY_ENABLED = SERVER_BUILDER
             .comment("Weekly rotating gate modifiers (endgame). Modifiers are datapack files in data/<ns>/khaosnexus_gate_modifiers/.")
@@ -461,31 +461,31 @@ public final class Config {
             .comment("Force these modifier ids instead of the weekly roll (empty = roll).")
             .defineListAllowEmpty("weeklyForce", List.of(), () -> "khaosnexus:glass_cannon", o -> o instanceof String);
     public static final ModConfigSpec.DoubleValue RED_GATE_CHANCE = SERVER_BUILDER
-            .comment("Chance a new gate of redGateRanks rolls as a Red Gate: locked until cleared, stronger boss, bigger rewards.")
+            .comment("Chance a new gate of redGateRanks rolls as a Crimson Rift: locked until cleared, stronger boss, bigger rewards.")
             .defineInRange("redGateChance", 0.03D, 0.0D, 1.0D);
     public static final ModConfigSpec.ConfigValue<String> RED_GATE_RANKS = SERVER_BUILDER
-            .comment("Gate ranks that can roll as Red Gates, comma separated.")
+            .comment("Gate ranks that can roll as Crimson Rifts, comma separated.")
             .define("redGateRanks", "A,S");
     public static final ModConfigSpec.DoubleValue RED_BOSS_HEALTH = SERVER_BUILDER
-            .comment("Red Gate boss health multiplier.")
+            .comment("Crimson Rift boss health multiplier.")
             .defineInRange("redBossHealth", 1.5D, 0.1D, 20.0D);
     public static final ModConfigSpec.DoubleValue RED_BOSS_DAMAGE = SERVER_BUILDER
-            .comment("Red Gate boss damage multiplier.")
+            .comment("Crimson Rift boss damage multiplier.")
             .defineInRange("redBossDamage", 1.25D, 0.1D, 20.0D);
     public static final ModConfigSpec.IntValue RED_BONUS_CORES = SERVER_BUILDER
-            .comment("Extra Rift Cores dropped when a Red Gate is cleared.")
+            .comment("Extra Rift Cores dropped when a Crimson Rift is cleared.")
             .defineInRange("redBonusCores", 3, 0, 64);
     public static final ModConfigSpec.DoubleValue RED_XP = SERVER_BUILDER
-            .comment("Hunter XP multiplier for clearing a Red Gate.")
+            .comment("Hunter XP multiplier for clearing a Crimson Rift.")
             .defineInRange("redXpMultiplier", 2.0D, 0.0D, 20.0D);
     public static final ModConfigSpec.BooleanValue RED_LOCK = SERVER_BUILDER
-            .comment("Hunters inside a Red Gate cannot leave until it is cleared (or the dungeon collapses).")
+            .comment("Hunters inside a Crimson Rift cannot leave until it is cleared (or the dungeon collapses).")
             .define("redLockExit", true);
     public static final ModConfigSpec.BooleanValue BREAKS_ENABLED = SERVER_BUILDER
-            .comment("Dungeon breaks: a gate left unopened too long spills its wave into the world around it.")
+            .comment("Rift overflows: a gate left unopened too long spills its wave into the world around it.")
             .define("dungeonBreaks", true);
     public static final ModConfigSpec.IntValue BREAK_MINUTES = SERVER_BUILDER
-            .comment("Minutes an unopened gate waits before it breaks. Red Gates break in half the time.")
+            .comment("Minutes an unopened gate waits before it breaks. Crimson Rifts break in half the time.")
             .defineInRange("dungeonBreakMinutes", 30, 1, 10080);
     public static final ModConfigSpec.ConfigValue<String> BREAK_MIN_RANK = SERVER_BUILDER
             .comment("Lowest gate rank that can break.")
@@ -527,10 +527,10 @@ public final class Config {
             .comment("Highest mastery level per class. Each level is one perk point.")
             .defineInRange("masteryMaxLevel", 50, 1, 1000);
     public static final ModConfigSpec.BooleanValue PRESTIGE = SERVER_BUILDER
-            .comment("Prestige ranks past S: SS, then National. Earned by achievements, not XP.")
+            .comment("Prestige ranks past S: SS, then Paragon. Earned by achievements, not XP.")
             .define("prestigeRanks", true);
     public static final ModConfigSpec.BooleanValue SS_NEEDS_RED = SERVER_BUILDER
-            .comment("SS requires having cleared a Red Gate.")
+            .comment("SS requires having cleared a Crimson Rift.")
             .define("ssRequiresRedGate", true);
     public static final ModConfigSpec.IntValue SS_SPIRE = SERVER_BUILDER
             .comment("SS requires this many fully cleared Spire floors (10 levels each).")
@@ -539,19 +539,19 @@ public final class Config {
             .comment("SS requires this many boss rush wins.")
             .defineInRange("ssBossRushWins", 1, 0, 1000);
     public static final ModConfigSpec.IntValue NATIONAL_SPIRE = SERVER_BUILDER
-            .comment("National requires this many fully cleared Spire floors (and SS).")
+            .comment("Paragon requires this many fully cleared Spire floors (and SS).")
             .defineInRange("nationalSpireFloor", 10, 0, 100000);
     public static final ModConfigSpec.IntValue NATIONAL_RUSH = SERVER_BUILDER
-            .comment("National requires this many boss rush wins.")
+            .comment("Paragon requires this many boss rush wins.")
             .defineInRange("nationalBossRushWins", 3, 0, 1000);
     public static final ModConfigSpec.IntValue NATIONAL_CHALLENGES = SERVER_BUILDER
-            .comment("National requires this many challenge gate clears.")
+            .comment("Paragon requires this many challenge gate clears.")
             .defineInRange("nationalChallengeClears", 1, 0, 1000);
     public static final ModConfigSpec.IntValue PRESTIGE_SKILL_POINTS = SERVER_BUILDER
-            .comment("Extra skill points per prestige rank (SS = 1x, National = 2x).")
+            .comment("Extra skill points per prestige rank (SS = 1x, Paragon = 2x).")
             .defineInRange("prestigeSkillPoints", 1, 0, 100);
     public static final ModConfigSpec.DoubleValue SS_GATE_CHANCE = SERVER_BUILDER
-            .comment("Chance a new S gate rolls as an SS gate (only SS and National hunters can open it).")
+            .comment("Chance a new S gate rolls as an SS gate (only SS and Paragon hunters can open it).")
             .defineInRange("ssGateChance", 0.1D, 0.0D, 1.0D);
     public static final ModConfigSpec.DoubleValue SS_GATE_SCALE = SERVER_BUILDER
             .comment("SS gate boss health and damage multiplier on top of S tuning.")
@@ -590,10 +590,10 @@ public final class Config {
             .comment("Attempts per player per month (0 = unlimited). A challenge allows one life per attempt.")
             .defineInRange("challengeAttemptsPerMonth", 3, 0, 1000);
     public static final ModConfigSpec.BooleanValue AWAKENING = SERVER_BUILDER
-            .comment("On by default since 1.1. Second Awakening: a one-time quest at National level that unlocks an awakened ability (sneak + secondary ability key). Options are datapack files in data/<ns>/khaosnexus_awakenings/.")
+            .comment("On by default since 1.1. Ascension: a one-time quest at Paragon level that unlocks an awakened ability (sneak + secondary ability key). Options are datapack files in data/<ns>/khaosnexus_awakenings/.")
             .define("secondAwakening", true);
     public static final ModConfigSpec.ConfigValue<List<? extends String>> AWAKENING_STEPS = SERVER_BUILDER
-            .comment("Quest steps after reaching National, in order. Forms: stat:<EndgameKey>:<min>, spire:<floor>, title:<id>.")
+            .comment("Quest steps after reaching Paragon, in order. Forms: stat:<EndgameKey>:<min>, spire:<floor>, title:<id>.")
             .defineListAllowEmpty("awakeningSteps", List.of("stat:SSClears:3", "spire:12", "stat:BossRushWins:5"), () -> "spire:12", o -> o instanceof String);
     public static final ModConfigSpec.BooleanValue GROUP_RAIDS = SERVER_BUILDER
             .comment("On by default since 1.1. Group raids: multi-phase raid bosses for up to groupRaidMaxParty hunters, with tank aggro and healer cleanses. Bosses are datapack files in data/<ns>/khaosnexus_raid_bosses/.")

@@ -8,10 +8,10 @@ import net.minecraft.world.entity.player.Player;
 
 /**
  * Hunter Tome rules that don't touch Ars Nouveau classes (safe to call without Ars installed).
- * Tiers: 0..5 = hunter rank E..S, 6 = Monarch (SS / National).
+ * Tiers: 0..5 = hunter rank E..S, 6 = Paragon (SS / Paragon).
  */
 public final class HunterTomes {
-    public static final String[] TIER_IDS = {"e", "d", "c", "b", "a", "s", "monarch"};
+    public static final String[] TIER_IDS = {"e", "d", "c", "b", "a", "s", "paragon"};
     /** Spell slots per tier. */
     public static final int[] SLOTS = {3, 4, 5, 6, 7, 9, 10};
     /** Ars glyph tier allowed (1..3): spell complexity. */

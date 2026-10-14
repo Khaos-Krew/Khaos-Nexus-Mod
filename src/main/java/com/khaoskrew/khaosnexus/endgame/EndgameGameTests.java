@@ -66,7 +66,7 @@ public class EndgameGameTests {
         } finally {
             Config.RED_GATE_CHANCE.set(chance);
         }
-        helper.assertTrue(RedGates.breakDelay(true) * 2 == RedGates.breakDelay(false), "red gates break twice as fast");
+        helper.assertTrue(RedGates.breakDelay(true) * 2 == RedGates.breakDelay(false), "crimson rifts break twice as fast");
         helper.assertTrue(RedGates.canBreak(GateRank.S) && !RedGates.canBreak(GateRank.E), "break min rank");
         helper.assertTrue(RedGates.scaleXp(80, true) == 160 && RedGates.scaleXp(80, false) == 80, "red xp multiplier");
 
@@ -202,13 +202,13 @@ public class EndgameGameTests {
         helper.assertTrue(Prestige.tryPromote(player) && Prestige.level(p) == Prestige.SS, "promoted to SS");
         helper.assertTrue(p.hasTitle(Prestige.TITLE_SS), "SS title");
         helper.assertTrue(com.khaoskrew.khaosnexus.skill.SkillService.totalPoints(p) == basePoints + Config.PRESTIGE_SKILL_POINTS.get(), "bonus skill point");
-        helper.assertFalse(Prestige.missing(p).isEmpty(), "National needs more");
+        helper.assertFalse(Prestige.missing(p).isEmpty(), "Paragon needs more");
         p.spireBest = Config.NATIONAL_SPIRE.get();
         p.endgame.putInt(Prestige.RUSH_WINS, Config.NATIONAL_RUSH.get());
         p.endgame.putInt(Prestige.CHALLENGES, Config.NATIONAL_CHALLENGES.get());
-        helper.assertTrue(Prestige.tryPromote(player) && Prestige.level(p) == Prestige.NATIONAL, "promoted to National");
-        helper.assertFalse(Prestige.tryPromote(player), "National is the top");
-        helper.assertTrue(Auras.unlockedIds(p).stream().anyMatch(r -> r.getPath().equals("national")), "National aura unlocks");
+        helper.assertTrue(Prestige.tryPromote(player) && Prestige.level(p) == Prestige.NATIONAL, "promoted to Paragon");
+        helper.assertFalse(Prestige.tryPromote(player), "Paragon is the top");
+        helper.assertTrue(Auras.unlockedIds(p).stream().anyMatch(r -> r.getPath().equals("national")), "Paragon aura unlocks");
         double chance = Config.SS_GATE_CHANCE.get();
         try {
             Config.SS_GATE_CHANCE.set(1.0D);

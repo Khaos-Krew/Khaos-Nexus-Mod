@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "khaosnexus:item/hunter_tome_monarch"
+    "layer0": "khaosnexus:item/hunter_tome_paragon"
   }
 }

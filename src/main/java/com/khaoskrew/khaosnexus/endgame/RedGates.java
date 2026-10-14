@@ -13,7 +13,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
-/** Red Gates and dungeon-break rules. State lives on NexusGateBlockEntity; this holds the tunable logic. */
+/** Crimson Rifts and rift-overflow rules. State lives on NexusGateBlockEntity; this holds the tunable logic. */
 public final class RedGates {
     public static final String TITLE = "red_gate_survivor";
     public static final String BREAK_TITLE = "break_stopper";

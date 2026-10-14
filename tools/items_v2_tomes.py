@@ -1,7 +1,7 @@
 from gen_items_v2 import *
 RAMPS['rankE'] = R('#1a1a1e', '#46464e', '#77777f', '#a9a9ae', '#d6d6d8', '#ffffff')
 RAMPS['rankD'] = RAMPS['green']; RAMPS['rankC'] = RAMPS['cyan']; RAMPS['rankB'] = RAMPS['void']; RAMPS['rankA'] = RAMPS['amber']; RAMPS['rankS'] = RAMPS['rift']
-RAMPS['moncov'] = R('#06040c', '#140c22', '#22143a', '#321e54', '#4a2e78', '#6e4aa8')
+RAMPS['parcov'] = R('#06040c', '#140c22', '#22143a', '#321e54', '#4a2e78', '#6e4aa8')
 RAMPS['blue_leather'] = R('#0a0c1a', '#18203e', '#243466', '#344c8e', '#5070b4', '#86a4dc')
 RAMPS['plum'] = R('#12060e', '#32122a', '#521e46', '#743064', '#9a4a86', '#c87cb4')
 RAMPS['oxblood'] = R('#120406', '#360c12', '#5a141e', '#7e1e2a', '#a8323c', '#d46a66')
@@ -10,7 +10,7 @@ RAMPS['forest'] = R('#06100a', '#122a1a', '#1e442a', '#2c623c', '#428456', '#70b
 # cover ramp, trim ramp, gem ramp, ornament level 0..6
 TIERS = {
  'e': ('leather', 'iron', 'rankE', 0), 'd': ('forest', 'bronze', 'rankD', 1), 'c': ('blue_leather', 'steel', 'rankC', 2),
- 'b': ('plum', 'gold', 'rankB', 3), 'a': ('oxblood', 'gold', 'rankA', 4), 's': ('night', 'gold', 'rankS', 5), 'monarch': ('moncov', 'white', 'void', 6)}
+ 'b': ('plum', 'gold', 'rankB', 3), 'a': ('oxblood', 'gold', 'rankA', 4), 's': ('night', 'gold', 'rankS', 5), 'paragon': ('parcov', 'white', 'void', 6)}
 
 def tome(cover, trim, gem, lvl):
     s = Sprite()
@@ -40,7 +40,7 @@ def tome(cover, trim, gem, lvl):
         for x, y in ((9, 21), (11, 21), (13, 20), (19, 9), (17, 8), (20, 19)): s.px([(x, y)], gem, 4)
     if lvl >= 5:  # S: crown of rift shards over the top edge
         for x, h in ((8, 3), (13, 4), (18, 3)): s.shape(poly([(x, 4.5), (x + 1.5, 4.5 - h), (x + 3, 4.5)]), gem, normal=facet_normals(x + 1.5, 3, 2))
-    if lvl >= 6:  # Monarch: void flames along the spine + twin eyes
+    if lvl >= 6:  # Paragon: void flames along the spine + twin eyes
         for y in range(8, 27, 3): s.px([(2, y), (1, y + 1)], 'void', 4)
         s.px([(12, 11), (18, 10)], 'void', 5)
     return s.image()

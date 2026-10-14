@@ -22,7 +22,7 @@ public final class CompatItems {
     public static DeferredItem<Item> RIFT_LANTERN;
     public static DeferredItem<Item> VOIDSTEP_ANKLET;
     public static DeferredItem<Item> GATEBREAKER_BAND;
-    /** Hunter Tomes by tier (E, D, C, B, A, S, Monarch); null without Ars Nouveau. */
+    /** Hunter Tomes by tier (E, D, C, B, A, S, Paragon); null without Ars Nouveau. */
     @SuppressWarnings("unchecked")
     public static DeferredItem<Item>[] HUNTER_TOMES = new DeferredItem[7];
     public static DeferredItem<Item> WARDENS_BROKEN_CHAIN;
