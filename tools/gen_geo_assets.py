@@ -894,7 +894,7 @@ def boss_combat_set(name, A, has):
     else:
         # halberd held diagonally in both hands, haft across the chest, blade high on the right
         G = {'right_arm': [-55, 0, 20], 'right_forearm': [-25, 0, 0], 'left_arm': [-50, 0, -30], 'left_forearm': [-45, 0, 0],
-             'halberd': [-20, 0, 0], 'chest': [4, -6, 0], 'head': [-2, 6, 0]}
+             'halberd': [30, 0, 0], 'chest': [4, -6, 0], 'head': [-2, 6, 0]}
     def guard(extra_amp, period, axis_wave=0):
         out = {}
         for bn, base in G.items():

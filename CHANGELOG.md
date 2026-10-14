@@ -1,5 +1,32 @@
 # Changelog
 
+## 1.1.0 (unreleased)
+
+The 1.1 update turns on the endgame that 1.0 shipped switched off, and adds companion-mod content, a boss animation pass and new dungeon themes. Everything can still be tuned in `khaosnexus-server.toml` and through datapacks.
+
+### Endgame, now on by default
+- **Boss rush** (`/khaosnexus bossrush start`, S rank): a timed chain of 5 bosses with one heal after the 3rd. Cataclysm bosses in the roster now get the same health and damage tuning they use in gates (`modBossScale`), so a rush is tough but never a one-shot. Missing mods' bosses are skipped.
+- **Challenge gates:** monthly authored encounters (Iron Wall, Shadow Run, Void Choir, Warden's Trial), one life per attempt, 3 attempts a month.
+- **Second Awakening:** a one-time quest after National rank (3 SS clears, Spire floor 12, 5 boss rush wins) that unlocks an awakened ability per class (16 options).
+- **Group raids:** multi-phase raid bosses (Rift Sovereign, Abyssal Colossus) with tank aggro and Lifebinder cleanses. The minimum party is now **2** (was 4) so smaller servers can raid; boss health still grows per hunter.
+- Turn any of them off with `bossRush`, `challengeGates`, `secondAwakening` or `groupRaids` in `[endgame]`.
+
+### Companion-mod content (optional, only when the mod is installed)
+- **Ars Nouveau:** new **Gatesense** glyph. It names the nearest open gate's rank, distance and direction and draws a short trail toward it (Amplify/AOE widens the search). Recipe: Rift Source Shard, compass, air essence.
+- **Apotheosis:** 8 **class gems** (Bulwark, Shadowfang, Arcanum, Hawkeye, Lifethread, Bloodrage, Legion, Phylactery), found in B–S gate chests.
+- **Artifacts:** boss trophies that counter their boss. **Warden's Broken Chain** (the Rift Warden's hits deal 25% less and can't slow you) and **Guardian's Plume** (the Spire Guardian can't knock you back) each drop 20% of the time. New **Hunter's Lucky Coin** charm (+2 Luck) in C–S gate chests.
+- The 1.0 compat items are unchanged.
+
+### Boss animations
+- The Rift Warden and the Spire Guardian have new **combat idle and walk loops**. With the weapon drawn, the Warden holds the greatsword in a low guard and the Guardian carries the halberd two-handed across its body, instead of swinging their arms like they were jogging.
+- The Warden's draw now ends exactly in the guard pose, so there's no snap when it finishes.
+- Heavier unarmed walk (shorter stride, feet plant, weight dips on each step), no more armour "breathing" wobble, and smoother blends into and out of attacks.
+
+### Dungeons
+- Four new themes: **Scorched Forge** (nether, badlands, desert; D+), **Sunken Temple** (ocean, beach, swamp; C+), **Void Sanctum** (B+), **Sculk Hollow** (deep dark; A+).
+- With Mowzie's Mobs installed: **Wroughtnaut Forge Hall** (B+) and **Frostmaw Den** (A+).
+- **Theme hazards are now on** and mild, pulsing every 5 seconds: chill (Slowness I), heat (Hunger I, Fire Resistance ignores it), damp (Mining Fatigue I), void (brief Darkness) and spores (Weakness I, Overgrown Ruin). A lit campfire, torch or lantern within 3 blocks keeps the chill and the damp off. Turn them off with `dungeonThemeHazards`.
+
 ## 1.0.0 (2026-10-14)
 
 The first full release. Everything below is new since 0.1.2-beta and can be tuned in the server config (`[endgame]` and `[spire]`) and through datapack folders.
