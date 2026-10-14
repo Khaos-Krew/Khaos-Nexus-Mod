@@ -128,20 +128,31 @@ def rig_hierophant():
     for side, s in (('right', -1), ('left', 1)):
         x = s * 3.6
         lg = r.bone(f'{side}_leg', 'root', (x, 22, 0)); taper(r, lg, x, 0, 22, 11, 4.6, 4.0, 4.6, 4.0, 2, 'limb')
-        B(lg, (s * 4.1, 16.6, -3.9), (8.0, 11.2, 1.1), 'robe'); B(lg, (s * 7.6, 16.6, -0.2), (1.1, 11.2, 7.8), 'robe')
         sh = r.bone(f'{side}_shin', lg, (x, 11, 0)); taper(r, sh, x, 0, 11, 1.5, 3.8, 3.4, 3.8, 3.4, 2, 'limb')
         B(sh, (x, 1, -1.2), (4.4, 2, 7), 'gauntlet')
-        B(sh, (s * 4.3, 6.4, -4.25), (8.6, 10.4, 1.1), 'robe'); B(sh, (s * 8.0, 6.4, -0.3), (1.1, 10.4, 8.6), 'robe')
-        B(sh, (s * 4.4, 0.9, -4.45), (8.9, 1.8, 1.2), 'capehem'); B(sh, (s * 8.2, 0.9, -0.3), (1.2, 1.8, 8.9), 'capehem')
-        B(sh, (s * 4.4, 3.0, -4.9), (6.4, 0.9, 0.3), 'rune'); B(sh, (s * 4.4, 4.6, -4.85), (8.4, 0.7, 0.3), 'collar')
     r.bone('hips', 'root', (0, 22, 0))
     B('hips', (0, 22, 0), (16, 3.4, 10.4), 'belt')
     for i, x in enumerate((-5.5, -2, 2, 5.5)): B('hips', (x, 22, -5.4), (1.6, 1.6, 0.6), 'guard')
     B('hips', (6.5, 19.2, -4.3), (2.4, 3.2, 2.2), 'belt'); B('hips', (-6.6, 18.6, -3.4), (2.0, 2.4, 2.0), 'mask')   # pouch, skull trinket
-    for nm, z in (('robe_back', 4.6),):
-        r.bone(nm, 'hips', (0, 22, z)); B(nm, (0, 16.3, z + 0.4), (16, 11.4, 1.2), 'robe'); B(nm, (0, 16.3, z + 1.05), (3.2, 11.4, 0.3), 'collar')
-        r.bone('robe_back2', nm, (0, 10.6, z + 0.4)); B('robe_back2', (0, 5.6, z + 0.7), (17, 10.4, 1.2), 'robe'); B('robe_back2', (0, 0.9, z + 0.8), (17.4, 1.8, 1.3), 'capehem')
-        B('robe_back2', (0, 3.0, z + 1.4), (12, 0.9, 0.3), 'rune')
+    r.bone('robe_back', 'hips', (0, 22, 4.6)); r.bone('robe_back2', 'robe_back', (0, 10.6, 5.0))
+    # tattered layered skirt: three flaring tiers of cloth strips around an ellipse; front/side strips ride the legs
+    # (thigh for the middle tier, shin for the hem) so the skirt strides, the back strips hang from the back panels
+    rnd = random.Random(31)
+    for tier, (n, rx, rz, ytop, ln, flare, role) in enumerate(((12, 8.0, 5.6, 22.6, 8.5, 9, 'robe'), (14, 8.7, 6.1, 15.8, 9.0, 12, 'robe'), (16, 9.4, 6.7, 8.4, 7.8, 15, 'capehem'))):
+        for i in range(n):
+            a = 2 * math.pi * (i + 0.5 * (tier % 2)) / n; ca, sa = math.cos(a), math.sin(a)
+            cx, cz = sa * rx, ca * rz
+            L = ln + (rnd.uniform(-0.6, 2.4) if tier == 2 else rnd.uniform(-0.4, 0.8))
+            if tier == 0: bone = 'hips'
+            elif cz > rz * 0.45: bone = 'robe_back' if tier == 1 else 'robe_back2'
+            else: bone = (('right_leg' if cx < 0 else 'left_leg') if tier == 1 else ('right_shin' if cx < 0 else 'left_shin'))
+            w = 2 * math.pi * math.hypot(rx, rz) / 2 / n * 1.18
+            size = (w, L, 0.9) if abs(ca) >= abs(sa) else (0.9, L, w * 0.9)
+            r.box(bone, (cx, ytop - L / 2, cz), size, role, rot=(ca * flare, 0, -sa * flare), pivot=(cx, ytop, cz))
+            if tier == 2 and abs(ca) >= abs(sa) and i % 2 == 0:
+                r.box(bone, (cx * 1.03, ytop - 1.4, cz * 1.03 + (0.5 if ca > 0 else -0.5)), (w * 0.8, 0.8, 0.3), 'rune', rot=(ca * flare, 0, -sa * flare), pivot=(cx, ytop, cz))
+            if tier == 1 and i % 3 == 0:
+                r.box(bone, (cx, ytop - 0.6, cz), size[:1] + (1.0,) + size[2:] if False else (size[0] * 1.02, 1.0, size[2] * 1.02 + 0.1), 'collar', rot=(ca * flare, 0, -sa * flare), pivot=(cx, ytop, cz))
     r.bone('tabard', 'hips', (0, 21, -5.4))
     B('tabard', (0, 12.4, -5.6), (4.6, 17, 0.6), 'collar'); B('tabard', (0, 14.5, -6.0), (3.4, 3.4, 0.4), 'sigil'); B('tabard', (0, 3.4, -5.6), (3.2, 2.0, 0.6), 'capehem')
     # --- torso (hunched), mantle, stole, sigil plaque, prayer beads, broken spinal spires

@@ -76,6 +76,9 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
     private int dungeonSlot = -1;
     private long dungeonGen;
     private long lastOccupied;
+    /** Game time at which a finished dungeon clears; the boss's death animation (2.5s) plays out first. Not saved: a reload clears at once. */
+    private long clearAt;
+    public static final int CLEAR_DELAY_TICKS = 50;
 
     /** Game time the gate first ticked (0 = not yet). Drives the client crack-open animation. */
     public long bornAt;
@@ -349,7 +352,14 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         if (this.inDungeon && this.tendDungeon(level)) {
             return;
         }
-        if (this.waveMobs.isEmpty()) {
+        if (this.waveMobs.isEmpty()) {   // the last mob died: finish once its death animation has played (also after a reload)
+            if (this.waveSize > 0) {
+                if (this.clearAt == 0L) this.clearAt = level.getGameTime() + CLEAR_DELAY_TICKS;
+                if (level.getGameTime() >= this.clearAt) {
+                    this.clearAt = 0L;
+                    this.finishWave(level);
+                }
+            }
             return;
         }
         ServerLevel gateLevel = level;
@@ -384,7 +394,16 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         int living = this.livingCount(level);
         this.updateBossBar(level, living);
         if (!pending) {
-            this.finishWave(gateLevel);
+            long now = gateLevel.getGameTime();
+            if (this.inDungeon && this.clearAt == 0L) {
+                this.clearAt = now + CLEAR_DELAY_TICKS;
+            }
+            if (!this.inDungeon || now >= this.clearAt) {
+                this.clearAt = 0L;
+                this.finishWave(gateLevel);
+            }
+        } else {
+            this.clearAt = 0L;
         }
     }
 
