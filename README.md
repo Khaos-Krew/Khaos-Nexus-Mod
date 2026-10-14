@@ -2,7 +2,7 @@
 
 **Break the gates. Climb the Spire. Become a Paragon hunter.**
 
-Khaos Nexus is an original action RPG mod for Minecraft 1.21.1 (NeoForge). Ranked dungeon gates tear open across your world, an endless tower waits in its own dimension, and every player picks a hunter class and climbs from E rank to S rank and beyond. It is a complete adventure on its own, and it scales up when you add other mods.
+Khaos Nexus is an anime-inspired RPG mod for Minecraft 1.21.1 (NeoForge). Ranked dungeon gates tear open across your world, an endless tower waits in its own dimension, and every player picks a hunter class and climbs from E rank to S rank and beyond. It is a complete adventure on its own, and it scales up when you add other mods.
 
 > **Status:** 1.0.0 for Minecraft 1.21.1 (NeoForge). Works on its own and alongside large modpacks.
 
