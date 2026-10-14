@@ -165,4 +165,30 @@ public class SagaGameTests {
             });
         });
     }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    public static void sagaArmorSetsCountAndCraft(GameTestHelper h) {
+        var player = h.makeMockServerPlayerInLevel();
+        var slots = new net.minecraft.world.entity.EquipmentSlot[] {net.minecraft.world.entity.EquipmentSlot.HEAD, net.minecraft.world.entity.EquipmentSlot.CHEST,
+                net.minecraft.world.entity.EquipmentSlot.LEGS, net.minecraft.world.entity.EquipmentSlot.FEET};
+        for (int i = 0; i < 4; i++) player.setItemSlot(slots[i], new net.minecraft.world.item.ItemStack(com.khaoskrew.khaosnexus.saga.armor.SagaArmor.VESTMENT_SET[i].get()));
+        h.assertTrue(com.khaoskrew.khaosnexus.saga.armor.SagaArmor.worn(player, "vestment") == 4, "full vestment set");
+        h.assertTrue(com.khaoskrew.khaosnexus.saga.armor.SagaArmor.worn(player, "choir") == 0, "no choir pieces");
+        int def = 0; for (var a : com.khaoskrew.khaosnexus.saga.armor.SagaArmor.VESTMENT_SET) def += ((net.minecraft.world.item.ArmorItem) a.get()).getDefense();
+        h.assertTrue(def == 21, "set defense " + def);
+        var rm = h.getLevel().getServer().getRecipeManager();
+        for (String r : new String[] {"choir_helmet", "choir_boots", "vestment_chestplate", "vestment_boots", "wisp_bell"}) {
+            h.assertTrue(rm.byKey(id(r)).isPresent(), "recipe " + r);
+        }
+        h.succeed();
+    }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    public static void wispWithoutOwnerFades(GameTestHelper h) {
+        var w = com.khaoskrew.khaosnexus.mob.ModEntities.RIFT_WISP.get().create(h.getLevel());
+        w.moveTo(h.absoluteVec(new net.minecraft.world.phys.Vec3(1.5, 3, 1.5)));
+        h.getLevel().addFreshEntity(w);
+        h.assertTrue(w.isInvulnerable() && !w.isPushable(), "wisp cannot be hurt or pushed");
+        h.runAfterDelay(3, () -> { h.assertTrue(w.isRemoved(), "ownerless wisp is removed"); h.succeed(); });
+    }
 }

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "MCM",
+    "A A"
+  ],
+  "key": {
+    "M": {
+      "item": "khaosnexus:singing_glass"
+    },
+    "C": {
+      "item": "khaosnexus:crown_shard"
+    },
+    "A": {
+      "item": "minecraft:amethyst_shard"
+    }
+  },
+  "result": {
+    "id": "khaosnexus:choir_helmet",
+    "count": 1
+  }
+}

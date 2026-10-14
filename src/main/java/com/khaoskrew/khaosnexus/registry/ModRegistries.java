@@ -89,6 +89,7 @@ public final class ModRegistries {
     public static final DeferredItem<Item> SINGING_GLASS = ITEMS.registerItem("singing_glass", p -> new com.khaoskrew.khaosnexus.saga.LoreItem(p, 1), new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE));
     public static final DeferredItem<Item> HIEROPHANT_CENSER = ITEMS.registerItem("hierophant_censer", p -> new com.khaoskrew.khaosnexus.saga.LoreItem(p, 2), new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC).stacksTo(1));
     public static final DeferredItem<Item> PROFANE_SIGIL = ITEMS.registerItem("profane_sigil", p -> new com.khaoskrew.khaosnexus.saga.LoreItem(p, 1), new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE));
+    public static final DeferredItem<Item> WISP_BELL = ITEMS.registerItem("wisp_bell", com.khaoskrew.khaosnexus.saga.RiftWisp.Bell::new, new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.RARE));
     public static final DeferredItem<com.khaoskrew.khaosnexus.saga.CrownShardItem> CROWN_SHARD = ITEMS.registerItem("crown_shard",
             com.khaoskrew.khaosnexus.saga.CrownShardItem::new, new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC));
     public static final DeferredItem<BlockItem> SPIRE_GATE_ITEM = ITEMS.registerSimpleBlockItem(SPIRE_GATE);
@@ -126,7 +127,9 @@ public final class ModRegistries {
                         output.accept(com.khaoskrew.khaosnexus.forge.HunterForge.RIFT_CORE.get());
                         output.accept(SPIRE_GATE_ITEM.get());
                         output.accept(SEAL_GATE_ITEM.get());
-                        output.accept(CROWN_SHARD.get());
+                        output.accept(CROWN_SHARD.get()); output.accept(WISP_BELL.get());
+                        for (var a : com.khaoskrew.khaosnexus.saga.armor.SagaArmor.CHOIR_SET) output.accept(a.get());
+                        for (var a : com.khaoskrew.khaosnexus.saga.armor.SagaArmor.VESTMENT_SET) output.accept(a.get());
                         output.accept(VAELITH_CHOIR_MASK.get()); output.accept(SINGING_GLASS.get());
                         output.accept(HIEROPHANT_CENSER.get()); output.accept(PROFANE_SIGIL.get());
                         output.accept(RAID_ALTAR_ITEM.get());
@@ -138,6 +141,7 @@ public final class ModRegistries {
     private ModRegistries() {}
 
     public static void register(IEventBus modEventBus) {
+        com.khaoskrew.khaosnexus.saga.armor.SagaArmor.register(modEventBus);
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
         BLOCK_ENTITIES.register(modEventBus);

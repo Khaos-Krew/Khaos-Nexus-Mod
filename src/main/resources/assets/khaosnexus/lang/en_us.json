@@ -682,5 +682,22 @@
   "khaosnexus.general.warn_title": "A Crownless General stirs",
   "khaosnexus.general.warn_sub": "It answers your fighting style in %ss",
   "khaosnexus.general.warn_chat": "A Crownless General has found this gate. It arrives in %s seconds. The gate will not clear until it falls.",
-  "khaosnexus.general.arrived": "%s has come to take back its crown."
+  "khaosnexus.general.arrived": "%s has come to take back its crown.",
+  "item.khaosnexus.choir_helmet": "Glass Choir Crown",
+  "item.khaosnexus.choir_chestplate": "Glass Choir Cuirass",
+  "item.khaosnexus.choir_leggings": "Glass Choir Greaves",
+  "item.khaosnexus.choir_boots": "Glass Choir Sabatons",
+  "item.khaosnexus.vestment_helmet": "Profane Vestment Mitre",
+  "item.khaosnexus.vestment_chestplate": "Profane Vestment Robe",
+  "item.khaosnexus.vestment_leggings": "Profane Vestment Skirts",
+  "item.khaosnexus.vestment_boots": "Profane Vestment Sandals",
+  "khaosnexus.armor.choir.set": "Glass Choir set (Vaelith)",
+  "khaosnexus.armor.choir.bonus": "Full set: +8% speed, projectiles hit you 20% softer",
+  "khaosnexus.armor.vestment.set": "Profane Vestment set (Fallen Hierophant)",
+  "khaosnexus.armor.vestment.bonus": "Full set: +10% max health, melee attackers may catch fire",
+  "item.khaosnexus.wisp_bell": "Wisp Bell",
+  "item.khaosnexus.wisp_bell.desc": "Ring to call a Rift Wisp. It gathers drops and mends you in a fight.",
+  "entity.khaosnexus.rift_wisp": "Rift Wisp",
+  "khaosnexus.wisp.called": "A Rift Wisp answers the bell.",
+  "khaosnexus.wisp.dismissed": "The Rift Wisp fades."
 }

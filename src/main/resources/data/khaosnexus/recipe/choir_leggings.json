@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "MCM",
+    "A A",
+    "M M"
+  ],
+  "key": {
+    "M": {
+      "item": "khaosnexus:singing_glass"
+    },
+    "C": {
+      "item": "khaosnexus:crown_shard"
+    },
+    "A": {
+      "item": "minecraft:amethyst_shard"
+    }
+  },
+  "result": {
+    "id": "khaosnexus:choir_leggings",
+    "count": 1
+  }
+}

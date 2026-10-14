@@ -41,6 +41,9 @@ public final class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<RiftBoss>> GENERAL_ARCANIST = ENTITIES.register("general_arcanist",
             () -> EntityType.Builder.<RiftBoss>of(RiftBoss::general, MobCategory.MONSTER).sized(1.3F, 3.9F).clientTrackingRange(12)
                     .build(KhaosNexus.MODID + ":general_arcanist"));
+    public static final DeferredHolder<EntityType<?>, EntityType<com.khaoskrew.khaosnexus.saga.RiftWisp>> RIFT_WISP = ENTITIES.register("rift_wisp",
+            () -> EntityType.Builder.<com.khaoskrew.khaosnexus.saga.RiftWisp>of(com.khaoskrew.khaosnexus.saga.RiftWisp::new, MobCategory.MISC).sized(0.5F, 0.6F).clientTrackingRange(8)
+                    .fireImmune().noSummon().build(KhaosNexus.MODID + ":rift_wisp"));
     public static final DeferredHolder<EntityType<?>, EntityType<VoidOrb>> VOID_ORB = ENTITIES.register("void_orb",
             () -> EntityType.Builder.<VoidOrb>of(VoidOrb::new, MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(6).updateInterval(2)
                     .build(KhaosNexus.MODID + ":void_orb"));
@@ -102,6 +105,7 @@ public final class ModEntities {
         event.put(VAELITH.get(), RiftMob.attributes(220.0D, 11.0D, 0.27D, 0.6D).add(Attributes.ARMOR, 6.0D).build());
         event.put(FALLEN_HIEROPHANT.get(), RiftMob.attributes(260.0D, 13.0D, 0.24D, 0.9D).add(Attributes.ARMOR, 10.0D).build());
         event.put(GENERAL_BLADE.get(), RiftMob.attributes(170.0D, 12.0D, 0.28D, 0.8D).add(Attributes.ARMOR, 12.0D).build());
+        event.put(RIFT_WISP.get(), com.khaoskrew.khaosnexus.saga.RiftWisp.attributes().build());
         event.put(GENERAL_ARCANIST.get(), RiftMob.attributes(140.0D, 10.0D, 0.26D, 0.5D).add(Attributes.ARMOR, 5.0D).build());
         event.put(SPIRE_GUARDIAN.get(), RiftMob.attributes(80.0D, 8.0D, 0.25D, 0.8D).add(Attributes.ARMOR, 6.0D).build());
     }
