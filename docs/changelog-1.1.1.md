@@ -12,3 +12,9 @@
 
 ## Naming
 - The top Hunter Tome tier is now the **Zenith Hunter Tome** (item ID unchanged, existing worlds are fine).
+
+## Dimension safety (works alongside Twilight Forest, Aether, Undergarden, Terralith)
+- Gate dungeons and the Spire now use their own `khaosnexus:` void biomes instead of vanilla's, so other mods' biome modifiers can't add features or mobs to them.
+- Other mods' natural spawns (biome modifiers, patrols, events) are blocked inside Khaos Nexus dimensions. Config: `[dimensions] blockForeignSpawns`. Our gate mobs, spawn eggs and commands are unaffected.
+- All trips use our own gates and a safe teleport: if a dimension is missing, you land at overworld spawn, and if another mod cancels a trip you're told instead of being stranded.
+- No vanilla data is overridden (tags only append). Gates still spawn only in the overworld.

@@ -626,6 +626,11 @@ public final class Config {
             .comment("Minutes a grave stays locked to its owner and party before anyone can loot it.")
             .defineInRange("partyAccessMinutes", 60, 0, 10080);
     static { SERVER_BUILDER.pop(); }
+    static { SERVER_BUILDER.push("dimensions"); }
+    public static final ModConfigSpec.BooleanValue BLOCK_FOREIGN_SPAWNS = SERVER_BUILDER
+            .comment("Block other mods' natural mob spawns (biome modifiers, spawners, patrols, events) in Khaos Nexus dimensions.")
+            .define("blockForeignSpawns", true);
+    static { SERVER_BUILDER.pop(); }
     public static final ModConfigSpec SERVER_SPEC = SERVER_BUILDER.build();
 
     private Config() {}

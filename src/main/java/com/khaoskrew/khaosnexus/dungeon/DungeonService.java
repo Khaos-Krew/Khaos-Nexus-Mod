@@ -262,7 +262,9 @@ public final class DungeonService {
             back.putLong("Pos", gate.asLong());
             player.getPersistentData().put(RETURN, back);
         }
-        player.teleportTo(dungeon, spawn.getX() + 0.5D, spawn.getY(), spawn.getZ() + 0.5D, yaw, 0.0F);
+        if (!DimensionSafety.teleportExact(player, dungeon, Vec3.atBottomCenterOf(spawn), yaw) && player.level() != dungeon) {
+            player.getPersistentData().remove(RETURN); // the trip was cancelled, so there is no dungeon to return from
+        }
     }
 
     /** Sends a player back to the gate they came through. False when they have no return point. */
@@ -273,14 +275,12 @@ public final class DungeonService {
         }
         player.getPersistentData().remove(RETURN);
         ResourceLocation dim = ResourceLocation.tryParse(back.getString("Dim"));
-        ServerLevel target = dim == null ? null : player.server.getLevel(ResourceKey.create(Registries.DIMENSION, dim));
-        if (target == null) {
-            target = player.server.overworld();
-        }
+        ServerLevel target = DimensionSafety.resolve(player.server, dim == null ? null : ResourceKey.create(Registries.DIMENSION, dim));
         BlockPos gate = BlockPos.of(back.getLong("Pos"));
-        Vec3 out = Vec3.atBottomCenterOf(gate).add(0.0D, 0.0D, 2.0D);
-        player.teleportTo(target, out.x, gate.getY(), out.z, player.getYRot(), 0.0F);
-        player.fallDistance = 0.0F;
+        if (!target.dimension().location().equals(dim)) {
+            gate = target.getSharedSpawnPos();
+        }
+        DimensionSafety.teleport(player, target.dimension(), gate.south(2), player.getYRot(), true);
         return true;
     }
 

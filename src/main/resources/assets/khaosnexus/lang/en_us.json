@@ -624,5 +624,6 @@
   "khaosnexus.grave.placed": "Your items were moved out of the rift to a grave at %s %s %s (%s).",
   "khaosnexus.grave.recovery": "No safe spot for your grave, so your items are in your Recovery Chest. Use /khaos recover.",
   "khaosnexus.grave.locked": "This grave belongs to another hunter's party for now.",
-  "khaosnexus.grave.claimed": "Recovered %s item stacks."
+  "khaosnexus.grave.claimed": "Recovered %s item stacks.",
+  "khaosnexus.dimension.blocked": "Another mod blocked that trip. You were not moved."
 }
