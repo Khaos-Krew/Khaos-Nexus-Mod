@@ -12,6 +12,10 @@
     {
       "id": "khaosnexus:wisp_bell",
       "required": false
+    },
+    {
+      "id": "khaosnexus:hollow_crown",
+      "required": false
     }
   ]
 }

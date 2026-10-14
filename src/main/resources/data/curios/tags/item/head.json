@@ -4,6 +4,10 @@
     {
       "id": "khaosnexus:guardians_plume",
       "required": false
+    },
+    {
+      "id": "khaosnexus:hollow_crown",
+      "required": false
     }
   ]
 }

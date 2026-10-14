@@ -217,6 +217,29 @@ public class SagaGameTests {
     }
 
     @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    public static void hollowKingPhasesUnlockAndDrops(GameTestHelper h) {
+        HunterProfile p = new HunterProfile();
+        h.assertFalse(HollowThrone.allSealsBroken(p), "king locked before the seals");
+        for (var sid : JsonPool.SEALS.all().keySet()) Saga.breakSeal(p, sid);
+        h.assertTrue(HollowThrone.allSealsBroken(p), "king unlocked once every seal is broken");
+        h.assertTrue(Saga.slayKing(p) == 1 && Saga.slayKing(p) == 2 && Saga.kingsSlain(p) == 2, "king kills recorded");
+        var king = (com.khaoskrew.khaosnexus.mob.RiftBoss) h.spawn(com.khaoskrew.khaosnexus.mob.ModEntities.HOLLOW_KING.get(), new net.minecraft.core.BlockPos(1, 2, 1));
+        h.assertTrue(king.isKing() && king.isSagaBoss() && king.getPhase() == 0, "fresh king");
+        king.setHealth(king.getMaxHealth() * 0.6F);
+        h.runAfterDelay(3, () -> {
+            h.assertTrue(king.getPhase() == 1, "phase two at 66%");
+            king.setHealth(king.getMaxHealth() * 0.3F);
+            h.runAfterDelay(3, () -> {
+                h.assertTrue(king.getPhase() == 2, "phase three at 33%");
+                var lt = h.getLevel().getServer().reloadableRegistries().getLootTable(king.getLootTable());
+                h.assertTrue(lt != net.minecraft.world.level.storage.loot.LootTable.EMPTY, "king loot table");
+                king.discard();
+                h.succeed();
+            });
+        });
+    }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
     public static void sealNeedsBothWardsAndOffersTheOther(GameTestHelper h) {
         HunterProfile p = new HunterProfile();
         var seal = id("hollow_crown"); var themes = JsonPool.SEALS.get(seal).getAsJsonArray("themes");

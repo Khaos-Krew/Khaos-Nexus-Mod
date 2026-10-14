@@ -57,6 +57,9 @@ public class SealGateBlock extends Block {
             return gate.activate(sp);
         }
         HunterProfile p = HunterRanks.profile(sp);
+        if (!sp.isShiftKeyDown() && HollowThrone.allSealsBroken(p)) {   // every seal broken: the gate opens on the Hollow Throne
+            return HollowThrone.enter(sp) ? InteractionResult.SUCCESS : InteractionResult.FAIL;
+        }
         ResourceLocation seal = nextSeal(p);
         if (seal == null || !(sp.isCreative() || Saga.canOpenSeal(p, seal))) {
             sp.displayClientMessage(Component.translatable("khaosnexus.seal.locked"), false);

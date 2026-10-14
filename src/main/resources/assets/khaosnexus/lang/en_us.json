@@ -702,5 +702,21 @@
   "khaosnexus.wisp.dismissed": "The Rift Wisp fades.",
   "entity.khaosnexus.gate_mimic": "Gate Mimic",
   "item.khaosnexus.gate_mimic_spawn_egg": "Gate Mimic Spawn Egg",
-  "khaosnexus.seal.ward": "%s has fallen: a ward of the seal breaks (%s left)."
+  "khaosnexus.seal.ward": "%s has fallen: a ward of the seal breaks (%s left).",
+  "entity.khaosnexus.hollow_king": "Morvane, the Hollow King",
+  "item.khaosnexus.hollow_king_spawn_egg": "Hollow King Spawn Egg",
+  "item.khaosnexus.kingsbane": "Kingsbane",
+  "item.khaosnexus.kingsbane.desc.0": "Deals +20% damage to rift creatures.",
+  "item.khaosnexus.kingsbane.desc.1": "It was forged to end a king. It ended one.",
+  "item.khaosnexus.hollow_crown": "The Hollow Crown",
+  "item.khaosnexus.hollow_crown.desc.0": "Worn (Curios head/charm) or held in the off hand: +8% damage dealt, -6% damage taken.",
+  "item.khaosnexus.hollow_crown.desc.1": "Every socket is empty. Every socket still burns.",
+  "item.khaosnexus.hollow_crown.desc.2": "Trophy of Morvane, the Hollow King.",
+  "item.khaosnexus.heart_ember": "Morvane's Heart-Ember",
+  "item.khaosnexus.heart_ember.desc.0": "Saga material: the fire that hung in the King's empty chest.",
+  "item.khaosnexus.heart_ember.desc.1": "Warm, steady, and patient, like something waiting.",
+  "khaosnexus.king.enter": "The Seal Gate opens on the Hollow Throne. Morvane rises to hold court.",
+  "khaosnexus.king.slain_first": "The Hollow King has fallen. The Underthrone is without a crown.",
+  "khaosnexus.king.slain": "The Hollow King has fallen again (%s times). The throne will not stay empty.",
+  "khaosnexus.king.return": "The throne room fades. You are back in the Exile Camp."
 }

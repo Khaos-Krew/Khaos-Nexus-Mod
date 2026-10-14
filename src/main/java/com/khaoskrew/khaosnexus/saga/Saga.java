@@ -146,6 +146,18 @@ public final class Saga {
         return left;
     }
 
+    /** Records a Hollow King kill; returns the new total. */
+    public static int slayKing(HunterProfile p) {
+        CompoundTag k = tag(p).getCompound("King");
+        k.putInt("Slain", k.getInt("Slain") + 1);
+        tag(p).put("King", k);
+        return k.getInt("Slain");
+    }
+
+    public static int kingsSlain(HunterProfile p) {
+        return tag(p).getCompound("King").getInt("Slain");
+    }
+
     public static void resetSeals(HunterProfile p) {
         tag(p).remove("Seals"); tag(p).remove("Wards"); tag(p).remove("King");
     }

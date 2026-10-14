@@ -41,6 +41,9 @@ public final class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<RiftBoss>> GENERAL_ARCANIST = ENTITIES.register("general_arcanist",
             () -> EntityType.Builder.<RiftBoss>of(RiftBoss::general, MobCategory.MONSTER).sized(1.3F, 3.9F).clientTrackingRange(12)
                     .build(KhaosNexus.MODID + ":general_arcanist"));
+    public static final DeferredHolder<EntityType<?>, EntityType<RiftBoss>> HOLLOW_KING = ENTITIES.register("hollow_king",
+            () -> EntityType.Builder.<RiftBoss>of(RiftBoss::king, MobCategory.MONSTER).sized(1.7F, 5.4F).clientTrackingRange(14)
+                    .fireImmune().build(KhaosNexus.MODID + ":hollow_king"));
     public static final DeferredHolder<EntityType<?>, EntityType<com.khaoskrew.khaosnexus.saga.RiftWisp>> RIFT_WISP = ENTITIES.register("rift_wisp",
             () -> EntityType.Builder.<com.khaoskrew.khaosnexus.saga.RiftWisp>of(com.khaoskrew.khaosnexus.saga.RiftWisp::new, MobCategory.MISC).sized(0.5F, 0.6F).clientTrackingRange(8)
                     .fireImmune().noSummon().build(KhaosNexus.MODID + ":rift_wisp"));
@@ -71,6 +74,7 @@ public final class ModEntities {
     public static final DeferredItem<DeferredSpawnEggItem> FALLEN_HIEROPHANT_EGG = egg("fallen_hierophant", FALLEN_HIEROPHANT, 0x3A1620, 0xB848FF);
     public static final DeferredItem<DeferredSpawnEggItem> GENERAL_BLADE_EGG = egg("general_blade", GENERAL_BLADE, 0x3A3A42, 0xFF5A3A);
     public static final DeferredItem<DeferredSpawnEggItem> GENERAL_ARCANIST_EGG = egg("general_arcanist", GENERAL_ARCANIST, 0x2A3436, 0x5AF0C8);
+    public static final DeferredItem<DeferredSpawnEggItem> HOLLOW_KING_EGG = egg("hollow_king", HOLLOW_KING, 0x5E0E1E, 0xFFD06A);
     public static final DeferredItem<DeferredSpawnEggItem> GATE_MIMIC_EGG = egg("gate_mimic", GATE_MIMIC, 0x6A4524, 0xFFB43A);
 
     private ModEntities() {}
@@ -81,7 +85,7 @@ public final class ModEntities {
 
     public static java.util.List<Item> eggs() {
         return java.util.List.of(RIFT_GHOUL_EGG.get(), RIFT_STALKER_EGG.get(), VOID_CASTER_EGG.get(), RIFT_BRUTE_EGG.get(),
-                RIFT_WARDEN_EGG.get(), SPIRE_GUARDIAN_EGG.get(), GATE_MIMIC_EGG.get());
+                RIFT_WARDEN_EGG.get(), SPIRE_GUARDIAN_EGG.get(), GATE_MIMIC_EGG.get(), HOLLOW_KING_EGG.get());
     }
 
     private static DeferredHolder<EntityType<?>, EntityType<RiftMob>> register(String name, float width, float height) {
@@ -108,6 +112,7 @@ public final class ModEntities {
         // Act I seal guardians: S gate tuning multiplies these. Between the Guardian and the Warden: a real fight, not a wall.
         event.put(VAELITH.get(), RiftMob.attributes(220.0D, 11.0D, 0.27D, 0.6D).add(Attributes.ARMOR, 6.0D).build());
         event.put(FALLEN_HIEROPHANT.get(), RiftMob.attributes(260.0D, 13.0D, 0.24D, 0.9D).add(Attributes.ARMOR, 10.0D).build());
+        event.put(HOLLOW_KING.get(), RiftMob.attributes(900.0D, 16.0D, 0.27D, 1.0D).add(Attributes.ARMOR, 16.0D).add(Attributes.ARMOR_TOUGHNESS, 8.0D).add(Attributes.FOLLOW_RANGE, 40.0D).build());
         event.put(GENERAL_BLADE.get(), RiftMob.attributes(170.0D, 12.0D, 0.28D, 0.8D).add(Attributes.ARMOR, 12.0D).build());
         event.put(RIFT_WISP.get(), com.khaoskrew.khaosnexus.saga.RiftWisp.attributes().build());
         event.put(GENERAL_ARCANIST.get(), RiftMob.attributes(140.0D, 10.0D, 0.26D, 0.5D).add(Attributes.ARMOR, 5.0D).build());
