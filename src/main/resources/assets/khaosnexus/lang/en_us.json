@@ -701,5 +701,6 @@
   "khaosnexus.wisp.called": "A Rift Wisp answers the bell.",
   "khaosnexus.wisp.dismissed": "The Rift Wisp fades.",
   "entity.khaosnexus.gate_mimic": "Gate Mimic",
-  "item.khaosnexus.gate_mimic_spawn_egg": "Gate Mimic Spawn Egg"
+  "item.khaosnexus.gate_mimic_spawn_egg": "Gate Mimic Spawn Egg",
+  "khaosnexus.seal.ward": "%s has fallen: a ward of the seal breaks (%s left)."
 }

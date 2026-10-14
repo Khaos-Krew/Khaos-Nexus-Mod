@@ -215,4 +215,16 @@ public class SagaGameTests {
             h.succeed();
         });
     }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    public static void sealNeedsBothWardsAndOffersTheOther(GameTestHelper h) {
+        HunterProfile p = new HunterProfile();
+        var seal = id("hollow_crown"); var themes = JsonPool.SEALS.get(seal).getAsJsonArray("themes");
+        h.assertTrue(Saga.wardsLeft(p, seal) == 2, "two wards");
+        h.assertTrue(Saga.slayWard(p, seal, id("fallen_hierophant")) == 1 && !Saga.sealBroken(p, seal), "one ward down, seal holds");
+        for (int i = 0; i < 20; i++)
+            h.assertTrue(SealGateBlock.pickTheme(p, seal, themes, RandomSource.create(i)).getPath().contains("crystal"), "next seal gate is Vaelith's");
+        h.assertTrue(Saga.slayWard(p, seal, id("vaelith")) == 0, "both wards down");
+        h.succeed();
+    }
 }

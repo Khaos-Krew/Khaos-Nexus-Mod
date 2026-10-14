@@ -123,6 +123,37 @@ public final class Saga {
         tag(p).put("Seals", seals);
     }
 
+    /** Each guardian listed on a seal is a ward; the seal breaks once every ward has fallen. */
+    public static boolean wardSlain(HunterProfile p, ResourceLocation seal, ResourceLocation guardian) {
+        return tag(p).getCompound("Wards").getCompound(seal.toString()).getBoolean(guardian.toString());
+    }
+
+    /** Records a slain ward; returns how many of the seal's wards are still standing. */
+    public static int slayWard(HunterProfile p, ResourceLocation seal, ResourceLocation guardian) {
+        CompoundTag wards = tag(p).getCompound("Wards");
+        CompoundTag w = wards.getCompound(seal.toString());
+        w.putBoolean(guardian.toString(), true);
+        wards.put(seal.toString(), w);
+        tag(p).put("Wards", wards);
+        return wardsLeft(p, seal);
+    }
+
+    public static int wardsLeft(HunterProfile p, ResourceLocation seal) {
+        JsonObject s = JsonPool.SEALS.get(seal);
+        if (s == null || !s.has("guardians")) return 0;
+        int left = 0;
+        for (var g : s.getAsJsonArray("guardians")) if (!wardSlain(p, seal, ResourceLocation.parse(g.getAsString()))) left++;
+        return left;
+    }
+
+    public static void resetSeals(HunterProfile p) {
+        tag(p).remove("Seals"); tag(p).remove("Wards"); tag(p).remove("King");
+    }
+
+    public static String status(HunterProfile p) {
+        return "Seals=" + tag(p).getCompound("Seals") + " Wards=" + tag(p).getCompound("Wards") + " King=" + tag(p).getCompound("King") + " Shards=" + shards(p);
+    }
+
     // ---- Crownless General ambush ----
     /** Rolled when a normal gate opens: only A/S, never Crimson Rifts/challenges (caller passes normal=true). */
     public static boolean rollAmbush(GateRank rank, boolean normal, RandomSource random) {

@@ -57,8 +57,13 @@ public final class SagaBosses {
             if (p.level() != mob.level() && p != killer) continue;
             var profile = HunterRanks.profile(p);
             if (!Saga.sealBroken(profile, id)) {
-                Saga.breakSeal(profile, id);
-                p.displayClientMessage(Component.translatable("khaosnexus.seal.broken", Component.translatable("khaosnexus.seal." + id.getPath())), false);
+                int left = Saga.slayWard(profile, id, net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType()));
+                if (left <= 0) {
+                    Saga.breakSeal(profile, id);
+                    p.displayClientMessage(Component.translatable("khaosnexus.seal.broken", Component.translatable("khaosnexus.seal." + id.getPath())), false);
+                } else {
+                    p.displayClientMessage(Component.translatable("khaosnexus.seal.ward", mob.getType().getDescription(), left), false);
+                }
             }
             HunterRanks.sync(p);
         }

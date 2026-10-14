@@ -69,6 +69,20 @@ public final class KhaosCommands {
                                                             HunterRanks.profile(player).xp), true);
                                                     return 1;
                                                 })))))
+                .then(Commands.literal("saga")
+                        .requires(source -> source.hasPermission(2))
+                        .then(Commands.literal("reset").then(Commands.argument("player", EntityArgument.player()).executes(context -> {
+                            ServerPlayer player = EntityArgument.getPlayer(context, "player");
+                            com.khaoskrew.khaosnexus.saga.Saga.resetSeals(HunterRanks.profile(player));
+                            HunterRanks.sync(player);
+                            context.getSource().sendSuccess(() -> Component.literal("Saga seals, wards and the Hollow King reset for ").append(player.getName()), true);
+                            return 1;
+                        })))
+                        .then(Commands.literal("status").then(Commands.argument("player", EntityArgument.player()).executes(context -> {
+                            ServerPlayer player = EntityArgument.getPlayer(context, "player");
+                            context.getSource().sendSuccess(() -> Component.literal(com.khaoskrew.khaosnexus.saga.Saga.status(HunterRanks.profile(player))), false);
+                            return 1;
+                        }))))
                 .then(Commands.literal("class")
                         .executes(context -> showClass(context.getSource().getPlayerOrException()))
                         .then(Commands.literal("equip")

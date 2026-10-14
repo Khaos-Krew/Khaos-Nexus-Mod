@@ -65,7 +65,7 @@ public class SealGateBlock extends Block {
         var json = JsonPool.SEALS.get(seal);
         Saga.spendShards(p, json.get("shard_cost").getAsInt());
         var themes = json.getAsJsonArray("themes");
-        ResourceLocation theme = ResourceLocation.parse(themes.get(sl.random.nextInt(themes.size())).getAsString());
+        ResourceLocation theme = pickTheme(p, seal, themes, sl.random);
         sl.setBlock(front, ModRegistries.NEXUS_GATE.get().defaultBlockState(), 3);
         if (!(sl.getBlockEntity(front) instanceof NexusGateBlockEntity gate)) return InteractionResult.FAIL;
         gate.setRank(GateRank.S);
@@ -73,5 +73,18 @@ public class SealGateBlock extends Block {
         gate.getPersistentData().putString(SEAL_TAG, seal.toString());
         sp.displayClientMessage(Component.translatable("khaosnexus.seal.opened"), false);
         return gate.activate(sp);
+    }
+
+    /** The theme whose guardian ward still stands (random among them); any theme once the seal is broken. */
+    public static ResourceLocation pickTheme(HunterProfile p, ResourceLocation seal, com.google.gson.JsonArray themes, net.minecraft.util.RandomSource random) {
+        java.util.List<ResourceLocation> open = new java.util.ArrayList<>();
+        java.util.List<ResourceLocation> all = new java.util.ArrayList<>();
+        for (var t : themes) {
+            ResourceLocation th = ResourceLocation.parse(t.getAsString()); all.add(th);
+            ResourceLocation g = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(SagaBosses.guardianFor(th));
+            if (!Saga.wardSlain(p, seal, g)) open.add(th);
+        }
+        var from = open.isEmpty() ? all : open;
+        return from.get(random.nextInt(from.size()));
     }
 }
