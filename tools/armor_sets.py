@@ -20,8 +20,7 @@ def choir():
     r = Rig(); B = r.box; bones(r)
     # --- helm: pale steel skull-cap, a smooth singing mask, glass fins and a crown of crystal spines
     B('armorHead', (0, 28.6, 0.6), (9.4, 9.0, 8.4), 'pauldron'); B('armorHead', (0, 33.3, 0.2), (8.6, 0.8, 8.4), 'pauldron')
-    B('armorHead', (0, 27.8, -4.4), (8.8, 7.4, 0.8), 'mask'); B('armorHead', (0, 28.9, -4.85), (7.0, 1.0, 0.2), 'void')
-    B('armorHead', (0, 25.4, -4.85), (2.2, 1.6, 0.2), 'void')
+    B('armorHead', (0, 27.8, -4.4), (8.8, 7.4, 0.8), 'mask'); B('armorHead', (0, 28.9, -4.85), (7.0, 0.8, 0.2), 'void'); B('armorHead', (0, 27.2, -4.9), (0.8, 2.6, 0.2), 'glass')
     for s in (-1, 1):
         B('armorHead', (s * 4.95, 28.2, 0), (0.6, 6.4, 7.0), 'belt'); shard(r, 'armorHead', (s * 5.0, 30.4, 1.6), 5, 1.4, (-20, 0, s * -55), 'glass')
     for x, h in ((-3.0, 3.0), (-1.5, 4.4), (0, 5.6), (1.5, 4.4), (3.0, 3.0)):
@@ -63,7 +62,7 @@ def vestments():
     for j in range(3):
         w = 6.4 - j * 1.4; y = 34.6 + j * 2.0
         B('armorHead', (0, y, -1.4), (w, 2.2, 0.9), 'mitre', rot=(-6, 0, 0)); B('armorHead', (0, y, 2.0), (w, 2.2, 0.9), 'mitre', rot=(6, 0, 0))
-        B('armorHead', (0, y, 0.3), (w - 0.6, 2.2, 2.4), 'void')
+        B('armorHead', (0, y, 0.3), (w - 0.6, 2.2, 2.6), 'mitre')
     B('armorHead', (0, 34.0, 0.3), (7.0, 1.0, 4.4), 'crown'); B('armorHead', (0, 36.2, -1.95), (1.6, 1.6, 0.2), 'rune', rot=(0, 0, 45))
     # --- robe chest: velvet cuirass, gold stole, mantle collar, sigil, short tattered back cape
     B('armorBody', (0, 18.2, 0), (9.0, 12.4, 5.0), 'robe')

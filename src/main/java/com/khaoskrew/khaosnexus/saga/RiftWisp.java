@@ -93,7 +93,7 @@ public class RiftWisp extends PathfinderMob implements GeoEntity {
         }
         // hover beside the owner's right shoulder, eased
         double yaw = Math.toRadians(o.getYRot());
-        Vec3 target = o.position().add(-Math.cos(yaw) * 0.9 - (-Math.sin(yaw)) * 0.3, o.getBbHeight() + 0.1 + 0.15 * Math.sin(this.tickCount * 0.1), -Math.sin(yaw) * 0.9 - Math.cos(yaw) * 0.3);
+        Vec3 target = o.position().add(-Math.cos(yaw) * 0.9 - (-Math.sin(yaw)) * 0.3, o.getBbHeight() - 0.55 + 0.12 * Math.sin(this.tickCount * 0.1), -Math.sin(yaw) * 0.9 - Math.cos(yaw) * 0.3);
         Vec3 d = target.subtract(this.position());
         if (d.lengthSqr() > 400) this.setPos(target);
         else this.setDeltaMovement(d.scale(0.25));
