@@ -36,6 +36,7 @@ public final class SagaBosses {
         if (seal.isEmpty() || boss == null) return boss;
         Mob guardian = GateArena.spawnMob(dungeon, GateRank.S, guardianFor(gate.getTheme()), boss.blockPosition(), boss.getYRot(), 1.0D, true);
         if (guardian == null) return boss;
+        guardian.setCustomName(guardian.getType().getDescription().copy());   // boss bar shows the guardian, not the generic gate-mob name
         guardian.addTag("khaosnexus_dungeon_boss");
         guardian.getPersistentData().putLong(DungeonInstances.GEN_KEY, boss.getPersistentData().getLong(DungeonInstances.GEN_KEY));
         guardian.getPersistentData().putBoolean(SealGateBlock.SEAL_TAG, true);
