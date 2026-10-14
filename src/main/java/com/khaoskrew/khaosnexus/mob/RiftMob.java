@@ -34,6 +34,8 @@ public class RiftMob extends Monster implements GeoEntity {
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
     private final String animPrefix;
     private static final EntityDataAccessor<Integer> RANK = SynchedEntityData.defineId(RiftMob.class, EntityDataSerializers.INT);
+    /** Screenshot/clip-review hook: when set (NBT "DebugPose"), the model holds the baked freeze_<name> pose. Empty in normal play. */
+    private static final EntityDataAccessor<String> DEBUG_POSE = SynchedEntityData.defineId(RiftMob.class, EntityDataSerializers.STRING);
 
     public RiftMob(EntityType<? extends RiftMob> type, Level level) {
         super(type, level);
@@ -54,6 +56,7 @@ public class RiftMob extends Monster implements GeoEntity {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(RANK, -1);
+        builder.define(DEBUG_POSE, "");
     }
 
     @Override
@@ -87,6 +90,11 @@ public class RiftMob extends Monster implements GeoEntity {
         if (rank != null) {
             tag.putString("GateRank", rank.name());
         }
+        if (!this.getDebugPose().isEmpty()) tag.putString("DebugPose", this.getDebugPose());
+    }
+
+    public String getDebugPose() {
+        return this.entityData.get(DEBUG_POSE);
     }
 
     @Override
@@ -95,6 +103,7 @@ public class RiftMob extends Monster implements GeoEntity {
         if (tag.contains("GateRank")) {
             this.setGateRank(GateRank.byName(tag.getString("GateRank")));
         }
+        if (tag.contains("DebugPose")) this.entityData.set(DEBUG_POSE, tag.getString("DebugPose"));
     }
 
     protected RawAnimation anim(String name, boolean loop) {
@@ -126,6 +135,12 @@ public class RiftMob extends Monster implements GeoEntity {
             }
         }
         controllers.add(action);
+        if (this instanceof RiftBoss) {   // last controller wins: a frozen review pose overrides movement and action
+            controllers.add(new AnimationController<>(this, "debug_pose", 0, state -> {
+                String pose = this.getDebugPose();
+                return pose.isEmpty() ? software.bernie.geckolib.animation.PlayState.STOP : state.setAndContinue(this.anim("freeze_" + pose, true));
+            }));
+        }
     }
 
     @Override
