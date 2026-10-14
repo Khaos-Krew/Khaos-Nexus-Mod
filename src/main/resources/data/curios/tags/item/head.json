@@ -8,6 +8,10 @@
     {
       "id": "khaosnexus:hollow_crown",
       "required": false
+    },
+    {
+      "id": "khaosnexus:awakened_crown",
+      "required": false
     }
   ]
 }

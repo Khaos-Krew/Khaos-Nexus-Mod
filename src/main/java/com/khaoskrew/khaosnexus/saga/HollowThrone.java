@@ -134,14 +134,21 @@ public final class HollowThrone {
     @SubscribeEvent
     public static void kingRelics(LivingIncomingDamageEvent event) {
         if (event.getSource().getEntity() instanceof ServerPlayer att) {
-            if (crowned(att)) event.setAmount(event.getAmount() * 1.08F);
-            if (att.getMainHandItem().is(ModRegistries.KINGSBANE.get()) && event.getEntity() instanceof RiftMob) event.setAmount(event.getAmount() * 1.2F);
+            int c = crown(att);
+            if (c > 0) event.setAmount(event.getAmount() * (c == 2 ? 1.12F : 1.08F));
+            boolean bane = att.getMainHandItem().is(ModRegistries.KINGSBANE.get()) || att.getMainHandItem().is(ModRegistries.AWAKENED_KINGSBANE.get());
+            if (bane && event.getEntity() instanceof RiftMob) event.setAmount(event.getAmount() * 1.2F);
         }
-        if (event.getEntity() instanceof ServerPlayer vic && crowned(vic)) event.setAmount(event.getAmount() * 0.94F);
+        if (event.getEntity() instanceof ServerPlayer vic) {
+            int c = crown(vic);
+            if (c > 0) event.setAmount(event.getAmount() * (c == 2 ? 0.90F : 0.94F));
+        }
     }
 
-    public static boolean crowned(ServerPlayer p) {
-        return p.getOffhandItem().is(ModRegistries.HOLLOW_CROWN.get()) || CuriosCompat.wears(p, ModRegistries.HOLLOW_CROWN.get());
+    /** 0 = no crown, 1 = Hollow Crown, 2 = Awakened Crown (worn in Curios or held off-hand). */
+    public static int crown(ServerPlayer p) {
+        if (p.getOffhandItem().is(ModRegistries.AWAKENED_CROWN.get()) || CuriosCompat.wears(p, ModRegistries.AWAKENED_CROWN.get())) return 2;
+        return p.getOffhandItem().is(ModRegistries.HOLLOW_CROWN.get()) || CuriosCompat.wears(p, ModRegistries.HOLLOW_CROWN.get()) ? 1 : 0;
     }
 
     /** The Hollow Throne: a stepped gothic backrest with a glowing crying-obsidian seam, a halo ring of walls behind,

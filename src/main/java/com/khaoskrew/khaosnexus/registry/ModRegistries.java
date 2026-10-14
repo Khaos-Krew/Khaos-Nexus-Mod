@@ -85,15 +85,19 @@ public final class ModRegistries {
     public static final DeferredBlock<com.khaoskrew.khaosnexus.saga.SealGateBlock> SEAL_GATE = BLOCKS.registerBlock("seal_gate", com.khaoskrew.khaosnexus.saga.SealGateBlock::new,
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).strength(-1.0F, 3600000.0F).lightLevel(state -> 12).sound(SoundType.AMETHYST).noLootTable());
     public static final DeferredItem<BlockItem> SEAL_GATE_ITEM = ITEMS.registerSimpleBlockItem(SEAL_GATE);
-    public static final DeferredItem<Item> VAELITH_CHOIR_MASK = ITEMS.registerItem("vaelith_choir_mask", p -> new com.khaoskrew.khaosnexus.saga.LoreItem(p, 2), new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC).stacksTo(1));
+    public static final DeferredItem<Item> VAELITH_CHOIR_MASK = ITEMS.registerItem("vaelith_choir_mask", p -> new com.khaoskrew.khaosnexus.saga.LoreItem(p, 3), new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC).stacksTo(1));
     public static final DeferredItem<Item> SINGING_GLASS = ITEMS.registerItem("singing_glass", p -> new com.khaoskrew.khaosnexus.saga.LoreItem(p, 1), new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE));
-    public static final DeferredItem<Item> HIEROPHANT_CENSER = ITEMS.registerItem("hierophant_censer", p -> new com.khaoskrew.khaosnexus.saga.LoreItem(p, 2), new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC).stacksTo(1));
+    public static final DeferredItem<Item> HIEROPHANT_CENSER = ITEMS.registerItem("hierophant_censer", p -> new com.khaoskrew.khaosnexus.saga.LoreItem(p, 3), new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC).stacksTo(1));
     public static final DeferredItem<Item> PROFANE_SIGIL = ITEMS.registerItem("profane_sigil", p -> new com.khaoskrew.khaosnexus.saga.LoreItem(p, 1), new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE));
     public static final DeferredItem<Item> KINGSBANE = ITEMS.registerItem("kingsbane", com.khaoskrew.khaosnexus.saga.Kingsbane::new,
             new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC).fireResistant()
                     .attributes(net.minecraft.world.item.SwordItem.createAttributes(net.minecraft.world.item.Tiers.NETHERITE, 7, -2.7F)));
+    public static final DeferredItem<Item> AWAKENED_KINGSBANE = ITEMS.registerItem("awakened_kingsbane", com.khaoskrew.khaosnexus.saga.Kingsbane::new,
+            new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC).fireResistant()
+                    .attributes(net.minecraft.world.item.SwordItem.createAttributes(net.minecraft.world.item.Tiers.NETHERITE, 10, -2.6F)));
+    public static final DeferredItem<Item> AWAKENED_CROWN = ITEMS.registerItem("awakened_crown", p -> new com.khaoskrew.khaosnexus.saga.LoreItem(p, 3), new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC).stacksTo(1).fireResistant());
     public static final DeferredItem<Item> HOLLOW_CROWN = ITEMS.registerItem("hollow_crown", p -> new com.khaoskrew.khaosnexus.saga.LoreItem(p, 3), new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC).stacksTo(1).fireResistant());
-    public static final DeferredItem<Item> HEART_EMBER = ITEMS.registerItem("heart_ember", p -> new com.khaoskrew.khaosnexus.saga.LoreItem(p, 2), new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC));
+    public static final DeferredItem<Item> HEART_EMBER = ITEMS.registerItem("heart_ember", p -> new com.khaoskrew.khaosnexus.saga.LoreItem(p, 3), new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC));
     public static final DeferredItem<Item> WISP_BELL = ITEMS.registerItem("wisp_bell", com.khaoskrew.khaosnexus.saga.RiftWisp.Bell::new, new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.RARE));
     public static final DeferredItem<com.khaoskrew.khaosnexus.saga.CrownShardItem> CROWN_SHARD = ITEMS.registerItem("crown_shard",
             com.khaoskrew.khaosnexus.saga.CrownShardItem::new, new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC));
@@ -137,7 +141,7 @@ public final class ModRegistries {
                         for (var a : com.khaoskrew.khaosnexus.saga.armor.SagaArmor.VESTMENT_SET) output.accept(a.get());
                         output.accept(VAELITH_CHOIR_MASK.get()); output.accept(SINGING_GLASS.get());
                         output.accept(HIEROPHANT_CENSER.get()); output.accept(PROFANE_SIGIL.get());
-                        output.accept(KINGSBANE.get()); output.accept(HOLLOW_CROWN.get()); output.accept(HEART_EMBER.get());
+                        output.accept(KINGSBANE.get()); output.accept(HOLLOW_CROWN.get()); output.accept(HEART_EMBER.get()); output.accept(AWAKENED_KINGSBANE.get()); output.accept(AWAKENED_CROWN.get());
                         output.accept(RAID_ALTAR_ITEM.get());
                         output.accept(PERSONAL_LOOT_ITEM.get());
                         com.khaoskrew.khaosnexus.mob.ModEntities.eggs().forEach(output::accept);

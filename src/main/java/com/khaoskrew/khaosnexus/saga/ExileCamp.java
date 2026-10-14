@@ -88,6 +88,7 @@ public final class ExileCamp {
         fillLight(l, o);
         // vendors on the plaza (same spots as Spire towns)
         SpireVendors.spawn(l, o, 50, GateRank.S);
+        ExileQuest.ensure(l, o);
     }
 
     static void flora(ServerLevel l, BlockPos o) {

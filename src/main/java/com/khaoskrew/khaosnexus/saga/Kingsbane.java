@@ -22,6 +22,6 @@ public class Kingsbane extends SwordItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> tip, TooltipFlag flag) {
-        for (int i = 0; i < 2; i++) tip.add(Component.translatable("item.khaosnexus.kingsbane.desc." + i).withStyle(i == 0 ? ChatFormatting.GOLD : ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC));
+        for (int i = 0; i < 3; i++) tip.add(Component.translatable(this.getDescriptionId() + ".desc." + i).withStyle(i == 0 ? ChatFormatting.GOLD : ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC));
     }
 }

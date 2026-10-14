@@ -25,6 +25,11 @@ public class HunterForgeBlock extends Block {
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
             InteractionHand hand, BlockHitResult hit) {
+        if (player instanceof ServerPlayer sp0 && !level.isClientSide && com.khaoskrew.khaosnexus.saga.KingAwakening.tryAwaken(sp0, stack)) {
+            ((ServerLevel) level).sendParticles(ParticleTypes.END_ROD, pos.getX() + 0.5D, pos.getY() + 1.2D, pos.getZ() + 0.5D, 30, 0.3D, 0.4D, 0.3D, 0.05D);
+            level.playSound(null, pos, SoundEvents.BEACON_POWER_SELECT, SoundSource.BLOCKS, 1.0F, 0.7F);
+            return ItemInteractionResult.CONSUME;
+        }
         if (ForgeRecipes.match(stack) == null) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }

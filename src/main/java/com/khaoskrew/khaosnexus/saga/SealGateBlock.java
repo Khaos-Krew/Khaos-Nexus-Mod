@@ -58,6 +58,10 @@ public class SealGateBlock extends Block {
         }
         HunterProfile p = HunterRanks.profile(sp);
         if (!sp.isShiftKeyDown() && HollowThrone.allSealsBroken(p)) {   // every seal broken: the gate opens on the Hollow Throne
+            if (!sp.isCreative() && !ExileQuest.relicsGiven(p)) {   // ...once Brother Caddoc holds both guardians' relics
+                sp.displayClientMessage(Component.translatable("khaosnexus.quest.throne_locked"), false);
+                return InteractionResult.FAIL;
+            }
             return HollowThrone.enter(sp) ? InteractionResult.SUCCESS : InteractionResult.FAIL;
         }
         ResourceLocation seal = nextSeal(p);

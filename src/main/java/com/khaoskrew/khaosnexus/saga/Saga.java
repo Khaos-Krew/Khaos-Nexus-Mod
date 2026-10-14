@@ -158,12 +158,16 @@ public final class Saga {
         return tag(p).getCompound("King").getInt("Slain");
     }
 
+    public static void resetQuest(HunterProfile p) {
+        tag(p).remove("Quest");
+    }
+
     public static void resetSeals(HunterProfile p) {
         tag(p).remove("Seals"); tag(p).remove("Wards"); tag(p).remove("King");
     }
 
     public static String status(HunterProfile p) {
-        return "Seals=" + tag(p).getCompound("Seals") + " Wards=" + tag(p).getCompound("Wards") + " King=" + tag(p).getCompound("King") + " Shards=" + shards(p);
+        return "Seals=" + tag(p).getCompound("Seals") + " Wards=" + tag(p).getCompound("Wards") + " King=" + tag(p).getCompound("King") + " Quest=" + tag(p).getCompound("Quest") + " Shards=" + shards(p);
     }
 
     // ---- Crownless General ambush ----

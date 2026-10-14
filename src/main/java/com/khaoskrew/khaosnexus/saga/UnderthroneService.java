@@ -58,6 +58,7 @@ public final class UnderthroneService {
         if (!ExileCamp.built(under, o)) {
             ExileCamp.build(under, o);
         }
+        ExileQuest.ensure(under, o);   // camps built before 1.2 get the three exiles too
         boolean ok = DimensionSafety.teleport(player, Saga.UNDERTHRONE, ExileCamp.arrival(o), 180.0F, true);
         if (ok) {
             player.displayClientMessage(Component.translatable("khaosnexus.underthrone.entered"), false);

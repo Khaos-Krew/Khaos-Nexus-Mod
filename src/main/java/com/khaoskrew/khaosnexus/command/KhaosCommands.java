@@ -74,9 +74,14 @@ public final class KhaosCommands {
                         .then(Commands.literal("reset").then(Commands.argument("player", EntityArgument.player()).executes(context -> {
                             ServerPlayer player = EntityArgument.getPlayer(context, "player");
                             com.khaoskrew.khaosnexus.saga.Saga.resetSeals(HunterRanks.profile(player));
+                            com.khaoskrew.khaosnexus.saga.Saga.resetQuest(HunterRanks.profile(player));
                             HunterRanks.sync(player);
                             context.getSource().sendSuccess(() -> Component.literal("Saga seals, wards and the Hollow King reset for ").append(player.getName()), true);
                             return 1;
+                        })))
+                        .then(Commands.literal("camp").then(Commands.argument("player", EntityArgument.player()).executes(context -> {
+                            ServerPlayer player = EntityArgument.getPlayer(context, "player");
+                            return com.khaoskrew.khaosnexus.saga.UnderthroneService.enter(player) ? 1 : 0;
                         })))
                         .then(Commands.literal("status").then(Commands.argument("player", EntityArgument.player()).executes(context -> {
                             ServerPlayer player = EntityArgument.getPlayer(context, "player");

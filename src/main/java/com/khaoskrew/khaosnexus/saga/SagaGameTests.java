@@ -222,7 +222,14 @@ public class SagaGameTests {
         h.assertFalse(HollowThrone.allSealsBroken(p), "king locked before the seals");
         for (var sid : JsonPool.SEALS.all().keySet()) Saga.breakSeal(p, sid);
         h.assertTrue(HollowThrone.allSealsBroken(p), "king unlocked once every seal is broken");
+        h.assertFalse(ExileQuest.relicsGiven(p), "relics still owed");
+        h.assertTrue(ExileQuest.step(p) == 1, "meet the captain first");
+        ExileQuest.set(p, "met"); h.assertTrue(ExileQuest.step(p) == 3, "seals broken: next is the mask");
+        ExileQuest.set(p, "mask"); h.assertTrue(ExileQuest.step(p) == 4, "then the censer");
+        h.assertTrue(ExileQuest.stock(p).size() > 4, "mask adds glasswork stock");
+        ExileQuest.set(p, "censer"); h.assertTrue(ExileQuest.relicsGiven(p) && ExileQuest.step(p) == 6, "throne open");
         h.assertTrue(Saga.slayKing(p) == 1 && Saga.slayKing(p) == 2 && Saga.kingsSlain(p) == 2, "king kills recorded");
+        h.assertTrue(ExileQuest.step(p) == 7, "questline complete");
         var king = (com.khaoskrew.khaosnexus.mob.RiftBoss) h.spawn(com.khaoskrew.khaosnexus.mob.ModEntities.HOLLOW_KING.get(), new net.minecraft.core.BlockPos(1, 2, 1));
         h.assertTrue(king.isKing() && king.isSagaBoss() && king.getPhase() == 0, "fresh king");
         king.setHealth(king.getMaxHealth() * 0.6F);
