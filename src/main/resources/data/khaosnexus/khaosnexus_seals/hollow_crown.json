@@ -1,0 +1,19 @@
+{
+  "act": 1,
+  "realm": "khaosnexus:underthrone",
+  "order": 1,
+  "shard_cost": 0,
+  "min_prestige": 2,
+  "themes": [
+    "khaosnexus:crystal_cavern",
+    "khaosnexus:corrupted_cathedral"
+  ],
+  "guardians": [
+    "khaosnexus:vaelith",
+    "khaosnexus:fallen_hierophant"
+  ],
+  "generals": [
+    "khaosnexus:general_blade",
+    "khaosnexus:general_arcanist"
+  ]
+}

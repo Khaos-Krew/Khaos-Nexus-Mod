@@ -624,5 +624,14 @@
   "khaosnexus.grave.placed": "Your items were moved out of the rift to a grave at %s %s %s (%s).",
   "khaosnexus.grave.recovery": "No safe spot for your grave, so your items are in your Recovery Chest. Use /khaos recover.",
   "khaosnexus.grave.locked": "This grave belongs to another hunter's party for now.",
-  "khaosnexus.grave.claimed": "Recovered %s item stacks."
+  "khaosnexus.grave.claimed": "Recovered %s item stacks.",
+  "theme.khaosnexus.crystal_cavern": "Crystal Cavern",
+  "theme.khaosnexus.corrupted_cathedral": "Corrupted Cathedral",
+  "khaosnexus.oath.oath_of_the_unbroken": "Oath of the Unbroken",
+  "khaosnexus.oath.oath_of_the_crimson_edge": "Oath of the Crimson Edge",
+  "khaosnexus.oath.oath_of_the_quiet_star": "Oath of the Quiet Star",
+  "khaosnexus.oath.oath_of_the_long_watch": "Oath of the Long Watch",
+  "khaosnexus.seal.hollow_crown": "Seal of the Hollow Crown",
+  "khaosnexus.general.warning": "The air turns cold. A Crownless General is coming...",
+  "khaosnexus.shards.balance": "Crown Shards: %s"
 }

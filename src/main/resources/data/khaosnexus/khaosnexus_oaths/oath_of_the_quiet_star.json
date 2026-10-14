@@ -1,0 +1,18 @@
+{
+  "act": 1,
+  "role": "caster",
+  "nodes": [
+    "+10% spell power, -8% max health",
+    "Spells under 3 mana cost 25% less",
+    "Every 5th spell echoes at 40%",
+    "Ultimate: starfall zone"
+  ],
+  "node_cost": [
+    1,
+    1,
+    2,
+    2,
+    3
+  ],
+  "respec_shards": 40
+}

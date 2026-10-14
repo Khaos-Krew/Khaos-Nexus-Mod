@@ -1,0 +1,18 @@
+{
+  "act": 1,
+  "role": "melee",
+  "nodes": [
+    "+8% attack speed, -6% armor",
+    "Crits mark targets (+5% damage taken)",
+    "Kills refund 10% of ability cooldown",
+    "Ultimate: 6s bleed flurry"
+  ],
+  "node_cost": [
+    1,
+    1,
+    2,
+    2,
+    3
+  ],
+  "respec_shards": 40
+}

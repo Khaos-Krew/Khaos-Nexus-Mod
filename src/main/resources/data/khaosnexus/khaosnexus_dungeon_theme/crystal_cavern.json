@@ -1,0 +1,39 @@
+{
+  "display_name": {
+    "translate": "theme.khaosnexus.crystal_cavern"
+  },
+  "weight": 6,
+  "min_rank": "B",
+  "max_rank": "S",
+  "palette": {
+    "minecraft:polished_blackstone_bricks": "minecraft:calcite",
+    "minecraft:cracked_polished_blackstone_bricks": "minecraft:smooth_basalt",
+    "minecraft:chiseled_polished_blackstone": "minecraft:amethyst_block",
+    "minecraft:gilded_blackstone": "minecraft:budding_amethyst",
+    "minecraft:deepslate_tiles": "minecraft:tuff_bricks",
+    "minecraft:cracked_deepslate_tiles": "minecraft:tuff",
+    "minecraft:deepslate_bricks": "minecraft:calcite",
+    "minecraft:obsidian": "minecraft:smooth_basalt",
+    "minecraft:crying_obsidian": "minecraft:tinted_glass",
+    "minecraft:purple_stained_glass": "minecraft:light_blue_stained_glass",
+    "minecraft:magma_block": "minecraft:pearlescent_froglight"
+  },
+  "decor": [
+    {
+      "block": "minecraft:amethyst_cluster",
+      "on": "floor",
+      "chance": 0.02
+    },
+    {
+      "block": "minecraft:large_amethyst_bud",
+      "on": "ceiling",
+      "chance": 0.03
+    }
+  ],
+  "hazards": [
+    {
+      "type": "khaosnexus:chill"
+    }
+  ],
+  "saga": "hollow_crown"
+}

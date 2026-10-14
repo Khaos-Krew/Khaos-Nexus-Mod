@@ -1,0 +1,43 @@
+{
+  "display_name": {
+    "translate": "theme.khaosnexus.corrupted_cathedral"
+  },
+  "weight": 6,
+  "min_rank": "A",
+  "max_rank": "S",
+  "palette": {
+    "minecraft:polished_blackstone_bricks": "minecraft:deepslate_bricks",
+    "minecraft:cracked_polished_blackstone_bricks": "minecraft:cracked_deepslate_bricks",
+    "minecraft:chiseled_polished_blackstone": "minecraft:chiseled_deepslate",
+    "minecraft:gilded_blackstone": "minecraft:gilded_blackstone",
+    "minecraft:deepslate_tiles": "minecraft:polished_deepslate",
+    "minecraft:cracked_deepslate_tiles": "minecraft:sculk",
+    "minecraft:obsidian": "minecraft:crying_obsidian",
+    "minecraft:crying_obsidian": "minecraft:soul_lantern",
+    "minecraft:purple_stained_glass": "minecraft:red_stained_glass",
+    "minecraft:magma_block": "minecraft:soul_soil"
+  },
+  "decor": [
+    {
+      "block": "minecraft:soul_lantern",
+      "on": "ceiling",
+      "chance": 0.02
+    },
+    {
+      "block": "minecraft:candle",
+      "on": "floor",
+      "chance": 0.01
+    },
+    {
+      "block": "minecraft:cobweb",
+      "on": "ceiling",
+      "chance": 0.02
+    }
+  ],
+  "hazards": [
+    {
+      "type": "khaosnexus:void"
+    }
+  ],
+  "saga": "hollow_crown"
+}

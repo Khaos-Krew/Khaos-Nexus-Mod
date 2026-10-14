@@ -626,6 +626,17 @@ public final class Config {
             .comment("Minutes a grave stays locked to its owner and party before anyone can loot it.")
             .defineInRange("partyAccessMinutes", 60, 0, 10080);
     static { SERVER_BUILDER.pop(); }
+    static { SERVER_BUILDER.push("saga"); }
+    public static final ModConfigSpec.DoubleValue GENERAL_AMBUSH_CHANCE = SERVER_BUILDER
+            .comment("Chance a Crownless General ambushes an A or S rank normal gate (0 turns ambushes off).")
+            .defineInRange("generalAmbushChance", 0.05D, 0.0D, 1.0D);
+    public static final ModConfigSpec.IntValue GENERAL_WARNING_TICKS = SERVER_BUILDER
+            .comment("Ticks of warning before a General appears. 20 ticks is one second.")
+            .defineInRange("generalWarningTicks", 200, 20, 1200);
+    public static final ModConfigSpec.IntValue OATH_RESPEC_SHARDS = SERVER_BUILDER
+            .comment("Crown Shards to reset an Oath.")
+            .defineInRange("oathRespecShards", 40, 0, 10000);
+    static { SERVER_BUILDER.pop(); }
     public static final ModConfigSpec SERVER_SPEC = SERVER_BUILDER.build();
 
     private Config() {}

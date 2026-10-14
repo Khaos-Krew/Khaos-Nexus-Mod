@@ -1,0 +1,18 @@
+{
+  "act": 1,
+  "role": "ranged",
+  "nodes": [
+    "+10% projectile damage beyond 16 blocks, -10% within 6",
+    "Standing still 2s: +8% crit",
+    "Marked targets glow for the party",
+    "Ultimate: piercing volley"
+  ],
+  "node_cost": [
+    1,
+    1,
+    2,
+    2,
+    3
+  ],
+  "respec_shards": 40
+}

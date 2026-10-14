@@ -1,0 +1,18 @@
+{
+  "act": 1,
+  "role": "tank",
+  "nodes": [
+    "+10% max health, -5% damage",
+    "Blocking restores 2% health",
+    "Taunt pulse every 20s",
+    "Below 30% health: 3s of damage reduction (60s cd)"
+  ],
+  "node_cost": [
+    1,
+    1,
+    2,
+    2,
+    3
+  ],
+  "respec_shards": 40
+}
