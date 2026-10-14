@@ -35,6 +35,27 @@ public class MinionMob extends PathfinderMob implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private final String prefix;
     private final boolean familiar;
+    /** Screenshot/clip-review hook (NBT "DebugPose"): holds the baked freeze_<name> pose. Empty in normal play. */
+    private static final net.minecraft.network.syncher.EntityDataAccessor<String> DEBUG_POSE =
+            net.minecraft.network.syncher.SynchedEntityData.defineId(MinionMob.class, net.minecraft.network.syncher.EntityDataSerializers.STRING);
+
+    @Override
+    protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DEBUG_POSE, "");
+    }
+
+    @Override
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        if (!this.entityData.get(DEBUG_POSE).isEmpty()) tag.putString("DebugPose", this.entityData.get(DEBUG_POSE));
+    }
+
+    @Override
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        if (tag.contains("DebugPose")) this.entityData.set(DEBUG_POSE, tag.getString("DebugPose"));
+    }
 
     public MinionMob(EntityType<? extends MinionMob> type, Level level) {
         super(type, level);
@@ -106,6 +127,10 @@ public class MinionMob extends PathfinderMob implements GeoEntity {
         controllers.add(new AnimationController<>(this, "movement", 5, s -> s.setAndContinue(s.isMoving() ? walk : idle)));
         controllers.add(new AnimationController<>(this, "action", 1, s -> PlayState.STOP)
                 .triggerableAnim("attack", RawAnimation.begin().thenPlay(this.prefix + "attack")));
+        controllers.add(new AnimationController<>(this, "debug_pose", 0, s -> {
+            String pose = this.entityData.get(DEBUG_POSE);
+            return pose.isEmpty() ? PlayState.STOP : s.setAndContinue(RawAnimation.begin().thenLoop(this.prefix + "freeze_" + pose));
+        }));
     }
 
     @Override

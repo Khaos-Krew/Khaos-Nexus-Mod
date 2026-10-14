@@ -313,7 +313,7 @@
        "post": [
         0,
         0,
-        -3.739
+        -21.74
        ],
        "lerp_mode": "catmullrom"
       },
@@ -321,7 +321,7 @@
        "post": [
         0,
         0,
-        -5.211
+        -23.21
        ],
        "lerp_mode": "catmullrom"
       },
@@ -329,7 +329,7 @@
        "post": [
         0,
         0,
-        -5.388
+        -23.39
        ],
        "lerp_mode": "catmullrom"
       },
@@ -337,7 +337,7 @@
        "post": [
         0,
         0,
-        -4.166
+        -22.17
        ],
        "lerp_mode": "catmullrom"
       },
@@ -345,7 +345,7 @@
        "post": [
         0,
         0,
-        -2.261
+        -20.26
        ],
        "lerp_mode": "catmullrom"
       },
@@ -353,7 +353,7 @@
        "post": [
         0,
         0,
-        -0.7890000000000001
+        -18.79
        ],
        "lerp_mode": "catmullrom"
       },
@@ -361,7 +361,7 @@
        "post": [
         0,
         0,
-        -0.6120000000000001
+        -18.61
        ],
        "lerp_mode": "catmullrom"
       },
@@ -369,7 +369,7 @@
        "post": [
         0,
         0,
-        -1.834
+        -19.83
        ],
        "lerp_mode": "catmullrom"
       },
@@ -377,7 +377,7 @@
        "post": [
         0,
         0,
-        -3.739
+        -21.74
        ],
        "lerp_mode": "catmullrom"
       }
@@ -389,7 +389,7 @@
        "post": [
         0,
         0,
-        3.739
+        21.74
        ],
        "lerp_mode": "catmullrom"
       },
@@ -397,7 +397,7 @@
        "post": [
         0,
         0,
-        5.211
+        23.21
        ],
        "lerp_mode": "catmullrom"
       },
@@ -405,7 +405,7 @@
        "post": [
         0,
         0,
-        5.388
+        23.39
        ],
        "lerp_mode": "catmullrom"
       },
@@ -413,7 +413,7 @@
        "post": [
         0,
         0,
-        4.166
+        22.17
        ],
        "lerp_mode": "catmullrom"
       },
@@ -421,7 +421,7 @@
        "post": [
         0,
         0,
-        2.261
+        20.26
        ],
        "lerp_mode": "catmullrom"
       },
@@ -429,7 +429,7 @@
        "post": [
         0,
         0,
-        0.7890000000000001
+        18.79
        ],
        "lerp_mode": "catmullrom"
       },
@@ -437,7 +437,7 @@
        "post": [
         0,
         0,
-        0.6120000000000001
+        18.61
        ],
        "lerp_mode": "catmullrom"
       },
@@ -445,7 +445,7 @@
        "post": [
         0,
         0,
-        1.834
+        19.83
        ],
        "lerp_mode": "catmullrom"
       },
@@ -453,7 +453,7 @@
        "post": [
         0,
         0,
-        3.739
+        21.74
        ],
        "lerp_mode": "catmullrom"
       }
@@ -1197,7 +1197,7 @@
        "post": [
         0.0,
         0,
-        0
+        -18.0
        ],
        "lerp_mode": "catmullrom"
       },
@@ -1205,7 +1205,7 @@
        "post": [
         -16.971,
         0,
-        0
+        -18.0
        ],
        "lerp_mode": "catmullrom"
       },
@@ -1213,7 +1213,7 @@
        "post": [
         -24.0,
         0,
-        0
+        -18.0
        ],
        "lerp_mode": "catmullrom"
       },
@@ -1221,7 +1221,7 @@
        "post": [
         -16.971,
         0,
-        0
+        -18.0
        ],
        "lerp_mode": "catmullrom"
       },
@@ -1229,7 +1229,7 @@
        "post": [
         0.0,
         0,
-        0
+        -18.0
        ],
        "lerp_mode": "catmullrom"
       },
@@ -1237,7 +1237,7 @@
        "post": [
         16.971,
         0,
-        0
+        -18.0
        ],
        "lerp_mode": "catmullrom"
       },
@@ -1245,7 +1245,7 @@
        "post": [
         24.0,
         0,
-        0
+        -18.0
        ],
        "lerp_mode": "catmullrom"
       },
@@ -1253,7 +1253,7 @@
        "post": [
         16.971,
         0,
-        0
+        -18.0
        ],
        "lerp_mode": "catmullrom"
       },
@@ -1261,7 +1261,7 @@
        "post": [
         0.0,
         0,
-        0
+        -18.0
        ],
        "lerp_mode": "catmullrom"
       }
@@ -1273,7 +1273,7 @@
        "post": [
         0.0,
         0,
-        0
+        18.0
        ],
        "lerp_mode": "catmullrom"
       },
@@ -1281,7 +1281,7 @@
        "post": [
         16.971,
         0,
-        0
+        18.0
        ],
        "lerp_mode": "catmullrom"
       },
@@ -1289,7 +1289,7 @@
        "post": [
         24.0,
         0,
-        0
+        18.0
        ],
        "lerp_mode": "catmullrom"
       },
@@ -1297,7 +1297,7 @@
        "post": [
         16.971,
         0,
-        0
+        18.0
        ],
        "lerp_mode": "catmullrom"
       },
@@ -1305,7 +1305,7 @@
        "post": [
         0.0,
         0,
-        0
+        18.0
        ],
        "lerp_mode": "catmullrom"
       },
@@ -1313,7 +1313,7 @@
        "post": [
         -16.971,
         0,
-        0
+        18.0
        ],
        "lerp_mode": "catmullrom"
       },
@@ -1321,7 +1321,7 @@
        "post": [
         -24.0,
         0,
-        0
+        18.0
        ],
        "lerp_mode": "catmullrom"
       },
@@ -1329,7 +1329,7 @@
        "post": [
         -16.971,
         0,
-        0
+        18.0
        ],
        "lerp_mode": "catmullrom"
       },
@@ -1337,7 +1337,7 @@
        "post": [
         0.0,
         0,
-        0
+        18.0
        ],
        "lerp_mode": "catmullrom"
       }
@@ -1507,7 +1507,7 @@
        "post": [
         0,
         0,
-        0
+        -18.0
        ],
        "lerp_mode": "catmullrom"
       },
@@ -1515,7 +1515,7 @@
        "post": [
         -130,
         0,
-        30
+        12.0
        ],
        "lerp_mode": "catmullrom"
       },
@@ -1523,7 +1523,7 @@
        "post": [
         -30,
         0,
-        -20
+        -38.0
        ],
        "lerp_mode": "catmullrom"
       },
@@ -1531,7 +1531,7 @@
        "post": [
         0,
         0,
-        0
+        -18.0
        ],
        "lerp_mode": "catmullrom"
       }
@@ -1543,7 +1543,7 @@
        "post": [
         0,
         0,
-        0
+        18.0
        ],
        "lerp_mode": "catmullrom"
       },
@@ -1551,7 +1551,7 @@
        "post": [
         -130,
         0,
-        -30
+        -12.0
        ],
        "lerp_mode": "catmullrom"
       },
@@ -1559,7 +1559,7 @@
        "post": [
         -30,
         0,
-        20
+        38.0
        ],
        "lerp_mode": "catmullrom"
       },
@@ -1567,7 +1567,7 @@
        "post": [
         0,
         0,
-        0
+        18.0
        ],
        "lerp_mode": "catmullrom"
       }
@@ -1812,6 +1812,1526 @@
        "lerp_mode": "catmullrom"
       }
      }
+    }
+   }
+  },
+  "animation.bone_thrall.freeze_idle": {
+   "loop": true,
+   "animation_length": 1.0,
+   "bones": {
+    "root": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_leg": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_shin": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "left_leg": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "left_shin": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "hips": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "torso": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "chest": {
+     "rotation": [
+      0.0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "head": {
+     "rotation": [
+      2.5,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "jaw": {
+     "rotation": [
+      3.0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_arm": {
+     "rotation": [
+      0,
+      0,
+      -21.74
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_forearm": {
+     "rotation": [
+      -8.0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_hand": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "left_arm": {
+     "rotation": [
+      0,
+      0,
+      21.74
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "left_forearm": {
+     "rotation": [
+      -5.476,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "left_hand": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "loin_front": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "loin_back": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_grip": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "cleaver": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "soul": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "cloak": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    }
+   }
+  },
+  "animation.bone_thrall.freeze_walk": {
+   "loop": true,
+   "animation_length": 1.0,
+   "bones": {
+    "root": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_leg": {
+     "rotation": [
+      30.0,
+      0.0,
+      0.0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_shin": {
+     "rotation": [
+      12.683,
+      0.0,
+      0.0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "left_leg": {
+     "rotation": [
+      -30.0,
+      0.0,
+      0.0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "left_shin": {
+     "rotation": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "hips": {
+     "rotation": [
+      0.0,
+      -3.0,
+      0.0
+     ],
+     "position": [
+      0.0,
+      -0.0,
+      0.0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "torso": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "chest": {
+     "rotation": [
+      4.0,
+      4.0,
+      0.0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "head": {
+     "rotation": [
+      0.0,
+      -3.0,
+      0.0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "jaw": {
+     "rotation": [
+      3.0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_arm": {
+     "rotation": [
+      -24.0,
+      0.0,
+      -18.0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_forearm": {
+     "rotation": [
+      -7.0,
+      0.0,
+      0.0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_hand": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "left_arm": {
+     "rotation": [
+      24.0,
+      0.0,
+      18.0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "left_forearm": {
+     "rotation": [
+      -23.0,
+      0.0,
+      0.0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "left_hand": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "loin_front": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "loin_back": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_grip": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "cleaver": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "soul": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "cloak": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    }
+   }
+  },
+  "animation.bone_thrall.freeze_attack_windup": {
+   "loop": true,
+   "animation_length": 1.0,
+   "bones": {
+    "root": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_leg": {
+     "rotation": [
+      -6.149,
+      0.0,
+      0.0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_shin": {
+     "rotation": [
+      11.438,
+      0.0,
+      0.0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "left_leg": {
+     "rotation": [
+      3.35,
+      0.0,
+      0.0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "left_shin": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "hips": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "torso": {
+     "rotation": [
+      1.508,
+      0.0,
+      0.0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "chest": {
+     "rotation": [
+      5.749,
+      -6.036,
+      0.0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "head": {
+     "rotation": [
+      2.5,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "jaw": {
+     "rotation": [
+      29.818,
+      0.0,
+      0.0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_arm": {
+     "rotation": [
+      -94.533,
+      0.0,
+      -10.089
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_forearm": {
+     "rotation": [
+      -8.0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_hand": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "left_arm": {
+     "rotation": [
+      -126.66,
+      0.0,
+      -12.194
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "left_forearm": {
+     "rotation": [
+      -5.476,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "left_hand": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "loin_front": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "loin_back": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_grip": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "cleaver": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "soul": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "cloak": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    }
+   }
+  },
+  "animation.bone_thrall.freeze_attack": {
+   "loop": true,
+   "animation_length": 1.0,
+   "bones": {
+    "root": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_leg": {
+     "rotation": [
+      -12.296,
+      0.0,
+      0.0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_shin": {
+     "rotation": [
+      9.741,
+      0.0,
+      0.0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "left_leg": {
+     "rotation": [
+      8.0,
+      0.0,
+      0.0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "left_shin": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "hips": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "torso": {
+     "rotation": [
+      1.963,
+      0.0,
+      0.0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "chest": {
+     "rotation": [
+      20.064,
+      14.64,
+      0.0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "head": {
+     "rotation": [
+      2.5,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "jaw": {
+     "rotation": [
+      14.799,
+      0.0,
+      0.0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_arm": {
+     "rotation": [
+      -11.52,
+      0.0,
+      -34.08
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_forearm": {
+     "rotation": [
+      -8.0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_hand": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "left_arm": {
+     "rotation": [
+      -25.905,
+      0.0,
+      38.658
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "left_forearm": {
+     "rotation": [
+      -5.476,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "left_hand": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "loin_front": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "loin_back": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "right_grip": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "cleaver": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "soul": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    },
+    "cloak": {
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "position": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
     }
    }
   }
