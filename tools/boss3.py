@@ -288,7 +288,7 @@ def bake(cf, rig_, A, verbose=False):
                         q = K.xf(mf, (cf.HX, yy, 0)); u = np.clip((q - sa) @ sd, cf.ax[0], cf.ax[1])
                         pen.append(max(0.0, cf.fa_rad - np.linalg.norm(sa + sd * u - q)) * 14)
                         for cp, rad in hz: pen.append(max(0.0, rad - np.linalg.norm(cp - q)) * 14)
-                    return np.concatenate([(K.xf(m, (cf.HX, Y, Z)) - tgt) * 3, pen, (K.xd(m, (0, 0, -1)) - ax) * W_AX, (K.xd(m, (0, 1, 0)) - nrm(shL - tgt)) * W_FI, x * 0.004])
+                    return np.concatenate([(K.xf(m, (cf.HX, Y, Z)) - tgt) * getattr(cf, 'wpos_l', 3), pen, (K.xd(m, (0, 0, -1)) - ax) * W_AX, (K.xd(m, (0, 1, 0)) - nrm(shL - tgt)) * W_FI, x * 0.004])
                 SEEDS_L = [np.array([-90, 0, 30, -60, 0, 0, 0, 0, 0.0]), np.array([-150, 0, 10, -20, 0, 0, 0, 0, 0.0]), np.array([-60, 0, 20, -60, 0, 0, 0, 0, 0.0]),
                            np.array([-40, 0, 40, -100, 0, 0, 0, 0, 0.0])]
                 bl = K.solve(fl, xl, loL, hiL)
@@ -339,10 +339,15 @@ def cloth(cf, rig_, A, ik):
                             d = nxt[j + 1] - nxt[j]; dl = np.linalg.norm(d) + 1e-9; diff = (dl - lens[j]) / dl
                             if j == 0: nxt[j + 1] -= d * diff
                             else: nxt[j] += d * diff * 0.5; nxt[j + 1] -= d * diff * 0.5
+                        lat = K.xd(Cm, (1, 0, 0)) * s
                         for j in range(1, ns + 1):
                             for c, rad in sph:
                                 v = nxt[j] - c; dl = np.linalg.norm(v)
                                 if dl < rad + 0.5: nxt[j] = c + v / (dl + 1e-9) * (rad + 0.5)
+                            if C.get('wide'):                                     # the panel's outer half, not just its spine
+                                for c, rad in C['wide'](fk, R, Q):
+                                    o = nxt[j] + lat * C['segs'][j - 1][1] * 0.6; v = o - c; dl = np.linalg.norm(v)
+                                    if dl < rad + 0.5: nxt[j] = nxt[j] + v / (dl + 1e-9) * (rad + 0.5 - dl)
                             if nxt[j][1] < 0.8: nxt[j][1] = 0.8
                     prev[h], parts[h] = p, nxt
                     if L == loops - 1 and i % 3 == 0: rec[h].append((min(t, T), Cm.copy(), nxt.copy()))
@@ -355,7 +360,7 @@ def cloth(cf, rig_, A, ik):
                     d = PM.T @ nrm(pts[j + 1] - pts[j])
                     rx = math.degrees(math.atan2(d[2], -d[1]))
                     rz = math.degrees(math.atan2(d[0], math.hypot(d[1], d[2])))
-                    ang = np.clip(np.array([rx, 0.0, -rz]), [-80, -5, -45], [150, 5, 45])
+                    zl = C.get('zlim', 45); ang = np.clip(np.array([rx, 0.0, -rz]), [-80, -5, -zl], [150, 5, zl])
                     ch[f"{C['prefix']}{h}{j + 1}"].append((t, ang))
                     PM = PM @ K.rot(-ang[0], ang[1], -ang[2])
         res[name] = ch
