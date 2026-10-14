@@ -72,3 +72,11 @@ Khaos Nexus adds Nexus Gates, hunter ranks, classes, bounties, raids, and the Ne
     versionRange="[4.9.3,)"
     ordering="NONE"
     side="BOTH"
+
+# Optional: Patchouli shows the Hunter's Codex guidebook (data-only; nothing breaks without it)
+[[dependencies.${mod_id}]]
+    modId="patchouli"
+    type="optional"
+    versionRange="*"
+    ordering="NONE"
+    side="BOTH"

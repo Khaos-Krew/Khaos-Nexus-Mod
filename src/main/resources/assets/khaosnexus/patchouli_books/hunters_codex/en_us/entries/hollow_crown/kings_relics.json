@@ -1,0 +1,16 @@
+{
+  "name": "The King's Relics",
+  "icon": "khaosnexus:hollow_crown",
+  "category": "khaosnexus:hollow_crown",
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(l)The Hollow Crown$(): wear it in a Curios head or charm slot, or hold it in your off hand. +8% damage dealt, -6% damage taken.$(br2)$(l)Kingsbane$() (35%): a netherite-tier greatsword. +20% damage against rift creatures, and hits apply Weakness.$(br2)$(l)Morvane's Heart-Ember$(): used for awakening."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)Awakening$()$(br)Hold Kingsbane or the Crown, put $(l)3 Heart-Embers$() in your off hand, and use a $(l)Hunter Forge$() (also costs $(l)4 Rift Cores$()). Enchantments and forge levels carry over.$(li)$(l)Awakened Kingsbane$(): +3 damage. Fully charged hits drop a crown shard on nearby foes (3 s cooldown).$(li)$(l)Awakened Crown$(): +12% damage dealt, -10% damage taken."
+    }
+  ]
+}

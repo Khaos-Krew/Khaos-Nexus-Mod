@@ -1,0 +1,20 @@
+{
+  "name": "Morvane, the Hollow King",
+  "icon": "khaosnexus:kingsbane",
+  "category": "khaosnexus:hollow_crown",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The crowned king of the Underthrone holds court in the $(l)Hollow Throne$(), a hall on its own rock. Everyone in your party standing nearby enters with you.$(br2)He fights with $(l)Kingsbane$(), shard volleys and a wide spin."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)Phase 1$() (100-66%): sword work and volleys.$(br)$(l)Phase 2$() (66%): he calls his court of ghouls and a stalker and starts using $(l)Crownfall$(). He kneels and drives Kingsbane into the floor, and shards fall where each hunter stood. Watch for the gold rings and move."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)Phase 3$() (33%): full enrage. A barrier soaks damage, and shards also rain on their own between attacks.$(br2)After he falls, the hall sends you back to camp. If you leave the hall empty, he resets."
+    }
+  ]
+}

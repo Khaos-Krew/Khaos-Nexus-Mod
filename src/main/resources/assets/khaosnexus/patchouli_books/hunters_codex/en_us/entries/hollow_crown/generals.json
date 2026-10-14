@@ -1,0 +1,12 @@
+{
+  "name": "Crownless Generals",
+  "icon": "khaosnexus:general_blade_spawn_egg",
+  "category": "khaosnexus:hollow_crown",
+  "sortnum": 6,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Exiled generals of the Hollow Crown sometimes ambush A- and S-rank gates. $(l)The Oathbroken Blade$() hunts melee classes. $(l)The Ashen Arcanist$() hunts casters and archers, firing shard volleys and raising barriers."
+    }
+  ]
+}

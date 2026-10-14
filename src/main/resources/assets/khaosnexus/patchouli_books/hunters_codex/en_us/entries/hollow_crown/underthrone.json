@@ -1,0 +1,16 @@
+{
+  "name": "The Underthrone",
+  "icon": "khaosnexus:crown_shard",
+  "category": "khaosnexus:hollow_crown",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The $(l)Underthrone$() is a dark realm under the world. Reach it through a Spire Gate once you have climbed $(l)floor 50$() of the Spire.$(br2)The $(l)Exile Camp$() is safe ground: blocks there can't be broken or placed, and it has vendors, tents and the $(l)Seal Gate$() under the north arch."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Gate and Spire bosses drop $(l)Crown Shards$() for SS/Paragon hunters. Seal gates add extra shards. Opening a seal costs shards.$(br2)Admins: $(l)/khaosnexus saga status|reset|camp <player>$()."
+    }
+  ]
+}

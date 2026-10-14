@@ -1,0 +1,12 @@
+{
+  "name": "Gate Mimics",
+  "icon": "khaosnexus:gate_mimic_spawn_egg",
+  "category": "khaosnexus:hollow_crown",
+  "sortnum": 5,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "In C-rank and higher dungeons, one loot chest may be a $(l)Gate Mimic$(). The chance is 20% at C, plus 5% for each rank above. It wakes when touched, when hit, or when you stand close to it.$(br2)Kill it for two rolls of the dungeon's loot."
+    }
+  ]
+}

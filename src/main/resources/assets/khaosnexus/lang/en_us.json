@@ -757,5 +757,7 @@
   "subtitles.khaosnexus.king.crownfall_rise": "Crown shards gather",
   "subtitles.khaosnexus.king.crownfall_impact": "Kingsbane strikes the floor",
   "subtitles.khaosnexus.king.shard_strike": "Crown shard falls",
-  "subtitles.khaosnexus.king.death": "Hollow King falls"
+  "subtitles.khaosnexus.king.death": "Hollow King falls",
+  "khaosnexus.codex.name": "Hunter's Codex",
+  "khaosnexus.codex.landing": "Field notes for Khaos Nexus hunters. This edition covers $(l)1.2: The Hollow Crown$()."
 }

@@ -1,0 +1,16 @@
+{
+  "name": "Seals and Wards",
+  "icon": "khaosnexus:seal_gate",
+  "category": "khaosnexus:hollow_crown",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The Seal Gate opens the next unbroken seal as an S-rank gate. The $(l)Hollow Crown$() seal has two $(l)wards$(): $(l)Vaelith, the Glass Choir$() (crystal caverns) and $(l)the Fallen Hierophant$() (corrupted cathedral)."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Each gate you open brings you to a guardian whose ward is still standing. The seal breaks when both wards have fallen.$(br2)Once every seal is broken $(l)and$() Caddoc holds both relics, the Seal Gate opens on the $(l)Hollow Throne$(). Sneak-use it to replay the last seal instead."
+    }
+  ]
+}

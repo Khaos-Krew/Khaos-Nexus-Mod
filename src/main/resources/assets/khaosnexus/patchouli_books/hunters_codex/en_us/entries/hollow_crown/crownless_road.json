@@ -1,0 +1,20 @@
+{
+  "name": "The Crownless Road",
+  "icon": "minecraft:writable_book",
+  "category": "khaosnexus:hollow_crown",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The camp questline. Three exiles run it:$(li)$(l)Captain Ysolde Marrow$(): gives the quest and tells you your next step.$(li)$(l)Brother Caddoc Venn$(): keeper of relics, by the arch.$(li)$(l)Wren Halloway$(): the quartermaster. Her stock grows as you go."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)Steps$()$(li)Speak with Ysolde.$(li)Fell one guardian ward through the Seal Gate.$(li)Give Caddoc $(l)Vaelith's Choir Mask$().$(li)Give Caddoc $(l)the Hierophant's Censer$().$(li)Break the seal (both wards).$(li)Slay the Hollow King."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)Relic rewards$()$(br)The Mask unlocks the $(l)glass halo$() cosmetic and Wren's glasswork.$(br)The Censer unlocks the $(l)ember trail$() and Wren's ember goods, including Heart-Embers.$(br2)Sneak and speak to Caddoc to switch cosmetics."
+    }
+  ]
+}
