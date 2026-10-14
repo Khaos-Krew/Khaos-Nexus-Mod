@@ -13,7 +13,8 @@ import boss3 as B3
 from boss3 import octo, otaper, plate, horn, SW, mv, R0
 Rig = G.Rig
 NAME = 'spire_guardian'
-HX, HY = 12.2, 26.6
+SHIFT = 18.0
+HX, HY = 12.2, 24.6
 FY, FZ = HY - 2.0, -0.4
 SH = (12.2, 46.6)
 CAPE = dict(prefix='cape', halves=[('R', -1, -3.4), ('L', 1, 3.4)], top=48.0, z=5.8, overlap=0.6,
@@ -134,7 +135,7 @@ def rig():
         prev, y = b, y + h
     B('spire4', (0, y + 0.8, -0.5), (0.8, 1.6, 0.8), 'core', rot=(45, 45, 0))
     r.bone('halberd', 'right_hand', (-HX, FY, FZ), (-90, 0, 0))
-    halberd_parts(r, 'halberd', -HX, FY, FZ)
+    halberd_parts(r, 'halberd', -HX, FY + SHIFT, FZ)   # right fist 15 px above the butt, left fist 9 px higher
     B3.cape_bones(r, CF, sigil='sigil')
     return r
 
@@ -146,9 +147,9 @@ def spheres(fk, R, Q):
         sph += [(K.xf(lm, (xx, 20, 0)), 4.2), (K.xf(lm, (xx, 15, 0)), 3.9), (K.xf(sm, (xx, 9, 0)), 3.4), (K.xf(sm, (xx, 4, 0)), 3.2)]
     return sph
 
-CF = B3.Cfg(weapon='halberd', HX=HX, FY=FY, FZ=FZ, SH=SH, gap=12.0, reach=22.6, ax=(-28.0, 50.0),
-            widths=[(36.0, 13.0), (36.0, 6.5), (37.0, 6.5), (30, 1.0)], hazards=[((0, 36.0, -7.0), 7.0)],
-            fa_pts=(HY + 1.6, HY + 2.6, HY + 4.2, HY + 6, 32.0, 34.4, 36.0), fa_rad=4.2, cape=dict(CAPE, spheres=spheres))
+CF = B3.Cfg(weapon='halberd', HX=HX, FY=FY, FZ=FZ, SH=SH, gap=-9.0, reach=24.4, ax=(-10.0, 68.0),
+            widths=[(54.0, 13.0), (54.0, 6.5), (55.0, 6.5), (48, 1.0)], hazards=[((0, 54.0, -7.0), 7.0)],
+            fa_pts=(HY + 3.0, HY + 4.2, HY + 6, 30.0, 33.0, 35.0), fa_rad=3.8, cape=dict(CAPE, spheres=spheres))
 
 PAL = {NAME: dict(who=NAME, k=3, ts=[768, 768], boss=True,
        pal=dict(base='#2D2528', dark='#120D0F', accent='#5A5054', robe='#3A1846', cape='#2E1238'),
@@ -163,9 +164,11 @@ PAL = {NAME: dict(who=NAME, k=3, ts=[768, 768], boss=True,
                 horn=((40, 30, 50), (110, 96, 130))))}
 
 # ------------------------------------------------------------------ animation
-CARRY = SW((-12.6, 27.4, -4.6), (0.0, 1.0, -0.06))           # sentry: halberd upright at his right side, butt on the floor
-GUARD = SW((-5.0, 31.0, -12.0), (0.18, 0.78, -0.6))           # two-handed diagonal guard, head up and forward
-PLANT = SW((-2.0, 30.0, -13.0), (0.0, 1.0, -0.04))            # planted upright before him
+CARRY = SW((-12.0, 30.0, -7.0), (0.06, 0.84, 0.54))          # sentry: halberd shouldered, head up over the right shoulder
+def H(mid, D, N=(1, 0, 0)):
+    d = B3.nrm(D); return SW(tuple(np.array(mid) - d * 4.5), D, N)       # hands straddle mid (left fist 9 px up the shaft)
+GUARD = H((0.0, 30.0, -13.0), (0.2, 0.75, -0.62))           # two-handed diagonal guard, head up and forward
+PLANT = SW((-2.0, 16.0, -15.0), (0.0, 1.0, -0.04))            # planted upright before him, butt on the floor
 REST_L = {'left_arm': [-4, 0, 6], 'left_forearm': [-12, 0, 0], 'left_hand': [0, 0, 0]}
 
 def author(rg):
@@ -207,9 +210,9 @@ def author(rg):
         return base(T, False, [(0, GUARD)] + keys + ([(T, GUARD)] if end else []), bb, pp, **kw)
     # ATTACK "Spire Fall": halberd hauled back over the right shoulder, then a two-handed overhead chop (impact 0.7)
     A['attack'] = act(1.2, [
-        (0.2, SW((-6.0, 44.0, -8.0), (-0.1, 0.95, 0.2))), (0.42, SW((-5.0, 50.0, -2.0), (-0.05, 0.3, 0.95))),
-        (0.55, SW((-5.0, 51.0, -1.0), (-0.05, 0.15, 0.99))), (0.62, SW((-3.0, 46.0, -14.0), (0.0, 0.55, -0.83))), (0.7, SW((-1.5, 30.0, -17.0), (0.0, -0.3, -0.95))),
-        (0.9, SW((-1.5, 29.0, -16.5), (0.0, -0.32, -0.95))), (1.05, SW((-2.0, 30.0, -14.0), (0.05, 0.4, -0.9)))],
+        (0.2, H((-6.0, 44.0, -8.0), (-0.1, 0.95, 0.2))), (0.42, H((-5.0, 50.0, -2.0), (-0.05, 0.3, 0.95))),
+        (0.55, H((-5.0, 51.0, -1.0), (-0.05, 0.15, 0.99))), (0.62, H((-3.0, 46.0, -14.0), (0.0, 0.55, -0.83))), (0.7, H((-1.5, 28.0, -21.0), (0.0, -0.55, -0.83))),
+        (0.9, H((-1.5, 27.0, -20.5), (0.0, -0.56, -0.82))), (1.05, H((-2.0, 30.0, -14.0), (0.05, 0.4, -0.9)))],
         {'chest': [(0.42, [-14, 12, 0]), (0.55, [-16, 12, 0]), (0.7, [26, -4, 0]), (0.9, [28, -4, 0])],
          'torso': [(0.42, [-6, 10, 0]), (0.7, [12, 0, 0]), (0.9, [12, 0, 0])],
          'head': [(0.42, [-6, 0, 0]), (0.7, [-12, 0, 0]), (0.9, [-12, 0, 0])],
@@ -220,15 +223,15 @@ def author(rg):
     # SWEEP "Reaping Arc": cocks the halberd past the right hip, then a flat two-handed reap across the front (impact 0.7)
     N_UP = (0, 1, 0)
     A['sweep'] = act(1.2, [
-        (0.2, SW((-6.0, 33.0, -14.0), (-0.45, 0.45, -0.77), N_UP)), (0.45, SW((-9.0, 31.0, -5.0), (-0.85, 0.1, 0.5), N_UP)), (0.55, SW((-9.5, 31.0, -4.0), (-0.8, 0.1, 0.58), N_UP)),
-        (0.7, SW((0.0, 30.0, -14.0), (0.2, 0.0, -0.98), N_UP)), (0.85, SW((7.0, 30.0, -10.0), (0.9, 0.0, -0.44), N_UP)), (1.0, SW((6.0, 30.0, -10.0), (0.88, 0.05, -0.46), N_UP))],
+        (0.2, H((-6.0, 33.0, -14.0), (-0.45, 0.45, -0.77), N_UP)), (0.45, H((-9.0, 31.0, -5.0), (-0.85, 0.1, 0.5), N_UP)), (0.55, H((-9.5, 31.0, -4.0), (-0.8, 0.1, 0.58), N_UP)),
+        (0.7, H((-1.0, 30.0, -22.0), (0.45, 0.0, -0.89), N_UP)), (0.85, H((7.0, 30.0, -10.0), (0.9, 0.0, -0.44), N_UP)), (1.0, H((6.0, 30.0, -10.0), (0.88, 0.05, -0.46), N_UP))],
         {'chest': [(0.45, [4, 30, 0]), (0.55, [4, 32, 0]), (0.7, [8, -8, 0]), (0.85, [8, -34, 0]), (1.0, [8, -32, 0])],
          'torso': [(0.45, [4, 16, 0]), (0.7, [6, -4, 0]), (0.85, [6, -18, 0]), (1.0, [6, -16, 0])],
          'head': [(0.45, [-10, -26, 0]), (0.7, [-10, 6, 0]), (0.85, [-10, 26, 0]), (1.0, [-10, 24, 0])],
          'left_leg': [(0.7, [-30, 0, -6]), (1.0, [-30, 0, -6])], 'left_shin': [(0.7, [36, 0, 0]), (1.0, [36, 0, 0])]},
         {'root': [(0.45, [0, -0.8, 0]), (0.7, [0, -2.8, -1.2]), (1.0, [0, -2.6, -1.2])]})
     # SPIN "Spire Wheel": halberd out flat to his right, one full heavy turn (impact 0.7)
-    SPN = SW((-8.0, 31.0, -8.0), (-0.9, 0.05, -0.42), N_UP)
+    SPN = H((-12.0, 31.0, -14.0), (-0.85, 0.05, 0.5), N_UP)
     A['spin'] = act(1.4, [(0.35, SPN), (1.05, SPN)],
         {'chest': [(0.35, [4, 14, 0]), (1.05, [4, 14, 0])], 'head': [(0.35, [-10, -10, 0]), (1.05, [-10, -10, 0])],
          'right_leg': [(0.35, [-10, 0, 8]), (1.05, [-10, 0, 8])], 'left_leg': [(0.35, [-10, 0, -8]), (1.05, [-10, 0, -8])],
@@ -237,13 +240,16 @@ def author(rg):
         extra={'root': {'rotation': S.lin([(0, R0), (0.38, [0, 30, 0]), (0.72, [0, -200, 0]), (1.0, [0, -360, 0]), (1.4, [0, -360, 0])])}})
     # BARRIER: plants the halberd upright before him and raises the left fist; the core flares
     A['barrier'] = act(1.2, [(0.35, PLANT), (0.9, PLANT)],
-        {'head': [(0.35, [-22, 0, 0]), (0.9, [-22, 0, 0])], 'chest': [(0.35, [-6, 0, 0]), (0.9, [-6, 0, 0])]},
+        {'head': [(0.35, [-22, 0, 0]), (0.9, [-22, 0, 0])], 'chest': [(0.35, [-6, 0, 0]), (0.9, [-6, 0, 0])],
+         'right_leg': [(0.35, [-20, 0, 2]), (0.9, [-20, 0, 2])], 'right_shin': [(0.35, [34, 0, 0]), (0.9, [34, 0, 0])],
+         'left_leg': [(0.35, [-14, 0, -2]), (0.9, [-14, 0, -2])], 'left_shin': [(0.35, [26, 0, 0]), (0.9, [26, 0, 0])]},
+        {'root': [(0.35, [0, -3.0, 0]), (0.9, [0, -3.0, 0])]},
         lfree=[(0.12, 1.05)],
         lf={'left_arm': [(0.35, [-168, 0, 22]), (0.9, [-170, 0, 24])], 'left_forearm': [(0.35, [-8, 0, 0]), (0.9, [-8, 0, 0])], 'left_hand': [(0.35, R0), (0.9, R0)]},
         extra={'core': {'scale': S.ch([(0, [1, 1, 1]), (0.35, [1.5, 1.5, 1.5]), (0.9, [1.5, 1.5, 1.5]), (1.2, [1, 1, 1])])}})
     # ROAR: hunches over the planted halberd, then rears back; the core and spire flare
     A['roar'] = act(2.4, [(0.4, PLANT), (0.6, mv(PLANT, (0, -2, 0))), (1.0, PLANT), (1.9, PLANT)],
-        {'chest': [(0.6, [24, 0, 0]), (1.0, [-18, 0, 0]), (1.9, [-16, 0, 0])], 'head': [(0.6, [16, 0, 0]), (1.0, [-34, 0, 0]), (1.9, [-32, 0, 0])],
+        {'chest': [(0.6, [10, 0, 0]), (1.0, [-18, 0, 0]), (1.9, [-16, 0, 0])], 'head': [(0.6, [6, 0, 0]), (1.0, [-34, 0, 0]), (1.9, [-32, 0, 0])],
          'torso': [(0.6, [10, 0, 0]), (1.0, [-6, 0, 0]), (1.9, [-6, 0, 0])]},
         {'root': [(0.6, [0, -2.6, 0]), (1.0, [0, 0.3, 0]), (1.9, [0, 0.2, 0])]},
         extra={'core': {'scale': S.ch([(0, [1, 1, 1]), (0.6, [0.8, 0.8, 0.8]), (1.0, [1.7, 1.7, 1.7]), (1.9, [1.6, 1.6, 1.6]), (2.4, [1, 1, 1])])}})
