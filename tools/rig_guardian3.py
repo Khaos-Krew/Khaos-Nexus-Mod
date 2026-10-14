@@ -13,8 +13,8 @@ import boss3 as B3
 from boss3 import octo, otaper, plate, horn, SW, mv, R0
 Rig = G.Rig
 NAME = 'spire_guardian'
-SHIFT = 23.0
-HX, HY = 12.2, 24.6
+SHIFT = 0.0
+HX, HY = 12.2, 21.2
 FY, FZ = HY - 2.0, -0.4
 SH = (12.2, 46.6)
 CAPE = dict(prefix='cape', halves=[('R', -1, -3.4), ('L', 1, 3.4)], top=48.0, z=5.8, overlap=0.6,
@@ -31,24 +31,33 @@ def fist(r, bone, x, s):
     B_(r, bone, (x, fy + 2.1, FZ), (3.6, 0.7, 3.3), 'breastplate')
 
 def halberd_parts(r, bone, x, f, z):
-    """Halberd built along +Y from the right-fist centre f: butt spike, banded shaft, crescent axe, back hook, top spike."""
-    B_(r, bone, (x, f - 27.4, z), (1.2, 3.0, 1.2), 'edge'); octo(r, bone, (x, f - 25.4, z), (2.4, 1.6, 2.4), 'crown')
-    otaper(r, bone, x, z, f - 24.6, f + 34.0, 1.8, 1.8, 1.8, 1.8, 6, 'shaft')
-    for y in (-20, -13.2, -6.0, 6.0, 14, 22, 30): octo(r, bone, (x, f + y, z), (2.3, 0.6, 2.3), 'crown')
-    for y in (-10.0, 2.0, 18.0): B_(r, bone, (x, f + y, z), (2.0, 4.4, 2.0), 'grip')
-    octo(r, bone, (x, f + 35.0, z), (3.2, 2.4, 3.2), 'guard'); B_(r, bone, (x, f + 35.0, z - 1.8), (1.4, 1.4, 0.4), 'core', rot=(0, 0, 45))
-    # crescent axe on the front (-Z), flat normal X
-    for j, (yy, ln, zz) in enumerate(((36.4, 12.0, -3.0), (36.8, 13.6, -5.0), (37.0, 14.6, -7.0), (37.0, 14.4, -9.0), (36.8, 12.8, -10.8), (36.6, 10.4, -12.2))):
-        B_(r, bone, (x, f + yy, z + zz), (1.0 if j < 4 else 0.8, ln, 2.2), 'axehead')
-    B_(r, bone, (x, f + 36.8, z - 13.2), (0.5, 9.6, 1.4), 'edge')
-    for yy in (31.4, 42.2): B_(r, bone, (x, f + yy, z - 12.6), (0.5, 2.0, 1.2), 'edge', rot=(30 if yy > 40 else -30, 0, 0))
-    B_(r, bone, (x, f + 37.2, z - 6.2), (1.2, 4.6, 4.6), 'rune', rot=(45, 0, 0))
-    for j, (yy, zz, ln) in enumerate(((38.0, 2.8, 2.2), (37.0, 4.6, 1.8), (35.6, 6.0, 1.4))):   # back hook curving down
-        B_(r, bone, (x, f + yy, z + zz), (1.0, ln + 1.0, 1.8 - j * 0.3), 'axehead')
-    B_(r, bone, (x, f + 34.4, z + 6.6), (0.6, 2.0, 0.8), 'edge')
-    S.taper(r, bone, x, z, f + 36.2, f + 49.0, 1.2, 0.5, 2.6, 0.8, 3, 'axehead')                     # top spike
-    S.taper(r, bone, x, z, f + 36.2, f + 49.4, 0.4, 0.2, 3.0, 1.0, 3, 'edge')
-    for zz in (-1.8, 1.8): B_(r, bone, (x, f + 32.4, z + zz * 1.4), (0.5, 3.6, 0.5), 'rune')         # ribbon sigils
+    """Halberd ~1.3x his height built along +Y from the right fist f (lower third): butt cap, banded shaft, sculpted
+    crescent axe (-Z) with gold rim and rune core, curved back spike (+Z), long top spear point."""
+    octo(r, bone, (x, f - 25.2, z), (2.6, 1.4, 2.6), 'axegold'); S.taper(r, bone, x, z, f - 28.6, f - 25.8, 0.6, 1.8, 0.6, 1.8, 2, 'edge')
+    otaper(r, bone, x, z, f - 24.6, f + 38.0, 1.8, 1.8, 1.8, 1.8, 7, 'shaft')
+    for y in (-18.0, -6.0, 6.0, 26.0, 33.0): octo(r, bone, (x, f + y, z), (2.4, 0.7, 2.4), 'axegold')
+    for y in (0.0, 13.0): B_(r, bone, (x, f + y, z), (2.1, 5.0, 2.1), 'grip')      # leather wraps under both fists
+    octo(r, bone, (x, f + 37.6, z), (3.4, 2.6, 3.4), 'guard'); octo(r, bone, (x, f + 50.6, z), (3.0, 1.8, 3.0), 'guard')
+    B_(r, bone, (x, f + 44.0, z), (2.2, 12.6, 2.2), 'axegold')                      # socket
+    C, Rr = (f + 44.0, z - 2.6), 9.6                                                 # crescent: arc of the cutting edge
+    import math
+    for ang in range(-66, 67, 12):
+        t = math.radians(ang); yy = C[0] + Rr * math.sin(t); zz = C[1] - Rr * math.cos(t)
+        B_(r, bone, (x, yy, zz), (0.7, 3.2, 1.4), 'edge', rot=(-ang, 0, 0))                        # bright honed edge
+        B_(r, bone, (x, yy + 0.0, zz + 1.6 * math.cos(t)), (1.1, 3.0, 2.0), 'axehead', rot=(-ang, 0, 0))
+    for j, yy in enumerate(range(-7, 8, 2)):                                          # blade body, lens shaped
+        t = math.asin(max(-1, min(1, yy / Rr))); zin = C[1] - Rr * math.cos(t) + 2.6
+        d = max(0.6, (z - 1.2) - zin)
+        B_(r, bone, (x, C[0] + yy, zin + d / 2), (1.3, 2.2, d), 'axehead')
+    for ang in (-48, 0, 48):                                                          # gold rim rivets / trim
+        t = math.radians(ang); B_(r, bone, (x, C[0] + 6.6 * math.sin(t), C[1] - 6.6 * math.cos(t) + 0.8), (1.5, 1.4, 1.4), 'axegold', rot=(45, 0, 0))
+    B_(r, bone, (x, C[0], z - 5.2), (1.6, 3.4, 3.4), 'rune', rot=(45, 0, 0)); B_(r, bone, (x, C[0], z - 5.2), (1.8, 1.6, 1.6), 'core', rot=(45, 0, 0))
+    for j in range(5):                                                                # back spike, curving down
+        B_(r, bone, (x, f + 44.6 - j * 0.7, z + 1.8 + j * 1.6), (1.0, 2.6 - j * 0.4, 1.8), 'axehead' if j < 4 else 'edge', rot=(-12 * j, 0, 0))
+    B_(r, bone, (x, f + 44.2, z + 1.6), (1.4, 1.2, 1.0), 'axegold')
+    S.taper(r, bone, x, z, f + 51.4, f + 63.0, 1.6, 0.3, 1.6, 0.3, 4, 'axehead')     # top spear point
+    S.taper(r, bone, x, z, f + 52.0, f + 63.4, 0.3, 0.1, 2.4, 0.4, 3, 'edge')
+    for zz in (-1.6, 1.6): B_(r, bone, (x, f + 47.4, z + zz), (0.5, 3.0, 0.5), 'rune')
 
 def rig():
     r = Rig(); B = r.box
@@ -135,9 +144,13 @@ def rig():
         prev, y = b, y + h
     B('spire4', (0, y + 0.8, -0.5), (0.8, 1.6, 0.8), 'core', rot=(45, 45, 0))
     r.bone('halberd', 'right_hand', (-HX, FY, FZ), (-90, 0, 0))
-    halberd_parts(r, 'halberd', -HX, FY + SHIFT, FZ)   # right fist 15 px above the butt, left fist 9 px higher
+    halberd_parts(r, 'halberd', -HX, FY + SHIFT, FZ)   # right fist on the lower third, left fist 13 px up at mid-shaft
     B3.cape_bones(r, CF, sigil='sigil')
     return r
+
+def wspheres(fk, R, Q):
+    Wm = fk.world('halberd', R, Q)                      # the cape (whole panel width) collides with the halberd
+    return [(K.xf(Wm, (-HX, FY + y, FZ)), 5.0) for y in range(-27, 64, 2)] + [(K.xf(Wm, (-HX, FY + 44, FZ + dz)), 4.5) for dz in (-9, -4, 3)]
 
 def spheres(fk, R, Q):
     Cm = fk.world('chest', R, Q); Hm = fk.world('hips', R, Q); Tm = fk.world('torso', R, Q)
@@ -147,17 +160,17 @@ def spheres(fk, R, Q):
         sph += [(K.xf(lm, (xx, 20, 0)), 4.2), (K.xf(lm, (xx, 15, 0)), 3.9), (K.xf(sm, (xx, 9, 0)), 3.4), (K.xf(sm, (xx, 4, 0)), 3.2)]
     return sph
 
-CF = B3.Cfg(weapon='halberd', HX=HX, FY=FY, FZ=FZ, SH=SH, gap=-9.0, reach=24.4, ax=(-5.0, 73.0),
-            widths=[(59.0, 13.0), (59.0, 6.5), (60.0, 6.5), (53, 1.0)], hazards=[((0, 59.0, -7.0), 7.0)],
-            fa_pts=(FY - 4.0, FY - 7.0, FY + 20.0), fa_rad=3.8, cape=dict(CAPE, spheres=spheres))
+CF = B3.Cfg(weapon='halberd', HX=HX, FY=FY, FZ=FZ, SH=SH, gap=-13.0, reach=27.6, ax=(-28.0, 63.0),
+            widths=[(44.0, 12.0), (44.0, 6.0), (40.0, 9.0), (48.0, 9.0)], hazards=[((0, 44.0, -7.0), 7.5)],
+            fa_pts=(HY + 2.0, HY + 3.5, HY + 5.0, HY + 7.0, HY + 9.5, HY + 12.0), fa_rad=4.4, wpos_l=40, cape=dict(CAPE, spheres=lambda fk, R, Q: spheres(fk, R, Q) + wspheres(fk, R, Q), wide=wspheres, zlim=80))
 
 PAL = {NAME: dict(who=NAME, k=3, ts=[768, 768], boss=True,
        pal=dict(base='#2D2528', dark='#120D0F', accent='#5A5054', robe='#3A1846', cape='#2E1238'),
        trim='#B8B8D0', glow='#B04BE0', eye='#E6B8FF', core='#C26CFF', crystal='#B04BE0', eyes='visor',
        mat=dict(metal={'plate': (70, 66, 84), 'breastplate': (96, 92, 112), 'pauldron': (90, 86, 106), 'helm': (84, 80, 100), 'helmspire': (100, 96, 118),
-                       'gauntlet': (60, 56, 72), 'visorplate': (104, 100, 122), 'belt': (50, 40, 60), 'shaft': (48, 38, 44), 'axehead': (120, 118, 138)},
+                       'gauntlet': (60, 56, 72), 'visorplate': (104, 100, 122), 'belt': (50, 40, 60), 'shaft': (48, 38, 44), 'axehead': (120, 118, 138), 'axegold': (200, 150, 62)},
                 spec=(226, 222, 246), rim=(176, 172, 200), trim=((126, 126, 150), (214, 216, 236), (255, 255, 255)), rune=(222, 150, 255),
-                trimmed=('breastplate', 'pauldron', 'visorplate'), etched=('breastplate', 'pauldron', 'helm', 'helmspire', 'axehead'), glowing=('breastplate', 'pauldron', 'helmspire'),
+                trimmed=('breastplate', 'pauldron', 'visorplate', 'axehead'), etched=('breastplate', 'pauldron', 'helm', 'helmspire', 'axehead'), glowing=('breastplate', 'pauldron', 'helmspire', 'axehead'),
                 veined=('plate',), vein=(200, 110, 255),
                 cloth={'robe': (66, 26, 80), 'cape': (52, 20, 64), 'capehem': (52, 20, 64)}, sheen=(150, 90, 190), hem=(200, 200, 220),
                 eye=((210, 140, 255), (250, 236, 255)), core=((190, 90, 255), (246, 220, 255)), edge=((184, 184, 204), (244, 244, 252)),
@@ -166,9 +179,9 @@ PAL = {NAME: dict(who=NAME, k=3, ts=[768, 768], boss=True,
 # ------------------------------------------------------------------ animation
 CARRY = SW((-15.5, 30.0, -8.0), (-0.14, 0.9, 0.41))          # sentry: halberd shouldered, head up over the right shoulder
 def H(mid, D, N=(1, 0, 0)):
-    d = B3.nrm(D); return SW(tuple(np.array(mid) - d * 4.5), D, N)       # hands straddle mid (left fist 9 px up the shaft)
-GUARD = H((0.0, 30.0, -13.0), (0.2, 0.75, -0.62))           # two-handed diagonal guard, head up and forward
-PLANT = SW((-2.0, 18.0, -15.0), (0.0, 1.0, -0.04))            # planted upright before him, butt on the floor
+    d = B3.nrm(D); return SW(tuple(np.array(mid) - d * 6.5), D, N)       # hands straddle mid (left fist 13 px up the shaft)
+GUARD = H((-4.0, 32.0, -15.0), (0.2, 0.9, -0.38))           # two-handed diagonal guard, head up and forward
+PLANT = SW((-3.0, 27.0, -15.0), (0.0, 1.0, -0.04))            # planted upright before him, butt on the floor
 REST_L = {'left_arm': [-4, 0, 6], 'left_forearm': [-12, 0, 0], 'left_hand': [0, 0, 0]}
 
 def author(rg):
@@ -210,10 +223,10 @@ def author(rg):
         return base(T, False, [(0, GUARD)] + keys + ([(T, GUARD)] if end else []), bb, pp, **kw)
     # ATTACK "Spire Fall": halberd hauled back over the right shoulder, then a two-handed overhead chop (impact 0.7)
     A['attack'] = act(1.2, [
-        (0.2, H((-6.0, 44.0, -8.0), (-0.1, 0.95, 0.2))), (0.42, H((-5.0, 50.0, -2.0), (-0.05, 0.3, 0.95))),
-        (0.55, H((-5.0, 51.0, -1.0), (-0.05, 0.15, 0.99))), (0.62, H((-3.0, 46.0, -14.0), (0.0, 0.55, -0.83))), (0.7, H((-1.5, 32.0, -18.0), (0.0, -0.65, -0.76))),
-        (0.9, H((-1.5, 31.0, -17.5), (0.0, -0.66, -0.75))), (1.05, H((-2.0, 30.0, -14.0), (0.05, 0.4, -0.9)))],
-        {'chest': [(0.42, [-14, 12, 0]), (0.55, [-16, 12, 0]), (0.7, [26, -4, 0]), (0.9, [28, -4, 0])],
+        (0.2, H((-8.0, 44.0, -10.0), (-0.1, 0.95, 0.2))), (0.42, H((-8.0, 52.0, -6.0), (-0.05, 0.45, 0.9))),
+        (0.55, H((-8.0, 53.0, -5.0), (-0.05, 0.35, 0.94))), (0.62, H((-1.0, 50.0, -14.0), (0.3, 0.4, -0.86))), (0.7, H((1.5, 35.0, -15.0), (0.62, -0.45, -0.64))),
+        (0.9, H((1.5, 34.5, -15.0), (0.62, -0.47, -0.63))), (1.05, H((0.0, 33.0, -15.0), (0.35, 0.6, -0.72)))],
+        {'chest': [(0.42, [-14, 12, 0]), (0.55, [-16, 12, 0]), (0.7, [4, -10, 0]), (0.9, [5, -10, 0])],
          'torso': [(0.42, [-6, 10, 0]), (0.7, [12, 0, 0]), (0.9, [12, 0, 0])],
          'head': [(0.42, [-6, 0, 0]), (0.7, [-12, 0, 0]), (0.9, [-12, 0, 0])],
          'hips': [(0.42, [0, 4, 0]), (0.7, [0, -8, 0]), (0.9, [0, -8, 0])],
@@ -223,15 +236,15 @@ def author(rg):
     # SWEEP "Reaping Arc": cocks the halberd past the right hip, then a flat two-handed reap across the front (impact 0.7)
     N_UP = (0, 1, 0)
     A['sweep'] = act(1.2, [
-        (0.2, H((-6.0, 33.0, -14.0), (-0.45, 0.45, -0.77), N_UP)), (0.45, H((-9.0, 31.0, -5.0), (-0.85, 0.1, 0.5), N_UP)), (0.55, H((-9.5, 31.0, -4.0), (-0.8, 0.1, 0.58), N_UP)),
-        (0.7, H((-2.0, 38.0, -14.0), (0.6, 0.0, -0.8), N_UP)), (0.85, H((5.0, 34.0, -17.0), (0.95, 0.0, -0.3), N_UP)), (1.0, H((4.0, 33.0, -17.0), (0.94, 0.05, -0.32), N_UP))],
+        (0.2, H((-3.0, 36.0, -15.0), (-0.6, 0.5, 0.62), N_UP)), (0.45, H((-4.0, 34.0, -14.0), (-0.85, 0.1, 0.5), N_UP)), (0.55, H((-4.5, 34.0, -13.0), (-0.8, 0.1, 0.58), N_UP)),
+        (0.62, H((-4.0, 36.0, -18.0), (-0.5, 0.05, -0.86), N_UP)), (0.7, H((-3.0, 37.0, -17.0), (0.6, 0.0, -0.8), N_UP)), (0.85, H((5.0, 34.0, -20.0), (0.95, 0.0, -0.3), N_UP)), (1.0, H((4.0, 33.0, -20.0), (0.94, 0.05, -0.32), N_UP))],
         {'chest': [(0.45, [4, 30, 0]), (0.55, [4, 32, 0]), (0.7, [8, -6, 0]), (0.85, [8, -18, 0]), (1.0, [8, -16, 0])],
          'torso': [(0.45, [4, 16, 0]), (0.7, [6, -4, 0]), (0.85, [6, -18, 0]), (1.0, [6, -16, 0])],
          'head': [(0.45, [-10, -26, 0]), (0.7, [-10, 6, 0]), (0.85, [-10, 26, 0]), (1.0, [-10, 24, 0])],
          'left_leg': [(0.7, [-30, 0, -6]), (1.0, [-30, 0, -6])], 'left_shin': [(0.7, [36, 0, 0]), (1.0, [36, 0, 0])]},
         {'root': [(0.45, [0, -0.8, 0]), (0.7, [0, -2.8, -1.2]), (1.0, [0, -2.6, -1.2])]})
     # SPIN "Spire Wheel": halberd out flat to his right, one full heavy turn (impact 0.7)
-    SPN = H((-10.0, 32.0, -18.0), (-0.95, 0.05, -0.3), N_UP)
+    SPN = H((-1.0, 41.0, -17.0), (-0.98, 0.05, 0.15), N_UP)
     A['spin'] = act(1.4, [(0.35, SPN), (1.05, SPN)],
         {'chest': [(0.35, [4, 14, 0]), (1.05, [4, 14, 0])], 'head': [(0.35, [-10, -10, 0]), (1.05, [-10, -10, 0])],
          'right_leg': [(0.35, [-10, 0, 8]), (1.05, [-10, 0, 8])], 'left_leg': [(0.35, [-10, 0, -8]), (1.05, [-10, 0, -8])],
