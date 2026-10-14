@@ -24,12 +24,28 @@ public class SpireGateBlock extends Block {
     }
 
     @Override
+    protected net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
+            net.minecraft.world.InteractionHand hand, BlockHitResult hit) {
+        if (!stack.is(com.khaoskrew.khaosnexus.registry.ModRegistries.CROWN_SHARD.get()) || level.dimension() == com.khaoskrew.khaosnexus.saga.Saga.UNDERTHRONE) {
+            return net.minecraft.world.ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        }
+        if (player instanceof ServerPlayer sp && com.khaoskrew.khaosnexus.saga.UnderthroneService.enter(sp) && !sp.isCreative()) {
+            stack.shrink(1);
+        }
+        return net.minecraft.world.ItemInteractionResult.sidedSuccess(level.isClientSide);
+    }
+
+    @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
         if (player instanceof ServerPlayer serverPlayer) {
-            if (level.dimension() == SpireService.DIMENSION) {
+            if (level.dimension() == com.khaoskrew.khaosnexus.saga.Saga.UNDERTHRONE) {
+                com.khaoskrew.khaosnexus.saga.UnderthroneService.leave(serverPlayer);
+            } else if (player.isShiftKeyDown() && com.khaoskrew.khaosnexus.saga.UnderthroneService.floorRouteOpen(serverPlayer)) {
+                com.khaoskrew.khaosnexus.saga.UnderthroneService.enter(serverPlayer);
+            } else if (level.dimension() == SpireService.DIMENSION) {
                 SpireService.leave(serverPlayer);
             } else {
                 SpireService.enter(serverPlayer);

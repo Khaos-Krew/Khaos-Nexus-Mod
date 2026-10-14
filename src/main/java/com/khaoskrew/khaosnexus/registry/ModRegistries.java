@@ -82,6 +82,11 @@ public final class ModRegistries {
             () -> new NexusGateItem(NEXUS_GATE.get(), new Item.Properties()));
 
     public static final DeferredItem<Item> NEXUS_TOKEN = ITEMS.registerSimpleItem("nexus_token");
+    public static final DeferredBlock<com.khaoskrew.khaosnexus.saga.SealGateBlock> SEAL_GATE = BLOCKS.registerBlock("seal_gate", com.khaoskrew.khaosnexus.saga.SealGateBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).strength(-1.0F, 3600000.0F).lightLevel(state -> 12).sound(SoundType.AMETHYST).noLootTable());
+    public static final DeferredItem<BlockItem> SEAL_GATE_ITEM = ITEMS.registerSimpleBlockItem(SEAL_GATE);
+    public static final DeferredItem<com.khaoskrew.khaosnexus.saga.CrownShardItem> CROWN_SHARD = ITEMS.registerItem("crown_shard",
+            com.khaoskrew.khaosnexus.saga.CrownShardItem::new, new Item.Properties().rarity(net.minecraft.world.item.Rarity.EPIC));
     public static final DeferredItem<BlockItem> SPIRE_GATE_ITEM = ITEMS.registerSimpleBlockItem(SPIRE_GATE);
     public static final DeferredItem<BlockItem> RAID_ALTAR_ITEM = ITEMS.registerSimpleBlockItem(RAID_ALTAR);
     public static final DeferredItem<BlockItem> PERSONAL_LOOT_ITEM = ITEMS.registerSimpleBlockItem(PERSONAL_LOOT);
@@ -116,6 +121,8 @@ public final class ModRegistries {
                         output.accept(com.khaoskrew.khaosnexus.forge.HunterForge.RIFT_ESSENCE.get());
                         output.accept(com.khaoskrew.khaosnexus.forge.HunterForge.RIFT_CORE.get());
                         output.accept(SPIRE_GATE_ITEM.get());
+                        output.accept(SEAL_GATE_ITEM.get());
+                        output.accept(CROWN_SHARD.get());
                         output.accept(RAID_ALTAR_ITEM.get());
                         output.accept(PERSONAL_LOOT_ITEM.get());
                         com.khaoskrew.khaosnexus.mob.ModEntities.eggs().forEach(output::accept);

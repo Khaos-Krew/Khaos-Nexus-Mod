@@ -1,0 +1,4 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": { "end": "khaosnexus:block/seal_gate_top", "side": "khaosnexus:block/seal_gate" }
+}

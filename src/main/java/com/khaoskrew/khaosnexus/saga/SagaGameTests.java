@@ -60,4 +60,30 @@ public class SagaGameTests {
         h.assertTrue(hits > 120 && hits < 280, "about 5%: " + hits);
         h.succeed();
     }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform", timeoutTicks = 400)
+    public static void exileCampBuildsWithSealGateExitAndVendors(GameTestHelper h) {
+        var l = h.getLevel();
+        net.minecraft.core.BlockPos o = h.absolutePos(new net.minecraft.core.BlockPos(0, 120, 0)).offset(300, 0, 0);
+        ExileCamp.build(l, o);
+        h.assertTrue(ExileCamp.built(l, o), "seal gate in the arch");
+        h.assertTrue(l.getBlockState(ExileCamp.exitPos(o)).is(com.khaoskrew.khaosnexus.registry.ModRegistries.SPIRE_GATE.get()), "exit gate");
+        h.assertTrue(l.getBlockState(o).is(net.minecraft.world.level.block.Blocks.SOUL_CAMPFIRE), "bonfire");
+        var a = ExileCamp.arrival(o);
+        h.assertTrue(l.getBlockState(a.below()).isSolid() && l.getBlockState(a).isAir() && l.getBlockState(a.above()).isAir(), "safe arrival");
+        var npcs = l.getEntitiesOfClass(net.minecraft.world.entity.npc.WanderingTrader.class, new net.minecraft.world.phys.AABB(o).inflate(20));
+        h.assertTrue(npcs.size() >= 1, "vendors");
+        npcs.forEach(n -> n.discard());
+        h.assertFalse(UnderthroneService.inCamp(l, o), "camp protection only applies in the Underthrone");
+        h.succeed();
+    }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    public static void sealGatePicksSealsInOrder(GameTestHelper h) {
+        HunterProfile p = new HunterProfile();
+        h.assertTrue(id("hollow_crown").equals(SealGateBlock.nextSeal(p)), "first seal");
+        Saga.breakSeal(p, id("hollow_crown"));
+        h.assertTrue(id("hollow_crown").equals(SealGateBlock.nextSeal(p)), "replay the last seal when all are broken");
+        h.succeed();
+    }
 }
