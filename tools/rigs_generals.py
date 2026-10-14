@@ -32,7 +32,7 @@ def legs(r, armored):
         lg = r.bone(f'{side}_leg', 'root', (x, 22, 0)); taper(r, lg, x, 0, 22, 11, 4.8, 4.2, 4.8, 4.2, 2, 'plate' if armored else 'limb')
         sh = r.bone(f'{side}_shin', lg, (x, 11, 0)); taper(r, sh, x, 0, 11, 1.5, 4.0, 3.6, 4.0, 3.6, 2, 'plate' if armored else 'limb')
         if armored:
-            B(lg, (x, 11.6, -2.3), (3.6, 3.2, 1.2), 'guard'); B(lg, (x, 11.6, -2.9), (1.4, 1.4, 0.6), 'helmspire', rot=(0, 0, 45))
+            B(lg, (x, 11.6, -2.3), (3.6, 3.2, 1.2), 'guard'); B(lg, (x, 11.6, -2.9), (1.4, 1.4, 0.6), 'crown', rot=(0, 0, 45))
             B(sh, (x, 6.5, -2.1), (3.4, 7, 0.6), 'plate')
         B(sh, (x, 1, -1.2), (4.6, 2, 7), 'gauntlet')
         if armored: B(sh, (x, 1.8, -4.4), (3.2, 1.2, 1.4), 'guard')
@@ -50,13 +50,13 @@ def rig_blade():
     r = Rig(); B = r.box
     r.bone('root', None, (0, 0, 0)); legs(r, True)
     B('hips', (0, 22, 0), (15, 3.4, 10), 'belt'); B('hips', (0, 22, -5.2), (3.2, 3.2, 0.8), 'guard')
-    skirt(r, ((10, 7.6, 5.4, 22.4, 6.0, 10, 'plate'), (14, 8.4, 6.0, 17.0, 8.0, 12, 'capehem'), (14, 9.0, 6.4, 10.2, 5.4, 14, 'capehem')), 17)
+    skirt(r, ((10, 7.6, 5.4, 22.4, 6.0, 10, 'plate'), (14, 8.3, 6.0, 17.4, 6.4, 12, 'capehem')), 17)
     r.bone('tabard', 'hips', (0, 21, -5.4))
     B('tabard', (0, 13.6, -5.9), (5.4, 14.6, 0.6), 'cape'); B('tabard', (0, 15.8, -6.3), (3.2, 3.2, 0.4), 'sigil', rot=(0, 0, 45)); B('tabard', (0, 5.6, -5.9), (5.0, 2.4, 0.6), 'capehem')
     # torso: barrel breastplate, plackart, gorget, back plate
-    r.bone('torso', 'hips', (0, 22.5, 0), (14, 0, 0))
+    r.bone('torso', 'hips', (0, 22.5, 0), (6, 0, 0))
     taper(r, 'torso', 0, 0, 22.5, 34, 12.4, 14.6, 8.6, 9.8, 2, 'plate')
-    for j in range(3): B('torso', (0, 24 + j * 3.4, -4.6 - j * 0.1), (12.4 - j * 0.6, 3.0, 1.0), 'breastplate')
+    for j in range(3): B('torso', (0, 24.2 + j * 3.4, -4.7 - j * 0.12), (13.4 + j * 0.6, 3.2, 1.2), 'breastplate')
     r.bone('chest', 'torso', (0, 34, 0))
     taper(r, 'chest', 0, 0.2, 34, 46, 14.6, 18.6, 9.8, 11.4, 3, 'plate')
     B('chest', (0, 41, -5.6), (16.4, 9.6, 1.4), 'breastplate'); B('chest', (0, 41, -6.35), (1.2, 9.0, 0.3), 'rune')
@@ -84,7 +84,7 @@ def rig_blade():
         x = s * 10.4
         arm = r.bone(f'{side}_arm', 'chest', (x, 45, 0))
         for j in range(3): B(arm, (x + s * 0.4 * j, 46.0 - j * 2.4, 0), (8.2 - j * 0.6, 3.2, 8.6 - j * 0.4), 'pauldron', rot=(0, 0, s * (12 + j * 6)))
-        B(arm, (x + s * 2.8, 49.4, 0), (1.4, 4.6, 1.4), 'helmspire', rot=(0, 0, s * -18))
+        B(arm, (x + s * 2.8, 49.4, 0), (1.4, 4.6, 1.4), 'crown', rot=(0, 0, s * -18))
         taper(r, arm, x, 0, 42, 36, 5.2, 5.0, 5.2, 5.0, 2, 'plate')
         fa = r.bone(f'{side}_forearm', arm, (x, 36, 0))
         B(fa, (x, 35.6, 1.0), (5.0, 3.6, 4.0), 'guard'); taper(r, fa, x, 0, 35, 28.5, 5.0, 5.8, 5.0, 5.8, 2, 'plate')
@@ -101,7 +101,6 @@ def rig_blade():
     taper(r, 'staff', x, z, 35, 76, 1.2, 1.0, 5.0, 3.8, 5, 'greatblade')
     B('staff', (x, 79.0, z), (0.9, 6, 2.6), 'greatblade'); B('staff', (x, 82.6, z), (0.7, 2.2, 1.2), 'greatblade')
     B('staff', (x, 55, z), (1.4, 36, 1.0), 'rune')
-    for y in (44, 58): B('staff', (x, y, z - 2.3), (1.3, 3.6, 1.2), 'void', rot=(30, 0, 0))   # notched edge
     r.bone('censer', 'staff', (x, 32.4, z - 5.0))   # a snapped crown hanging from the crossguard on a chain
     cz = z - 5.0
     for j in range(3): B('censer', (x, 31.0 - j * 1.9, cz), (0.6, 1.6, 0.6), 'guard', rot=(0, 45 * j, 0))
@@ -179,9 +178,9 @@ def rig_arcanist():
     B('censer', (x - 4.8, 60.4, z), (3.4, 4.0, 3.4), 'orb'); B('censer', (x - 4.8, 62.8, z), (2.6, 1.0, 2.6), 'crown'); B('censer', (x - 4.8, 58.0, z), (2.4, 0.8, 2.4), 'crown')
     B('censer', (x - 4.8, 60.4, z), (2.0, 2.8, 2.0), 'core')
     r.bone('sigil_hand', 'left_hand', (9.6, 22, -3))   # an open grimoire hovering over the left palm
-    B('sigil_hand', (9.6, 19.6, -4.0), (7.2, 0.8, 5.2), 'belt', rot=(-20, 0, 0))
-    B('sigil_hand', (7.9, 20.4, -4.2), (3.2, 0.5, 4.6), 'mask', rot=(-20, 0, 8)); B('sigil_hand', (11.3, 20.4, -4.2), (3.2, 0.5, 4.6), 'mask', rot=(-20, 0, -8))
-    B('sigil_hand', (9.6, 23.6, -4.6), (3.0, 3.0, 0.3), 'rune', rot=(0, 0, 45))
+    B('sigil_hand', (9.6, 19.8, -4.0), (5.2, 0.6, 3.8), 'belt', rot=(-20, 0, 0))
+    B('sigil_hand', (8.4, 20.4, -4.2), (2.4, 0.4, 3.4), 'mask', rot=(-20, 0, 8)); B('sigil_hand', (10.8, 20.4, -4.2), (2.4, 0.4, 3.4), 'mask', rot=(-20, 0, -8))
+    B('sigil_hand', (9.6, 23.0, -4.6), (2.4, 2.4, 0.3), 'rune', rot=(0, 0, 45))
     r.bone('sigils', 'root', (0, 46, 10))
     for k in range(4):
         a = 2 * math.pi * k / 4 + 0.4; px, py = math.sin(a) * 10, 46 + math.cos(a) * 10
@@ -200,20 +199,69 @@ def arcanist_extra(out):
     """Arcanist volley: thrusts the grimoire hand forward and fans three ash shards (impact 0.6, matches RiftBoss volley)."""
     g = lambda bn: S.HG.get(bn, R0); ch, hold, A = S.ch, S.hold, S.A
     out['volley'] = A(1.1, {
-        'left_arm': {'rotation': ch([(0, g('left_arm')), (0.4, [-30, 0, 30]), (0.6, [-96, 0, 6]), (0.8, [-94, 0, 6]), (1.1, g('left_arm'))])},
+        'left_arm': {'rotation': ch([(0, g('left_arm')), (0.4, [-30, 0, 30]), (0.6, [-78, 0, 18]), (0.8, [-76, 0, 18]), (1.1, g('left_arm'))])},
         'left_forearm': {'rotation': ch([(0, g('left_forearm')), (0.4, [-50, 0, 0]), (0.6, [-6, 0, 0]), (1.1, g('left_forearm'))])},
         'chest': {'rotation': ch([(0, g('chest')), (0.4, [0, -18, 0]), (0.6, [10, 14, 0]), (1.1, g('chest'))])},
         'head': {'rotation': ch([(0, g('head')), (0.6, [-4, 10, 0]), (1.1, g('head'))])},
         'right_arm': {'rotation': hold(g('right_arm'), 1.1)}, 'staff': {'rotation': hold(g('staff'), 1.1)},
-        'sigil_hand': {'scale': ch([(0, [1, 1, 1]), (0.5, [1.4, 1.4, 1.4]), (0.65, [1.8, 1.8, 1.8]), (1.1, [1, 1, 1])])},
+        'sigil_hand': {'scale': ch([(0, [1, 1, 1]), (0.5, [1.2, 1.2, 1.2]), (0.65, [1.35, 1.35, 1.35]), (1.1, [1, 1, 1])])},
         'sigils': {'rotation': S.spin(1.1, 1, 2)}})
     return out
+
+class Painter(S.Painter):
+    """Arcanist: ash-teal velvet and tarnished silver, painted like the Hierophant's cloth/metal (folds, weave, torn hems)."""
+    def style(s, F, role):
+        if s.mob['who'] != 'general_arcanist': return super().style(F, role)
+        k = s.k; e = max(1, k // 2)
+        def each(fn_body):
+            for fn, (fx, fy, fw, fh) in F.items():
+                if fw <= 0 or fh <= 0: continue
+                for yy in range(fy, fy + fh):
+                    t = (yy - fy) / max(1, fh - 1)
+                    for xx in range(fx, fx + fw):
+                        u = (xx - fx) / max(1, fw - 1); ed = min(xx - fx, fx + fw - 1 - xx, yy - fy, fy + fh - 1 - yy)
+                        fn_body(fn, xx, yy, u, t, ed, fw, fh)
+        if role in ('robe', 'sleeve', 'hood', 'cape', 'capehem'):
+            base = {'robe': (66, 76, 78), 'sleeve': (60, 70, 72), 'hood': (40, 46, 50), 'cape': (34, 42, 46), 'capehem': (34, 42, 46)}[role]
+            def f(fn, xx, yy, u, t, ed, fw, fh):
+                folds = max(1, fw // (3 * k))
+                fold = 0.5 + 0.5 * math.sin(u * math.pi * 2 * folds) if fn not in ('up', 'down') else 0.5
+                kk = s.shade(fn, t, u) * (0.78 + 0.34 * fold)
+                c = G.ramp(G.mix(G.mul(base, 0.7), G.mul(base, 1.25), s.n(xx, yy, 2 * k)), kk)
+                if (xx + yy) % 2 == 0: c = G.mul(c, 0.94)
+                a = 255
+                if role == 'capehem' and fn not in ('up', 'down') and t > 0.4:
+                    if s.n(xx, yy, k) > 0.25 + 1.1 * (1 - t): a = 0
+                    elif t > 0.75: c = G.mul(c, 0.62)
+                if role in ('robe', 'sleeve') and fn not in ('up', 'down') and t > 0.88: c = G.mix(c, (120, 150, 146), 0.5)   # pale hem band
+                s.px(xx, yy, c, a)
+            each(f); return True
+        if role in ('collar', 'crown', 'guard'):
+            met = (150, 166, 160)
+            def f(fn, xx, yy, u, t, ed, fw, fh):
+                kk = s.shade(fn, t, u)
+                c = G.ramp(G.mix(G.mul(met, 0.55), G.mul(met, 1.1), s.n(xx, yy, k)), kk)
+                if ed < e: c = G.mul(c, 0.5)
+                elif role == 'collar' and fw > 3 * k and fh > 3 * k:
+                    cx, cy = (xx - F[fn][0]) % (3 * k) - 1.5 * k, (yy - F[fn][1]) % (3 * k) - 1.5 * k
+                    if abs(abs(cx) + abs(cy) - k) < 0.7: c = G.mul(c, 0.55)
+                    elif abs(cx) + abs(cy) < 0.6 * k: c = (150, 255, 220); s.gl(xx, yy, s.gc, 0.6)
+                s.px(xx, yy, c)
+            each(f); return True
+        if role == 'mask':
+            def f(fn, xx, yy, u, t, ed, fw, fh):
+                kk = s.shade(fn, t, u) * (1.0 - 0.25 * abs(u - 0.5))
+                c = G.ramp(G.mix((150, 150, 144), (212, 210, 200), 0.5 + 0.4 * s.n(xx, yy, 2 * k)), kk)
+                if ed < e: c = G.mul(c, 0.65)
+                s.px(xx, yy, c)
+            each(f); return True
+        return super().style(F, role)
 
 def build(name):
     S.PAL.update(PAL)
     m = PAL[name]; rig = {'general_blade': rig_blade, 'general_arcanist': rig_arcanist}[name]()
     m = dict(m, ts=list(m['ts'])); uvs = G.pack(rig, m['k'], m['ts'])
-    hm = dict(m, k=m['k'] * 4, ts=[m['ts'][0] * 4, 256]); huvs = G.pack(rig, hm['k'], hm['ts']); pt = S.Painter(name, hm)
+    hm = dict(m, k=m['k'] * 4, ts=[m['ts'][0] * 4, 256]); huvs = G.pack(rig, hm['k'], hm['ts']); pt = Painter(name, hm)
     cs = [c for b in rig.order for c in rig.bones[b]['cubes']]
     for uv, c in zip(huvs, cs): pt.cube(uv, c)
     S.downsample(name, m, rig, pt, m['k'], huvs, uvs); G.geo(name, rig, m['k'], m['ts'], uvs)
