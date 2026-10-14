@@ -15,7 +15,7 @@ def rig():
     B('base', (0, 0.5, 0), (14, 1, 14), 'wood')
     B('base', (0, 5.5, -6.5), (14, 9, 1), 'wood'); B('base', (0, 5.5, 6.5), (14, 9, 1), 'wood')
     B('base', (-6.5, 5.5, 0), (1, 9, 12), 'wood'); B('base', (6.5, 5.5, 0), (1, 9, 12), 'wood')
-    B('base', (0, 5.5, 0), (12, 0.2, 12), 'maw')               # gullet floor (dark flesh), hidden when shut
+    B('base', (0, 1.1, 0), (12, 0.2, 12), 'maw')               # gullet floor (dark flesh)
     for x in (-4.5, 4.5):                                         # iron straps
         B('base', (x, 5.0, -7.05), (2, 10, 0.3), 'band'); B('base', (x, 5.0, 7.05), (2, 10, 0.3), 'band')
     for x in (-7.05, 7.05): B('base', (x, 9.2, 0), (0.3, 1.6, 14), 'band')
@@ -24,32 +24,37 @@ def rig():
         B('base', (-5 + i * 2, 10.6, -5.6), (1.0, 1.6, 0.9), 'teeth', rot=(0, 0, (i % 2 * 2 - 1) * 6))
     for z in (-3, 0, 3):
         for x in (-5.6, 5.6): B('base', (x, 10.4, z), (0.9, 1.2, 1.0), 'teeth')
-    r.bone('eye', 'base', (0, 6, 5.6))
-    B('eye', (0, 6, 5.7), (4, 4, 0.6), 'maw'); B('eye', (0, 6, 5.3), (2.6, 2.6, 0.4), 'core'); B('eye', (0, 6, 5.05), (0.8, 1.8, 0.2), 'pupil')
-    r.bone('tongue', 'base', (0, 1.6, 4))
-    B('tongue', (0, 1.6, 0.5), (4, 1, 7), 'tongue')
-    r.bone('tongue_tip', 'tongue', (0, 1.6, -3))
-    B('tongue_tip', (0, 1.6, -5), (3.2, 0.8, 4), 'tongue')
+    r.bone('tongue', 'base', (0, 6, 4))                          # throat at the back wall; lashes out over the front rim
+    B('tongue', (0, 6, 0), (4.2, 1.2, 8), 'tongue')
+    r.bone('tongue_tip', 'tongue', (0, 6, -4))
+    B('tongue_tip', (0, 6, -6), (3.4, 1.0, 4), 'tongue')
+    r.bone('tongue_end', 'tongue_tip', (0, 6, -8))
+    B('tongue_end', (0, 6, -9.5), (2.6, 0.9, 3), 'tongue')
     # lid, hinged at the back top edge
     r.bone('lid', 'base', (0, 10, 7))
     B('lid', (0, 12, 0), (14, 4, 14), 'wood', pivot=(0, 10, 7))
     for x in (-4.5, 4.5): B('lid', (x, 12.2, 0), (2, 4.2, 14.3), 'band')
     B('lid', (0, 10.9, 0), (14.3, 1.4, 14.3), 'band')
     B('lid', (0, 10.6, -7.4), (2.4, 3.2, 0.8), 'latch'); B('lid', (0, 10.0, -7.7), (1.0, 1.4, 0.5), 'latch')
+    r.bone('eye', 'lid', (0, 10, 0))                                # one amber eye in the lid's gullet, seen when it gapes
+    B('eye', (0, 9.5, -0.5), (6.0, 1.0, 6.0), 'maw'); B('eye', (0, 8.9, -0.5), (4.2, 1.0, 4.2), 'core'); B('eye', (0, 8.3, -0.5), (1.2, 0.6, 2.8), 'pupil')
     for i in range(7):                                            # upper fangs hang down inside the front rim
         B('lid', (-6 + i * 2, 9.2, -5.6), (1.0, 1.8, 0.9), 'teeth', rot=(0, 0, (i % 2 * 2 - 1) * 5))
     for z in (-2, 2):
         for x in (-5.6, 5.6): B('lid', (x, 9.4, z), (0.9, 1.4, 1.0), 'teeth')
-    # legs: hips sit clear of the chest corners; short thighs reach out, shins drop to claws
+    # legs: spider-like; a thick thigh runs out along the diagonal from the chest corner to a raised knee, the shin
+    # drops from the knee to a bone claw (legs are scaled to zero while it sleeps)
     for sx in (-1, 1):
         for sz in (-1, 1):
             n = ('r' if sx < 0 else 'l') + ('f' if sz < 0 else 'b')
-            hx, hz = sx * 7.6, sz * 7.6
-            r.bone(f'leg_{n}', 'base', (hx, 1.2, hz))
-            B(f'leg_{n}', (sx * 9.0, 0.4, sz * 9.0), (1.5, 1.5, 2.6), 'leg', rot=(sz * -30, sx * sz * 45, 0), pivot=(hx, 1.2, hz))
-            r.bone(f'shin_{n}', f'leg_{n}', (sx * 10.0, -0.4, sz * 10.0))
-            B(f'shin_{n}', (sx * 10.1, -3.0, sz * 10.1), (1.2, 4.6, 1.2), 'leg')
-            B(f'shin_{n}', (sx * 10.2, -5.6, sz * 10.2), (1.0, 1.0, 1.8), 'teeth', rot=(sz * -20, sx * sz * 45, 0))
+            hx, hz = sx * 7.4, sz * 7.4
+            r.bone(f'leg_{n}', 'base', (hx, 2.2, hz))
+            B(f'leg_{n}', (sx * 8.75, 2.4, sz * 8.75), (2.0, 2.0, 5.0), 'leg', rot=(0, -sx * sz * 45, 0), pivot=(sx * 8.75, 2.4, sz * 8.75))
+            B(f'leg_{n}', (sx * 9.0, 3.6, sz * 9.0), (0.8, 0.8, 3.0), 'teeth', rot=(0, -sx * sz * 45, 0), pivot=(sx * 9.0, 3.6, sz * 9.0))   # dorsal spine
+            r.bone(f'shin_{n}', f'leg_{n}', (sx * 10.9, 2.4, sz * 10.9))
+            B(f'shin_{n}', (sx * 10.9, 2.4, sz * 10.9), (2.4, 2.4, 2.4), 'leg', rot=(0, 45, 0))
+            B(f'shin_{n}', (sx * 11.1, -1.4, sz * 11.1), (1.6, 6.6, 1.6), 'leg', rot=(0, 45, 0))
+            B(f'shin_{n}', (sx * 11.2, -5.0, sz * 11.2), (1.2, 1.4, 1.2), 'teeth', rot=(0, 45, 0))
     return r
 
 PAL = dict(who='gate_mimic', k=2, ts=[256, 256], boss=False, pal=dict(base='#6A4524', dark='#22140A', accent='#8A6A3A', robe='#4A2A1A', cape='#3A2214'),
@@ -107,6 +112,13 @@ class Painter(S.Painter):
                 s.px(xx, yy, G.ramp(c, kk))
                 if fn not in ('up', 'down') and (t < 0.08 or t > 0.92): s.gl(xx, yy, s.gc, 0.45)
             each(f); return True
+        if role == 'core':     # amber iris: hot centre, darker rim, veins; fully emissive
+            def f(fn, xx, yy, u, t, ed, fw, fh):
+                r = min(1.0, math.hypot(u - 0.5, t - 0.5) * 2)
+                c = G.mix((255, 226, 120), (176, 74, 10), r)
+                if s.n(xx, yy, k) > 0.8 and r > 0.4: c = G.mul(c, 0.6)
+                s.px(xx, yy, c); s.gl(xx, yy, c, 1.0 - 0.5 * r)
+            each(f); return True
         if role == 'pupil':
             def f(fn, xx, yy, u, t, ed, fw, fh): s.px(xx, yy, (12, 4, 2))
             each(f); return True
@@ -116,32 +128,33 @@ def anims():
     A, ch, loop, hold = S.A, S.ch, S.loop, S.hold
     tuck = {f'leg_{n}': {'scale': hold([0, 0, 0], 1.0)} for n in ('rf', 'rb', 'lf', 'lb')}
     hide = {'tongue': {'scale': hold([0, 0, 0], 1.0)}, 'eye': {'scale': hold([0, 0, 0], 1.0)}}
+    LASH = {'tongue': [-46, 0, 0], 'tongue_tip': [36, 0, 0], 'tongue_end': [64, 0, 0]}
     out = {}
     out['dormant'] = A(1.0, dict(tuck, **hide), True)
     legs = lambda T, amp, ph: {f'leg_{n}': {'rotation': loop(T, amp, 0, (0, 0, 0), ph + i * 1.6)} for i, n in enumerate(('rf', 'lb', 'lf', 'rb'))}
     shins = lambda T, amp, ph: {f'shin_{n}': {'rotation': loop(T, amp, 0, (0, 0, 0), ph + i * 1.6 + 0.8)} for i, n in enumerate(('rf', 'lb', 'lf', 'rb'))}
     T = 2.0; b = {'root': {'position': hold([0, 5.5, 0], T)}, 'lid': {'rotation': loop(T, 5, 0, (-12, 0, 0))},
-                  'tongue': {'rotation': loop(T, 6, 0, (8, 0, 0), 1.0)}, 'tongue_tip': {'rotation': loop(T, 10, 0, (14, 0, 0), 1.8)},
+                  'tongue': {'scale': hold([0, 0, 0], T)},
                   'base': {'rotation': loop(T, 1.5, 2)}}
     b.update(legs(T, 4, 0)); b.update(shins(T, 5, 0)); out['idle'] = A(T, b, True)
     T = 0.6; b = {'root': {'position': ch([(0, [0, 5.5, 0]), (0.15, [0, 7.0, 0]), (0.3, [0, 5.5, 0]), (0.45, [0, 7.0, 0]), (0.6, [0, 5.5, 0])])},
                   'lid': {'rotation': ch([(0, [-8, 0, 0]), (0.15, [-22, 0, 0]), (0.3, [-8, 0, 0]), (0.45, [-22, 0, 0]), (0.6, [-8, 0, 0])])},
-                  'tongue': {'rotation': hold([14, 0, 0], T)}, 'tongue_tip': {'rotation': loop(T, 18, 0, (20, 0, 0))}, 'base': {'rotation': loop(T, 4, 2)}}
+                  'tongue': {'scale': hold([0, 0, 0], T)}, 'base': {'rotation': loop(T, 4, 2)}}
     b.update(legs(T, 28, 0)); b.update(shins(T, 22, 0)); out['walk'] = A(T, b, True)
     # bite: rear back with the lid flung open, lunge and SNAP shut (impact 0.45)
     T = 0.8; b = {'root': {'position': ch([(0, [0, 5.5, 0]), (0.25, [0, 7.5, 3]), (0.45, [0, 6.0, -5]), (0.8, [0, 5.5, 0])])},
                   'base': {'rotation': ch([(0, R0), (0.25, [-14, 0, 0]), (0.45, [10, 0, 0]), (0.8, R0)])},
                   'lid': {'rotation': ch([(0, [-12, 0, 0]), (0.25, [-78, 0, 0]), (0.4, [-70, 0, 0]), (0.45, [0, 0, 0]), (0.55, [-6, 0, 0]), (0.8, [-12, 0, 0])])},
-                  'tongue': {'rotation': ch([(0, [8, 0, 0]), (0.25, [-28, 0, 0]), (0.45, [0, 0, 0]), (0.8, [8, 0, 0])])},
-                  'tongue_tip': {'rotation': ch([(0, [14, 0, 0]), (0.25, [-24, 0, 0]), (0.45, [20, 0, 0]), (0.8, [14, 0, 0])])}}
+                  'tongue': {'scale': ch([(0, [0, 0, 0]), (0.1, [0, 0, 0]), (0.22, [1, 1, 1]), (0.36, [1, 1, 1]), (0.42, [0, 0, 0])], False), 'rotation': hold(LASH['tongue'], T)},
+                  'tongue_tip': {'rotation': ch([(0, [10, 0, 0]), (0.25, LASH['tongue_tip']), (0.4, [10, 0, 0])])}, 'tongue_end': {'rotation': ch([(0, [20, 0, 0]), (0.25, LASH['tongue_end']), (0.4, [20, 0, 0])])}}
     for i, n in enumerate(('rf', 'lf')): b[f'leg_{n}'] = {'rotation': ch([(0, R0), (0.25, [-26, 0, 0]), (0.45, [18, 0, 0]), (0.8, R0)])}
     for n in ('rb', 'lb'): b[f'leg_{n}'] = {'rotation': ch([(0, R0), (0.25, [16, 0, 0]), (0.45, [-14, 0, 0]), (0.8, R0)])}
     out['attack'] = A(T, b, False)
     # wake: legs burst out (scale), lid flies open, tongue unrolls, eye opens (1.0s)
     T = 1.2; b = {'root': {'position': ch([(0, R0), (0.3, [0, 1, 0]), (0.6, [0, 7.5, 0]), (1.2, [0, 5.5, 0])])},
                   'lid': {'rotation': ch([(0, R0), (0.15, [-6, 0, 0]), (0.25, [0, 0, 0]), (0.35, [-10, 0, 0]), (0.45, [0, 0, 0]), (0.7, [-82, 0, 0]), (1.0, [-74, 0, 0]), (1.2, [-12, 0, 0])])},
-                  'tongue': {'scale': ch([(0, [0, 0, 0]), (0.6, [0, 0, 0]), (0.75, [1, 1, 1])]), 'rotation': ch([(0.6, [-30, 0, 0]), (1.0, [-20, 0, 0]), (1.2, [8, 0, 0])])},
-                  'tongue_tip': {'rotation': ch([(0.6, [-30, 0, 0]), (0.85, [30, 0, 0]), (1.2, [14, 0, 0])])},
+                  'tongue': {'scale': ch([(0, [0, 0, 0]), (0.62, [0, 0, 0]), (0.78, [1, 1, 1]), (1.05, [1, 1, 1]), (1.12, [0, 0, 0])], False), 'rotation': hold(LASH['tongue'], T)},
+                  'tongue_tip': {'rotation': ch([(0.6, [10, 0, 0]), (0.85, LASH['tongue_tip']), (1.2, LASH['tongue_tip'])])}, 'tongue_end': {'rotation': ch([(0.6, [10, 0, 0]), (0.9, [72, 0, 0]), (1.0, LASH['tongue_end']), (1.2, LASH['tongue_end'])])},
                   'eye': {'scale': ch([(0, [0, 0, 0]), (0.55, [0, 0, 0]), (0.75, [1, 1, 1])])}, 'base': {'rotation': ch([(0, R0), (0.15, [0, 0, 4]), (0.25, [0, 0, -4]), (0.35, [0, 0, 3]), (0.45, R0)])}}
     for n in ('rf', 'rb', 'lf', 'lb'):
         b[f'leg_{n}'] = {'scale': ch([(0, [0, 0, 0]), (0.45, [0, 0, 0]), (0.65, [1.1, 1.1, 1.1]), (0.8, [1, 1, 1])])}
@@ -150,7 +163,8 @@ def anims():
     T = 2.4; b = {'root': {'position': ch([(0, [0, 5.5, 0]), (0.3, [0, 6.5, 0]), (0.7, [0, 0, 0]), (2.4, [0, 0, 0])])},
                   'base': {'rotation': ch([(0, R0), (0.7, [0, 0, 6]), (0.9, [0, 0, 9]), (2.4, [0, 0, 9])])},
                   'lid': {'rotation': ch([(0, [-12, 0, 0]), (0.5, [-60, 0, 0]), (0.9, [-96, 0, 0]), (1.1, [-90, 0, 0]), (2.4, [-92, 0, 0])])},
-                  'tongue': {'rotation': ch([(0, [8, 0, 0]), (0.9, [-6, 0, 0]), (2.4, [-6, 0, 0])])}, 'tongue_tip': {'rotation': ch([(0, [14, 0, 0]), (1.0, [-10, 0, 0]), (2.4, [-10, 0, 0])])},
+                  'tongue': {'scale': ch([(0, [0, 0, 0]), (0.5, [0, 0, 0]), (0.75, [1, 1, 1])], False), 'rotation': ch([(0.5, [-20, 0, 0]), (1.0, [-44, 0, 0]), (2.4, [-42, 0, 0])])},
+                  'tongue_tip': {'rotation': ch([(0.5, [10, 0, 0]), (1.0, [30, 0, 0]), (2.4, [34, 0, 0])])}, 'tongue_end': {'rotation': ch([(0.5, [20, 0, 0]), (1.1, [66, 0, 0]), (2.4, [62, 0, 0])])},
                   'eye': {'scale': ch([(0, [1, 1, 1]), (1.2, [1, 1, 1]), (2.0, [0.2, 0.2, 1]), (2.4, [0, 0, 0])])}}
     for n in ('rf', 'rb', 'lf', 'lb'):
         b[f'leg_{n}'] = {'rotation': ch([(0, R0), (0.6, [0, 0, 50 if n[0] == 'l' else -50]), (2.4, [0, 0, 60 if n[0] == 'l' else -60])])}
