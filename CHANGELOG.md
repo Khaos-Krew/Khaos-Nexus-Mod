@@ -15,11 +15,14 @@ The 1.1 update turns on the endgame that 1.0 shipped switched off, and adds comp
 - **Ars Nouveau:** new **Gatesense** glyph. It names the nearest open gate's rank, distance and direction and draws a short trail toward it (Amplify/AOE widens the search). Recipe: Rift Source Shard, compass, air essence.
 - **Apotheosis:** 8 **class gems** (Bulwark, Shadowfang, Arcanum, Hawkeye, Lifethread, Bloodrage, Legion, Phylactery), found in B–S gate chests.
 - **Artifacts:** boss trophies that counter their boss. **Warden's Broken Chain** (the Rift Warden's hits deal 25% less and can't slow you) and **Guardian's Plume** (the Spire Guardian can't knock you back) each drop 20% of the time. New **Hunter's Lucky Coin** charm (+2 Luck) in C–S gate chests.
-- The 1.0 compat items are unchanged.
+- The 1.0 compat items keep their stats; all compat item art (1.0 and 1.1) was redrawn to the boss-art standard.
+- **Hunter Tomes (Ars Nouveau):** an Ars spell book for the casting classes (Caster, Lifebinder, Summoner, Necromancer) that **evolves with your hunter rank** through 7 tiers: E, D, C, B, A, S and Monarch (SS/National). Each tier raises spell slots (3 → 10), the glyph tier it allows (1 → 3) and its source discount per cast (0 → 40). Evolution happens automatically on rank-up and keeps every inscribed spell, name and colour. From C up the tome unlocks a class attunement: Caster +8–30% spell damage, Summoner double that against rift creatures, Necromancer spell lifesteal, Lifebinder heals nearby allies when casting. Other classes can't open or cast it. Craft: Novice Spell Book + Rift Core + Rift Essence + Rift Source Shard.
+
 
 ### Boss animations
 - The Rift Warden and the Spire Guardian have new **combat idle and walk loops**. With the weapon drawn, the Warden holds the greatsword in a low guard and the Guardian carries the halberd two-handed across its body, instead of swinging their arms like they were jogging.
 - The Warden's draw now ends exactly in the guard pose, so there's no snap when it finishes.
+- The Guardian now carries the halberd two-handed on a diagonal, blade up and out to the side. Every Guardian and Warden animation was checked frame by frame so the halberd and greatsword never pass through the head, neck or body.
 - Heavier unarmed walk (shorter stride, feet plant, weight dips on each step), no more armour "breathing" wobble, and smoother blends into and out of attacks.
 
 ### Dungeons

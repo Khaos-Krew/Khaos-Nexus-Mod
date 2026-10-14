@@ -893,8 +893,9 @@ def boss_combat_set(name, A, has):
              'chest': [6, 8, 0], 'head': [-4, -6, 0], 'torso': [3, 0, 0]}
     else:
         # halberd held diagonally in both hands, haft across the chest, blade high on the right
-        G = {'right_arm': [-55, 0, 20], 'right_forearm': [-25, 0, 0], 'left_arm': [-50, 0, -30], 'left_forearm': [-45, 0, 0],
-             'halberd': [30, 0, 0], 'chest': [4, -6, 0], 'head': [-2, 6, 0]}
+        # solved by tools/fix_weapon_clip.py (haft through both hands, blade up and out, nothing inside the body)
+        G = {'right_arm': [-45, 0, -30], 'right_forearm': [-30, 0, 0], 'left_arm': [-100, 0, 0], 'left_forearm': [-35, 0, 0],
+             'halberd': [-15, 60, 45], 'chest': [4, -6, 0], 'head': [-2, 6, 0]}
     def guard(extra_amp, period, axis_wave=0):
         out = {}
         for bn, base in G.items():

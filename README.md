@@ -10,6 +10,7 @@ Khaos Nexus is an anime-inspired RPG mod for Minecraft 1.21.1 (NeoForge). Ranked
 
 ## Features
 - **Nexus Gates, ranked E to S:** gates tear open near players a few times a day. Clear the mob wave, or step through into a themed dungeon instance with a boss, for loot by rank. Then the gate collapses.
+- **Hunter Tomes (with Ars Nouveau):** casting classes get an Ars spell book that evolves with hunter rank (E to Monarch), gaining slots, glyph tier, source discount and a class attunement while keeping its spells.
 - **Dungeon themes:** Rift Bastion, Frostbound Crypt, Overgrown Ruin, Scorched Forge, Sunken Temple, Void Sanctum and Sculk Hollow (plus Create and Mowzie themes when those mods are installed). Themes are picked by biome and fully data-driven.
 - **Red Gates and dungeon breaks:** a rare Red Gate locks you in until you clear it, and its boss is stronger, but it pays double XP, bonus Rift Cores and a title. A gate nobody clears breaks open and spills its mobs into the world, and the server is warned.
 - **Weekly modifiers:** every week, A and S gates roll rotating modifiers (Glass Cannon, Ironhide, Frenzy and more) that pay bonus XP and cores.

@@ -22,6 +22,9 @@ public final class CompatItems {
     public static DeferredItem<Item> RIFT_LANTERN;
     public static DeferredItem<Item> VOIDSTEP_ANKLET;
     public static DeferredItem<Item> GATEBREAKER_BAND;
+    /** Hunter Tomes by tier (E, D, C, B, A, S, Monarch); null without Ars Nouveau. */
+    @SuppressWarnings("unchecked")
+    public static DeferredItem<Item>[] HUNTER_TOMES = new DeferredItem[7];
     public static DeferredItem<Item> WARDENS_BROKEN_CHAIN;
     public static DeferredItem<Item> GUARDIANS_PLUME;
     public static DeferredItem<Item> HUNTERS_LUCKY_COIN;
@@ -36,6 +39,7 @@ public final class CompatItems {
         if (ars()) {
             RIFT_SOURCE_SHARD = ITEMS.registerSimpleItem("rift_source_shard", new Item.Properties().rarity(Rarity.UNCOMMON));
             ArsCompat.init();
+            com.khaoskrew.khaosnexus.compat.items.tome.TomeRegistry.register(ITEMS, HUNTER_TOMES);
         }
         if (relics()) {
             RIFT_HUNTERS_SIGIL = ITEMS.register("rift_hunters_sigil", RelicsCompat::sigil);
