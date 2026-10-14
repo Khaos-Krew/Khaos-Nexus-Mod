@@ -27,6 +27,7 @@ public final class NexusGateClient {
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModRegistries.NEXUS_GATE_ENTITY.get(), context -> new NexusRiftRenderer());
         event.registerBlockEntityRenderer(ModRegistries.SPIRE_PORTAL_ENTITY.get(), context -> new SpirePortalRenderer());
+        event.registerEntityRenderer(net.minecraft.world.entity.EntityType.WANDERING_TRADER, NpcSkinRenderer::new);
     }
 
     private static void registerKeys(RegisterKeyMappingsEvent event) {

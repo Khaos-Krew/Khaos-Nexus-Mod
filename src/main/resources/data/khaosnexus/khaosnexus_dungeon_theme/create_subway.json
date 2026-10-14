@@ -36,6 +36,21 @@
       "block": "minecraft:cobweb",
       "on": "ceiling",
       "chance": 0.02
+    },
+    {
+      "block": "minecraft:rail",
+      "on": "floor",
+      "chance": 0.03
+    },
+    {
+      "block": "minecraft:lantern",
+      "on": "ceiling",
+      "chance": 0.006
+    },
+    {
+      "block": "minecraft:lever",
+      "on": "floor",
+      "chance": 0.003
     }
   ]
 }

@@ -45,6 +45,16 @@
       "block": "minecraft:chain",
       "on": "ceiling",
       "chance": 0.02
+    },
+    {
+      "block": "minecraft:purple_candle",
+      "on": "floor",
+      "chance": 0.01
+    },
+    {
+      "block": "minecraft:dragon_head",
+      "on": "floor",
+      "chance": 0.0008
     }
   ],
   "hazards": [

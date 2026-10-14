@@ -28,6 +28,21 @@
       "block": "minecraft:large_amethyst_bud",
       "on": "ceiling",
       "chance": 0.03
+    },
+    {
+      "block": "minecraft:small_amethyst_bud",
+      "on": "floor",
+      "chance": 0.03
+    },
+    {
+      "block": "minecraft:medium_amethyst_bud",
+      "on": "floor",
+      "chance": 0.015
+    },
+    {
+      "block": "minecraft:pointed_dripstone",
+      "on": "ceiling",
+      "chance": 0.02
     }
   ],
   "hazards": [

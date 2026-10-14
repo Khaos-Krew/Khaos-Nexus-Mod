@@ -32,6 +32,21 @@
       "block": "minecraft:cobweb",
       "on": "ceiling",
       "chance": 0.02
+    },
+    {
+      "block": "minecraft:red_candle",
+      "on": "floor",
+      "chance": 0.012
+    },
+    {
+      "block": "minecraft:wither_rose",
+      "on": "floor",
+      "chance": 0.004
+    },
+    {
+      "block": "minecraft:chain",
+      "on": "ceiling",
+      "chance": 0.015
     }
   ],
   "hazards": [

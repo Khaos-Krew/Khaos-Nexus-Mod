@@ -44,6 +44,21 @@
       "block": "minecraft:anvil",
       "on": "floor",
       "chance": 0.004
+    },
+    {
+      "block": "minecraft:lantern",
+      "on": "ceiling",
+      "chance": 0.01
+    },
+    {
+      "block": "minecraft:smithing_table",
+      "on": "floor",
+      "chance": 0.003
+    },
+    {
+      "block": "minecraft:grindstone",
+      "on": "floor",
+      "chance": 0.003
     }
   ],
   "hazards": [
