@@ -633,5 +633,15 @@
   "khaosnexus.oath.oath_of_the_long_watch": "Oath of the Long Watch",
   "khaosnexus.seal.hollow_crown": "Seal of the Hollow Crown",
   "khaosnexus.general.warning": "The air turns cold. A Crownless General is coming...",
-  "khaosnexus.shards.balance": "Crown Shards: %s"
+  "khaosnexus.shards.balance": "Crown Shards: %s",
+  "khaosnexus.dimension.blocked": "Another mod blocked that trip. You were not moved.",
+  "block.khaosnexus.seal_gate": "Seal Gate",
+  "item.khaosnexus.crown_shard": "Crown Shard",
+  "khaosnexus.underthrone.entered": "You descend into the Underthrone. The Exile Camp offers shelter.",
+  "khaosnexus.underthrone.left": "You climb back out of the Underthrone.",
+  "khaosnexus.underthrone.need": "The way down needs a Crown Shard, or a cleared Spire floor 50 (sneak-use the Spire Gate).",
+  "khaosnexus.seal.locked": "The seal does not answer. It needs a Paragon hunter and the seals before it broken.",
+  "khaosnexus.seal.opened": "The seal cracks and a rift tears open.",
+  "khaosnexus.shards.deposited": "Deposited %s Crown Shards. Crown Shards: %s",
+  "item.khaosnexus.crown_shard.desc": "Use on a Spire Gate to enter the Underthrone. Sneak-use to bank it for Oaths."
 }

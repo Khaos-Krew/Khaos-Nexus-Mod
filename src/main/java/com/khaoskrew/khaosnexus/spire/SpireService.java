@@ -134,8 +134,7 @@ public final class SpireService {
             spawn = entry.pos();
         }
         player.getPersistentData().remove(com.khaoskrew.khaosnexus.grave.SafeGraves.SPIRE_ENTRY);
-        player.teleportTo(target, spawn.getX() + 0.5D, spawn.getY(), spawn.getZ() + 0.5D, player.getYRot(), 0.0F);
-        player.fallDistance = 0.0F;
+        com.khaoskrew.khaosnexus.dungeon.DimensionSafety.teleport(player, target.dimension(), spawn, player.getYRot(), target.dimension() != DIMENSION);
         player.displayClientMessage(Component.translatable("khaosnexus.spire.left"), false);
     }
 
@@ -204,7 +203,7 @@ public final class SpireService {
             generate(spire, floor, level, season);
         }
         BlockPos at = SpireBuilder.arrival(o, town);
-        player.teleportTo(spire, at.getX() + 0.5D, at.getY(), at.getZ() + 0.5D, 180.0F, 0.0F);
+        com.khaoskrew.khaosnexus.dungeon.DimensionSafety.teleportExact(player, spire, net.minecraft.world.phys.Vec3.atBottomCenterOf(at), 180.0F);
         player.displayClientMessage(town ? Component.translatable("khaosnexus.spire.town", floor)
                 : Component.translatable("khaosnexus.spire.level_enter", floor, level, levels()), true);
     }

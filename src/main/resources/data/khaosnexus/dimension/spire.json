@@ -3,7 +3,7 @@
   "generator": {
     "type": "minecraft:flat",
     "settings": {
-      "biome": "minecraft:the_void",
+      "biome": "khaosnexus:spire_void",
       "layers": [
         {
           "block": "minecraft:air",

@@ -315,7 +315,7 @@ public final class BossRush {
             dim = server.overworld();
             pos = Vec3.atBottomCenterOf(dim.getSharedSpawnPos());
         }
-        p.teleportTo(dim, pos.x, pos.y, pos.z, p.getYRot(), 0.0F);
+        com.khaoskrew.khaosnexus.dungeon.DimensionSafety.teleportExact(p, dim, pos, p.getYRot());
     }
 
     public static void leave(ServerPlayer p, boolean died) {
