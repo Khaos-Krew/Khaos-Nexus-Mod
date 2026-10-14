@@ -111,6 +111,8 @@ public final class KhaosCommands {
                             PartyService.leave(context.getSource().getPlayerOrException());
                             return 1;
                         })))
+                .then(Commands.literal("recover").executes(context ->
+                        com.khaoskrew.khaosnexus.grave.SafeGraves.claim(context.getSource().getPlayerOrException())))
                 .then(Commands.literal("dungeon")
                         .then(Commands.literal("preview").requires(source -> source.hasPermission(2))
                                 .then(Commands.argument("rank", com.mojang.brigadier.arguments.StringArgumentType.greedyString()).executes(context -> {

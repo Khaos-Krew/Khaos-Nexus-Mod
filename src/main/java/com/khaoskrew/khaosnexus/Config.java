@@ -615,6 +615,17 @@ public final class Config {
         SERVER_BUILDER.pop();
     }
 
+    static { SERVER_BUILDER.push("safeGraves"); }
+    public static final ModConfigSpec.BooleanValue SAFE_GRAVES = SERVER_BUILDER
+            .comment("Deaths inside gate dungeons or the Spire put the grave outside, at the gate entrance or Spire entry point.")
+            .define("enabled", true);
+    public static final ModConfigSpec.IntValue SAFE_GRAVE_RADIUS = SERVER_BUILDER
+            .comment("How far from the entry point to search for a safe grave spot. No spot means the Recovery Chest (/khaos recover).")
+            .defineInRange("searchRadius", 8, 1, 16);
+    public static final ModConfigSpec.IntValue SAFE_GRAVE_PARTY_MINUTES = SERVER_BUILDER
+            .comment("Minutes a grave stays locked to its owner and party before anyone can loot it.")
+            .defineInRange("partyAccessMinutes", 60, 0, 10080);
+    static { SERVER_BUILDER.pop(); }
     public static final ModConfigSpec SERVER_SPEC = SERVER_BUILDER.build();
 
     private Config() {}

@@ -618,6 +618,11 @@
   "khaosnexus.tome.attune": "Class attunement %s: Caster +%% spell damage, Summoner x2 vs rift creatures, Necromancer spell lifesteal, Lifebinder heals allies on cast",
   "khaosnexus.tome.evolves": "Evolves as your hunter rank rises. Inscribed spells are kept.",
   "khaosnexus.tome.evolved": "Your Hunter Tome evolved: %s",
-  "item.khaosnexus.hunter_tome_paragon": "Paragon Hunter Tome",
-  "khaosnexus.tome.tier.paragon": "Paragon tier"
+  "item.khaosnexus.hunter_tome_paragon": "Zenith Hunter Tome",
+  "khaosnexus.tome.tier.paragon": "Zenith tier",
+  "khaosnexus.grave.name": "%s's Grave",
+  "khaosnexus.grave.placed": "Your items were moved out of the rift to a grave at %s %s %s (%s).",
+  "khaosnexus.grave.recovery": "No safe spot for your grave, so your items are in your Recovery Chest. Use /khaos recover.",
+  "khaosnexus.grave.locked": "This grave belongs to another hunter's party for now.",
+  "khaosnexus.grave.claimed": "Recovered %s item stacks."
 }

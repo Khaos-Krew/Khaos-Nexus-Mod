@@ -109,6 +109,7 @@ public final class SpireService {
         for (ServerPlayer member : PartyService.onlineMembers(player)) {
             floor = Math.max(floor, HunterRanks.profile(member).spireCheckpoint);
         }
+        com.khaoskrew.khaosnexus.grave.SafeGraves.saveSpireEntry(player);
         goTo(player, spire, floor, resumeLevel(profile, floor), data.season);
         HunterRanks.sync(player);
         player.displayClientMessage(Component.translatable("khaosnexus.spire.entered", floor), false);
@@ -126,7 +127,15 @@ public final class SpireService {
     public static void leave(ServerPlayer player) {
         ServerLevel overworld = player.server.overworld();
         BlockPos spawn = overworld.getSharedSpawnPos();
-        player.teleportTo(overworld, spawn.getX() + 0.5D, spawn.getY(), spawn.getZ() + 0.5D, player.getYRot(), 0.0F);
+        ServerLevel target = overworld;
+        var entry = com.khaoskrew.khaosnexus.grave.SafeGraves.anchorOf(player);
+        if (entry != null && player.server.getLevel(entry.dim()) != null && entry.dim() != DIMENSION) {
+            target = player.server.getLevel(entry.dim());
+            spawn = entry.pos();
+        }
+        player.getPersistentData().remove(com.khaoskrew.khaosnexus.grave.SafeGraves.SPIRE_ENTRY);
+        player.teleportTo(target, spawn.getX() + 0.5D, spawn.getY(), spawn.getZ() + 0.5D, player.getYRot(), 0.0F);
+        player.fallDistance = 0.0F;
         player.displayClientMessage(Component.translatable("khaosnexus.spire.left"), false);
     }
 
