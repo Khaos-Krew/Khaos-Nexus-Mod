@@ -49,6 +49,16 @@
       "block": "minecraft:lantern",
       "on": "floor",
       "chance": 0.01
+    },
+    {
+      "block": "minecraft:campfire",
+      "on": "floor",
+      "chance": 0.004
+    },
+    {
+      "block": "minecraft:anvil",
+      "on": "floor",
+      "chance": 0.002
     }
   ],
   "hazards": [

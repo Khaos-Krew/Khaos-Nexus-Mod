@@ -4,5 +4,27 @@
   },
   "weight": 30,
   "min_rank": "E",
-  "max_rank": "S"
+  "max_rank": "S",
+  "decor": [
+    {
+      "block": "minecraft:chain",
+      "on": "ceiling",
+      "chance": 0.02
+    },
+    {
+      "block": "minecraft:soul_lantern",
+      "on": "floor",
+      "chance": 0.005
+    },
+    {
+      "block": "minecraft:cobweb",
+      "on": "ceiling",
+      "chance": 0.01
+    },
+    {
+      "block": "minecraft:candle",
+      "on": "floor",
+      "chance": 0.008
+    }
+  ]
 }

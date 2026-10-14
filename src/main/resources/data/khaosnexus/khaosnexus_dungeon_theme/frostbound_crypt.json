@@ -45,6 +45,21 @@
       "block": "minecraft:cobweb",
       "on": "ceiling",
       "chance": 0.015
+    },
+    {
+      "block": "minecraft:soul_lantern",
+      "on": "ceiling",
+      "chance": 0.006
+    },
+    {
+      "block": "minecraft:skeleton_skull",
+      "on": "floor",
+      "chance": 0.004
+    },
+    {
+      "block": "minecraft:candle",
+      "on": "floor",
+      "chance": 0.006
     }
   ],
   "hazards": [

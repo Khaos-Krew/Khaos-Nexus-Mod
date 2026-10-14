@@ -44,6 +44,21 @@
       "block": "minecraft:glow_lichen",
       "on": "ceiling",
       "chance": 0.04
+    },
+    {
+      "block": "minecraft:sea_pickle",
+      "on": "floor",
+      "chance": 0.02
+    },
+    {
+      "block": "minecraft:seagrass",
+      "on": "floor",
+      "chance": 0.03
+    },
+    {
+      "block": "minecraft:lantern",
+      "on": "ceiling",
+      "chance": 0.005
     }
   ],
   "hazards": [

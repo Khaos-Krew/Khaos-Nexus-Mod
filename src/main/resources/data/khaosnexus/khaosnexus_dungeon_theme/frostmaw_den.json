@@ -39,6 +39,21 @@
       "block": "minecraft:snow",
       "on": "floor",
       "chance": 0.3
+    },
+    {
+      "block": "minecraft:pointed_dripstone",
+      "on": "ceiling",
+      "chance": 0.025
+    },
+    {
+      "block": "minecraft:bone_block",
+      "on": "floor",
+      "chance": 0.006
+    },
+    {
+      "block": "minecraft:skeleton_skull",
+      "on": "floor",
+      "chance": 0.003
     }
   ],
   "hazards": [
