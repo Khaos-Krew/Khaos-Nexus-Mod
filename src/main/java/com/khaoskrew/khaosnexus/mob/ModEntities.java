@@ -45,7 +45,7 @@ public final class ModEntities {
             () -> EntityType.Builder.<com.khaoskrew.khaosnexus.saga.RiftWisp>of(com.khaoskrew.khaosnexus.saga.RiftWisp::new, MobCategory.MISC).sized(0.5F, 0.6F).clientTrackingRange(8)
                     .fireImmune().noSummon().build(KhaosNexus.MODID + ":rift_wisp"));
     public static final DeferredHolder<EntityType<?>, EntityType<com.khaoskrew.khaosnexus.dungeon.GateMimic>> GATE_MIMIC = ENTITIES.register("gate_mimic",
-            () -> EntityType.Builder.<com.khaoskrew.khaosnexus.dungeon.GateMimic>of(com.khaoskrew.khaosnexus.dungeon.GateMimic::new, MobCategory.MONSTER).sized(0.9F, 1.2F).clientTrackingRange(10)
+            () -> EntityType.Builder.<com.khaoskrew.khaosnexus.dungeon.GateMimic>of(com.khaoskrew.khaosnexus.dungeon.GateMimic::new, MobCategory.MONSTER).sized(1.4F, 1.9F).clientTrackingRange(10)
                     .build(KhaosNexus.MODID + ":gate_mimic"));
     public static final DeferredHolder<EntityType<?>, EntityType<VoidOrb>> VOID_ORB = ENTITIES.register("void_orb",
             () -> EntityType.Builder.<VoidOrb>of(VoidOrb::new, MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(6).updateInterval(2)

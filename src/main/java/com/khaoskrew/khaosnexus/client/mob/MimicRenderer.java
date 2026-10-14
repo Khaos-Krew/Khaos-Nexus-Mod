@@ -19,7 +19,7 @@ import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 public class MimicRenderer extends GeoEntityRenderer<GateMimic> {
     public MimicRenderer(EntityRendererProvider.Context context) {
         super(context, new DefaultedEntityGeoModel<>(ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "gate_mimic"), false));
-        this.shadowRadius = 0.5F;
+        this.shadowRadius = 0.85F;
         ResourceLocation glow = ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "textures/entity/gate_mimic_glow.png");
         this.addRenderLayer(new GeoRenderLayer<>(this) {
             @Override
@@ -30,5 +30,11 @@ public class MimicRenderer extends GeoEntityRenderer<GateMimic> {
                 this.getRenderer().reRender(model, pose, buffer, mob, eyes, buffer.getBuffer(eyes), partialTick, 0xF00000, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
             }
         });
+    }
+
+    @Override
+    public void render(GateMimic mob, float yaw, float partialTick, PoseStack pose, MultiBufferSource buffer, int light) {
+        this.shadowRadius = mob.isAwake() ? 0.85F : 0.5F;   // chest-sized shadow while it sleeps
+        super.render(mob, yaw, partialTick, pose, buffer, light);
     }
 }

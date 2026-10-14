@@ -89,6 +89,18 @@ public class GateMimic extends Monster implements GeoEntity {
     }
 
     public boolean isAwake() { return this.entityData.get(AWAKE); }
+
+    /** Chest-sized while it sleeps; stands up to its full spider stance once awake. */
+    @Override
+    public net.minecraft.world.entity.EntityDimensions getDefaultDimensions(net.minecraft.world.entity.Pose pose) {
+        return this.isAwake() ? super.getDefaultDimensions(pose) : net.minecraft.world.entity.EntityDimensions.scalable(0.875F, 0.875F);
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if (AWAKE.equals(key)) this.refreshDimensions();
+    }
     boolean ready() { return this.isAwake() && this.stun <= 0 && this.isAlive(); }
     public String getDebugPose() { return this.entityData.get(DEBUG_POSE); }
 
@@ -106,7 +118,11 @@ public class GateMimic extends Monster implements GeoEntity {
         this.triggerAnim("action", "roar");
         this.level().playSound(null, this.blockPosition(), SoundEvents.CHEST_OPEN, SoundSource.HOSTILE, 1.0F, 0.6F);
         this.level().playSound(null, this.blockPosition(), SoundEvents.RAVAGER_ROAR, SoundSource.HOSTILE, 0.7F, 1.6F);
-        if (this.level() instanceof ServerLevel sl) sl.sendParticles(ParticleTypes.SMOKE, this.getX(), this.getY() + 0.8D, this.getZ(), 14, 0.3D, 0.2D, 0.3D, 0.02D);
+        if (this.level() instanceof ServerLevel sl) {
+            sl.sendParticles(ParticleTypes.SMOKE, this.getX(), this.getY() + 0.9D, this.getZ(), 18, 0.35D, 0.25D, 0.35D, 0.02D);
+            sl.sendParticles(ParticleTypes.FLAME, this.getX(), this.getY() + 0.7D, this.getZ(), 10, 0.25D, 0.15D, 0.25D, 0.01D);
+            sl.sendParticles(ParticleTypes.LAVA, this.getX(), this.getY() + 0.5D, this.getZ(), 4, 0.2D, 0.05D, 0.2D, 0.0D);
+        }
         if (by != null && !(by instanceof Player p && (p.isCreative() || p.isSpectator()))) this.setTarget(by);
     }
 
@@ -126,6 +142,15 @@ public class GateMimic extends Monster implements GeoEntity {
             return;
         }
         if (this.stun > 0) { this.stun--; this.getNavigation().stop(); }
+        if (this.tickCount % 9 == 0 && this.level() instanceof ServerLevel sl) {
+            double mx = this.getX(), my = this.getY() + 0.95D, mz = this.getZ();
+            float yaw = (float) Math.toRadians(this.getYRot());
+            // front of the maw (the chest faces -Z at rest yaw 180)
+            double fx = -Math.sin(yaw) * 0.55D, fz = Math.cos(yaw) * 0.55D;
+            sl.sendParticles(ParticleTypes.FALLING_HONEY, mx + fx, my + 0.15D, mz + fz, 1, 0.18D, 0.05D, 0.18D, 0.0D);
+            if (this.random.nextInt(2) == 0) sl.sendParticles(ParticleTypes.SMALL_FLAME, mx + fx * 0.3D, my + 0.35D, mz + fz * 0.3D, 1, 0.15D, 0.08D, 0.15D, 0.004D);
+            if (this.random.nextInt(5) == 0) sl.sendParticles(ParticleTypes.SMOKE, mx, my + 0.5D, mz, 1, 0.2D, 0.1D, 0.2D, 0.0D);
+        }
         if (this.bite > 0 && --this.bite == 0) {
             LivingEntity t = this.getTarget();
             this.level().playSound(null, this.blockPosition(), SoundEvents.CHEST_CLOSE, SoundSource.HOSTILE, 1.0F, 0.7F);
