@@ -142,8 +142,8 @@ def rig():
         fa = r.bone(f'{side}_forearm', arm, (x, 42, 0))
         octo(r, fa, (x, 41.8, 0.6), (5.2, 3.2, 4.6), 'breastplate')
         plate(r, fa, (x + s * 2.7, 41.8, 0.6), (0.8, 3.0, 3.4), 'breastplate', bev=0.3, raise_=0.2)
-        otaper(r, fa, x, 0, 41, HY + 1.6, 4.4, 5.4, 4.4, 5.4, 2, 'plate')
-        octo(r, fa, (x, HY + 1.4, 0), (6.4, 1.6, 6.4), 'crown', k=0.9)
+        otaper(r, fa, x, 0, 41, HY + 2.6, 4.4, 5.0, 4.4, 5.0, 2, 'plate')
+        octo(r, fa, (x, HY + 2.4, 0), (5.4, 1.4, 5.0), 'crown', k=0.9)
         B(fa, (x, HY + 4.6, -2.85), (2.4, 4.0, 0.3), 'rune')
         hd = r.bone(f'{side}_hand', fa, (x, HY, -0.4)); fy = HY - 1.8   # the grip runs fore-aft (local Z) through the fist
         octo(r, hd, (x, fy + 0.1, -0.4), (3.6, 3.4, 3.4), 'gauntlet', k=0.92, bev=0.18)
@@ -155,9 +155,9 @@ def rig():
     # the left fist takes the grip below, the pommel caps it.
     x, z, f = SWORD_X, SWORD_Z, GRIP_R
     r.bone('staff', 'right_hand', (x, f, z), (-90, 0, 0))   # the blade leaves the fist perpendicular to the forearm
-    B('staff', (x, f - 8.0, z), (2.6, 2.6, 2.6), 'core', rot=(45, 0, 45)); octo(r, 'staff', (x, f - 8.0, z), (3.4, 1.0, 3.4), 'crown')
-    otaper(r, 'staff', x, z, f - 6.9, f + 2.6, 1.5, 1.6, 1.5, 1.6, 2, 'grip')
-    octo(r, 'staff', (x, f - 6.7, z), (2.0, 0.6, 2.0), 'crown')
+    B('staff', (x, f - 9.2, z), (2.4, 2.4, 2.4), 'core', rot=(45, 0, 45)); octo(r, 'staff', (x, f - 9.2, z), (3.2, 1.0, 3.2), 'crown')
+    otaper(r, 'staff', x, z, f - 8.2, f + 2.6, 1.5, 1.6, 1.5, 1.6, 2, 'grip')
+    octo(r, 'staff', (x, f - 8.0, z), (2.0, 0.6, 2.0), 'crown')
     plate(r, 'staff', (x, f + 3.4, z), (2.6, 2.0, 14.0), 'crown', bev=0.4, raise_=0.0)
     for sz_ in (-1, 1):
         B('staff', (x, f + 5.2, z + sz_ * 7.4), (2.0, 4.2, 1.6), 'crown', rot=(sz_ * 26, 0, 0))
@@ -298,9 +298,9 @@ def nrm(v): v = np.array(v, float); return v / np.linalg.norm(v)
 def SW(P, D, N=(1, 0, 0)): return dict(P=P, D=D, N=N)
 # Targets are in ROOT space (feet on y=0, front = -Z, his right = -X). Blade: right fist -> tip 53 px, pommel 11 px.
 GUARD = SW((-3.0, 39.0, -14.0), (0.1, 0.9, -0.42))         # high guard: point up before his face, pommel clear of the belt
-REST = SW((0.0, 42.0, -14.0), (0.0, -0.97, -0.24))         # at rest: both hands stacked on the hilt, point set in the floor
-CARRY = SW((-11.0, 31.0, -6.0), (-0.05, -0.32, -0.95))     # walking: carried low in the right hand, point forward
-PLANT = SW((-1.0, 44.0, -14.0), (0.0, -0.9, -0.43))        # point planted in the floor before him
+REST = SW((0.0, 42.0, -15.0), (0.0, -0.95, -0.3))         # at rest: both hands stacked on the hilt, point set in the floor
+CARRY = SW((-12.5, 30.0, -8.0), (-0.1, -0.55, -0.83))     # walking: carried low in the right hand, point forward
+PLANT = SW((-1.0, 44.0, -16.0), (0.0, -0.9, -0.43))        # point planted in the floor before him
 REST_L = {'left_arm': [(0, [-8, 0, 12])], 'left_forearm': [(0, [-34, 0, 0])], 'left_hand': [(0, [0, 0, 0])]}   # hand over the orb
 
 def stride(T, amp=22, knee=24, bob=1.2, n=16):
@@ -376,18 +376,18 @@ def author():
     # ATTACK "Sentence": rears back hoisting the blade over his right shoulder, hangs, then hews down (impact 0.7)
     A['attack'] = act(1.45, [
         (0.25, SW((-6.0, 52.0, -10.0), (-0.1, 0.95, 0.2))), (0.48, SW((-5.0, 60.0, -5.0), (-0.05, 0.3, 0.95))),
-        (0.6, SW((-5.0, 61.0, -4.0), (-0.05, 0.15, 0.99))), (0.7, SW((-1.0, 34.0, -19.0), (0.0, -0.5, -0.86))),
+        (0.6, SW((-5.0, 61.0, -4.0), (-0.05, 0.15, 0.99))), (0.65, SW((-3.0, 54.0, -18.0), (0.0, 0.5, -0.86))), (0.7, SW((-1.0, 34.0, -19.0), (0.0, -0.5, -0.86))),
         (0.95, SW((-1.0, 33.0, -18.5), (0.0, -0.52, -0.85))), (1.15, SW((-2.0, 36.0, -16.0), (0.05, 0.3, -0.95)))],
         {'chest': [(0.48, [-16, 12, 0]), (0.6, [-18, 12, 0]), (0.7, [28, -4, 0]), (0.95, [30, -4, 0])],
          'torso': [(0.48, [-8, 10, 0]), (0.7, [14, 0, 0]), (0.95, [14, 0, 0])],
-         'head': [(0.48, [-4, 0, 0]), (0.7, [-26, 0, 0]), (0.95, [-26, 0, 0])],
+         'head': [(0.48, [-4, 0, 0]), (0.7, [-12, 0, 0]), (0.95, [-12, 0, 0])],
          'hips': [(0.48, [0, 4, 0]), (0.7, [0, -8, 0]), (0.95, [0, -8, 0])],
          'right_leg': [(0.48, [24, 0, 4]), (0.7, [22, 0, 4]), (0.95, [22, 0, 4])], 'right_shin': [(0.48, [24, 0, 0]), (0.7, [34, 0, 0]), (0.95, [34, 0, 0])],
          'left_leg': [(0.48, [-14, 0, -4]), (0.7, [-46, 0, -4]), (0.95, [-46, 0, -4])], 'left_shin': [(0.48, [10, 0, 0]), (0.7, [52, 0, 0]), (0.95, [52, 0, 0])]},
         {'root': [(0.48, [0, 1.2, 1.0]), (0.6, [0, 1.6, 1.2]), (0.7, [0, -5.0, -3.0]), (0.95, [0, -5.2, -3.0])]})
     # SWEEP "Reaping": blade cocked out past the right hip, then a flat two-handed reap across the front (impact 0.62)
     A['sweep'] = act(1.4, [
-        (0.42, SW((-9.0, 38.0, -8.0), (-0.85, 0.1, 0.5), (0, 1, 0))), (0.5, SW((-9.5, 38.0, -7.0), (-0.8, 0.1, 0.58), (0, 1, 0))),
+        (0.2, SW((-7.0, 40.0, -18.0), (-0.45, 0.45, -0.77), (0, 1, 0))), (0.42, SW((-9.0, 38.0, -8.0), (-0.85, 0.1, 0.5), (0, 1, 0))), (0.5, SW((-9.5, 38.0, -7.0), (-0.8, 0.1, 0.58), (0, 1, 0))),
         (0.62, SW((0.0, 37.0, -17.0), (0.2, 0.0, -0.98), (0, 1, 0))), (0.78, SW((8.0, 37.0, -12.0), (0.9, 0.0, -0.44), (0, 1, 0))),
         (1.0, SW((7.0, 37.0, -12.0), (0.88, 0.05, -0.46), (0, 1, 0)))],
         {'chest': [(0.42, [4, 30, 0]), (0.5, [4, 32, 0]), (0.62, [8, -8, 0]), (0.78, [8, -34, 0]), (1.0, [8, -32, 0])],
@@ -408,7 +408,7 @@ def author():
         {'chest': [(0.35, [-6, 20, 0]), (0.6, [10, -18, 0]), (0.85, [10, -16, 0])], 'head': [(0.35, [-12, -16, 0]), (0.6, [-14, 12, 0])],
          'left_leg': [(0.6, [-20, 0, -4]), (0.9, [-20, 0, -4])], 'left_shin': [(0.6, [24, 0, 0]), (0.9, [24, 0, 0])]},
         free=[(0.12, 1.02)],
-        lf={'left_arm': [(0.35, [-40, 30, 60]), (0.48, [-48, 20, 66]), (0.6, [-96, -20, 10]), (0.85, [-94, -20, 12])],
+        lf={'left_arm': [(0.2, [-30, 0, 45]), (0.35, [-40, 30, 70]), (0.48, [-48, 20, 76]), (0.6, [-96, -10, 34]), (0.85, [-94, -10, 36])],
             'left_forearm': [(0.35, [-90, 0, 0]), (0.6, [-6, 0, 0]), (0.85, [-8, 0, 0])], 'left_hand': [(0.35, R0), (0.6, [-20, 0, 0]), (0.85, [-20, 0, 0])]},
         extra={'sigil_hand': {'scale': S.ch([(0, [0.01] * 3), (0.3, [1.6] * 3), (0.7, [1.6] * 3), (1.2, [0.01] * 3)])}})
     # BARRIER: plants the blade point-down before him and raises the left fist; the sigils swell
@@ -426,13 +426,13 @@ def author():
         extra={'sigils': {'scale': S.ch([(0, [1, 1, 1]), (0.5, [0.7, 0.7, 1]), (0.9, [2.0, 2.0, 1]), (1.7, [1.9, 1.9, 1]), (2.1, [1, 1, 1])]), 'rotation': S.spin(2.1, 1.5, 2)}})
     # CROWNFALL: hoists Kingsbane point-down overhead as the crown rises, drops to one knee and drives the blade deep
     # into the floor in front of him (impact 0.9; frozen for review at 0.9)
-    DRIVE = SW((-1.0, 34.0, -18.0), (0.0, -0.85, -0.53))
+    DRIVE = SW((-4.5, 35.0, -20.0), (0.0, -0.85, -0.53))
     A['crownfall'] = act(1.6, [
-        (0.45, SW((-2.0, 64.0, -8.0), (0.0, 0.1, -0.99))), (0.68, SW((-2.0, 68.0, -9.0), (0.0, -0.35, -0.94))),
+        (0.22, SW((-2.0, 50.0, -17.0), (0.0, 0.75, -0.66))), (0.45, SW((-2.0, 64.0, -10.0), (0.0, 0.1, -0.99))), (0.68, SW((-2.0, 68.0, -9.0), (0.0, -0.35, -0.94))),
         (0.9, DRIVE), (1.25, DRIVE)],
         {'chest': [(0.45, [-14, 0, 0]), (0.68, [-18, 0, 0]), (0.9, [22, 0, 0]), (1.25, [22, 0, 0])],
          'torso': [(0.68, [-6, 0, 0]), (0.9, [12, 0, 0]), (1.25, [12, 0, 0])],
-         'head': [(0.45, [-24, 0, 0]), (0.9, [-26, 0, 0]), (1.25, [-26, 0, 0])],
+         'head': [(0.45, [-24, 0, 0]), (0.9, [-14, 0, 0]), (1.25, [-14, 0, 0])],
          'hips': [(0.9, [0, 0, 0]), (1.25, [0, 0, 0])],
          'right_leg': [(0.45, [-8, 0, 0]), (0.9, [-4, 0, 4]), (1.25, [-4, 0, 4])], 'right_shin': [(0.45, [10, 0, 0]), (0.9, [96, 0, 0]), (1.25, [96, 0, 0])],
          'left_leg': [(0.45, [10, 0, 0]), (0.9, [-80, 0, -4]), (1.25, [-80, 0, -4])], 'left_shin': [(0.45, [8, 0, 0]), (0.9, [84, 0, 0]), (1.25, [84, 0, 0])]},
@@ -452,7 +452,38 @@ def author():
 REACH = 22.6
 ARMS_R = ['right_arm', 'right_forearm', 'right_hand']; ARMS_L = ['left_arm', 'left_forearm', 'left_hand']
 LIM_ARM = ([-220, -120, -150], [90, 120, 90]); LIM_FA = ([-140, -90, -10], [0, 90, 10]); LIM_HAND = ([-100, -170, -90], [100, 170, 90])
-W_AX, W_FI = 8, 0.7
+W_AX, W_FI = 8, 1.5
+
+
+CLEAR_BONES = ['chest', 'torso', 'hips', 'head', 'right_leg', 'left_leg', 'right_shin', 'left_shin']
+def body_boxes(rig_):
+    """Per bone: list of (inverse cube rotation about pivot, min, max) in bone-rest space, for staff clearance."""
+    out = {}
+    for bn in CLEAR_BONES:
+        L = []
+        for c in rig_.bones[bn]['cubes']:
+            o = np.array(c['origin'], float); sz = np.array(c['size'], float)
+            if c.get('rot'):
+                Rm = K.rot(c['rot'][0], -c['rot'][1], c['rot'][2]); pv = np.array(c['pivot'], float)
+            else: Rm, pv = np.eye(3), np.zeros(3)
+            L.append((Rm.T, pv, o - 0.4, o + sz + 0.4))
+        out[bn] = L
+    return out
+
+def staff_hits(fk, boxes, R, Q):
+    ms = fk.world('staff', R, Q)
+    pts = [K.xf(ms, (SWORD_X, GRIP_R + y, SWORD_Z)) for y in np.arange(-9.5, 49, 1.5)]
+    pts += [K.xf(ms, (SWORD_X, GRIP_R + y, SWORD_Z + dz)) for y in (5.2, 20, 35) for dz in (-7.5, -4, 4, 7.5)]
+    pts += [K.xf(ms, (SWORD_X + dx, GRIP_R + y, SWORD_Z + dz)) for y in (-10.4, -9.2, -8.0, 3.4) for dx in (-1.4, 1.4) for dz in (-1.4, 1.4)]
+    hits = []
+    for bn, L in boxes.items():
+        Mi = np.linalg.inv(fk.world(bn, R, Q))
+        for pw in pts:
+            pl = K.xf(Mi, pw)
+            for RT, pv, lo, hi in L:
+                q = RT @ (pl - pv) + pv
+                if np.all(q > lo) and np.all(q < hi): hits.append((bn, pw)); break
+    return hits
 
 def sample_body(a, t):
     R, Q = {}, {}; L = a['T'] if a['loop'] else None
@@ -464,7 +495,7 @@ def sample_body(a, t):
     return R, Q
 
 def bake(rig_, A, verbose=False):
-    fk = K.FK(rig_); out = {}
+    fk = K.FK(rig_); out = {}; boxes = body_boxes(rig_)
     loR = LIM_ARM[0] + LIM_FA[0] + LIM_HAND[0]; hiR = LIM_ARM[1] + LIM_FA[1] + LIM_HAND[1]
     loL = [LIM_ARM[0][0], -LIM_ARM[1][1], -LIM_ARM[1][2]] + LIM_FA[0] + LIM_HAND[0]
     hiL = [LIM_ARM[1][0], -LIM_ARM[0][1], -LIM_ARM[0][2]] + LIM_FA[1] + LIM_HAND[1]
@@ -491,15 +522,27 @@ def bake(rig_, A, verbose=False):
             seeds = [xr] if t > 0 else [xr, np.array([-90, 0, -20, -60, 0, 0, 0, 0, 0.0]), np.array([-150, 0, -10, -20, 0, 0, 0, 0, 0.0])]
             xr = min((K.solve(fr, sd, loR, hiR) for sd in seeds), key=lambda q: q[1])[0]
             RR = dict(R); RR['right_arm'], RR['right_forearm'], RR['right_hand'] = xr[0:3], xr[3:6], xr[6:9]
+            for _c in range(16):   # clearance: push the grip away from any body part the blade or pommel enters
+                hs = staff_hits(fk, boxes, RR, Q)
+                if not hs: break
+                ctr = np.mean([K.xf(fk.world(bn, RR, Q), (0, 40, 0)) for bn, _ in hs], axis=0)
+                away = np.mean([pw for _, pw in hs], axis=0) - ctr; away[1] *= 0.3
+                Pw = Pw + nrm(away + K.xd(Rm, (0, 0, -1.5))) * 1.5
+                xr = K.solve(fr, xr, loR, hiR)[0]
+                RR = dict(R); RR['right_arm'], RR['right_forearm'], RR['right_hand'] = xr[0:3], xr[3:6], xr[6:9]
             ms = fk.world('staff', RR, Q); mh = fk.world('right_hand', RR, Q)
             er = float(np.linalg.norm(K.xf(ms, (SWORD_X, GRIP_R, SWORD_Z)) - Pw)); worst = max(worst, er); el = 0.0
             free = any(t0 < t < t1 for t0, t1 in a['free'])
             if not free:
-                tgt = K.xf(ms, (SWORD_X, GRIP_L, SWORD_Z)); ax = K.xd(ms, (0, 1, 0)); fing = K.xd(mh, (0, 1, 0))
+                tgt = K.xf(ms, (SWORD_X, GRIP_L, SWORD_Z)); ax = K.xd(ms, (0, 1, 0)); sa = K.xf(ms, (SWORD_X, GRIP_R, SWORD_Z)); sd = ax; fing = K.xd(mh, (0, 1, 0))
                 def fl(x):
                     RL = dict(RR); RL['left_arm'], RL['left_forearm'], RL['left_hand'] = x[0:3], x[3:6], x[6:9]
-                    m = fk.world('left_hand', RL, Q)
-                    return np.concatenate([(K.xf(m, (11.6, GRIP_R, SWORD_Z)) - tgt) * 3, (K.xd(m, (0, 0, -1)) - ax) * W_AX, (K.xd(m, (0, 1, 0)) - fing) * W_FI, x * 0.004])
+                    m = fk.world('left_hand', RL, Q); mf = fk.world('left_forearm', RL, Q)
+                    pen = []
+                    for yy in (HY + 2.4, HY + 5, 38.5, 41.5):
+                        q = K.xf(mf, (11.6, yy, 0)); u = np.clip((q - sa) @ sd, -12.0, 50.0)
+                        pen.append(max(0.0, 3.6 - np.linalg.norm(sa + sd * u - q)) * 6)
+                    return np.concatenate([(K.xf(m, (11.6, GRIP_R, SWORD_Z)) - tgt) * 3, pen, (K.xd(m, (0, 0, -1)) - ax) * W_AX, (K.xd(m, (0, 1, 0)) - nrm(shL - tgt)) * W_FI, x * 0.004])
                 seeds = [xl] if t > 0 else [xl, np.array([-90, 0, 30, -60, 0, 0, 0, 0, 0.0]), np.array([-150, 0, 10, -20, 0, 0, 0, 0, 0.0])]
                 xl = min((K.solve(fl, sd, loL, hiL) for sd in seeds), key=lambda q: q[1])[0]
                 RL = dict(RR); RL['left_arm'], RL['left_forearm'], RL['left_hand'] = xl[0:3], xl[3:6], xl[6:9]
