@@ -171,8 +171,8 @@ def rig():
     for y in (10.8, 18.8, 26.8, 34.8): B('staff', (x, f + y, z), (1.6, 0.6, 2.6), 'crown')
     r.bone('censer', 'staff', (x, f + 3.4, z - 7.0))
     cz = z - 7.0
-    for j in range(3): B('censer', (x, f + 2.0 - j * 1.9, cz), (0.6, 1.6, 0.6), 'guard', rot=(0, 45 * j, 0))
-    B('censer', (x, f - 3.6, cz), (3.6, 3.6, 0.8), 'crown'); B('censer', (x, f - 4.05, cz - 0.45), (2.2, 2.2, 0.2), 'core', rot=(0, 0, 45))
+    B('censer', (x, f + 2.6, cz), (0.6, 1.4, 0.6), 'guard')   # short chain: the medallion hangs clear of the left fist
+    B('censer', (x, f + 0.2, cz), (3.6, 3.6, 0.8), 'crown'); B('censer', (x, f - 0.25, cz - 0.45), (2.2, 2.2, 0.2), 'core', rot=(0, 0, 45))
     r.bone('sigil_hand', 'left_forearm', (15.0, HY + 5, 0))   # crown rune that flares off the left vambrace when he casts
     B('sigil_hand', (15.2, HY + 5, 0), (0.3, 3.0, 3.0), 'rune', rot=(45, 0, 0)); B('sigil_hand', (15.3, HY + 5, 0), (0.3, 1.4, 1.4), 'core', rot=(45, 0, 0))
     r.bone('sigils', 'chest', (0, 54, 12))
@@ -408,8 +408,8 @@ def author():
         {'chest': [(0.35, [-6, 20, 0]), (0.6, [10, -18, 0]), (0.85, [10, -16, 0])], 'head': [(0.35, [-12, -16, 0]), (0.6, [-14, 12, 0])],
          'left_leg': [(0.6, [-20, 0, -4]), (0.9, [-20, 0, -4])], 'left_shin': [(0.6, [24, 0, 0]), (0.9, [24, 0, 0])]},
         free=[(0.12, 1.02)],
-        lf={'left_arm': [(0.2, [-30, 0, 45]), (0.35, [-40, 30, 70]), (0.48, [-48, 20, 76]), (0.6, [-96, -10, 34]), (0.85, [-94, -10, 36])],
-            'left_forearm': [(0.35, [-90, 0, 0]), (0.6, [-6, 0, 0]), (0.85, [-8, 0, 0])], 'left_hand': [(0.35, R0), (0.6, [-20, 0, 0]), (0.85, [-20, 0, 0])]},
+        lf={'left_arm': [(0.2, [-54, -10, 58]), (0.35, [-66, 6, 84]), (0.48, [-72, 10, 82]), (0.6, [-96, -10, 34]), (0.85, [-94, -10, 36])],
+            'left_forearm': [(0.35, [-62, 0, 0]), (0.6, [-6, 0, 0]), (0.85, [-8, 0, 0])], 'left_hand': [(0.35, R0), (0.6, [-20, 0, 0]), (0.85, [-20, 0, 0])]},
         extra={'sigil_hand': {'scale': S.ch([(0, [0.01] * 3), (0.3, [1.6] * 3), (0.7, [1.6] * 3), (1.2, [0.01] * 3)])}})
     # BARRIER: plants the blade point-down before him and raises the left fist; the sigils swell
     A['barrier'] = act(1.3, [(0.4, PLANT), (0.95, PLANT)],
@@ -426,13 +426,13 @@ def author():
         extra={'sigils': {'scale': S.ch([(0, [1, 1, 1]), (0.5, [0.7, 0.7, 1]), (0.9, [2.0, 2.0, 1]), (1.7, [1.9, 1.9, 1]), (2.1, [1, 1, 1])]), 'rotation': S.spin(2.1, 1.5, 2)}})
     # CROWNFALL: hoists Kingsbane point-down overhead as the crown rises, drops to one knee and drives the blade deep
     # into the floor in front of him (impact 0.9; frozen for review at 0.9)
-    DRIVE = SW((-4.5, 35.0, -20.0), (0.0, -0.85, -0.53))
+    DRIVE = SW((-3.0, 44.5, -25.0), (0.0, -0.995, -0.1))   # near-vertical, point ~1 block under the floor
     A['crownfall'] = act(1.6, [
         (0.22, SW((-2.0, 50.0, -17.0), (0.0, 0.75, -0.66))), (0.45, SW((-2.0, 64.0, -10.0), (0.0, 0.1, -0.99))), (0.68, SW((-2.0, 68.0, -9.0), (0.0, -0.35, -0.94))),
         (0.9, DRIVE), (1.25, DRIVE)],
         {'chest': [(0.45, [-14, 0, 0]), (0.68, [-18, 0, 0]), (0.9, [22, 0, 0]), (1.25, [22, 0, 0])],
          'torso': [(0.68, [-6, 0, 0]), (0.9, [12, 0, 0]), (1.25, [12, 0, 0])],
-         'head': [(0.45, [-24, 0, 0]), (0.9, [-14, 0, 0]), (1.25, [-14, 0, 0])],
+         'head': [(0.45, [-24, 0, 0]), (0.9, [16, 0, 0]), (1.25, [18, 0, 0])],
          'hips': [(0.9, [0, 0, 0]), (1.25, [0, 0, 0])],
          'right_leg': [(0.45, [-8, 0, 0]), (0.9, [-4, 0, 4]), (1.25, [-4, 0, 4])], 'right_shin': [(0.45, [10, 0, 0]), (0.9, [96, 0, 0]), (1.25, [96, 0, 0])],
          'left_leg': [(0.45, [10, 0, 0]), (0.9, [-80, 0, -4]), (1.25, [-80, 0, -4])], 'left_shin': [(0.45, [8, 0, 0]), (0.9, [84, 0, 0]), (1.25, [84, 0, 0])]},
@@ -535,13 +535,15 @@ def bake(rig_, A, verbose=False):
             free = any(t0 < t < t1 for t0, t1 in a['free'])
             if not free:
                 tgt = K.xf(ms, (SWORD_X, GRIP_L, SWORD_Z)); ax = K.xd(ms, (0, 1, 0)); sa = K.xf(ms, (SWORD_X, GRIP_R, SWORD_Z)); sd = ax; fing = K.xd(mh, (0, 1, 0))
+                pom = K.xf(ms, (SWORD_X, GRIP_R - 9.2, SWORD_Z)); cen = K.xf(ms, (SWORD_X, GRIP_R + 0.2, SWORD_Z - 7.0))
                 def fl(x):
                     RL = dict(RR); RL['left_arm'], RL['left_forearm'], RL['left_hand'] = x[0:3], x[3:6], x[6:9]
                     m = fk.world('left_hand', RL, Q); mf = fk.world('left_forearm', RL, Q)
                     pen = []
-                    for yy in (HY + 2.4, HY + 5, 38.5, 41.5):
+                    for yy in (HY + 1.8, HY + 2.6, HY + 4, HY + 6, 38.5, 41.5, 43.5):
                         q = K.xf(mf, (11.6, yy, 0)); u = np.clip((q - sa) @ sd, -12.0, 50.0)
-                        pen.append(max(0.0, 3.6 - np.linalg.norm(sa + sd * u - q)) * 6)
+                        pen.append(max(0.0, 4.9 - np.linalg.norm(sa + sd * u - q)) * 14)
+                        for cp in (pom, cen): pen.append(max(0.0, 5.2 - np.linalg.norm(cp - q)) * 14)
                     return np.concatenate([(K.xf(m, (11.6, GRIP_R, SWORD_Z)) - tgt) * 3, pen, (K.xd(m, (0, 0, -1)) - ax) * W_AX, (K.xd(m, (0, 1, 0)) - nrm(shL - tgt)) * W_FI, x * 0.004])
                 seeds = [xl] if t > 0 else [xl, np.array([-90, 0, 30, -60, 0, 0, 0, 0, 0.0]), np.array([-150, 0, 10, -20, 0, 0, 0, 0, 0.0])]
                 xl = min((K.solve(fl, sd, loL, hiL) for sd in seeds), key=lambda q: q[1])[0]

@@ -203,6 +203,7 @@ public class RiftBoss extends RiftMob {
                     this.aoe(4.2D, 1.3F, 1.0D, true);
                     this.playSound(com.khaoskrew.khaosnexus.saga.ModSounds.CROWNFALL_IMPACT.get(), 2.5F, 1.0F);
                     this.crownfallTicks = 1;
+                    this.bladeImpact();
                 }
                 case "slam" -> this.aoe(4.5D, 1.6F, 0.9D, true);
                 case "spin" -> this.aoe(3.8D, 1.1F, 1.4D, false);
@@ -304,6 +305,29 @@ public class RiftBoss extends RiftMob {
     }
 
     /** Hits every non-rift living thing in radius for attack damage * mult, with a shockwave of particles. */
+    /** Crownfall: cracks and debris where Kingsbane is driven into the floor, directly in front of the King
+     *  (model blade point is 20 px ahead of the root at 1.5x scale). */
+    private void bladeImpact() {
+        if (!(this.level() instanceof net.minecraft.server.level.ServerLevel server)) return;
+        double yaw = Math.toRadians(this.yBodyRot);
+        double px = this.getX() - Math.sin(yaw) * 1.9D, pz = this.getZ() + Math.cos(yaw) * 1.9D, py = this.getY();
+        net.minecraft.core.BlockPos below = net.minecraft.core.BlockPos.containing(px, py - 0.5D, pz);
+        net.minecraft.world.level.block.state.BlockState floor = server.getBlockState(below);
+        if (floor.isAir()) floor = net.minecraft.world.level.block.Blocks.DEEPSLATE.defaultBlockState();
+        net.minecraft.core.particles.BlockParticleOption crumbs = new net.minecraft.core.particles.BlockParticleOption(net.minecraft.core.particles.ParticleTypes.BLOCK, floor);
+        server.sendParticles(crumbs, px, py + 0.1D, pz, 70, 0.35D, 0.05D, 0.35D, 0.25D);         // debris thrown up
+        for (int i = 0; i < 10; i++) {                                                           // radiating cracks
+            double a = Math.PI * 2 * i / 10 + this.random.nextDouble() * 0.4D;
+            for (int j = 1; j <= 6; j++) {
+                double r = j * 0.22D;
+                server.sendParticles(crumbs, px + Math.cos(a) * r, py + 0.05D, pz + Math.sin(a) * r, 2, 0.02D, 0.0D, 0.02D, 0.0D);
+                if (j % 2 == 0) server.sendParticles(net.minecraft.core.particles.ParticleTypes.SMALL_FLAME, px + Math.cos(a) * r, py + 0.05D, pz + Math.sin(a) * r, 1, 0, 0, 0, 0.0D);
+            }
+        }
+        server.sendParticles(net.minecraft.core.particles.ParticleTypes.LARGE_SMOKE, px, py + 0.2D, pz, 14, 0.3D, 0.1D, 0.3D, 0.03D);
+        server.sendParticles(net.minecraft.core.particles.ParticleTypes.CRIT, px, py + 0.3D, pz, 24, 0.25D, 0.2D, 0.25D, 0.4D);
+    }
+
     private void aoe(double radius, float mult, double knock, boolean slam) {
         if (!(this.level() instanceof net.minecraft.server.level.ServerLevel server)) return;
         float dmg = (float) this.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE) * mult;
