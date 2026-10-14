@@ -61,8 +61,25 @@ public final class CuriosCompat {
         }
     }
 
+    /** True when the item is worn in any curios slot (false without Curios). */
+    public static boolean wears(ServerPlayer p, net.minecraft.world.item.Item item) {
+        if (!present() || failed) return false;
+        try {
+            return CuriosSlots.wears(p, item);
+        } catch (RuntimeException | LinkageError e) {
+            return false;
+        }
+    }
+
     @SubscribeEvent
     public static void onTick(PlayerTickEvent.Post event) {
+        if (event.getEntity() instanceof ServerPlayer player && player.tickCount % 100 == 0 && present()) {
+            try {
+                CuriosSlots.refresh(player);
+            } catch (RuntimeException | LinkageError e) {
+                KhaosNexus.LOGGER.debug("Curios rank slots skipped: {}", e.toString());
+            }
+        }
         if (event.getEntity() instanceof ServerPlayer player && player.tickCount % 20 == 0 && present()) {
             ItemStack card = wornCard(player);
             if (!card.isEmpty()) {

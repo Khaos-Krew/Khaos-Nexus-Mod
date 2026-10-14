@@ -87,7 +87,7 @@ public class RiftWisp extends PathfinderMob implements GeoEntity {
                     this.getX() + (this.random.nextDouble() - 0.5) * 0.3, this.getY() + 0.25, this.getZ() + (this.random.nextDouble() - 0.5) * 0.3, 0, -0.01, 0);
             return;
         }
-        if (o == null || o.level() != this.level() || !o.getPersistentData().getBoolean(FLAG) || !this.getUUID().toString().equals(o.getPersistentData().getString(ID))) {
+        if (o == null || o.level() != this.level() || !wanted(o) || !this.getUUID().toString().equals(o.getPersistentData().getString(ID))) {
             this.discard();
             return;
         }
@@ -129,6 +129,12 @@ public class RiftWisp extends PathfinderMob implements GeoEntity {
     @Override public AnimatableInstanceCache getAnimatableInstanceCache() { return this.cache; }
 
     // ------------------------------------------------------------ owner side
+    /** Bell rung, or the bell worn in a Curios charm slot. */
+    static boolean wanted(Player p) {
+        return p.getPersistentData().getBoolean(FLAG) || (p instanceof ServerPlayer sp
+                && com.khaoskrew.khaosnexus.compat.CuriosCompat.wears(sp, com.khaoskrew.khaosnexus.registry.ModRegistries.WISP_BELL.get()));
+    }
+
     static boolean present(ServerPlayer p) {
         String id = p.getPersistentData().getString(ID);
         if (id.isEmpty()) return false;
@@ -153,7 +159,7 @@ public class RiftWisp extends PathfinderMob implements GeoEntity {
 
     @SubscribeEvent
     public static void reform(PlayerTickEvent.Post e) {
-        if (e.getEntity() instanceof ServerPlayer p && p.tickCount % 40 == 0 && p.getPersistentData().getBoolean(FLAG) && !p.isSpectator() && !present(p)) summon(p);
+        if (e.getEntity() instanceof ServerPlayer p && p.tickCount % 40 == 0 && wanted(p) && !p.isSpectator() && !present(p)) summon(p);
     }
 
     /** The Wisp Bell: ring to call the wisp, ring again to dismiss it. */

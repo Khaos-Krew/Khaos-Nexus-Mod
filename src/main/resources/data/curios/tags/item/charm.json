@@ -8,6 +8,10 @@
     {
       "id": "khaosnexus:hunters_lucky_coin",
       "required": false
+    },
+    {
+      "id": "khaosnexus:wisp_bell",
+      "required": false
     }
   ]
 }

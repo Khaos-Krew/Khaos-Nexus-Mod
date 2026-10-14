@@ -36,6 +36,16 @@ repositories {
         url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
         content { includeGroupByRegex('software\\.bernie.*') }
     }
+    maven {
+        name = 'FTB'
+        url = 'https://maven.ftb.dev/releases'
+        content { includeGroup 'dev.ftb.mods' }
+    }
+    maven {
+        name = 'Architectury'
+        url = 'https://maven.architectury.dev/'
+        content { includeGroup 'dev.architectury' }
+    }
     // Add here additional repositories if required by some of the dependencies below.
 }
 
@@ -143,6 +153,9 @@ dependencies {
     compileOnly("maven.modrinth:ars-nouveau:yWDnir1o") { transitive = false }
     compileOnly("maven.modrinth:relics-mod:WKEe9sPL") { transitive = false }
     compileOnly("maven.modrinth:curios:yohfFbgD") { transitive = false }
+    compileOnly("dev.ftb.mods:ftb-quests-neoforge:2101.1.36") { transitive = false }
+    compileOnly("dev.ftb.mods:ftb-library-neoforge:2101.1.37") { transitive = false }
+    compileOnly("dev.architectury:architectury-neoforge:13.0.11") { transitive = false }
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime

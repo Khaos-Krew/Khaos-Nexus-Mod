@@ -1,5 +1,6 @@
 package com.khaoskrew.khaosnexus.compat;
 
+import net.minecraft.resources.ResourceLocation;
 import java.util.List;
 
 import com.khaoskrew.khaosnexus.Config;
@@ -179,6 +180,24 @@ public class CompatGameTests {
         helper.assertTrue(ModBossTuning.engagedIn(level, boss.getBoundingBox().inflate(4), 0L), "engaged boss holds the dungeon open");
         boss.discard();
         arrow.discard();
+        helper.succeed();
+    }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    public static void compat12GemSlotsAndQuests(GameTestHelper helper) {
+        helper.assertTrue(GemClassBonus.classOf(ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "bulwark")) == HunterClass.TANK
+                && GemClassBonus.classOf(ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "riftheart")) == null
+                && GemClassBonus.classOf(ResourceLocation.fromNamespaceAndPath("apotheosis", "bulwark")) == null, "gem class map");
+        helper.assertTrue(Math.abs(GemClassBonus.dealtMult(9) - 1.16F) < 1e-4 && Math.abs(GemClassBonus.takenMult(2) - 0.96F) < 1e-4, "gem bonus capped at 4");
+        for (HunterClass c : HunterClass.values()) {
+            helper.assertTrue(GemClassBonus.GEM_CLASS.containsValue(c), "every class has a matching gem: " + c.id());
+        }
+        helper.assertTrue(CuriosSlots.ringBonus(com.khaoskrew.khaosnexus.gate.GateRank.C) == 0 && CuriosSlots.ringBonus(com.khaoskrew.khaosnexus.gate.GateRank.B) == 1
+                && CuriosSlots.charmBonus(com.khaoskrew.khaosnexus.gate.GateRank.A) == 0 && CuriosSlots.charmBonus(com.khaoskrew.khaosnexus.gate.GateRank.S) == 1, "rank slot gates");
+        if (net.neoforged.fml.ModList.get().isLoaded("ftbquests")) {
+            helper.assertTrue(dev.ftb.mods.ftbquests.quest.task.TaskTypes.TYPES.containsKey(ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "hunter_rank"))
+                    && dev.ftb.mods.ftbquests.quest.reward.RewardTypes.TYPES.containsKey(ResourceLocation.fromNamespaceAndPath(KhaosNexus.MODID, "crown_shards")), "FTB types registered");
+        }
         helper.succeed();
     }
 }
