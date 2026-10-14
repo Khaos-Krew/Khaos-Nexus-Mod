@@ -1,0 +1,49 @@
+{
+  "display_name": {
+    "translate": "theme.khaosnexus.frostmaw_den"
+  },
+  "weight": 5,
+  "min_rank": "A",
+  "max_rank": "S",
+  "required_mods": [
+    "mowziesmobs"
+  ],
+  "biome_weights": [
+    {
+      "biomes": "#c:is_snowy",
+      "multiplier": 5.0
+    },
+    {
+      "biomes": "#c:is_icy",
+      "multiplier": 5.0
+    }
+  ],
+  "palette": {
+    "minecraft:polished_blackstone_bricks": "minecraft:packed_ice",
+    "minecraft:cracked_polished_blackstone_bricks": "minecraft:blue_ice",
+    "minecraft:chiseled_polished_blackstone": "minecraft:chiseled_stone_bricks",
+    "minecraft:gilded_blackstone": "minecraft:snow_block",
+    "minecraft:deepslate_tiles": "minecraft:packed_ice",
+    "minecraft:cracked_deepslate_tiles": "minecraft:snow_block",
+    "minecraft:deepslate_bricks": "minecraft:blue_ice",
+    "minecraft:obsidian": "minecraft:blue_ice",
+    "minecraft:crying_obsidian": "minecraft:sea_lantern",
+    "minecraft:amethyst_block": "minecraft:sea_lantern",
+    "minecraft:amethyst_cluster": "minecraft:large_amethyst_bud",
+    "minecraft:purple_stained_glass": "minecraft:light_blue_stained_glass",
+    "minecraft:magma_block": "minecraft:blue_ice",
+    "minecraft:polished_blackstone_pressure_plate": "minecraft:stone_pressure_plate"
+  },
+  "decor": [
+    {
+      "block": "minecraft:snow",
+      "on": "floor",
+      "chance": 0.3
+    }
+  ],
+  "hazards": [
+    {
+      "type": "khaosnexus:chill"
+    }
+  ]
+}

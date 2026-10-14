@@ -75,6 +75,11 @@ public class RiftBoss extends RiftMob {
         return this.isWeaponDrawn() && this.tickCount - this.drawChangedAt >= DRAW_TICKS && this.special == null;
     }
 
+    /** Movement controller: play the armed idle/walk. weapon out (the Warden waits for its draw to finish). */
+    public boolean inCombatStance() {
+        return this.isWeaponDrawn() && !(this.isWarden() && this.isDrawing());
+    }
+
     public int getPhase() {
         return this.entityData.get(PHASE);
     }

@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ars_nouveau"
+    }
+  ],
+  "type": "ars_nouveau:glyph",
+  "exp": 27,
+  "inputs": [
+    {
+      "item": "khaosnexus:rift_source_shard"
+    },
+    {
+      "item": "minecraft:compass"
+    },
+    {
+      "item": "ars_nouveau:air_essence"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "khaosnexus:glyph_gatesense"
+  }
+}

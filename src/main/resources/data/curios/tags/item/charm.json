@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "khaosnexus:wardens_broken_chain",
+      "required": false
+    },
+    {
+      "id": "khaosnexus:hunters_lucky_coin",
+      "required": false
+    }
+  ]
+}

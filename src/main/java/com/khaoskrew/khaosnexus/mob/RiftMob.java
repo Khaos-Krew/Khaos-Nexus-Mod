@@ -106,9 +106,15 @@ public class RiftMob extends Monster implements GeoEntity {
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         RawAnimation idle = this.anim("idle", true);
         RawAnimation walk = this.anim("walk", true);
-        controllers.add(new AnimationController<>(this, "movement", 6,
-                state -> state.setAndContinue(state.isMoving() ? walk : idle)));
-        AnimationController<RiftMob> action = new AnimationController<>(this, "action", 1, state -> software.bernie.geckolib.animation.PlayState.STOP)
+        boolean boss = this instanceof RiftBoss;
+        RawAnimation idleCombat = boss ? this.anim("idle_combat", true) : idle;
+        RawAnimation walkCombat = boss ? this.anim("walk_combat", true) : walk;
+        // Bosses blend (8 ticks) into weighted combat loops while the weapon is out (Warden) or a target is held (Guardian)
+        controllers.add(new AnimationController<>(this, "movement", boss ? 8 : 6, state -> {
+            boolean armed = this instanceof RiftBoss b && b.inCombatStance();
+            return state.setAndContinue(state.isMoving() ? (armed ? walkCombat : walk) : (armed ? idleCombat : idle));
+        }));
+        AnimationController<RiftMob> action = new AnimationController<>(this, "action", boss ? 3 : 1, state -> software.bernie.geckolib.animation.PlayState.STOP)
                 .triggerableAnim("attack", this.anim("attack", false));
         if (this instanceof RiftBoss) {
             action.triggerableAnim("roar", this.anim("roar", false));

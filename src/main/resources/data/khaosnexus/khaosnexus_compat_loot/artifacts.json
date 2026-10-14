@@ -69,6 +69,30 @@
           }
         }
       }
+    },
+    {
+      "ranks": {
+        "C": 0.03,
+        "B": 0.04,
+        "A": 0.05,
+        "S": 0.06
+      },
+      "stack": {
+        "id": "khaosnexus:hunters_lucky_coin",
+        "components": {
+          "curios:attribute_modifiers": {
+            "modifiers": [
+              {
+                "type": "minecraft:generic.luck",
+                "id": "khaosnexus:hunters_lucky_coin",
+                "amount": 2.0,
+                "operation": "add_value",
+                "slot": "charm"
+              }
+            ]
+          }
+        }
+      }
     }
   ]
 }

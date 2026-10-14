@@ -852,7 +852,85 @@ def anim_set(name, d, rig):
             'head': {'rotation': ([(0, R0), (0.4, [-25, 0, 0]), (0.9, [-25, 0, 0]), (1.2, R0)], True)},
             'chest': {'rotation': ([(0, R0), (0.4, [-10, 0, 0]), (1.2, R0)], True)},
             'root': {'scale': ([(0, [1, 1, 1]), (0.4, [1.05, 1.05, 1.05]), (0.9, [1.05, 1.05, 1.05]), (1.2, [1, 1, 1])], True)}}))
+    if MOBS[name].get('boss'):
+        boss_combat_set(name, A, has)
     write_anims(name, A)
+
+def boss_combat_set(name, A, has):
+    """1.1 animation pass for the two bosses. The old set reused the generic biped idle/walk, so a boss holding a
+    greatsword or halberd swung both arms like a jogger, dropped its draw-ready pose the moment the draw ended, and
+    its chest scale-breathed (armour plates visibly wobbled). This adds weighted combat loops that the movement
+    controller plays while the weapon is out (RiftMob.registerControllers), and calms the unarmed loops."""
+    R0 = [0, 0, 0]
+    sm = lambda pairs: kf(pairs)
+    def loop(period, amp, axis, base, phase=0.0, n=8):
+        return kf(wave(period, amp, axis, n=n, phase=phase, base=base))
+    # calmer unarmed idle: no chest scaling, slower breath, arms hang with a slight bend
+    idle = A['idle']['bones']
+    if 'chest' in idle: idle['chest'] = {'rotation': loop(4.0, 1.6, 0, (0, 0, 0))}
+    for arm, sgn in (('right_arm', 1), ('left_arm', -1)):
+        if arm in idle: idle[arm] = {'rotation': loop(4.0, 1.2, 2, (0, 0, 4 * sgn), phase=0.6)}
+    A['idle']['length'] = 4.0
+    for bn in list(idle):
+        if bn not in ('chest', 'right_arm', 'left_arm') and 'rotation' in idle[bn] and not any(k in bn for k in ('orb', 'sigil')):
+            idle[bn] = {'rotation': loop(4.0, 1.8 if 'cape' not in bn else 3.0, 0, (4 if 'cape' in bn else 0, 0, 0), phase=len(bn))}
+    # heavy unarmed walk: shorter stride, feet plant (shin bends only on the lift), weight dip on each footfall
+    T = 1.5; st = 20
+    W = A['walk']['bones']; A['walk']['length'] = T
+    lift = lambda ph: kf([(T * i / 12, [round(max(0.0, math.sin(2 * math.pi * i / 12 + ph)) ** 2 * 28, 3), 0, 0]) for i in range(13)])
+    W.update({'right_leg': {'rotation': loop(T, st, 0, (0, 0, 0), n=12)}, 'left_leg': {'rotation': loop(T, st, 0, (0, 0, 0), phase=math.pi, n=12)},
+              'right_shin': {'rotation': lift(1.4)}, 'left_shin': {'rotation': lift(1.4 + math.pi)},
+              'hips': {'position': kf([(T * i / 8, [0, round(-0.5 * abs(math.sin(2 * math.pi * i / 8)), 3), 0]) for i in range(9)]), 'rotation': loop(T, 2.5, 1, (0, 0, 0))},
+              'chest': {'rotation': loop(T, 2.5, 1, (5, 0, 0), phase=math.pi)},
+              'head': {'rotation': loop(T, 2, 1, (-3, 0, 0))},
+              'right_arm': {'rotation': loop(T, 12, 0, (0, 0, 3), phase=math.pi)}, 'left_arm': {'rotation': loop(T, 12, 0, (0, 0, -3))}})
+    for c in ('cape1', 'cape2'):
+        if c in W: W[c] = {'rotation': loop(T / 2, 4, 0, (12, 0, 0), phase=0.8, n=4)}
+    # armed guard pose, shared by idle_combat and walk_combat
+    if name == 'rift_warden':
+        # greatsword held low across the body: right hand on the grip, left hand on the pommel, blade angled forward
+        G = {'right_arm': [-40, 0, -10], 'right_forearm': [-30, 0, 0], 'left_arm': [-32, 0, 14], 'left_forearm': [-40, 0, 0],
+             'chest': [6, 8, 0], 'head': [-4, -6, 0], 'torso': [3, 0, 0]}
+    else:
+        # halberd held diagonally in both hands, haft across the chest, blade high on the right
+        # solved by tools/fix_weapon_clip.py (haft through both hands, blade up and out, nothing inside the body)
+        G = {'right_arm': [-45, 0, -30], 'right_forearm': [-30, 0, 0], 'left_arm': [-100, 0, 0], 'left_forearm': [-35, 0, 0],
+             'halberd': [-15, 60, 45], 'chest': [4, -6, 0], 'head': [-2, 6, 0]}
+    def guard(extra_amp, period, axis_wave=0):
+        out = {}
+        for bn, base in G.items():
+            if not has(bn): continue
+            amp = extra_amp * (0.5 if 'forearm' in bn or bn == 'halberd' else 1.0)
+            out[bn] = {'rotation': loop(period, amp, axis_wave, tuple(base), phase=len(bn) * 0.3)}
+        return out
+    IC = guard(1.5, 3.0)
+    IC['right_leg'] = {'rotation': kf([(0, [-8, 0, 2]), (3.0, [-8, 0, 2])], smooth=False)}
+    IC['left_leg'] = {'rotation': kf([(0, [8, 0, -3]), (3.0, [8, 0, -3])], smooth=False)}
+    IC['right_shin'] = {'rotation': kf([(0, [10, 0, 0]), (3.0, [10, 0, 0])], smooth=False)}
+    IC['left_shin'] = {'rotation': kf([(0, [6, 0, 0]), (3.0, [6, 0, 0])], smooth=False)}
+    IC['hips'] = {'position': loop(3.0, 0.3, 1, (0, -0.8, 0))}
+    for c in ('cape1', 'cape2'):
+        if has(c): IC[c] = {'rotation': loop(3.0, 3, 0, (8, 0, 0), phase=1.0)}
+    A['idle_combat'] = dict(loop=True, length=3.0, bones={b: v for b, v in IC.items() if has(b)})
+    T2 = 1.3; st2 = 22
+    WC = guard(3.0, T2, axis_wave=1)  # arms stay on the weapon; only a little shoulder roll with the stride
+    WC.update({'right_leg': {'rotation': loop(T2, st2, 0, (-4, 0, 0), n=12)}, 'left_leg': {'rotation': loop(T2, st2, 0, (-4, 0, 0), phase=math.pi, n=12)},
+               'right_shin': {'rotation': kf([(T2 * i / 12, [round(6 + max(0.0, math.sin(2 * math.pi * i / 12 + 1.4)) ** 2 * 32, 3), 0, 0]) for i in range(13)])},
+               'left_shin': {'rotation': kf([(T2 * i / 12, [round(6 + max(0.0, math.sin(2 * math.pi * i / 12 + 1.4 + math.pi)) ** 2 * 32, 3), 0, 0]) for i in range(13)])},
+               'hips': {'position': kf([(T2 * i / 8, [0, round(-0.9 - 0.6 * abs(math.sin(2 * math.pi * i / 8)), 3), 0]) for i in range(9)]),
+                        'rotation': loop(T2, 4, 1, (0, 0, 0))}})
+    if 'chest' in G: WC['chest'] = {'rotation': loop(T2, 4, 1, tuple(G['chest']), phase=math.pi)}
+    for c in ('cape1', 'cape2'):
+        if has(c): WC[c] = {'rotation': loop(T2 / 2, 6, 0, (20, 0, 0), phase=0.8, n=4)}
+    A['walk_combat'] = dict(loop=True, length=T2, bones={b: v for b, v in WC.items() if has(b)})
+    # draw ends in exactly the guard pose so the hand-off to idle_combat doesn't pop
+    if 'draw' in A:
+        for bn, base in G.items():
+            ch = A['draw']['bones'].get(bn)
+            if ch and 'rotation' in ch:
+                ks = sorted(ch['rotation'], key=float)
+                for k in ks[-2:]:
+                    v = ch['rotation'][k]; (v['post'] if isinstance(v, dict) else v)[:] = list(base)
 
 def write_anims(name, A):
     js = {'format_version': '1.8.0', 'animations': {}}
@@ -961,7 +1039,11 @@ def rift_geo():
     js = {'format_version': '1.8.0', 'animations': {f'animation.nexus_rift.{k}': {'loop': a['loop'], 'animation_length': a['length'], 'bones': a['bones']} for k, a in A.items()}}
     json.dump(js, open(out('animations', 'block', 'nexus_rift.animation.json'), 'w'), indent=1)
 
-if __name__ == '__main__':
+if __name__ == '__main__' and len(sys.argv) > 2 and sys.argv[1] == '--anims':
+    import rigs_v4, rigs_minions, rigs_v5; rigs_v4.install(sys.modules[__name__]); rigs_minions.install(sys.modules[__name__]); rigs_v5.install(sys.modules[__name__])
+    for name in sys.argv[2:]:
+        rig, d = MOBS[name]['rig'](); anim_set(name, d, rig); print(name, 'anims ok')
+elif __name__ == '__main__':
     import rigs_v4, rigs_minions, rigs_v5; rigs_v4.install(sys.modules[__name__]); rigs_minions.install(sys.modules[__name__]); rigs_v5.install(sys.modules[__name__])
     HI = 4  # paint at 4x the in-game density, then Lanczos down
     for name, m in MOBS.items():

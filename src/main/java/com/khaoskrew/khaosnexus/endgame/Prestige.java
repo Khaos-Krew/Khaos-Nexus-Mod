@@ -23,7 +23,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
-/** SS and National hunter ranks, earned by achievements. Stored as endgame "Prestige" (0 none, 1 SS, 2 National). */
+/** SS and Paragon hunter ranks, earned by achievements. Stored as endgame "Prestige" (0 none, 1 SS, 2 Paragon). */
 @EventBusSubscriber(modid = KhaosNexus.MODID)
 public final class Prestige {
     public static final String KEY = "Prestige";

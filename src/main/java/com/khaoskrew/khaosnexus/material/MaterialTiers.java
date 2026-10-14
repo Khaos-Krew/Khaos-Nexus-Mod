@@ -153,7 +153,7 @@ public final class MaterialTiers extends SimpleJsonResourceReloadListener {
     }
 
     /**
-     * Material reward for a cleared gate of this rank: mostly the rank's own tier, sometimes one tier lower,
+     * Material reward for a cleacrimson rift of this rank: mostly the rank's own tier, sometimes one tier lower,
      * rarely one tier higher. Empty when the pack has no material at or below the rank.
      */
     public static List<ItemStack> roll(GateRank rank, RandomSource random) {

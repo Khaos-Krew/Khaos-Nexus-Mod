@@ -49,9 +49,9 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
     private boolean rankAssigned;
     private boolean active;
     private boolean closed;
-    /** Red Gate: locked until cleared, stronger boss, bigger rewards. */
+    /** Crimson Rift: locked until cleared, stronger boss, bigger rewards. */
     private boolean red;
-    /** SS gate: an S gate only SS/National hunters can open, with a stronger boss and an extra modifier. */
+    /** SS gate: an S gate only SS/Paragon hunters can open, with a stronger boss and an extra modifier. */
     private boolean ss;
     /** Set once this gate broke open into the world. */
     private boolean broken;
@@ -136,7 +136,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         return this.broken;
     }
 
-    /** True when this player is inside an active Red Gate's dungeon and may not walk out yet. */
+    /** True when this player is inside an active Crimson Rift's dungeon and may not walk out yet. */
     public static boolean lockedIn(ServerPlayer player) {
         if (!com.khaoskrew.khaosnexus.Config.RED_LOCK.get()) {
             return false;
@@ -225,7 +225,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         return InteractionResult.SUCCESS;
     }
 
-    /** Dungeon break: the ignored gate spills its wave into the world around it. */
+    /** Rift overflow: the ignocrimson rift spills its wave into the world around it. */
     public boolean breakOpen(ServerLevel level) {
         this.broken = true;
         if (!GateArena.spawnWave(level, this)) {

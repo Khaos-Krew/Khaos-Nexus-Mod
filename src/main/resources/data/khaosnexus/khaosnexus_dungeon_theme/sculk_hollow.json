@@ -1,0 +1,63 @@
+{
+  "display_name": {
+    "translate": "theme.khaosnexus.sculk_hollow"
+  },
+  "weight": 6,
+  "min_rank": "A",
+  "max_rank": "S",
+  "biome_weights": [
+    {
+      "biomes": "minecraft:deep_dark",
+      "multiplier": 8.0
+    },
+    {
+      "biomes": "#minecraft:is_mountain",
+      "multiplier": 1.5
+    },
+    {
+      "biomes": "minecraft:dripstone_caves",
+      "multiplier": 3.0
+    }
+  ],
+  "palette": {
+    "minecraft:polished_blackstone_bricks": "minecraft:deepslate_bricks",
+    "minecraft:cracked_polished_blackstone_bricks": "minecraft:cracked_deepslate_bricks",
+    "minecraft:chiseled_polished_blackstone": "minecraft:chiseled_deepslate",
+    "minecraft:gilded_blackstone": "minecraft:reinforced_deepslate",
+    "minecraft:deepslate_tiles": "minecraft:sculk",
+    "minecraft:cracked_deepslate_tiles": "minecraft:cracked_deepslate_tiles",
+    "minecraft:deepslate_bricks": "minecraft:polished_deepslate",
+    "minecraft:obsidian": "minecraft:sculk",
+    "minecraft:crying_obsidian": "minecraft:sculk_catalyst",
+    "minecraft:amethyst_block": "minecraft:ochre_froglight",
+    "minecraft:amethyst_cluster": "minecraft:small_amethyst_bud",
+    "minecraft:purple_stained_glass": "minecraft:black_stained_glass",
+    "minecraft:magma_block": "minecraft:sculk",
+    "minecraft:polished_blackstone_pressure_plate": "minecraft:polished_blackstone_pressure_plate"
+  },
+  "decor": [
+    {
+      "block": "minecraft:sculk_vein",
+      "on": "floor",
+      "chance": 0.06
+    },
+    {
+      "block": "minecraft:soul_lantern",
+      "on": "floor",
+      "chance": 0.006
+    },
+    {
+      "block": "minecraft:cobweb",
+      "on": "ceiling",
+      "chance": 0.02
+    }
+  ],
+  "hazards": [
+    {
+      "type": "khaosnexus:void"
+    },
+    {
+      "type": "khaosnexus:chill"
+    }
+  ]
+}

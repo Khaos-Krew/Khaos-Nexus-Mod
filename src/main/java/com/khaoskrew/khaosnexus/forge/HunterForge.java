@@ -49,7 +49,7 @@ public final class HunterForge {
         event.addListener(new ForgeRecipes());
     }
 
-    /** Essence for every cleared gate, cores from C rank up. */
+    /** Essence for every cleacrimson rift, cores from C rank up. */
     public static void addRewards(GateRank rank, RandomSource random, List<ItemStack> out) {
         out.add(new ItemStack(RIFT_ESSENCE.get(), 1 + rank.ordinal() + random.nextInt(2)));
         if (rank.ordinal() >= GateRank.C.ordinal() && random.nextFloat() < 0.25F + 0.15F * (rank.ordinal() - 2)) {

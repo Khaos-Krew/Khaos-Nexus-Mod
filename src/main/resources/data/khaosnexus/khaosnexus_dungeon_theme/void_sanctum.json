@@ -1,0 +1,55 @@
+{
+  "display_name": {
+    "translate": "theme.khaosnexus.void_sanctum"
+  },
+  "weight": 7,
+  "min_rank": "B",
+  "max_rank": "S",
+  "biome_weights": [
+    {
+      "biomes": "#c:is_end",
+      "multiplier": 6.0
+    },
+    {
+      "biomes": "#minecraft:is_mountain",
+      "multiplier": 1.5
+    },
+    {
+      "biomes": "#c:is_cold",
+      "multiplier": 1.2
+    }
+  ],
+  "palette": {
+    "minecraft:polished_blackstone_bricks": "minecraft:end_stone_bricks",
+    "minecraft:cracked_polished_blackstone_bricks": "minecraft:end_stone",
+    "minecraft:chiseled_polished_blackstone": "minecraft:purpur_pillar",
+    "minecraft:gilded_blackstone": "minecraft:purpur_block",
+    "minecraft:deepslate_tiles": "minecraft:obsidian",
+    "minecraft:cracked_deepslate_tiles": "minecraft:crying_obsidian",
+    "minecraft:deepslate_bricks": "minecraft:end_stone_bricks",
+    "minecraft:obsidian": "minecraft:obsidian",
+    "minecraft:crying_obsidian": "minecraft:end_rod",
+    "minecraft:amethyst_block": "minecraft:amethyst_block",
+    "minecraft:amethyst_cluster": "minecraft:amethyst_cluster",
+    "minecraft:purple_stained_glass": "minecraft:magenta_stained_glass",
+    "minecraft:magma_block": "minecraft:crying_obsidian",
+    "minecraft:polished_blackstone_pressure_plate": "minecraft:polished_blackstone_pressure_plate"
+  },
+  "decor": [
+    {
+      "block": "minecraft:end_rod",
+      "on": "floor",
+      "chance": 0.008
+    },
+    {
+      "block": "minecraft:chain",
+      "on": "ceiling",
+      "chance": 0.02
+    }
+  ],
+  "hazards": [
+    {
+      "type": "khaosnexus:void"
+    }
+  ]
+}

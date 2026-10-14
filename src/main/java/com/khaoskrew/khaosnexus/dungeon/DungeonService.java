@@ -152,6 +152,7 @@ public final class DungeonService {
         }
         if (theme != null) {
             DungeonThemes.apply(level, theme, box, random);
+            ThemeHazards.track(level, box, theme);
         }
         BlockPos spawn = null;
         BlockPos boss = null;

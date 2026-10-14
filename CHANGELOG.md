@@ -1,5 +1,39 @@
 # Changelog
 
+## 1.1.0 (unreleased)
+
+The 1.1 update turns on the endgame that 1.0 shipped switched off, and adds companion-mod content, a boss animation pass and new dungeon themes. Everything can still be tuned in `khaosnexus-server.toml` and through datapacks.
+
+### Original naming pass
+- Renamed borrowed-sounding terms to Khaos Nexus originals (display text only, saves and config keys unchanged): Red Gate → **Crimson Rift**, dungeon break → **rift overflow**, National rank → **Paragon**, Second Awakening → **Ascension**, Shadow Monarch's Step → **Nightveil Step**, Monarch tome tier → **Paragon**.
+- The awakening id `assassin_monarch` is now `assassin_nightveil`; existing choices migrate automatically.
+
+### Endgame, now on by default
+- **Boss rush** (`/khaosnexus bossrush start`, S rank): a timed chain of 5 bosses with one heal after the 3rd. Cataclysm bosses in the roster now get the same health and damage tuning they use in gates (`modBossScale`), so a rush is tough but never a one-shot. Missing mods' bosses are skipped.
+- **Challenge gates:** monthly authored encounters (Iron Wall, Shadow Run, Void Choir, Warden's Trial), one life per attempt, 3 attempts a month.
+- **Ascension:** a one-time quest after Paragon rank (3 SS clears, Spire floor 12, 5 boss rush wins) that unlocks an awakened ability per class (16 options).
+- **Group raids:** multi-phase raid bosses (Rift Sovereign, Abyssal Colossus) with tank aggro and Lifebinder cleanses. The minimum party is now **2** (was 4) so smaller servers can raid; boss health still grows per hunter.
+- Turn any of them off with `bossRush`, `challengeGates`, `secondAwakening` or `groupRaids` in `[endgame]`.
+
+### Companion-mod content (optional, only when the mod is installed)
+- **Ars Nouveau:** new **Gatesense** glyph. It names the nearest open gate's rank, distance and direction and draws a short trail toward it (Amplify/AOE widens the search). Recipe: Rift Source Shard, compass, air essence.
+- **Apotheosis:** 8 **class gems** (Bulwark, Shadowfang, Arcanum, Hawkeye, Lifethread, Bloodrage, Legion, Phylactery), found in B–S gate chests.
+- **Artifacts:** boss trophies that counter their boss. **Warden's Broken Chain** (the Rift Warden's hits deal 25% less and can't slow you) and **Guardian's Plume** (the Spire Guardian can't knock you back) each drop 20% of the time. New **Hunter's Lucky Coin** charm (+2 Luck) in C–S gate chests.
+- The 1.0 compat items keep their stats; all compat item art (1.0 and 1.1) was redrawn to the boss-art standard.
+- **Hunter Tomes (Ars Nouveau):** an Ars spell book for the casting classes (Caster, Lifebinder, Summoner, Necromancer) that **evolves with your hunter rank** through 7 tiers: E, D, C, B, A, S and Paragon (SS/Paragon). Each tier raises spell slots (3 → 10), the glyph tier it allows (1 → 3) and its source discount per cast (0 → 40). Evolution happens automatically on rank-up and keeps every inscribed spell, name and colour. From C up the tome unlocks a class attunement: Caster +8–30% spell damage, Summoner double that against rift creatures, Necromancer spell lifesteal, Lifebinder heals nearby allies when casting. Other classes can't open or cast it. Craft: Novice Spell Book + Rift Core + Rift Essence + Rift Source Shard.
+
+
+### Boss animations
+- The Rift Warden and the Spire Guardian have new **combat idle and walk loops**. With the weapon drawn, the Warden holds the greatsword in a low guard and the Guardian carries the halberd two-handed across its body, instead of swinging their arms like they were jogging.
+- The Warden's draw now ends exactly in the guard pose, so there's no snap when it finishes.
+- The Guardian now carries the halberd two-handed on a diagonal, blade up and out to the side. Every Guardian and Warden animation was checked frame by frame so the halberd and greatsword never pass through the head, neck or body.
+- Heavier unarmed walk (shorter stride, feet plant, weight dips on each step), no more armour "breathing" wobble, and smoother blends into and out of attacks.
+
+### Dungeons
+- Four new themes: **Scorched Forge** (nether, badlands, desert; D+), **Sunken Temple** (ocean, beach, swamp; C+), **Void Sanctum** (B+), **Sculk Hollow** (deep dark; A+).
+- With Mowzie's Mobs installed: **Wroughtnaut Forge Hall** (B+) and **Frostmaw Den** (A+).
+- **Theme hazards are now on** and mild, pulsing every 5 seconds: chill (Slowness I), heat (Hunger I, Fire Resistance ignores it), damp (Mining Fatigue I), void (brief Darkness) and spores (Weakness I, Overgrown Ruin). A lit campfire, torch or lantern within 3 blocks keeps the chill and the damp off. Turn them off with `dungeonThemeHazards`.
+
 ## 1.0.0 (2026-10-14)
 
 The first full release. Everything below is new since 0.1.2-beta and can be tuned in the server config (`[endgame]` and `[spire]`) and through datapack folders.
@@ -22,21 +56,21 @@ The first full release. Everything below is new since 0.1.2-beta and can be tune
 
 ### Post-S endgame
 - **Weekly modifiers** for A and S gates, with bonus XP and Rift Cores. See `/khaosnexus weekly`.
-- **Red Gates:** rare, locked until cleared, with a stronger boss, double XP, bonus cores and a title.
-- **Dungeon breaks:** gates left uncleared too long spill their mobs into the world.
+- **Crimson Rifts:** rare, locked until cleared, with a stronger boss, double XP, bonus cores and a title.
+- **Rift overflows:** gates left uncleared too long spill their mobs into the world.
 - **Leaderboards:** `/khaosnexus top`.
 - **Auras:** cosmetic particle auras unlocked by achievements. See `/khaosnexus aura`. They also show on the Hunter Card.
 - **Class mastery:** XP earned at S rank fills a mastery track per class, levels 1–50, spent on sidegrade perks. See `/khaosnexus mastery`.
-- **SS and National ranks:** earned by achievements. They grant a title, an aura and bonus skill points, and SS hunters can open **SS gates**. See `/khaosnexus prestige`.
+- **SS and Paragon ranks:** earned by achievements. They grant a title, an aura and bonus skill points, and SS hunters can open **SS gates**. See `/khaosnexus prestige`.
 - Bosses tuned past vanilla's 1024 max health now take proportionally less damage, so their full health still counts.
 
 ### Hunter Card
-- The rank line shows SS or National rank when you have one, in its own colour.
+- The rank line shows SS or Paragon rank when you have one, in its own colour.
 - The Spire line shows floor, level and floors cleared.
 - The equipped aura is shown.
 
 ### Coming in 1.1 (included, off by default)
-Boss rush, monthly challenge gates, Second Awakening and 8-player group raids are in the jar but switched off. Server owners can try them with the `bossRush`, `challengeGates`, `secondAwakening` and `groupRaids` toggles.
+Boss rush, monthly challenge gates, Ascension and 8-player group raids are in the jar but switched off. Server owners can try them with the `bossRush`, `challengeGates`, `secondAwakening` and `groupRaids` toggles.
 
 ### Defaults changed
 - `[spire] checkpointInterval` is now 1 (every floor town is a checkpoint). Existing config files keep their saved value.

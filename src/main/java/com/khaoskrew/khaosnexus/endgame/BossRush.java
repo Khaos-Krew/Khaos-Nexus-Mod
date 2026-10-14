@@ -215,7 +215,15 @@ public final class BossRush {
         run.nextSpawn = -1;
         for (int i = 0; i < group.size(); i++) {
             int dx = group.size() == 1 ? 0 : (i % 5 - 2) * 3;
-            Mob boss = GateArena.spawnMob(level, GateRank.S, group.get(i), run.origin.offset(dx, 0, 6 + i / 5 * 2), 180.0F, run.healthScale, group.size() == 1);
+            EntityType<?> t = group.get(i);
+            String ns = BuiltInRegistries.ENTITY_TYPE.getKey(t).getNamespace();
+            boolean modded = !ns.equals(com.khaoskrew.khaosnexus.KhaosNexus.MODID) && !ns.equals("minecraft");
+            double hs = run.healthScale * (modded ? com.khaoskrew.khaosnexus.compat.ModBossTuning.healthScale(t) : 1.0D);
+            Mob boss = GateArena.spawnMob(level, GateRank.S, t, run.origin.offset(dx, 0, 6 + i / 5 * 2), 180.0F, hs, group.size() == 1);
+            if (boss != null && modded) {
+                com.khaoskrew.khaosnexus.compat.CompatPools.wake(boss);
+                com.khaoskrew.khaosnexus.compat.ModBossTuning.setUp(boss, GateRank.S, level.getGameTime());
+            }
             if (boss != null) {
                 boss.getPersistentData().putUUID(TAG, run.id);
                 boss.setCustomName(Component.translatable(run.label, run.stage + 1, run.size(), boss.getType().getDescription()));

@@ -1,0 +1,35 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "apotheosis"
+    }
+  ],
+  "type": "apotheosis:gem",
+  "weights": {
+    "weight": 0,
+    "quality": 0.0
+  },
+  "bonuses": [
+    {
+      "type": "apotheosis:attribute",
+      "attribute": "minecraft:generic.attack_damage",
+      "gem_class": {
+        "key": "light_weapon",
+        "types": [
+          "apotheosis:melee_weapon",
+          "apotheosis:trident"
+        ]
+      },
+      "operation": "add_multiplied_base",
+      "values": {
+        "cracked": 0.04,
+        "chipped": 0.06,
+        "flawed": 0.08,
+        "normal": 0.1,
+        "flawless": 0.12,
+        "perfect": 0.15
+      }
+    }
+  ]
+}

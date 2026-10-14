@@ -135,6 +135,58 @@ def band():
     shade(img, ring, STEEL)
     g = gem(RIFT, facets=6, r=6, cx=16, cy=9); img = Image.alpha_composite(img, g); return img
 
+
+def glyph_sense():
+    img = glyph(); px = img.load()
+    for y in range(N):  # recolour the tear teal and add a compass needle
+        for x in range(N):
+            r, g, b, a = px[x, y]
+            if a and r > g + 60: px[x, y] = ramp(TEAL, (r / 255.0)) + (255,)
+    for i in range(-8, 9):
+        px[16 + i // 3, 16 - i] = (GOLD[4] if i > 0 else STEEL[4]) + (255,)
+    return img
+
+def chain():
+    img = new()
+    for k, (cx, cy) in enumerate(((9, 9), (14, 14), (19, 19), (24, 24))):
+        def link(x, y, cx=cx, cy=cy, k=k):
+            dx, dy = x - cx, y - cy
+            if k % 2: dx, dy = dy * 0.6 + dx * 0.4, dy
+            d = math.hypot(dx / 4.5, dy / 3.0)
+            if 0.55 < d < 1.0: return (dx / 5, dy / 5)
+            return None
+        l = new(); shade(l, link, STEEL); img = Image.alpha_composite(img, l)
+    px = img.load()
+    for x, y in ((26, 26), (27, 27), (27, 25), (25, 28)): px[x, y] = RIFT[4] + (255,)  # broken, glowing end
+    return img
+
+def plume():
+    img = new()
+    def f(x, y):
+        u = (x - 16) - (y - 16) * 0.55; t = (y - 4) / 24.0
+        if not (0 <= t <= 1): return None
+        w = 6 * math.sin(math.pi * min(1, t * 1.15))
+        if abs(u) > w: return None
+        return (-0.7, -0.2) if u < 0 else (0.6, 0.3)
+    shade(img, f, VOID)
+    px = img.load()
+    for y in range(6, 29): px[int(16 + (y - 16) * 0.55), y] = GOLD[4] + (255,)
+    return img
+
+def coin():
+    img = new()
+    def m(x, y):
+        dx, dy = (x - 16) / 11.0, (y - 16) / 11.0; d = math.hypot(dx, dy)
+        if d > 1: return None
+        return (dx, dy) if d > 0.78 else (-0.3, -0.3)
+    shade(img, m, GOLD); px = img.load()
+    for i in range(-4, 5): px[16 + i // 2, 16 + i] = GOLD[1] + (255,); px[16 - i // 2 + 1, 16 + i] = GOLD[1] + (255,)
+    spec(img, [(11, 9), (12, 9), (10, 10)]); return img
+
+CLASS_PALS = {'bulwark': STEEL, 'shadowfang': VOID, 'arcanum': TEAL, 'hawkeye': [(10, 30, 10), (24, 70, 24), (40, 120, 40), (80, 176, 70), (150, 226, 120), (230, 255, 210)],
+              'lifethread': [(30, 20, 10), (90, 60, 20), (170, 130, 40), (230, 200, 90), (255, 240, 170), (255, 255, 240)], 'bloodrage': RIFT, 'legion': GOLD,
+              'phylactery': [(10, 20, 14), (20, 50, 34), (40, 90, 60), (90, 150, 110), (160, 210, 170), (230, 255, 236)]}
+
 def save(img, name):
     p = os.path.join(OUT, name + '.png'); os.makedirs(os.path.dirname(p), exist_ok=True); img.save(p)
 
@@ -143,3 +195,5 @@ if __name__ == '__main__':
     save(lantern(), 'rift_lantern'); save(anklet(), 'voidstep_anklet'); save(band(), 'gatebreaker_band')
     save(gem(RIFT, 6), 'gems/riftheart'); save(gem(VOID, 8, rot=0.2), 'gems/voidglass'); save(gem(GOLD, 5, rot=-math.pi / 2), 'gems/gatekeeper')
     print('ok')
+    save(glyph_sense(), 'glyph_gatesense'); save(chain(), 'wardens_broken_chain'); save(plume(), 'guardians_plume'); save(coin(), 'hunters_lucky_coin')
+    for i, (n, pal) in enumerate(CLASS_PALS.items()): save(gem(pal, (4, 5, 6, 7, 8)[i % 5], r=10, rot=i * 0.4), 'gems/' + n)

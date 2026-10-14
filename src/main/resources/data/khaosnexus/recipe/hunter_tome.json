@@ -1,0 +1,28 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ars_nouveau"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:novice_spell_book"
+    },
+    {
+      "item": "khaosnexus:rift_core"
+    },
+    {
+      "item": "khaosnexus:rift_essence"
+    },
+    {
+      "item": "khaosnexus:rift_source_shard"
+    }
+  ],
+  "result": {
+    "id": "khaosnexus:hunter_tome_e",
+    "count": 1
+  }
+}

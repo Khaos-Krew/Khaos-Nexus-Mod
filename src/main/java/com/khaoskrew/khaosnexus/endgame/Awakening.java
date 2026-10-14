@@ -30,7 +30,7 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 
 /**
- * Second Awakening. Quest steps come from awakeningSteps; options are datapack files with "class", "cooldown_seconds",
+ * Ascension. Quest steps come from awakeningSteps; options are datapack files with "class", "cooldown_seconds",
  * "self_effects", "enemy_effects" ([{id, amplifier, seconds}]), "radius", "damage", "heal_allies" and "particle".
  * Endgame keys: AwakenDone (quest finished), Awakening (chosen option id), AwakenReady (cooldown game time).
  */
@@ -99,7 +99,7 @@ public final class Awakening {
         if (!Config.AWAKENING.get()) {
             return "khaosnexus.awaken.disabled";
         }
-        if (!p.endgame.getString(CHOICE).isEmpty()) {
+        if (!choice(p).isEmpty()) {
             return "khaosnexus.awaken.already";
         }
         if (!missing(p).isEmpty()) {
@@ -145,13 +145,23 @@ public final class Awakening {
     }
 
     public static boolean has(Player player) {
-        return Config.AWAKENING.get() && !HunterRanks.profile(player).endgame.getString(CHOICE).isEmpty();
+        return Config.AWAKENING.get() && !choice(HunterRanks.profile(player)).isEmpty();
+    }
+
+    /** Saved choice, migrating ids renamed in 1.1 (assassin_monarch -> assassin_nightveil) so old worlds keep their ability. */
+    static String choice(HunterProfile p) {
+        String c = p.endgame.getString(CHOICE);
+        if ("khaosnexus:assassin_monarch".equals(c)) {
+            c = "khaosnexus:assassin_nightveil";
+            p.endgame.putString(CHOICE, c);
+        }
+        return c;
     }
 
     /** Casts the awakened ability. Returns false when on cooldown or not unlocked. */
     public static boolean cast(ServerPlayer player) {
         HunterProfile p = HunterRanks.profile(player);
-        String choice = p.endgame.getString(CHOICE);
+        String choice = choice(p);
         JsonObject o = choice.isEmpty() ? null : JsonPool.AWAKENINGS.get(ResourceLocation.parse(choice));
         if (o == null || !Config.AWAKENING.get()) {
             return false;
@@ -205,7 +215,7 @@ public final class Awakening {
     }
 
     public static Component status(HunterProfile p) {
-        String choice = p.endgame.getString(CHOICE);
+        String choice = choice(p);
         if (!choice.isEmpty()) {
             return Component.translatable("khaosnexus.awaken.chosen", name(ResourceLocation.parse(choice)));
         }

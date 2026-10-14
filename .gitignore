@@ -40,3 +40,4 @@ repo/
 !**/src/**/repo/
 run-compat/
 run-compat-test/
+tools/__pycache__/

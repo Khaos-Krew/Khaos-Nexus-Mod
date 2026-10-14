@@ -8,5 +8,6 @@ final class ArsCompat {
 
     static void init() {
         GlyphRegistry.registerSpell(RiftRendEffect.INSTANCE);
+        GlyphRegistry.registerSpell(GatesenseEffect.INSTANCE);
     }
 }
