@@ -68,6 +68,12 @@ public class RiftMobRenderer extends GeoEntityRenderer<RiftMob> {
         return super.getPackedOverlay(mob, u, partialTick);
     }
 
+    /** The Hollow Crown bosses play a death animation instead of the vanilla tip-over. */
+    @Override
+    protected float getDeathMaxRotation(RiftMob mob) {
+        return mob.isSagaBoss() ? 0.0F : super.getDeathMaxRotation(mob);
+    }
+
     /** 0..1 attack flare for the Void Caster's orb, driven by the synced melee swing. */
     static float flare(RiftMob mob, float partialTick) {
         if (mob.getType() != com.khaoskrew.khaosnexus.mob.ModEntities.VOID_CASTER.get()) {
@@ -81,6 +87,7 @@ public class RiftMobRenderer extends GeoEntityRenderer<RiftMob> {
     public RenderType getRenderType(RiftMob mob, ResourceLocation texture, MultiBufferSource buffer, float partialTick) {
         // The Rift Phantom's smoke tails are translucent; everything else is cutout.
         return mob.getType() == com.khaoskrew.khaosnexus.mob.ModEntities.RIFT_STALKER.get()
+                || mob.getType() == com.khaoskrew.khaosnexus.mob.ModEntities.VAELITH.get()
                 ? RenderType.entityTranslucent(texture) : RenderType.entityCutoutNoCull(texture);
     }
 

@@ -1,3 +1,5 @@
+"""SUPERSEDED by rigs_saga2.py (1.2 v2 rework). Kept for reference; do not run, it would overwrite the v2 assets."""
+import sys; sys.exit("use rigs_saga2.py") if __name__ == "__main__" else None
 """1.2 Hollow Crown bosses (GeckoLib, same pipeline as the 1.1 bosses: 4x paint -> Lanczos -> unsharp, lossless PNG).
 - Vaelith, the Glass Choir: a floating crystal conductor. Glass-shard skirt instead of legs, a crown of crystal spines,
   four singing masks orbiting on a choir ring, a crystal baton in each hand.

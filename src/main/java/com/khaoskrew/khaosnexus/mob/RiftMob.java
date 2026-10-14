@@ -34,6 +34,8 @@ public class RiftMob extends Monster implements GeoEntity {
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
     private final String animPrefix;
     private static final EntityDataAccessor<Integer> RANK = SynchedEntityData.defineId(RiftMob.class, EntityDataSerializers.INT);
+    /** Screenshot/clip-review hook: when set (NBT "DebugPose"), the model holds the baked freeze_<name> pose. Empty in normal play. */
+    private static final EntityDataAccessor<String> DEBUG_POSE = SynchedEntityData.defineId(RiftMob.class, EntityDataSerializers.STRING);
 
     public RiftMob(EntityType<? extends RiftMob> type, Level level) {
         super(type, level);
@@ -54,6 +56,7 @@ public class RiftMob extends Monster implements GeoEntity {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(RANK, -1);
+        builder.define(DEBUG_POSE, "");
     }
 
     @Override
@@ -87,6 +90,32 @@ public class RiftMob extends Monster implements GeoEntity {
         if (rank != null) {
             tag.putString("GateRank", rank.name());
         }
+        if (!this.getDebugPose().isEmpty()) tag.putString("DebugPose", this.getDebugPose());
+    }
+
+    public String getDebugPose() {
+        return this.entityData.get(DEBUG_POSE);
+    }
+
+    /** True for the Hollow Crown bosses, which have a death animation and a longer death. */
+    public boolean isSagaBoss() {
+        return this.getType() == ModEntities.VAELITH.get() || this.getType() == ModEntities.FALLEN_HIEROPHANT.get();
+    }
+
+    @Override
+    public void die(net.minecraft.world.damagesource.DamageSource source) {
+        super.die(source);
+        if (this.isSagaBoss() && !this.level().isClientSide) this.triggerAnim("action", "death");
+    }
+
+    @Override
+    protected void tickDeath() {
+        if (!this.isSagaBoss()) { super.tickDeath(); return; }
+        ++this.deathTime;
+        if (this.deathTime >= 50 && !this.level().isClientSide() && !this.isRemoved()) {
+            this.level().broadcastEntityEvent(this, (byte) 60);
+            this.remove(Entity.RemovalReason.KILLED);
+        }
     }
 
     @Override
@@ -95,6 +124,7 @@ public class RiftMob extends Monster implements GeoEntity {
         if (tag.contains("GateRank")) {
             this.setGateRank(GateRank.byName(tag.getString("GateRank")));
         }
+        if (tag.contains("DebugPose")) this.entityData.set(DEBUG_POSE, tag.getString("DebugPose"));
     }
 
     protected RawAnimation anim(String name, boolean loop) {
@@ -124,9 +154,16 @@ public class RiftMob extends Monster implements GeoEntity {
             } else {
                 action.triggerableAnim("spin", this.anim("spin", false)).triggerableAnim("sweep", this.anim("sweep", false)).triggerableAnim("barrier", this.anim("barrier", false));
                 if ("animation.vaelith.".equals(this.animPrefix)) action.triggerableAnim("volley", this.anim("volley", false));
+                if (this.isSagaBoss()) action.triggerableAnim("death", this.anim("death", false));
             }
         }
         controllers.add(action);
+        if (this.isSagaBoss()) {   // last controller wins: a frozen review pose overrides movement and action
+            controllers.add(new AnimationController<>(this, "debug_pose", 0, state -> {
+                String pose = this.getDebugPose();
+                return pose.isEmpty() ? software.bernie.geckolib.animation.PlayState.STOP : state.setAndContinue(this.anim("freeze_" + pose, true));
+            }));
+        }
     }
 
     @Override
