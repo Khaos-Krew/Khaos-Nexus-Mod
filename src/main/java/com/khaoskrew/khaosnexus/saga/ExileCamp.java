@@ -62,7 +62,7 @@ public final class ExileCamp {
         if (d <= 9) return (r < 20 ? Blocks.POLISHED_BLACKSTONE_BRICKS : r < 30 ? Blocks.CRACKED_POLISHED_BLACKSTONE_BRICKS : Blocks.DEEPSLATE_TILES).defaultBlockState();
         if (Math.abs(x) <= 1 || Math.abs(z) <= 1) return Blocks.POLISHED_DEEPSLATE.defaultBlockState(); // paths
         if (d > radius - 3 && r < 50) return Blocks.TUFF.defaultBlockState();
-        return (r < 25 ? Blocks.SOUL_SOIL : r < 45 ? Blocks.CRIMSON_NYLIUM : r < 60 ? Blocks.COARSE_DIRT : r < 75 ? Blocks.DEEPSLATE : Blocks.TUFF).defaultBlockState();
+        return (r < 20 ? Blocks.SOUL_SOIL : r < 32 ? Blocks.CRIMSON_NYLIUM : r < 60 ? Blocks.COARSE_DIRT : r < 75 ? Blocks.DEEPSLATE : Blocks.TUFF).defaultBlockState();
     }
 
     public static void build(ServerLevel l, BlockPos o) {
@@ -78,7 +78,7 @@ public final class ExileCamp {
         for (int[] p : new int[][] {{-4, 12}, {4, 12}, {-4, -12}, {4, -12}, {-11, 0}, {11, 0}, {-19, -1}, {19, 1}}) post(l, o.offset(p[0], 0, p[1]));
         sealArch(l, o.offset(0, 0, -17));
         exitDais(l, o.offset(0, 0, 16));
-        throne(l, o.offset(0, 8, -52));
+        throne(l, o.offset(0, 6, -46));
         // vendors on the plaza (same spots as Spire towns)
         SpireVendors.spawn(l, o, 50, GateRank.S);
     }
@@ -87,7 +87,7 @@ public final class ExileCamp {
         for (int x = -RADIUS; x <= RADIUS; x++) for (int z = -RADIUS; z <= RADIUS; z++) {
             BlockPos g = o.offset(x, -1, z); BlockState s = l.getBlockState(g); int r = h(x * 11, z * 7);
             if (s.is(Blocks.CRIMSON_NYLIUM) && r < 30) set(l, g.above(), (r < 18 ? Blocks.CRIMSON_ROOTS : Blocks.CRIMSON_FUNGUS).defaultBlockState());
-            else if (s.is(Blocks.SOUL_SOIL) && r < 6) set(l, g.above(), Blocks.SOUL_FIRE.defaultBlockState());
+            else if (s.is(Blocks.SOUL_SOIL) && r < 1) set(l, g.above(), Blocks.SOUL_FIRE.defaultBlockState());
             else if (s.is(Blocks.COARSE_DIRT) && r < 10) set(l, g.above(), Blocks.DEAD_BUSH.defaultBlockState());
             else if (s.is(Blocks.TUFF) && r < 3) { set(l, g.above(), Blocks.AMETHYST_CLUSTER.defaultBlockState()); }
         }
@@ -137,10 +137,10 @@ public final class ExileCamp {
             set(l, c.offset(x, y - 1, 0), (Math.abs(x) <= 1 ? Blocks.CRYING_OBSIDIAN : Blocks.BLACKSTONE).defaultBlockState());
         }
         set(l, c.offset(0, 10, 0), Blocks.GILDED_BLACKSTONE.defaultBlockState());
-        for (int y = 2; y <= 9; y++) for (int x = -3; x <= 3; x++) if (Math.abs(x) == 3 || y == 9) set(l, c.offset(x, y, 0), Blocks.PURPLE_STAINED_GLASS_PANE.defaultBlockState());
+        for (int x : new int[] {-3, 3}) for (int y = 4; y <= 9; y++) set(l, c.offset(x, y, 0), Blocks.CHAIN.defaultBlockState()); // broken seal chains
         set(l, c.offset(0, 1, 0), ModRegistries.SEAL_GATE.get().defaultBlockState());
         set(l, c.offset(0, 0, 0), Blocks.CHISELED_POLISHED_BLACKSTONE.defaultBlockState());
-        for (int x : new int[] {-2, 2}) { set(l, c.offset(x, 0, 1), Blocks.SOUL_CAMPFIRE.defaultBlockState()); }
+        for (int x : new int[] {-2, 2}) { set(l, c.offset(x, 0, 1), Blocks.POLISHED_BLACKSTONE_WALL.defaultBlockState()); set(l, c.offset(x, 1, 1), Blocks.SOUL_LANTERN.defaultBlockState()); }
         // rubble from the broken pillar
         for (int[] r : new int[][] {{6, 0, 2}, {7, 0, 1}, {6, 1, 1}, {8, 0, 3}}) set(l, c.offset(r[0], r[1], r[2]), Blocks.CRACKED_POLISHED_BLACKSTONE_BRICKS.defaultBlockState());
     }
