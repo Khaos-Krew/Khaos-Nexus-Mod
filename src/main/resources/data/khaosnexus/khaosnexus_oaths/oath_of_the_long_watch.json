@@ -5,7 +5,7 @@
     "+10% projectile damage beyond 16 blocks, -10% within 6",
     "Standing still 2s: +8% crit",
     "Marked targets glow for the party",
-    "Ultimate: piercing volley"
+    "Ultimate: 3-arrow volley on hit (45s cd)"
   ],
   "node_cost": [
     1,

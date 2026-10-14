@@ -4,8 +4,8 @@
   "nodes": [
     "+8% attack speed, -6% armor",
     "Crits mark targets (+5% damage taken)",
-    "Kills refund 10% of ability cooldown",
-    "Ultimate: 6s bleed flurry"
+    "Kills refund 10% of ability cooldowns",
+    "Ultimate: 6s flurry on crit, hits bleed (60s cd)"
   ],
   "node_cost": [
     1,

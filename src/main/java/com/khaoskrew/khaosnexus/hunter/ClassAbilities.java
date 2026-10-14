@@ -67,6 +67,7 @@ public final class ClassAbilities {
         com.khaoskrew.khaosnexus.endgame.GroupRaids.onAbility(player, hunterClass);
         AbilityVfx.play(player, level, hunterClass, primary);
         int cooldown = (int) Math.round((primary ? Config.ABILITY_COOLDOWN.get() : Config.ABILITY_ALT_COOLDOWN.get()) * SkillService.mult(player, primary, Stat.COOLDOWN));
+        cooldown = com.khaoskrew.khaosnexus.saga.OathEffects.onCast(player, cooldown);
         if (primary) {
             profile.abilityReady = now + cooldown;
         } else {

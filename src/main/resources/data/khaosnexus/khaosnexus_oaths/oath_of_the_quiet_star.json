@@ -3,9 +3,9 @@
   "role": "caster",
   "nodes": [
     "+10% spell power, -8% max health",
-    "Spells under 3 mana cost 25% less",
-    "Every 5th spell echoes at 40%",
-    "Ultimate: starfall zone"
+    "Ability cooldowns 25% shorter",
+    "Every 5th cast echoes a 40% arcane burst",
+    "Ultimate: starfall zone on cast (45s cd)"
   ],
   "node_cost": [
     1,
