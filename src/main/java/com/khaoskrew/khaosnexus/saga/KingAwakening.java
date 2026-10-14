@@ -62,7 +62,7 @@ public final class KingAwakening {
         l.sendParticles(net.minecraft.core.particles.ParticleTypes.END_ROD, target.getX(), target.getY() + 4.0D, target.getZ(), 16, 0.1, 2.0, 0.1, 0.02);
         l.sendParticles(new net.minecraft.core.particles.BlockParticleOption(net.minecraft.core.particles.ParticleTypes.BLOCK,
                 net.minecraft.world.level.block.Blocks.GOLD_BLOCK.defaultBlockState()), target.getX(), target.getY() + 0.2D, target.getZ(), 24, 0.8, 0.1, 0.8, 0.2);
-        l.playSound(null, target.blockPosition(), net.minecraft.sounds.SoundEvents.AMETHYST_CLUSTER_BREAK, net.minecraft.sounds.SoundSource.PLAYERS, 0.8F, 1.3F);
+        l.playSound(null, target.blockPosition(), ModSounds.SHARD_STRIKE.get(), net.minecraft.sounds.SoundSource.PLAYERS, 0.8F, 1.3F);
         p.getCooldowns().addCooldown(w.getItem(), 60);
     }
 }

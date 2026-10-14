@@ -103,6 +103,7 @@ public final class HollowThrone {
     @SubscribeEvent
     public static void onKingDeath(LivingDeathEvent event) {
         if (!(event.getEntity() instanceof Mob mob) || !mob.getTags().contains(KING_TAG) || !(mob.level() instanceof ServerLevel l)) return;
+        l.playSound(null, mob.blockPosition(), ModSounds.KING_DEATH.get(), net.minecraft.sounds.SoundSource.HOSTILE, 4.0F, 1.0F);
         for (ServerPlayer p : l.getEntitiesOfClass(ServerPlayer.class, new AABB(ARENA).inflate(RADIUS + 12, 30, RADIUS + 12))) {
             int n = Saga.slayKing(HunterRanks.profile(p));
             p.displayClientMessage(Component.translatable(n == 1 ? "khaosnexus.king.slain_first" : "khaosnexus.king.slain", n), false);

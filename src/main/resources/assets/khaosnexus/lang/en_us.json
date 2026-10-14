@@ -751,5 +751,11 @@
   "item.khaosnexus.awakened_crown.desc.1": "The sockets are no longer empty.",
   "item.khaosnexus.awakened_crown.desc.2": "Awakened with Morvane's Heart-Ember.",
   "khaosnexus.awaken.missing": "Awakening needs %s Heart-Embers in your off hand and %s Rift Cores.",
-  "khaosnexus.awaken.done": "The Heart-Ember catches: %s awakens."
+  "khaosnexus.awaken.done": "The Heart-Ember catches: %s awakens.",
+  "subtitles.khaosnexus.king.roar": "Hollow King roars",
+  "subtitles.khaosnexus.king.phase": "Hollow King calls his court",
+  "subtitles.khaosnexus.king.crownfall_rise": "Crown shards gather",
+  "subtitles.khaosnexus.king.crownfall_impact": "Kingsbane strikes the floor",
+  "subtitles.khaosnexus.king.shard_strike": "Crown shard falls",
+  "subtitles.khaosnexus.king.death": "Hollow King falls"
 }

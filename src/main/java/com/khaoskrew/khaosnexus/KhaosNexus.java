@@ -23,6 +23,7 @@ public class KhaosNexus {
     public KhaosNexus(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
         ModRegistries.register(modEventBus);
+        com.khaoskrew.khaosnexus.saga.ModSounds.SOUNDS.register(modEventBus);
         com.khaoskrew.khaosnexus.card.HunterCard.register(modEventBus);
         com.khaoskrew.khaosnexus.forge.HunterForge.register(modEventBus);
         com.khaoskrew.khaosnexus.compat.items.CompatItems.register(modEventBus);

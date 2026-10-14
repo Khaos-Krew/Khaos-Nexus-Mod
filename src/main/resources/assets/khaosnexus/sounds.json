@@ -1,0 +1,55 @@
+{
+  "king.roar": {
+    "subtitle": "subtitles.khaosnexus.king.roar",
+    "sounds": [
+      "khaosnexus:king/king_roar"
+    ]
+  },
+  "king.phase": {
+    "subtitle": "subtitles.khaosnexus.king.phase",
+    "sounds": [
+      "khaosnexus:king/king_phase"
+    ]
+  },
+  "king.crownfall_rise": {
+    "subtitle": "subtitles.khaosnexus.king.crownfall_rise",
+    "sounds": [
+      "khaosnexus:king/crownfall_rise"
+    ]
+  },
+  "king.crownfall_impact": {
+    "subtitle": "subtitles.khaosnexus.king.crownfall_impact",
+    "sounds": [
+      "khaosnexus:king/crownfall_impact"
+    ]
+  },
+  "king.shard_strike": {
+    "subtitle": "subtitles.khaosnexus.king.shard_strike",
+    "sounds": [
+      "khaosnexus:king/shard_strike"
+    ]
+  },
+  "king.death": {
+    "subtitle": "subtitles.khaosnexus.king.death",
+    "sounds": [
+      "khaosnexus:king/king_death"
+    ]
+  },
+  "music.hollow_king": {
+    "sounds": [
+      {
+        "name": "khaosnexus:music/hollow_king_theme",
+        "stream": true
+      }
+    ]
+  },
+  "music.underthrone_camp": {
+    "sounds": [
+      {
+        "name": "khaosnexus:music/underthrone_camp",
+        "stream": true,
+        "volume": 0.7
+      }
+    ]
+  }
+}

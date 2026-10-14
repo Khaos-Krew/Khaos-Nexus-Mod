@@ -146,7 +146,8 @@ public class RiftBoss extends RiftMob {
         this.specialTick = 0;
         this.triggerAnim("action", name);
         this.getNavigation().stop();
-        this.playSound(this.isWarden() ? net.minecraft.sounds.SoundEvents.RAVAGER_ROAR : net.minecraft.sounds.SoundEvents.EVOKER_PREPARE_SUMMON, 1.2F, 0.8F);
+        if (this.isKing()) this.playSound("crownfall".equals(name) ? com.khaoskrew.khaosnexus.saga.ModSounds.CROWNFALL_RISE.get() : com.khaoskrew.khaosnexus.saga.ModSounds.KING_ROAR.get(), 1.6F, "crownfall".equals(name) ? 1.0F : 1.15F);
+        else this.playSound(this.isWarden() ? net.minecraft.sounds.SoundEvents.RAVAGER_ROAR : net.minecraft.sounds.SoundEvents.EVOKER_PREPARE_SUMMON, 1.2F, 0.8F);
     }
 
     private void pickSpecial(net.minecraft.world.entity.LivingEntity target) {
@@ -200,6 +201,7 @@ public class RiftBoss extends RiftMob {
             switch (this.special) {
                 case "crownfall" -> {
                     this.aoe(4.2D, 1.3F, 1.0D, true);
+                    this.playSound(com.khaoskrew.khaosnexus.saga.ModSounds.CROWNFALL_IMPACT.get(), 2.5F, 1.0F);
                     this.crownfallTicks = 1;
                 }
                 case "slam" -> this.aoe(4.5D, 1.6F, 0.9D, true);
@@ -256,14 +258,14 @@ public class RiftBoss extends RiftMob {
         server.sendParticles(net.minecraft.core.particles.ParticleTypes.EXPLOSION, at.x, at.y + 0.3D, at.z, 2, 0.6, 0.1, 0.6, 0);
         server.sendParticles(new net.minecraft.core.particles.BlockParticleOption(net.minecraft.core.particles.ParticleTypes.BLOCK,
                 net.minecraft.world.level.block.Blocks.GOLD_BLOCK.defaultBlockState()), at.x, at.y + 0.2D, at.z, 40, 1.0, 0.2, 1.0, 0.2);
-        if (first) server.playSound(null, at.x, at.y, at.z, net.minecraft.sounds.SoundEvents.AMETHYST_CLUSTER_BREAK, net.minecraft.sounds.SoundSource.HOSTILE, 2.0F, 0.6F);
+        if (first) server.playSound(null, at.x, at.y, at.z, com.khaoskrew.khaosnexus.saga.ModSounds.SHARD_STRIKE.get(), net.minecraft.sounds.SoundSource.HOSTILE, 1.8F, 0.9F + this.random.nextFloat() * 0.2F);
     }
 
     /** Phase 2 at 66%: the King calls his court (three ghouls + a stalker). Phase 3 at 33%: full enrage. */
     private void kingPhase(int phase) {
         this.entityData.set(PHASE, phase);
         this.triggerAnim("action", "roar");
-        this.playSound(net.minecraft.sounds.SoundEvents.ENDER_DRAGON_GROWL, 2.5F, 0.5F);
+        this.playSound(com.khaoskrew.khaosnexus.saga.ModSounds.KING_PHASE.get(), 3.0F, 1.0F);
         this.specialCooldown = 30;
         var mul = net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_BASE;
         var speed = this.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
