@@ -1,13 +1,27 @@
 {
-  "display_name": {"translate": "theme.khaosnexus.overgrown_ruin"},
+  "display_name": {
+    "translate": "theme.khaosnexus.overgrown_ruin"
+  },
   "weight": 10,
   "min_rank": "E",
   "max_rank": "S",
   "biome_weights": [
-    {"biomes": "#minecraft:is_jungle", "multiplier": 4.0},
-    {"biomes": "#c:is_swamp", "multiplier": 3.0},
-    {"biomes": "#minecraft:is_forest", "multiplier": 2.0},
-    {"biomes": "minecraft:lush_caves", "multiplier": 4.0}
+    {
+      "biomes": "#minecraft:is_jungle",
+      "multiplier": 4.0
+    },
+    {
+      "biomes": "#c:is_swamp",
+      "multiplier": 3.0
+    },
+    {
+      "biomes": "#minecraft:is_forest",
+      "multiplier": 2.0
+    },
+    {
+      "biomes": "minecraft:lush_caves",
+      "multiplier": 4.0
+    }
   ],
   "palette": {
     "minecraft:polished_blackstone_bricks": "minecraft:mossy_stone_bricks",
@@ -27,10 +41,30 @@
     "minecraft:polished_blackstone_pressure_plate": "minecraft:mangrove_pressure_plate"
   },
   "decor": [
-    {"block": "minecraft:moss_carpet", "on": "floor", "chance": 0.22},
-    {"block": "minecraft:short_grass", "on": "floor", "chance": 0.04},
-    {"block": "minecraft:cave_vines", "on": "ceiling", "chance": 0.05},
-    {"block": "minecraft:spore_blossom", "on": "ceiling", "chance": 0.006}
+    {
+      "block": "minecraft:moss_carpet",
+      "on": "floor",
+      "chance": 0.22
+    },
+    {
+      "block": "minecraft:short_grass",
+      "on": "floor",
+      "chance": 0.04
+    },
+    {
+      "block": "minecraft:cave_vines",
+      "on": "ceiling",
+      "chance": 0.05
+    },
+    {
+      "block": "minecraft:spore_blossom",
+      "on": "ceiling",
+      "chance": 0.006
+    }
   ],
-  "hazards": [{"type": "khaosnexus:thorns"}]
+  "hazards": [
+    {
+      "type": "khaosnexus:thorns"
+    }
+  ]
 }

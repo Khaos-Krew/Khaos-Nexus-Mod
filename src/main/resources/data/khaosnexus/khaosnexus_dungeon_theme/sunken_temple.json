@@ -1,0 +1,54 @@
+{
+  "display_name": {
+    "translate": "theme.khaosnexus.sunken_temple"
+  },
+  "weight": 9,
+  "min_rank": "C",
+  "max_rank": "S",
+  "biome_weights": [
+    {
+      "biomes": "#minecraft:is_ocean",
+      "multiplier": 5.0
+    },
+    {
+      "biomes": "#minecraft:is_beach",
+      "multiplier": 3.0
+    },
+    {
+      "biomes": "#c:is_swamp",
+      "multiplier": 2.0
+    },
+    {
+      "biomes": "#minecraft:is_river",
+      "multiplier": 2.0
+    }
+  ],
+  "palette": {
+    "minecraft:polished_blackstone_bricks": "minecraft:prismarine_bricks",
+    "minecraft:cracked_polished_blackstone_bricks": "minecraft:prismarine",
+    "minecraft:chiseled_polished_blackstone": "minecraft:chiseled_stone_bricks",
+    "minecraft:gilded_blackstone": "minecraft:dark_prismarine",
+    "minecraft:deepslate_tiles": "minecraft:prismarine_bricks",
+    "minecraft:cracked_deepslate_tiles": "minecraft:mossy_stone_bricks",
+    "minecraft:deepslate_bricks": "minecraft:dark_prismarine",
+    "minecraft:obsidian": "minecraft:dark_prismarine",
+    "minecraft:crying_obsidian": "minecraft:sea_lantern",
+    "minecraft:amethyst_block": "minecraft:sea_lantern",
+    "minecraft:amethyst_cluster": "minecraft:tube_coral",
+    "minecraft:purple_stained_glass": "minecraft:cyan_stained_glass",
+    "minecraft:magma_block": "minecraft:sea_lantern",
+    "minecraft:polished_blackstone_pressure_plate": "minecraft:stone_pressure_plate"
+  },
+  "decor": [
+    {
+      "block": "minecraft:glow_lichen",
+      "on": "ceiling",
+      "chance": 0.04
+    }
+  ],
+  "hazards": [
+    {
+      "type": "khaosnexus:damp"
+    }
+  ]
+}

@@ -594,5 +594,11 @@
   "item.khaosnexus.guardians_plume": "Guardian's Plume",
   "item.khaosnexus.guardians_plume.effect": "The Spire Guardian can't knock you back",
   "item.khaosnexus.hunters_lucky_coin": "Hunter's Lucky Coin",
-  "item.khaosnexus.hunters_lucky_coin.effect": "+2 Luck: better gate chest rolls"
+  "item.khaosnexus.hunters_lucky_coin.effect": "+2 Luck: better gate chest rolls",
+  "theme.khaosnexus.scorched_forge": "Scorched Forge",
+  "theme.khaosnexus.sunken_temple": "Sunken Temple",
+  "theme.khaosnexus.void_sanctum": "Void Sanctum",
+  "theme.khaosnexus.sculk_hollow": "Sculk Hollow",
+  "theme.khaosnexus.wroughtnaut_forge": "Wroughtnaut Forge Hall",
+  "theme.khaosnexus.frostmaw_den": "Frostmaw Den"
 }

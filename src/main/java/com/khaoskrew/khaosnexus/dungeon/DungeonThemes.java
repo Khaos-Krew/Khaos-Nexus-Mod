@@ -259,7 +259,7 @@ public final class DungeonThemes extends SimpleJsonResourceReloadListener {
         return to;
     }
 
-    /** Hook for theme hazards (chill, heat, ...). Off by default: dungeonThemes.hazards. Nothing is implemented yet. */
+    /** Theme hazards (see {@link ThemeHazards}); dungeonThemeHazards toggles them. */
     public static boolean hazardsActive(Theme theme) {
         return Config.THEME_HAZARDS.get() && !theme.hazards().isEmpty();
     }

@@ -1,12 +1,23 @@
 {
-  "display_name": {"translate": "theme.khaosnexus.frostbound_crypt"},
+  "display_name": {
+    "translate": "theme.khaosnexus.frostbound_crypt"
+  },
   "weight": 10,
   "min_rank": "E",
   "max_rank": "S",
   "biome_weights": [
-    {"biomes": "#c:is_snowy", "multiplier": 4.0},
-    {"biomes": "#c:is_icy", "multiplier": 4.0},
-    {"biomes": "#minecraft:is_mountain", "multiplier": 2.0}
+    {
+      "biomes": "#c:is_snowy",
+      "multiplier": 4.0
+    },
+    {
+      "biomes": "#c:is_icy",
+      "multiplier": 4.0
+    },
+    {
+      "biomes": "#minecraft:is_mountain",
+      "multiplier": 2.0
+    }
   ],
   "palette": {
     "minecraft:polished_blackstone_bricks": "minecraft:packed_ice",
@@ -25,8 +36,20 @@
     "minecraft:polished_blackstone_pressure_plate": "minecraft:stone_pressure_plate"
   },
   "decor": [
-    {"block": "minecraft:snow", "on": "floor", "chance": 0.18},
-    {"block": "minecraft:cobweb", "on": "ceiling", "chance": 0.015}
+    {
+      "block": "minecraft:snow",
+      "on": "floor",
+      "chance": 0.18
+    },
+    {
+      "block": "minecraft:cobweb",
+      "on": "ceiling",
+      "chance": 0.015
+    }
   ],
-  "hazards": [{"type": "khaosnexus:chill"}]
+  "hazards": [
+    {
+      "type": "khaosnexus:chill"
+    }
+  ]
 }

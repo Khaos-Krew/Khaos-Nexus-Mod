@@ -237,8 +237,9 @@ public final class Config {
             .comment("Theme ids never rolled.")
             .defineListAllowEmpty("dungeonThemesDisabled", List.of(), () -> "khaosnexus:overgrown_ruin", o -> o instanceof String);
     public static final ModConfigSpec.BooleanValue THEME_HAZARDS = SERVER_BUILDER
-            .comment("Theme environmental hazards (chill, heat, ...). Hook only for now; keep off.")
-            .define("dungeonThemeHazards", false);
+            .comment("Mild theme hazards inside dungeons, pulsed every 5 s: chill (Slowness I), heat (Hunger I, Fire Resistance ignores it),",
+                     "damp (Mining Fatigue I), void (brief Darkness), spores (Weakness I). Standing within 3 blocks of a lit campfire, torch or lantern wards chill and damp.")
+            .define("dungeonThemeHazards", true);
 
     public static final ModConfigSpec.ConfigValue<List<? extends String>> DUNGEON_BOSSES = SERVER_BUILDER
             .comment("Boss mob per gate rank, in order E, D, C, B, A, S.")

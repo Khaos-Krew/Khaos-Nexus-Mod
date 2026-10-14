@@ -1,0 +1,59 @@
+{
+  "display_name": {
+    "translate": "theme.khaosnexus.scorched_forge"
+  },
+  "weight": 9,
+  "min_rank": "D",
+  "max_rank": "S",
+  "biome_weights": [
+    {
+      "biomes": "#minecraft:is_nether",
+      "multiplier": 5.0
+    },
+    {
+      "biomes": "#minecraft:is_badlands",
+      "multiplier": 4.0
+    },
+    {
+      "biomes": "#c:is_desert",
+      "multiplier": 3.0
+    },
+    {
+      "biomes": "#c:is_savanna",
+      "multiplier": 1.5
+    }
+  ],
+  "palette": {
+    "minecraft:polished_blackstone_bricks": "minecraft:nether_bricks",
+    "minecraft:cracked_polished_blackstone_bricks": "minecraft:cracked_nether_bricks",
+    "minecraft:chiseled_polished_blackstone": "minecraft:chiseled_nether_bricks",
+    "minecraft:gilded_blackstone": "minecraft:gilded_blackstone",
+    "minecraft:deepslate_tiles": "minecraft:polished_basalt",
+    "minecraft:cracked_deepslate_tiles": "minecraft:smooth_basalt",
+    "minecraft:deepslate_bricks": "minecraft:red_nether_bricks",
+    "minecraft:obsidian": "minecraft:magma_block",
+    "minecraft:crying_obsidian": "minecraft:shroomlight",
+    "minecraft:amethyst_block": "minecraft:raw_gold_block",
+    "minecraft:amethyst_cluster": "minecraft:small_amethyst_bud",
+    "minecraft:purple_stained_glass": "minecraft:orange_stained_glass",
+    "minecraft:magma_block": "minecraft:magma_block",
+    "minecraft:polished_blackstone_pressure_plate": "minecraft:heavy_weighted_pressure_plate"
+  },
+  "decor": [
+    {
+      "block": "minecraft:chain",
+      "on": "ceiling",
+      "chance": 0.03
+    },
+    {
+      "block": "minecraft:lantern",
+      "on": "floor",
+      "chance": 0.01
+    }
+  ],
+  "hazards": [
+    {
+      "type": "khaosnexus:heat"
+    }
+  ]
+}

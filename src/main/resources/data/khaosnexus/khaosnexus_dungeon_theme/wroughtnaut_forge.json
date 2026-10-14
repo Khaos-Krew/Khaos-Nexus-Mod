@@ -1,0 +1,54 @@
+{
+  "display_name": {
+    "translate": "theme.khaosnexus.wroughtnaut_forge"
+  },
+  "weight": 6,
+  "min_rank": "B",
+  "max_rank": "S",
+  "required_mods": [
+    "mowziesmobs"
+  ],
+  "biome_weights": [
+    {
+      "biomes": "#c:is_mountain",
+      "multiplier": 2.0
+    },
+    {
+      "biomes": "#minecraft:is_forest",
+      "multiplier": 1.2
+    }
+  ],
+  "palette": {
+    "minecraft:polished_blackstone_bricks": "minecraft:polished_andesite",
+    "minecraft:cracked_polished_blackstone_bricks": "minecraft:andesite",
+    "minecraft:chiseled_polished_blackstone": "minecraft:chiseled_stone_bricks",
+    "minecraft:gilded_blackstone": "minecraft:iron_block",
+    "minecraft:deepslate_tiles": "minecraft:stone_bricks",
+    "minecraft:cracked_deepslate_tiles": "minecraft:cracked_stone_bricks",
+    "minecraft:deepslate_bricks": "minecraft:stone_bricks",
+    "minecraft:obsidian": "minecraft:iron_block",
+    "minecraft:crying_obsidian": "minecraft:lantern",
+    "minecraft:amethyst_block": "minecraft:iron_block",
+    "minecraft:amethyst_cluster": "minecraft:chain",
+    "minecraft:purple_stained_glass": "minecraft:gray_stained_glass",
+    "minecraft:magma_block": "minecraft:magma_block",
+    "minecraft:polished_blackstone_pressure_plate": "minecraft:heavy_weighted_pressure_plate"
+  },
+  "decor": [
+    {
+      "block": "minecraft:chain",
+      "on": "ceiling",
+      "chance": 0.05
+    },
+    {
+      "block": "minecraft:anvil",
+      "on": "floor",
+      "chance": 0.004
+    }
+  ],
+  "hazards": [
+    {
+      "type": "khaosnexus:heat"
+    }
+  ]
+}

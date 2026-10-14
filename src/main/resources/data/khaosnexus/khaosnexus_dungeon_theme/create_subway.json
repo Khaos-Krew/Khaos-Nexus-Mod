@@ -1,9 +1,13 @@
 {
-  "display_name": {"translate": "theme.khaosnexus.create_subway"},
+  "display_name": {
+    "translate": "theme.khaosnexus.create_subway"
+  },
   "weight": 8,
   "min_rank": "D",
   "max_rank": "S",
-  "required_mods": ["create"],
+  "required_mods": [
+    "create"
+  ],
   "pools": {
     "linear": "khaosnexus:dungeon/create_subway/linear/start",
     "branching": "khaosnexus:dungeon/create_subway/branching/start"
@@ -23,7 +27,15 @@
     "minecraft:magma_block": "create:railway_casing"
   },
   "decor": [
-    {"block": "minecraft:chain", "on": "ceiling", "chance": 0.03},
-    {"block": "minecraft:cobweb", "on": "ceiling", "chance": 0.02}
+    {
+      "block": "minecraft:chain",
+      "on": "ceiling",
+      "chance": 0.03
+    },
+    {
+      "block": "minecraft:cobweb",
+      "on": "ceiling",
+      "chance": 0.02
+    }
   ]
 }

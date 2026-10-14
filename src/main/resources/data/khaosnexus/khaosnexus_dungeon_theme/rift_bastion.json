@@ -1,5 +1,7 @@
 {
-  "display_name": {"translate": "theme.khaosnexus.rift_bastion"},
+  "display_name": {
+    "translate": "theme.khaosnexus.rift_bastion"
+  },
   "weight": 30,
   "min_rank": "E",
   "max_rank": "S"
