@@ -161,7 +161,7 @@ public class RiftMob extends Monster implements GeoEntity {
             }
         }
         controllers.add(action);
-        if (this.isSagaBoss()) {   // last controller wins: a frozen review pose overrides movement and action
+        if (this.isSagaBoss() || this instanceof RiftBoss) {   // last controller wins: a frozen review pose overrides movement and action
             controllers.add(new AnimationController<>(this, "debug_pose", 0, state -> {
                 String pose = this.getDebugPose();
                 return pose.isEmpty() ? software.bernie.geckolib.animation.PlayState.STOP : state.setAndContinue(this.anim("freeze_" + pose, true));
