@@ -107,6 +107,9 @@ public final class HollowThrone {
         for (ServerPlayer p : l.getEntitiesOfClass(ServerPlayer.class, new AABB(ARENA).inflate(RADIUS + 12, 30, RADIUS + 12))) {
             int n = Saga.slayKing(HunterRanks.profile(p));
             p.displayClientMessage(Component.translatable(n == 1 ? "khaosnexus.king.slain_first" : "khaosnexus.king.slain", n), false);
+            var bane = com.khaoskrew.khaosnexus.registry.ModRegistries.KINGSBANE.get();
+            if (n == 1 && !p.getInventory().hasAnyOf(java.util.Set.of(bane, com.khaoskrew.khaosnexus.registry.ModRegistries.AWAKENED_KINGSBANE.get())))
+                p.getInventory().placeItemBackInInventory(new net.minecraft.world.item.ItemStack(bane));   // first-kill pity: the blade is never a coin flip the first time
             HunterRanks.sync(p);
         }
         for (Mob m : l.getEntitiesOfClass(Mob.class, new AABB(ARENA).inflate(RADIUS + 12, 30, RADIUS + 12), m -> m.getTags().contains("khaosnexus_king_court"))) m.kill();

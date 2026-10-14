@@ -159,12 +159,12 @@ public class RiftBoss extends RiftMob {
             else return;
         } else if (this.isKing()) {
             int ph = this.getPhase();
-            if (ph >= 1 && this.random.nextInt(ph >= 2 ? 2 : 3) == 0) this.startSpecial("crownfall");
+            if (ph >= 1 && this.random.nextInt(3) == 0) this.startSpecial("crownfall");
             else if (ph >= 2 && this.barrierTicks <= 0 && this.random.nextInt(3) == 0) this.startSpecial("barrier");
             else if (d >= 5.0D && d < 22.0D && this.hasLineOfSight(target)) this.startSpecial("volley");
             else if (d < 4.8D) this.startSpecial("spin");
             else return;
-            this.specialCooldown = (ph >= 2 ? 60 : ph == 1 ? 80 : 110) + this.random.nextInt(40);
+            this.specialCooldown = (ph >= 2 ? 70 : ph == 1 ? 90 : 110) + this.random.nextInt(40);
             return;
         } else {
             boolean vaelith = this.getType() == ModEntities.VAELITH.get() || this.getType() == ModEntities.GENERAL_ARCANIST.get();
@@ -270,15 +270,15 @@ public class RiftBoss extends RiftMob {
         var mul = net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_BASE;
         var speed = this.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
         var damage = this.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE);
-        double k = phase == 1 ? 0.12D : 0.3D;
+        double k = phase == 1 ? 0.10D : 0.22D;
         if (speed != null) speed.addOrUpdateTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(ENRAGE_ID, k, mul));
         if (damage != null) damage.addOrUpdateTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(ENRAGE_ID, k * 1.2D, mul));
         this.bossEvent.setColor(phase == 1 ? BossEvent.BossBarColor.YELLOW : BossEvent.BossBarColor.RED);
         if (phase == 1 && this.level() instanceof net.minecraft.server.level.ServerLevel server) {
-            for (int i = 0; i < 4; i++) {
-                RiftMob add = (i == 3 ? ModEntities.RIFT_STALKER.get() : ModEntities.RIFT_GHOUL.get()).create(server);
+            for (int i = 0; i < 3; i++) {
+                RiftMob add = (i == 2 ? ModEntities.RIFT_STALKER.get() : ModEntities.RIFT_GHOUL.get()).create(server);
                 if (add == null) continue;
-                double a = Math.PI * 2 * i / 4 + 0.4D;
+                double a = Math.PI * 2 * i / 3 + 0.4D;
                 add.moveTo(this.getX() + Math.cos(a) * 4.0, this.getY(), this.getZ() + Math.sin(a) * 4.0, this.getYRot(), 0);
                 add.setGateRank(this.getGateRank());
                 add.addTag("khaosnexus_king_court");
