@@ -24,7 +24,7 @@ public final class RiftMobClient {
         event.registerEntityRenderer(ModEntities.VAELITH.get(), c -> new RiftMobRenderer(c, "vaelith", 1.2F));
         event.registerEntityRenderer(ModEntities.FALLEN_HIEROPHANT.get(), c -> new RiftMobRenderer(c, "fallen_hierophant", 1.4F));
         event.registerEntityRenderer(ModEntities.RIFT_WISP.get(), WispRenderer::new);
-        event.registerEntityRenderer(ModEntities.HOLLOW_KING.get(), c -> new RiftMobRenderer(c, "hollow_king", 1.3F));
+        event.registerEntityRenderer(ModEntities.HOLLOW_KING.get(), c -> new RiftMobRenderer(c, "hollow_king", 1.5F));
         event.registerEntityRenderer(ModEntities.GENERAL_BLADE.get(), c -> new RiftMobRenderer(c, "general_blade", 1.25F));
         event.registerEntityRenderer(ModEntities.GATE_MIMIC.get(), MimicRenderer::new);
         event.registerEntityRenderer(ModEntities.GENERAL_ARCANIST.get(), c -> new RiftMobRenderer(c, "general_arcanist", 1.25F));

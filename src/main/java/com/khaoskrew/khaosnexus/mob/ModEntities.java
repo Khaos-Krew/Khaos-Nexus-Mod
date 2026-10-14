@@ -42,7 +42,7 @@ public final class ModEntities {
             () -> EntityType.Builder.<RiftBoss>of(RiftBoss::general, MobCategory.MONSTER).sized(1.3F, 3.9F).clientTrackingRange(12)
                     .build(KhaosNexus.MODID + ":general_arcanist"));
     public static final DeferredHolder<EntityType<?>, EntityType<RiftBoss>> HOLLOW_KING = ENTITIES.register("hollow_king",
-            () -> EntityType.Builder.<RiftBoss>of(RiftBoss::king, MobCategory.MONSTER).sized(1.7F, 5.4F).clientTrackingRange(14)
+            () -> EntityType.Builder.<RiftBoss>of(RiftBoss::king, MobCategory.MONSTER).sized(1.9F, 6.4F).clientTrackingRange(14)
                     .fireImmune().build(KhaosNexus.MODID + ":hollow_king"));
     public static final DeferredHolder<EntityType<?>, EntityType<com.khaoskrew.khaosnexus.saga.RiftWisp>> RIFT_WISP = ENTITIES.register("rift_wisp",
             () -> EntityType.Builder.<com.khaoskrew.khaosnexus.saga.RiftWisp>of(com.khaoskrew.khaosnexus.saga.RiftWisp::new, MobCategory.MISC).sized(0.5F, 0.6F).clientTrackingRange(8)

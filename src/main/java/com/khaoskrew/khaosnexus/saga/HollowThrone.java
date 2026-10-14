@@ -57,7 +57,7 @@ public final class HollowThrone {
     }
 
     public static boolean built(ServerLevel l) {
-        return l.getBlockState(ARENA.offset(0, 4, -12)).is(Blocks.GOLD_BLOCK);
+        return l.getBlockState(ARENA.offset(0, -3, 0)).is(Blocks.LODESTONE);   // v2 hall marker (older halls rebuild)
     }
 
     /** Takes the hunter and nearby party members to the throne room and wakes the King. */
@@ -144,6 +144,47 @@ public final class HollowThrone {
         return p.getOffhandItem().is(ModRegistries.HOLLOW_CROWN.get()) || CuriosCompat.wears(p, ModRegistries.HOLLOW_CROWN.get());
     }
 
+    /** The Hollow Throne: a stepped gothic backrest with a glowing crying-obsidian seam, a halo ring of walls behind,
+     *  skull-capped armrests, gilded finials, hanging soul lanterns and a crown of candles. Seat faces south. */
+    static void throne(ServerLevel l, BlockPos t) {
+        BlockState bricks = Blocks.POLISHED_BLACKSTONE_BRICKS.defaultBlockState(), chis = Blocks.CHISELED_POLISHED_BLACKSTONE.defaultBlockState();
+        BlockState gild = Blocks.GILDED_BLACKSTONE.defaultBlockState(), wall = Blocks.POLISHED_BLACKSTONE_BRICK_WALL.defaultBlockState();
+        set(l, t, Blocks.POLISHED_BLACKSTONE_STAIRS.defaultBlockState().setValue(StairBlock.FACING, Direction.NORTH));
+        set(l, t.below(), chis);
+        for (int x : new int[] {-1, 1}) {   // armrests
+            set(l, t.offset(x, 0, 0), Blocks.POLISHED_BLACKSTONE_STAIRS.defaultBlockState().setValue(StairBlock.FACING, x < 0 ? Direction.WEST : Direction.EAST)
+                    .setValue(StairBlock.HALF, net.minecraft.world.level.block.state.properties.Half.TOP));
+            set(l, t.offset(x, 0, 1), wall);
+            set(l, t.offset(x, 1, 1), Blocks.WITHER_SKELETON_SKULL.defaultBlockState().setValue(net.minecraft.world.level.block.SkullBlock.ROTATION, 8));
+        }
+        int[] h = {5, 8, 12, 8, 5};   // stepped backrest, tallest at the centre
+        for (int i = 0; i < 5; i++) {
+            int x = i - 2;
+            for (int y = 0; y <= h[i]; y++) {
+                BlockState b = y == h[i] ? gild : x == 0 && y >= 1 && y <= 7 ? Blocks.CRYING_OBSIDIAN.defaultBlockState() : y % 4 == 0 ? chis : bricks;
+                set(l, t.offset(x, y, -1), b);
+            }
+            set(l, t.offset(x, h[i] + 1, -1), Math.abs(x) == 2 ? Blocks.POLISHED_BLACKSTONE_BRICK_WALL.defaultBlockState() : Blocks.CHAIN.defaultBlockState());
+            if (Math.abs(x) == 1) set(l, t.offset(x, h[i] + 2, -1), Blocks.CANDLE.defaultBlockState().setValue(net.minecraft.world.level.block.CandleBlock.LIT, true).setValue(net.minecraft.world.level.block.CandleBlock.CANDLES, 4));
+            if (Math.abs(x) == 2) set(l, t.offset(x, h[i] + 2, -1), gild);
+        }
+        for (int x : new int[] {-2, 2}) for (int y = 1; y <= 4; y++)   // upside-down stair buttresses on the sides
+            set(l, t.offset(x, y, 0), Blocks.POLISHED_BLACKSTONE_BRICK_STAIRS.defaultBlockState().setValue(StairBlock.FACING, Direction.NORTH)
+                    .setValue(StairBlock.HALF, y % 2 == 0 ? net.minecraft.world.level.block.state.properties.Half.TOP : net.minecraft.world.level.block.state.properties.Half.BOTTOM));
+        set(l, t.offset(0, 13, -1), Blocks.CHAIN.defaultBlockState()); set(l, t.offset(0, 14, -1), gild);
+        for (int x = -1; x <= 1; x++) set(l, t.offset(x, 15, -1), Blocks.CANDLE.defaultBlockState().setValue(net.minecraft.world.level.block.CandleBlock.LIT, true).setValue(net.minecraft.world.level.block.CandleBlock.CANDLES, 3));
+        for (int k = 0; k < 20; k++) {   // halo ring behind the backrest
+            double a = Math.PI * 2 * k / 20;
+            BlockPos p = t.offset((int) Math.round(Math.cos(a) * 5), 7 + (int) Math.round(Math.sin(a) * 5), -2);
+            set(l, p, k % 5 == 0 ? gild : wall);
+        }
+        for (int x : new int[] {-4, 4}) {   // hanging soul lanterns on chains from the halo
+            for (int y = 9; y >= 7; y--) set(l, t.offset(x, y, -1), Blocks.CHAIN.defaultBlockState());
+            set(l, t.offset(x, 6, -1), Blocks.SOUL_LANTERN.defaultBlockState().setValue(net.minecraft.world.level.block.LanternBlock.HANGING, true));
+        }
+        set(l, t.offset(0, 4, 1), Blocks.LIGHT.defaultBlockState().setValue(net.minecraft.world.level.block.LightBlock.LEVEL, 12));
+    }
+
     // ------------------------------------------------------------------ the hall
     static void set(ServerLevel l, BlockPos p, BlockState s) { l.setBlock(p, s, 2); }
 
@@ -176,17 +217,14 @@ public final class HollowThrone {
         for (int step = 0; step < 3; step++) for (int x = -6 + step; x <= 6 - step; x++) for (int z = -15; z <= -8 + step * -1; z++)
             set(l, o.offset(x, step, z), (step == 2 ? Blocks.POLISHED_BLACKSTONE_BRICKS : Blocks.POLISHED_DEEPSLATE).defaultBlockState());
         for (int x = -4; x <= 4; x++) set(l, o.offset(x, 0, -7), Blocks.POLISHED_BLACKSTONE_BRICK_STAIRS.defaultBlockState().setValue(StairBlock.FACING, Direction.NORTH));
-        BlockPos t = o.offset(0, 3, -12);
-        set(l, t, Blocks.POLISHED_BLACKSTONE_STAIRS.defaultBlockState().setValue(StairBlock.FACING, Direction.NORTH));
-        for (int x : new int[] {-1, 1}) { set(l, t.offset(x, 0, 0), Blocks.POLISHED_BLACKSTONE_WALL.defaultBlockState()); set(l, t.offset(x, 1, 0), Blocks.GOLD_BLOCK.defaultBlockState()); }
-        for (int y = 0; y <= 8; y++) for (int x = -2; x <= 2; x++) {
-            if (y > 6 - Math.abs(x) * 2 + 2 && Math.abs(x) > 0) continue;
-            set(l, t.offset(x, y, -1), (Math.abs(x) == 2 || y == 8 ? Blocks.GILDED_BLACKSTONE : y % 3 == 0 ? Blocks.CHISELED_POLISHED_BLACKSTONE : Blocks.BLACKSTONE).defaultBlockState());
+        throne(l, o.offset(0, 3, -12));
+        set(l, o.offset(0, -3, 0), Blocks.LODESTONE.defaultBlockState());
+        for (int z = -7; z <= 12; z++) for (int x = -1; x <= 1; x++)   // crimson runner from the arrival to the dais
+            set(l, o.offset(x, z == -7 ? 1 : 0, z), (Math.abs(x) == 1 ? Blocks.BLACK_CARPET : Blocks.RED_CARPET).defaultBlockState());
+        for (int x : new int[] {-3, 3}) for (int z = -5; z <= 11; z += 4) {   // candle stands lining the runner
+            set(l, o.offset(x, 0, z), Blocks.POLISHED_BLACKSTONE_WALL.defaultBlockState());
+            set(l, o.offset(x, 1, z), Blocks.CANDLE.defaultBlockState().setValue(net.minecraft.world.level.block.CandleBlock.LIT, true).setValue(net.minecraft.world.level.block.CandleBlock.CANDLES, 3));
         }
-        set(l, t.offset(0, 1, 0), Blocks.GOLD_BLOCK.defaultBlockState());   // the marker: the empty seat's gold cushion
-        set(l, t.offset(0, 9, -1), Blocks.GOLD_BLOCK.defaultBlockState());
-        for (int x : new int[] {-1, 1}) set(l, t.offset(x, 9, -1), Blocks.GOLD_BLOCK.defaultBlockState());
-        set(l, t.offset(0, 10, -1), Blocks.LIGHT.defaultBlockState().setValue(net.minecraft.world.level.block.LightBlock.LEVEL, 15));
         for (int x : new int[] {-5, 5}) {   // banners of the crown flanking the dais
             for (int y = 0; y <= 7; y++) set(l, o.offset(x, 2 + y, -14), Blocks.POLISHED_BLACKSTONE_BRICKS.defaultBlockState());
             set(l, o.offset(x, 8, -13), Blocks.RED_WALL_BANNER.defaultBlockState().setValue(net.minecraft.world.level.block.WallBannerBlock.FACING, Direction.SOUTH));
