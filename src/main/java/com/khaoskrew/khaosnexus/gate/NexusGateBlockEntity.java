@@ -295,6 +295,11 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
                 member.displayClientMessage(Component.translatable("khaosnexus.dungeon.entered", this.rankLabel()), false);
             }
         }
+        if (boss != null && !this.red && !this.ss && this.getPersistentData().getString(com.khaoskrew.khaosnexus.saga.SealGateBlock.SEAL_TAG).isEmpty()
+                && com.khaoskrew.khaosnexus.saga.Saga.rollAmbush(this.rank, true, server.getRandom())) {
+            this.scheduleAmbush(server, com.khaoskrew.khaosnexus.saga.CrownlessGenerals.forClass(com.khaoskrew.khaosnexus.hunter.ClassService.equipped(player)),
+                    com.khaoskrew.khaosnexus.Config.GENERAL_WARNING_TICKS.get());
+        }
         if (boss == null) {
             // Nothing to fight: clear right away rather than trapping the party.
             this.finishWave(server);
@@ -316,6 +321,52 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         if (level instanceof ServerLevel server) {
             gate.tickServer(server);
         }
+    }
+
+    /** Crownless General ambush: game time it arrives (0 = none) and which General. */
+    private long ambushAt;
+    private String ambushType = "";
+    private boolean ambushWarned;
+
+    public long ambushAt() {
+        return this.ambushAt;
+    }
+
+    /** Schedules a General ambush for this (dungeon) gate and warns everyone inside. */
+    public void scheduleAmbush(ServerLevel level, net.minecraft.world.entity.EntityType<?> type, int warningTicks) {
+        this.ambushAt = level.getGameTime() + warningTicks;
+        this.ambushType = net.minecraft.world.entity.EntityType.getKey(type).toString();
+        this.ambushWarned = false;
+        this.setChanged();
+    }
+
+    private void tickAmbush(ServerLevel gateLevel) {
+        ServerLevel mobs = this.mobLevel(gateLevel);
+        long now = gateLevel.getGameTime();
+        var inside = mobs.players().stream().filter(p -> !this.inDungeon || this.dungeonBox == null || this.dungeonBox.inflatedBy(8).isInside(p.blockPosition())).toList();
+        if (!this.ambushWarned && !inside.isEmpty()) {
+            this.ambushWarned = true;
+            int secs = (int) Math.max(1, (this.ambushAt - now) / 20);
+            inside.forEach(p -> com.khaoskrew.khaosnexus.saga.CrownlessGenerals.warn(p, secs));
+        }
+        if (now < this.ambushAt) return;
+        var type = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.get(net.minecraft.resources.ResourceLocation.parse(this.ambushType));
+        this.ambushAt = 0L;
+        BlockPos at = this.dungeonSpawn != null ? this.dungeonSpawn : this.getBlockPos().above();
+        float yaw = 0;
+        if (!inside.isEmpty()) {   // rises behind the first hunter inside
+            var p = inside.get(0);
+            net.minecraft.world.phys.Vec3 back = p.getLookAngle().multiply(1, 0, 1).normalize().scale(-4.0);
+            BlockPos c = BlockPos.containing(p.getX() + back.x, p.getY(), p.getZ() + back.z);
+            if (mobs.noCollision(type.getSpawnAABB(c.getX() + 0.5, c.getY(), c.getZ() + 0.5))) at = c; else at = p.blockPosition();
+            yaw = p.getYRot();
+        }
+        var m = com.khaoskrew.khaosnexus.saga.CrownlessGenerals.spawn(mobs, this.rank, type, at, yaw);
+        if (m != null) {
+            this.rememberMob(m.getUUID(), at);
+            this.waveSize++;
+        }
+        this.setChanged();
     }
 
     private void tickServer(ServerLevel level) {
@@ -351,6 +402,13 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         }
         if (this.inDungeon && this.tendDungeon(level)) {
             return;
+        }
+        if (this.ambushAt > 0L) {
+            this.tickAmbush(level);
+            if (this.ambushAt > 0L) {   // never clear while a General is on its way
+                if (!this.waveMobs.isEmpty()) this.updateBossBar(this.mobLevel(level), this.livingCount(this.mobLevel(level)));
+                return;
+            }
         }
         if (this.waveMobs.isEmpty()) {   // the last mob died: finish once its death animation has played (also after a reload)
             if (this.waveSize > 0) {
@@ -461,6 +519,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
     }
 
     public void discardWave() {
+        this.ambushAt = 0L;
         if (!(this.level instanceof ServerLevel server)) {
             this.waveMobs.clear();
             this.waveAnchors.clear();
@@ -606,6 +665,8 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         tag.putBoolean("Broken", this.broken);
         tag.putLong("BreakStart", this.breakStart);
         tag.putLong("StartedAt", this.startedAt);
+        tag.putLong("AmbushAt", this.ambushAt);
+        tag.putString("AmbushType", this.ambushType);
         tag.putInt("WaveSize", this.waveSize);
         if (this.activator != null) {
             tag.putString("Activator", this.activator.toString());
@@ -644,6 +705,8 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         this.broken = tag.getBoolean("Broken");
         this.breakStart = tag.getLong("BreakStart");
         this.startedAt = tag.getLong("StartedAt");
+        this.ambushAt = tag.getLong("AmbushAt");
+        this.ambushType = tag.getString("AmbushType");
         this.waveSize = tag.getInt("WaveSize");
         this.activator = null;
         if (tag.contains("Activator")) {

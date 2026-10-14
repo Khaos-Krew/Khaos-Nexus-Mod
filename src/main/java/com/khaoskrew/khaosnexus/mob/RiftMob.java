@@ -99,7 +99,8 @@ public class RiftMob extends Monster implements GeoEntity {
 
     /** True for the Hollow Crown bosses, which have a death animation and a longer death. */
     public boolean isSagaBoss() {
-        return this.getType() == ModEntities.VAELITH.get() || this.getType() == ModEntities.FALLEN_HIEROPHANT.get();
+        return this.getType() == ModEntities.VAELITH.get() || this.getType() == ModEntities.FALLEN_HIEROPHANT.get()
+                || this.getType() == ModEntities.GENERAL_BLADE.get() || this.getType() == ModEntities.GENERAL_ARCANIST.get();
     }
 
     @Override
@@ -153,7 +154,7 @@ public class RiftMob extends Monster implements GeoEntity {
                         .triggerableAnim("slam", this.anim("slam", false)).triggerableAnim("lunge", this.anim("lunge", false));
             } else {
                 action.triggerableAnim("spin", this.anim("spin", false)).triggerableAnim("sweep", this.anim("sweep", false)).triggerableAnim("barrier", this.anim("barrier", false));
-                if ("animation.vaelith.".equals(this.animPrefix)) action.triggerableAnim("volley", this.anim("volley", false));
+                if ("animation.vaelith.".equals(this.animPrefix) || "animation.general_arcanist.".equals(this.animPrefix)) action.triggerableAnim("volley", this.anim("volley", false));
                 if (this.isSagaBoss()) action.triggerableAnim("death", this.anim("death", false));
             }
         }
@@ -177,7 +178,7 @@ public class RiftMob extends Monster implements GeoEntity {
             case "rift_brute" -> 11;
             case "void_caster" -> 9;
             case "rift_warden" -> 16;
-            case "spire_guardian", "vaelith", "fallen_hierophant" -> 14;
+            case "spire_guardian", "vaelith", "fallen_hierophant", "general_blade", "general_arcanist" -> 14;
             default -> 7;
         };
     }
@@ -204,7 +205,7 @@ public class RiftMob extends Monster implements GeoEntity {
 
     /** Which melee animation to play; the Spire Guardian alternates an overhead halberd chop and a wide sweep. */
     protected String attackAnimName() {
-        return (this.getType() == ModEntities.SPIRE_GUARDIAN.get() || this.getType() == ModEntities.FALLEN_HIEROPHANT.get()) && this.random.nextBoolean() ? "sweep" : "attack";
+        return (this.getType() == ModEntities.SPIRE_GUARDIAN.get() || this.getType() == ModEntities.FALLEN_HIEROPHANT.get() || this.getType() == ModEntities.GENERAL_BLADE.get() || this.getType() == ModEntities.GENERAL_ARCANIST.get()) && this.random.nextBoolean() ? "sweep" : "attack";
     }
 
     @Override

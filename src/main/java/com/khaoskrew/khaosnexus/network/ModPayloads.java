@@ -39,6 +39,14 @@ public final class ModPayloads {
                 context.enqueueWork(() -> showFeedback(payload)));
         registrar.playToClient(CardPayload.TYPE, CardPayload.STREAM_CODEC, (payload, context) ->
                 context.enqueueWork(() -> openCard(payload)));
+        registrar.playToClient(SagaPayload.TYPE, SagaPayload.STREAM_CODEC, (payload, context) ->
+                context.enqueueWork(() -> {
+                    try {
+                        Class.forName("com.khaoskrew.khaosnexus.client.HunterCardScreen").getMethod("saga", SagaPayload.class).invoke(null, payload);
+                    } catch (ReflectiveOperationException ex) {
+                        throw new IllegalStateException(ex);
+                    }
+                }));
         registrar.playToServer(ActionPayload.TYPE, ActionPayload.STREAM_CODEC, ActionPayload::handle);
     }
 }

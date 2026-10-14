@@ -91,12 +91,7 @@ public final class OathEffects {
         HunterProfile prof = HunterRanks.profile(p);
         String oath = Saga.oath(prof);
         int n = Saga.oathNodes(prof);
-        boolean un = oath.equals(UNBROKEN) && n >= 1, cr = oath.equals(CRIMSON) && n >= 1, qs = oath.equals(QUIET) && n >= 1;
-        mod(p, Attributes.MAX_HEALTH, MOD_A, un ? 0.10 : qs ? -0.08 : 0);
-        mod(p, Attributes.ATTACK_DAMAGE, MOD_A, un ? -0.05 : 0);
-        mod(p, Attributes.ATTACK_SPEED, MOD_B, cr ? 0.08 : 0);
-        mod(p, Attributes.ARMOR, MOD_B, cr ? -0.06 : 0);
-        if (p.getHealth() > p.getMaxHealth()) p.setHealth(p.getMaxHealth());
+        refresh(p);
         // Unbroken 3: taunt pulse every 20s
         if (oath.equals(UNBROKEN) && n >= 3 && now % 400 == 0) {
             for (Mob m : level.getEntitiesOfClass(Mob.class, p.getBoundingBox().inflate(8), x -> x instanceof Enemy && x.isAlive())) m.setTarget(p);
@@ -108,6 +103,19 @@ public final class OathEffects {
             p.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 60, 2));
             level.playSound(null, p.blockPosition(), SoundEvents.TOTEM_USE, SoundSource.PLAYERS, 0.6F, 1.3F);
         }
+    }
+
+    /** Applies (or removes) the node-1 stat trade of the sworn oath. */
+    public static void refresh(ServerPlayer p) {
+        HunterProfile prof = HunterRanks.profile(p);
+        String oath = Saga.oath(prof);
+        int n = Saga.oathNodes(prof);
+        boolean un = oath.equals(UNBROKEN) && n >= 1, cr = oath.equals(CRIMSON) && n >= 1, qs = oath.equals(QUIET) && n >= 1;
+        mod(p, Attributes.MAX_HEALTH, MOD_A, un ? 0.10 : qs ? -0.08 : 0);
+        mod(p, Attributes.ATTACK_DAMAGE, MOD_A, un ? -0.05 : 0);
+        mod(p, Attributes.ATTACK_SPEED, MOD_B, cr ? 0.08 : 0);
+        mod(p, Attributes.ARMOR, MOD_B, cr ? -0.06 : 0);
+        if (p.getHealth() > p.getMaxHealth()) p.setHealth(p.getMaxHealth());
     }
 
     @SubscribeEvent

@@ -42,6 +42,10 @@ public class RiftBoss extends RiftMob {
         return new RiftBoss(type, level, BossEvent.BossBarColor.PURPLE);
     }
 
+    public static RiftBoss general(EntityType<? extends RiftBoss> type, Level level) {
+        return new RiftBoss(type, level, BossEvent.BossBarColor.WHITE);
+    }
+
     public static RiftBoss guardian(EntityType<? extends RiftBoss> type, Level level) {
         return new RiftBoss(type, level, BossEvent.BossBarColor.PURPLE);
     }
@@ -140,7 +144,7 @@ public class RiftBoss extends RiftMob {
             else if (enraged && d < 16.0D && this.hasLineOfSight(target)) this.startSpecial("lunge");
             else return;
         } else {
-            boolean vaelith = this.getType() == ModEntities.VAELITH.get();
+            boolean vaelith = this.getType() == ModEntities.VAELITH.get() || this.getType() == ModEntities.GENERAL_ARCANIST.get();
             if (enraged && this.barrierTicks <= 0 && this.random.nextBoolean()) this.startSpecial("barrier");
             else if (vaelith && d >= 5.0D && d < 20.0D && this.hasLineOfSight(target)) this.startSpecial("volley");
             else if (d < 4.5D) this.startSpecial("spin");

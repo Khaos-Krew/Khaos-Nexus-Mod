@@ -25,6 +25,9 @@ public record ActionPayload(int action, String id) implements CustomPacketPayloa
     public static final int OPEN_CARD = 3;
     public static final int SKILL_SPEND = 4;
     public static final int SKILL_RESPEC = 5;
+    public static final int OATH_SWEAR = 6;
+    public static final int OATH_NODE = 7;
+    public static final int OATH_RESPEC = 8;
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
@@ -55,6 +58,30 @@ public record ActionPayload(int action, String id) implements CustomPacketPayloa
                 player.displayClientMessage(net.minecraft.network.chat.Component.translatable(payload.action() == SKILL_RESPEC
                         && r == com.khaoskrew.khaosnexus.skill.SkillService.Result.OK ? "khaosnexus.skill.respec_done"
                         : "khaosnexus.skill.result." + r.name().toLowerCase(java.util.Locale.ROOT)), true);
+                com.khaoskrew.khaosnexus.card.HunterCardItem.sendCard(player);
+            } else if (payload.action() >= OATH_SWEAR && payload.action() <= OATH_RESPEC) {
+                if (!com.khaoskrew.khaosnexus.card.HunterCard.isUnlocked(player)) {
+                    return;
+                }
+                var prof = com.khaoskrew.khaosnexus.hunter.HunterRanks.profile(player);
+                boolean ok;
+                String key;
+                if (payload.action() == OATH_SWEAR) {
+                    var id = net.minecraft.resources.ResourceLocation.tryParse(payload.id());
+                    ok = id != null && com.khaoskrew.khaosnexus.saga.Saga.swear(prof, id);
+                    key = ok ? "khaosnexus.oath.ui.sworn" : "khaosnexus.oath.ui.cant_swear";
+                } else if (payload.action() == OATH_NODE) {
+                    ok = com.khaoskrew.khaosnexus.saga.Saga.unlockNode(prof);
+                    key = ok ? "khaosnexus.oath.ui.node_done" : "khaosnexus.oath.ui.node_fail";
+                } else {
+                    ok = com.khaoskrew.khaosnexus.saga.Saga.respec(prof);
+                    key = ok ? "khaosnexus.oath.ui.respec_done" : "khaosnexus.oath.ui.respec_fail";
+                }
+                player.displayClientMessage(net.minecraft.network.chat.Component.translatable(key), true);
+                if (ok) {
+                    player.playNotifySound(net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_CHIME, net.minecraft.sounds.SoundSource.PLAYERS, 1.0F, 0.8F);
+                }
+                com.khaoskrew.khaosnexus.hunter.HunterRanks.sync(player);
                 com.khaoskrew.khaosnexus.card.HunterCardItem.sendCard(player);
             } else if (payload.action() == OPEN_CARD) {
                 net.minecraft.world.item.ItemStack card = com.khaoskrew.khaosnexus.compat.CuriosCompat.wornCard(player);

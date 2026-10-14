@@ -63,7 +63,7 @@ public class HunterCardScreen extends Screen {
         float k = scale();
         int x = (int) (left() * k);
         int y = (int) ((top() - 22) * k);
-        String[] tabs = {"khaosnexus.card.tab.info", "khaosnexus.card.tab.gates", "khaosnexus.card.tab.settings", "khaosnexus.card.tab.forge", "khaosnexus.card.tab.skills"};
+        String[] tabs = {"khaosnexus.card.tab.info", "khaosnexus.card.tab.gates", "khaosnexus.card.tab.settings", "khaosnexus.card.tab.forge", "khaosnexus.card.tab.skills", "khaosnexus.card.tab.saga"};
         int tw = (int) (W * k / tabs.length); // tabs span the scaled card width
         for (int i = 0; i < tabs.length; i++) {
             int t = i;
@@ -88,6 +88,99 @@ public class HunterCardScreen extends Screen {
         }
         if (this.tab == 4) {
             this.skillWidgets(k);
+        }
+        if (this.tab == 5) {
+            this.sagaWidgets(k);
+        }
+    }
+
+    private static com.khaoskrew.khaosnexus.network.SagaPayload sagaDefs = new com.khaoskrew.khaosnexus.network.SagaPayload(List.of(), 0);
+
+    public static void saga(com.khaoskrew.khaosnexus.network.SagaPayload payload) {
+        sagaDefs = payload;
+    }
+
+    private static void act(int action, String id) {
+        net.neoforged.neoforge.network.PacketDistributor.sendToServer(new com.khaoskrew.khaosnexus.network.ActionPayload(action, id));
+    }
+
+    private com.khaoskrew.khaosnexus.network.SagaPayload.Oath sworn(HunterProfile p) {
+        String id = com.khaoskrew.khaosnexus.saga.Saga.oath(p);
+        for (var o : sagaDefs.oaths()) if (o.id().equals(id)) return o;
+        return null;
+    }
+
+    private void sagaWidgets(float k) {
+        HunterProfile p = this.minecraft.player.getData(ModAttachments.HUNTER);
+        var o = sworn(p);
+        boolean national = com.khaoskrew.khaosnexus.endgame.Prestige.level(p) >= com.khaoskrew.khaosnexus.endgame.Prestige.NATIONAL;
+        if (o == null) {
+            int i = 0;
+            for (var d : sagaDefs.oaths()) {
+                int bx = (int) ((left() + 8 + (i % 2) * 144) * k);
+                int by = (int) ((top() + 52 + (i / 2) * 64) * k);
+                Button b = Button.builder(Component.translatable("khaosnexus.oath.ui.swear", Component.translatable("khaosnexus.oath." + ResourceLocationHelper.parse(d.id()).getPath())),
+                        btn -> act(com.khaoskrew.khaosnexus.network.ActionPayload.OATH_SWEAR, d.id())).bounds(bx, by, (int) (140 * k), (int) (18 * k)).build();
+                net.minecraft.network.chat.MutableComponent tip = Component.translatable("khaosnexus.oath." + ResourceLocationHelper.parse(d.id()).getPath()).withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE);
+                for (int n = 0; n < d.nodes().size(); n++) {
+                    tip.append("\n").append(Component.literal((n + 1) + ". " + d.nodes().get(n)).withStyle(net.minecraft.ChatFormatting.GRAY));
+                }
+                if (!national) tip.append("\n").append(Component.translatable("khaosnexus.oath.ui.need_national").withStyle(net.minecraft.ChatFormatting.RED));
+                b.setTooltip(net.minecraft.client.gui.components.Tooltip.create(tip));
+                b.active = national;
+                this.addRenderableWidget(b);
+                i++;
+            }
+            return;
+        }
+        int have = com.khaoskrew.khaosnexus.saga.Saga.oathNodes(p);
+        if (have < Math.min(o.nodes().size(), o.costs().size())) {
+            int cost = o.costs().get(have);
+            Button b = Button.builder(Component.translatable("khaosnexus.oath.ui.unlock", cost),
+                    btn -> act(com.khaoskrew.khaosnexus.network.ActionPayload.OATH_NODE, ""))
+                    .bounds((int) ((left() + 8) * k), (int) ((top() + H - 26) * k), (int) (120 * k), (int) (18 * k)).build();
+            b.active = com.khaoskrew.khaosnexus.saga.Saga.shards(p) >= cost;
+            this.addRenderableWidget(b);
+        }
+        Button r = Button.builder(Component.translatable("khaosnexus.oath.ui.respec", sagaDefs.respecCost()),
+                btn -> act(com.khaoskrew.khaosnexus.network.ActionPayload.OATH_RESPEC, ""))
+                .bounds((int) ((left() + W - 128) * k), (int) ((top() + H - 26) * k), (int) (120 * k), (int) (18 * k)).build();
+        r.active = com.khaoskrew.khaosnexus.saga.Saga.shards(p) >= sagaDefs.respecCost();
+        this.addRenderableWidget(r);
+    }
+
+    private void sagaPanel(GuiGraphics g, HunterProfile p, int x, int y) {
+        int shards = com.khaoskrew.khaosnexus.saga.Saga.shards(p);
+        g.drawString(this.font, Component.translatable("khaosnexus.oath.ui.shards", shards), x, y, 0xFFE0C070, false);
+        var o = sworn(p);
+        if (o == null) {
+            g.drawString(this.font, Component.translatable("khaosnexus.oath.ui.choose"), x, y + 12, 0xFFA898B8, false);
+            int i = 0;
+            for (var d : sagaDefs.oaths()) {
+                int bx = x + (i % 2) * 144, by = y + 46 + (i / 2) * 64;
+                g.drawString(this.font, Component.translatable("khaosnexus.oath.ui.role", d.role()), bx, by, 0xFF8A7A9A, false);
+                if (!d.nodes().isEmpty()) {
+                    g.drawString(this.font, this.font.plainSubstrByWidth(d.nodes().get(0), 138), bx, by + 12, 0xFFC0B0D0, false);
+                }
+                i++;
+            }
+            return;
+        }
+        String path = ResourceLocationHelper.parse(o.id()).getPath();
+        int have = com.khaoskrew.khaosnexus.saga.Saga.oathNodes(p);
+        g.drawString(this.font, Component.translatable("khaosnexus.oath." + path).withStyle(net.minecraft.ChatFormatting.BOLD), x, y + 14, 0xFFB44BE6, false);
+        for (int n = 0; n < o.nodes().size(); n++) {
+            int ny = y + 34 + n * 30;
+            boolean on = n < have;
+            int col = on ? 0xFFE0C070 : n == have ? 0xFFF2EEF8 : 0xFF6A5A7A;
+            g.fill(x, ny - 2, x + 18, ny + 16, on ? 0xFF7A3AA8 : 0xFF2A1A3A);
+            g.fill(x + 1, ny - 1, x + 17, ny + 15, on ? 0xFFB44BE6 : 0xFF140C1E);
+            g.drawCenteredString(this.font, String.valueOf(n + 1), x + 9, ny + 3, on ? 0xFFFFFFFF : 0xFF8A7A9A);
+            if (n + 1 < o.nodes().size()) g.fill(x + 8, ny + 16, x + 10, ny + 28, on && n + 1 < have ? 0xFFB44BE6 : 0xFF3A2A4A);
+            g.drawString(this.font, this.font.plainSubstrByWidth(o.nodes().get(n), W - 60), x + 26, ny, col, false);
+            String state = on ? Component.translatable("khaosnexus.oath.ui.active").getString()
+                    : n < o.costs().size() ? Component.translatable("khaosnexus.oath.ui.cost", o.costs().get(n)).getString() : "";
+            g.drawString(this.font, state, x + 26, ny + 9, on ? 0xFF8AE07A : 0xFF8A7A9A, false);
         }
     }
 
@@ -183,6 +276,8 @@ public class HunterCardScreen extends Screen {
                     }
                 }
             }
+        } else if (this.tab == 5) {
+            this.sagaPanel(g, p, x + 8, y + 24);
         } else {
             g.drawString(this.font, Component.translatable("khaosnexus.card.set.note"), x + 8, y + 20, 0xFFA898B8, false);
         }

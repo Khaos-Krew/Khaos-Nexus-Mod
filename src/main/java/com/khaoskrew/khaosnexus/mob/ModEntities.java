@@ -35,6 +35,12 @@ public final class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<RiftBoss>> FALLEN_HIEROPHANT = ENTITIES.register("fallen_hierophant",
             () -> EntityType.Builder.<RiftBoss>of(RiftBoss::hierophant, MobCategory.MONSTER).sized(1.4F, 4.6F).clientTrackingRange(12)
                     .build(KhaosNexus.MODID + ":fallen_hierophant"));
+    public static final DeferredHolder<EntityType<?>, EntityType<RiftBoss>> GENERAL_BLADE = ENTITIES.register("general_blade",
+            () -> EntityType.Builder.<RiftBoss>of(RiftBoss::general, MobCategory.MONSTER).sized(1.3F, 3.9F).clientTrackingRange(12)
+                    .build(KhaosNexus.MODID + ":general_blade"));
+    public static final DeferredHolder<EntityType<?>, EntityType<RiftBoss>> GENERAL_ARCANIST = ENTITIES.register("general_arcanist",
+            () -> EntityType.Builder.<RiftBoss>of(RiftBoss::general, MobCategory.MONSTER).sized(1.3F, 3.9F).clientTrackingRange(12)
+                    .build(KhaosNexus.MODID + ":general_arcanist"));
     public static final DeferredHolder<EntityType<?>, EntityType<VoidOrb>> VOID_ORB = ENTITIES.register("void_orb",
             () -> EntityType.Builder.<VoidOrb>of(VoidOrb::new, MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(6).updateInterval(2)
                     .build(KhaosNexus.MODID + ":void_orb"));
@@ -57,6 +63,8 @@ public final class ModEntities {
     public static final DeferredItem<DeferredSpawnEggItem> SPIRE_GUARDIAN_EGG = egg("spire_guardian", SPIRE_GUARDIAN, 0xFFFFFF, 0xFFFFFF);
     public static final DeferredItem<DeferredSpawnEggItem> VAELITH_EGG = egg("vaelith", VAELITH, 0x334A78, 0x8AF0FF);
     public static final DeferredItem<DeferredSpawnEggItem> FALLEN_HIEROPHANT_EGG = egg("fallen_hierophant", FALLEN_HIEROPHANT, 0x3A1620, 0xB848FF);
+    public static final DeferredItem<DeferredSpawnEggItem> GENERAL_BLADE_EGG = egg("general_blade", GENERAL_BLADE, 0x3A3A42, 0xFF5A3A);
+    public static final DeferredItem<DeferredSpawnEggItem> GENERAL_ARCANIST_EGG = egg("general_arcanist", GENERAL_ARCANIST, 0x2A3436, 0x5AF0C8);
 
     private ModEntities() {}
 
@@ -93,6 +101,8 @@ public final class ModEntities {
         // Act I seal guardians: S gate tuning multiplies these. Between the Guardian and the Warden: a real fight, not a wall.
         event.put(VAELITH.get(), RiftMob.attributes(220.0D, 11.0D, 0.27D, 0.6D).add(Attributes.ARMOR, 6.0D).build());
         event.put(FALLEN_HIEROPHANT.get(), RiftMob.attributes(260.0D, 13.0D, 0.24D, 0.9D).add(Attributes.ARMOR, 10.0D).build());
+        event.put(GENERAL_BLADE.get(), RiftMob.attributes(170.0D, 12.0D, 0.28D, 0.8D).add(Attributes.ARMOR, 12.0D).build());
+        event.put(GENERAL_ARCANIST.get(), RiftMob.attributes(140.0D, 10.0D, 0.26D, 0.5D).add(Attributes.ARMOR, 5.0D).build());
         event.put(SPIRE_GUARDIAN.get(), RiftMob.attributes(80.0D, 8.0D, 0.25D, 0.8D).add(Attributes.ARMOR, 6.0D).build());
     }
 }

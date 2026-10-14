@@ -124,4 +124,45 @@ public class SagaGameTests {
         }
         h.succeed();
     }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform", timeoutTicks = 200)
+    public static void crownlessGeneralsCopyClassAndSpawnTagged(GameTestHelper h) {
+        var E = com.khaoskrew.khaosnexus.mob.ModEntities.class;
+        h.assertTrue(CrownlessGenerals.forClass(com.khaoskrew.khaosnexus.hunter.HunterClass.BERSERKER) == com.khaoskrew.khaosnexus.mob.ModEntities.GENERAL_BLADE.get(), "melee -> Blade");
+        h.assertTrue(CrownlessGenerals.forClass(com.khaoskrew.khaosnexus.hunter.HunterClass.CASTER) == com.khaoskrew.khaosnexus.mob.ModEntities.GENERAL_ARCANIST.get(), "caster -> Arcanist");
+        h.assertTrue(CrownlessGenerals.forClass(com.khaoskrew.khaosnexus.hunter.HunterClass.RANGER) == com.khaoskrew.khaosnexus.mob.ModEntities.GENERAL_ARCANIST.get(), "ranged -> Arcanist");
+        var at = h.absolutePos(new net.minecraft.core.BlockPos(1, 2, 1));
+        for (var type : java.util.List.of(com.khaoskrew.khaosnexus.mob.ModEntities.GENERAL_BLADE.get(), com.khaoskrew.khaosnexus.mob.ModEntities.GENERAL_ARCANIST.get())) {
+            var m = CrownlessGenerals.spawn(h.getLevel(), GateRank.A, type, at, 0);
+            h.assertTrue(m instanceof com.khaoskrew.khaosnexus.mob.RiftBoss rb && rb.isSagaBoss(), "general is a saga boss");
+            h.assertTrue(m.getTags().contains(CrownlessGenerals.TAG), "tagged for shard drops");
+            h.assertTrue(m.getCustomName().getString().contains(type.getDescription().getString()), "boss bar shows the general");
+            m.discard();
+        }
+        h.succeed();
+    }
+
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform", timeoutTicks = 100)
+    public static void oathNodesApplyAttributes(GameTestHelper h) {
+        var player = h.makeMockServerPlayerInLevel();
+        var p = com.khaoskrew.khaosnexus.hunter.HunterRanks.profile(player);
+        p.endgame.putInt(Prestige.KEY, Prestige.NATIONAL);
+        double base = player.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH);
+        h.assertTrue(Saga.swear(p, id("oath_of_the_unbroken")), "swear");
+        Saga.addShards(p, 1);
+        h.assertTrue(Saga.unlockNode(p), "node 1");
+        h.assertTrue(OathEffects.nodes(player, OathEffects.UNBROKEN) == 1, "node count");
+        OathEffects.refresh(player);
+        h.runAfterDelay(2, () -> {
+            double now = player.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH);
+            h.assertTrue(Math.abs(now - base * 1.10) < 0.01, "+10% max health: " + base + " -> " + now);
+            Saga.addShards(p, 100);
+            Saga.respec(p);
+            OathEffects.refresh(player);
+            h.runAfterDelay(2, () -> {
+                h.assertTrue(Math.abs(player.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH) - base) < 0.01, "removed after respec");
+                h.succeed();
+            });
+        });
+    }
 }

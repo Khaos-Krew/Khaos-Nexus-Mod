@@ -124,6 +124,9 @@ public class HunterCardItem extends Item {
     /** Sends (or refreshes) the card screen contents. */
     public static void sendCard(ServerPlayer server) {
         int radius = Config.CARD_GATE_RADIUS.get();
+        if (net.neoforged.neoforge.network.registration.NetworkRegistry.hasChannel(server.connection, com.khaoskrew.khaosnexus.network.SagaPayload.TYPE.id())) {
+            PacketDistributor.sendToPlayer(server, com.khaoskrew.khaosnexus.network.SagaPayload.build());
+        }
         PacketDistributor.sendToPlayer(server, new CardPayload(nearbyGates((ServerLevel) server.level(), server.blockPosition(), radius), radius,
                 com.khaoskrew.khaosnexus.forge.ForgeRecipes.cardLines(server),
                 com.khaoskrew.khaosnexus.skill.SkillService.header(server), com.khaoskrew.khaosnexus.skill.SkillService.lines(server)));
