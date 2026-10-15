@@ -85,6 +85,14 @@ public final class DungeonRules {
         }
     }
 
+    /** Explosions (creepers, mob abilities, TNT carts) never break blocks inside gate dungeons or the Spire. */
+    @SubscribeEvent
+    public static void onExplode(net.neoforged.neoforge.event.level.ExplosionEvent.Detonate event) {
+        if (Config.DUNGEON_NO_BUILD.get() && isDungeon(event.getLevel())) {
+            event.getAffectedBlocks().clear();
+        }
+    }
+
     @SubscribeEvent
     public static void onBreak(BlockEvent.BreakEvent event) {
         if (ruled(event.getPlayer(), Config.DUNGEON_NO_BUILD.get())) {

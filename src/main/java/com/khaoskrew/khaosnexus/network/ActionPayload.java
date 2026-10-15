@@ -32,9 +32,23 @@ public record ActionPayload(int action, String id) implements CustomPacketPayloa
         return TYPE;
     }
 
+    /** Per-player packet budget: at most MAX_PER_SECOND actions per 20 ticks; extra packets are dropped. */
+    public static final java.util.Map<java.util.UUID, long[]> BUDGET = new java.util.concurrent.ConcurrentHashMap<>();
+    public static final int MAX_PER_SECOND = 10;
+
+    public static boolean allow(ServerPlayer player) {
+        long now = player.server.getTickCount();
+        long[] b = BUDGET.computeIfAbsent(player.getUUID(), k -> new long[] {now, 0});
+        if (now - b[0] >= 20 || now < b[0]) {
+            b[0] = now;
+            b[1] = 0;
+        }
+        return ++b[1] <= MAX_PER_SECOND;
+    }
+
     public static void handle(ActionPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
-            if (!(context.player() instanceof ServerPlayer player)) {
+            if (!(context.player() instanceof ServerPlayer player) || !allow(player)) {
                 return;
             }
             if (payload.action() == PRIMARY) {

@@ -156,7 +156,7 @@ public final class SkillService {
         Item cost = respecItem();
         int need = Config.SKILL_RESPEC_COUNT.get();
         if (cost != null && !player.getAbilities().instabuild) {
-            if (player.getInventory().countItem(cost) < need) {
+            if (player.getInventory().items.stream().filter(st -> st.is(cost)).mapToInt(ItemStack::getCount).sum() < need) {
                 return Result.NO_RESPEC_ITEM;
             }
             int left = need;

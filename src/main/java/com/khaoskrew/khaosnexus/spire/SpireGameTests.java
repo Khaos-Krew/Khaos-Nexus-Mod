@@ -162,4 +162,32 @@ public class SpireGameTests {
         SpireService.LAST_TRIP.remove(player.getUUID());
         helper.succeed();
     }
+
+    @SuppressWarnings("removal")
+    @net.minecraft.gametest.framework.GameTest(templateNamespace = com.khaoskrew.khaosnexus.KhaosNexus.MODID, template = "gate_platform")
+    public static void actionRateLimit(net.minecraft.gametest.framework.GameTestHelper helper) {
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        com.khaoskrew.khaosnexus.network.ActionPayload.BUDGET.remove(player.getUUID());
+        int ok = 0;
+        for (int i = 0; i < 50; i++) {
+            if (com.khaoskrew.khaosnexus.network.ActionPayload.allow(player)) ok++;
+        }
+        helper.assertTrue(ok == com.khaoskrew.khaosnexus.network.ActionPayload.MAX_PER_SECOND, "packet budget caps a burst, got " + ok);
+        com.khaoskrew.khaosnexus.network.ActionPayload.BUDGET.remove(player.getUUID());
+        helper.succeed();
+    }
+
+    @SuppressWarnings("removal")
+    @net.minecraft.gametest.framework.GameTest(templateNamespace = com.khaoskrew.khaosnexus.KhaosNexus.MODID, template = "gate_platform")
+    public static void respecChargesMainInventoryOnly(net.minecraft.gametest.framework.GameTestHelper helper) {
+        net.minecraft.world.item.Item cost = com.khaoskrew.khaosnexus.skill.SkillService.respecItem();
+        if (cost == null) { helper.succeed(); return; }
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+        com.khaoskrew.khaosnexus.hunter.ClassService.equip(player, com.khaoskrew.khaosnexus.hunter.HunterClass.values()[0].id());
+        player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND, new net.minecraft.world.item.ItemStack(cost, 64));
+        var r = com.khaoskrew.khaosnexus.skill.SkillService.respec(player);
+        helper.assertTrue(r == com.khaoskrew.khaosnexus.skill.SkillService.Result.NO_RESPEC_ITEM, "offhand stack can't pay for a free respec, got " + r);
+        helper.succeed();
+    }
 }
