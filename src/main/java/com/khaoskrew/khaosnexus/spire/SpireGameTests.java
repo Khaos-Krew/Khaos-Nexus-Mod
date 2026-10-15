@@ -146,4 +146,20 @@ public class SpireGameTests {
         helper.assertTrue(SpireService.minRank() == com.khaoskrew.khaosnexus.gate.GateRank.E, "rank gate is off by default");
         helper.succeed();
     }
+
+    @SuppressWarnings("removal")
+    @net.minecraft.gametest.framework.GameTest(templateNamespace = com.khaoskrew.khaosnexus.KhaosNexus.MODID, template = "gate_platform")
+    public static void spireTravelGuards(net.minecraft.gametest.framework.GameTestHelper helper) {
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        var dim = player.level().dimension();
+        SpireService.leave(player);
+        helper.assertTrue(player.level().dimension() == dim, "leave outside the Spire does not teleport");
+        SpireService.checkpoint(player);
+        helper.assertTrue(player.level().dimension() == dim, "checkpoint outside the Spire does not teleport");
+        SpireService.LAST_TRIP.remove(player.getUUID());
+        helper.assertTrue(SpireService.tripReady(player), "first trip allowed");
+        helper.assertFalse(SpireService.tripReady(player), "second trip within the cooldown refused");
+        SpireService.LAST_TRIP.remove(player.getUUID());
+        helper.succeed();
+    }
 }
