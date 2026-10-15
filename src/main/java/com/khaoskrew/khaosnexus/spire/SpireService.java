@@ -84,7 +84,38 @@ public final class SpireService {
         return new BlockPos(x, 64, Math.max(1, floor) * 256);
     }
 
+    /** Spire travel guards (anti-exploit): leave/checkpoint only work inside the Spire; enter is refused from the Spire or from a
+     * gate dungeon (no escaping a gate without clearing or leaving it); enter/checkpoint rebuild a town, so they have a per-player cooldown. */
+    static final java.util.Map<java.util.UUID, Long> LAST_TRIP = new java.util.concurrent.ConcurrentHashMap<>();
+    static final int TRIP_COOLDOWN_TICKS = 60;
+
+    static boolean inSpire(ServerPlayer player) {
+        return player.level().dimension() == DIMENSION;
+    }
+
+    static boolean tripReady(ServerPlayer player) {
+        long now = player.server.overworld().getGameTime();
+        Long last = LAST_TRIP.get(player.getUUID());
+        if (last != null && now - last < TRIP_COOLDOWN_TICKS && now >= last) {
+            player.displayClientMessage(Component.translatable("khaosnexus.spire.cooldown"), true);
+            return false;
+        }
+        LAST_TRIP.put(player.getUUID(), now);
+        return true;
+    }
+
     public static void enter(ServerPlayer player) {
+        if (inSpire(player)) {
+            player.displayClientMessage(Component.translatable("khaosnexus.spire.already_inside"), false);
+            return;
+        }
+        if (player.level().dimension().location().getNamespace().equals(com.khaoskrew.khaosnexus.KhaosNexus.MODID)) {
+            player.displayClientMessage(Component.translatable("khaosnexus.spire.not_from_gate"), false);
+            return;
+        }
+        if (!tripReady(player)) {
+            return;
+        }
         ServerLevel spire = player.server.getLevel(DIMENSION);
         if (spire == null) {
             player.displayClientMessage(Component.translatable("khaosnexus.spire.missing"), false);
@@ -125,6 +156,10 @@ public final class SpireService {
     }
 
     public static void leave(ServerPlayer player) {
+        if (!inSpire(player)) {
+            player.displayClientMessage(Component.translatable("khaosnexus.spire.not_inside"), false);
+            return;
+        }
         ServerLevel overworld = player.server.overworld();
         BlockPos spawn = overworld.getSharedSpawnPos();
         ServerLevel target = overworld;
@@ -139,6 +174,13 @@ public final class SpireService {
     }
 
     public static void checkpoint(ServerPlayer player) {
+        if (!inSpire(player)) {
+            player.displayClientMessage(Component.translatable("khaosnexus.spire.not_inside"), false);
+            return;
+        }
+        if (!tripReady(player)) {
+            return;
+        }
         ServerLevel spire = player.server.getLevel(DIMENSION);
         if (spire == null) {
             player.displayClientMessage(Component.translatable("khaosnexus.spire.missing"), false);
