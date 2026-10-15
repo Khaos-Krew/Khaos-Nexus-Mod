@@ -25,6 +25,7 @@ public record ActionPayload(int action, String id) implements CustomPacketPayloa
     public static final int OPEN_CARD = 3;
     public static final int SKILL_SPEND = 4;
     public static final int SKILL_RESPEC = 5;
+    public static final int GUILD = 9;
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
@@ -44,6 +45,8 @@ public record ActionPayload(int action, String id) implements CustomPacketPayloa
                 } else {
                     ClassAbilities.cast(player, false);
                 }
+            } else if (payload.action() == GUILD) {
+                com.khaoskrew.khaosnexus.card.GuildActions.run(player, payload.id());
             } else if (payload.action() == EQUIP) {
                 ClassService.equip(player, payload.id());
             } else if (payload.action() == SKILL_SPEND || payload.action() == SKILL_RESPEC) {

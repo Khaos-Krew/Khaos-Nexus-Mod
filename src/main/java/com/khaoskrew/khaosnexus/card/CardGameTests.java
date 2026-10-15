@@ -72,4 +72,31 @@ public class CardGameTests {
         }
         helper.succeed();
     }
+
+    @SuppressWarnings("removal")
+    @GameTest(templateNamespace = KhaosNexus.MODID, template = "gate_platform")
+    public static void guildButtonsAreSafePlayerCommands(GameTestHelper helper) {
+        ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        var dispatcher = player.server.getCommands().getDispatcher();
+        var source = player.createCommandSourceStack().withPermission(0);
+        for (var e : GuildActions.COMMANDS.entrySet()) {
+            String cmd = e.getValue();
+            helper.assertFalse(cmd.contains(" set") || cmd.contains("newseason") || cmd.contains(" reset"), "no admin/reset commands: " + cmd);
+            var parse = dispatcher.parse(cmd, source);
+            helper.assertFalse(parse.getReader().canRead(), "registered and usable at permission 0: " + cmd);
+            helper.assertTrue(parse.getContext().getCommand() != null, "runnable as typed: " + cmd);
+        }
+        boolean required = Config.HUNTER_CARD_REQUIRED.get();
+        try {
+            Config.HUNTER_CARD_REQUIRED.set(true);
+            helper.assertFalse(GuildActions.run(player, "../op"), "unknown ids are ignored");
+            player.getData(ModAttachments.HUNTER).cardUnlocked = false;
+            helper.assertFalse(GuildActions.run(player, "bounty"), "a locked card cannot use the Guild tab");
+            HunterCard.unlock(player);
+            helper.assertTrue(GuildActions.run(player, "bounty"), "an unlocked hunter can");
+        } finally {
+            Config.HUNTER_CARD_REQUIRED.set(required);
+        }
+        helper.succeed();
+    }
 }
