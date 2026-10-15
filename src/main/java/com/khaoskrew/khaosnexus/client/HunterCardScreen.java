@@ -29,6 +29,8 @@ public class HunterCardScreen extends Screen {
     private final CardPayload.SkillHeader skillHeader;
     private final List<CardPayload.SkillLine> skills;
     private int tab;
+    private int guildTab = -1;
+    private boolean prestigeArmed;
     private int scroll;
 
     public HunterCardScreen(CardPayload payload) {
@@ -63,7 +65,8 @@ public class HunterCardScreen extends Screen {
         float k = scale();
         int x = (int) (left() * k);
         int y = (int) ((top() - 22) * k);
-        String[] tabs = {"khaosnexus.card.tab.info", "khaosnexus.card.tab.gates", "khaosnexus.card.tab.settings", "khaosnexus.card.tab.forge", "khaosnexus.card.tab.skills", "khaosnexus.card.tab.saga"};
+        String[] tabs = {"khaosnexus.card.tab.info", "khaosnexus.card.tab.gates", "khaosnexus.card.tab.settings", "khaosnexus.card.tab.forge", "khaosnexus.card.tab.skills", "khaosnexus.card.tab.saga", "khaosnexus.card.tab.guild"};
+        this.guildTab = tabs.length - 1;
         int tw = (int) (W * k / tabs.length); // tabs span the scaled card width
         for (int i = 0; i < tabs.length; i++) {
             int t = i;
@@ -75,6 +78,9 @@ public class HunterCardScreen extends Screen {
             }).bounds(x + i * tw, y, tw - 2, 18).build();
             b.active = i != this.tab;
             this.addRenderableWidget(b);
+        }
+        if (this.tab == this.guildTab) {
+            this.guildWidgets(k);
         }
         if (this.tab == 2) {
             int sx = this.width / 2 - 100;
@@ -278,6 +284,8 @@ public class HunterCardScreen extends Screen {
             }
         } else if (this.tab == 5) {
             this.sagaPanel(g, p, x + 8, y + 24);
+        } else if (this.tab == this.guildTab) {
+            g.drawString(this.font, Component.translatable("khaosnexus.card.guild.note"), x + 8, y + 20, 0xFFA898B8, false);
         } else {
             g.drawString(this.font, Component.translatable("khaosnexus.card.set.note"), x + 8, y + 20, 0xFFA898B8, false);
         }
@@ -411,6 +419,38 @@ public class HunterCardScreen extends Screen {
         protected void applyValue() {
             this.config.set(Math.round(this.current() * 100) / 100.0D);
             this.config.save();
+        }
+    }
+
+    static final String[] GUILD_BUTTONS = {"spire_enter", "spire_leave", "spire_status", "spire_checkpoint", "top", "weekly",
+            "prestige", "mastery", "aura", "title", "party", "bounty", "class"};
+
+    /** Guild tab: one button per hunter command, two columns. Class opens the class screen; prestige needs a second click. */
+    private void guildWidgets(float k) {
+        int bw = 140, bh = 20, gap = 4;
+        int sx = this.width / 2 - bw - gap / 2;
+        int sy = (int) ((top() + 30) * k);
+        for (int i = 0; i < GUILD_BUTTONS.length; i++) {
+            String id = GUILD_BUTTONS[i];
+            boolean armed = id.equals("prestige") && this.prestigeArmed;
+            Button b = Button.builder(Component.translatable(armed ? "khaosnexus.card.guild.prestige_confirm" : "khaosnexus.card.guild." + id), btn -> {
+                if (id.equals("class")) {
+                    this.minecraft.setScreen(new ClassScreen());
+                    return;
+                }
+                if (id.equals("prestige") && !this.prestigeArmed) {
+                    this.prestigeArmed = true;
+                    this.init();
+                    return;
+                }
+                this.prestigeArmed = false;
+                net.neoforged.neoforge.network.PacketDistributor.sendToServer(
+                        new com.khaoskrew.khaosnexus.network.ActionPayload(com.khaoskrew.khaosnexus.network.ActionPayload.GUILD, id));
+                if (id.startsWith("spire_enter") || id.startsWith("spire_leave")) {
+                    this.onClose();
+                }
+            }).bounds(sx + (i % 2) * (bw + gap), sy + (i / 2) * (bh + gap), bw, bh).build();
+            this.addRenderableWidget(b);
         }
     }
 }
