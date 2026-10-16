@@ -132,6 +132,68 @@ public final class DungeonRules {
         }
     }
 
+    // ---- Non-explosion block changes and escapes ----
+
+    /** Pearls and chorus fruit can't move players inside dungeons or the Spire (over walls, out of a locked rift). */
+    public static boolean blocksTeleport(ResourceKey<Level> dim, net.minecraft.world.entity.Entity e) {
+        return Config.DUNGEON_NO_BUILD.get() && isDungeonKey(dim) && !(e instanceof Player p && exempt(p));
+    }
+
+    /** Items that change blocks from a plain right-click (buckets, lily pads, frogspawn...) are refused. */
+    public static boolean blocksItemUse(ResourceKey<Level> dim, Player player, net.minecraft.world.item.ItemStack stack) {
+        if (!Config.DUNGEON_NO_BUILD.get() || !isDungeonKey(dim) || exempt(player)) {
+            return false;
+        }
+        var item = stack.getItem();
+        return item instanceof net.minecraft.world.item.BucketItem || item instanceof net.minecraft.world.item.SolidBucketItem
+                || item instanceof net.minecraft.world.item.BlockItem || item instanceof net.minecraft.world.item.BoneMealItem;
+    }
+
+    /** Mobs (Endermen, ravagers, withers, modded griefers) never change blocks in dungeons or the Spire. */
+    public static boolean deniesGrief(ResourceKey<Level> dim, @javax.annotation.Nullable net.minecraft.world.entity.Entity e) {
+        return Config.DUNGEON_NO_BUILD.get() && isDungeonKey(dim) && !(e instanceof Player);
+    }
+
+    public static boolean isDungeonKey(ResourceKey<Level> key) {
+        return key == GATE_DUNGEON || key == SpireService.DIMENSION;
+    }
+
+    @SubscribeEvent
+    public static void onPearl(net.neoforged.neoforge.event.entity.EntityTeleportEvent.EnderPearl event) {
+        if (blocksTeleport(event.getPlayer().level().dimension(), event.getPlayer())) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onChorus(net.neoforged.neoforge.event.entity.EntityTeleportEvent.ChorusFruit event) {
+        if (blocksTeleport(event.getEntityLiving().level().dimension(), event.getEntityLiving())) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onUseItem(PlayerInteractEvent.RightClickItem event) {
+        if (blocksItemUse(event.getLevel().dimension(), event.getEntity(), event.getItemStack())) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onGrief(net.neoforged.neoforge.event.entity.EntityMobGriefingEvent event) {
+        if (event.getEntity() != null && deniesGrief(event.getEntity().level().dimension(), event.getEntity())) {
+            event.setCanGrief(false);
+        }
+    }
+
+    /** Pistons (and contraptions built on piston events) can't push or pull blocks in dungeons or the Spire. */
+    @SubscribeEvent
+    public static void onPiston(net.neoforged.neoforge.event.level.PistonEvent.Pre event) {
+        if (Config.DUNGEON_NO_BUILD.get() && event.getLevel() instanceof Level l && isDungeonKey(l.dimension())) {
+            event.setCanceled(true);
+        }
+    }
+
     public static boolean interactable(BlockState state) {
         var b = state.getBlock();
         return b instanceof DoorBlock || b instanceof TrapDoorBlock || b instanceof FenceGateBlock

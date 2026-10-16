@@ -413,8 +413,7 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
         int minutes = com.khaoskrew.khaosnexus.Config.DUNGEON_ABANDON_MINUTES.get();
         if (minutes > 0 && now - this.lastOccupied > minutes * 1200L) {
             GateArena.announce(level, this.getBlockPos(), this.rankLine("khaosnexus.dungeon.collapsed"), false);
-            this.discardWave();
-            this.sync();
+            this.collapseDungeon(level);
             return true;
         }
         return false;
@@ -430,9 +429,23 @@ public class NexusGateBlockEntity extends BlockEntity implements software.bernie
                 && com.khaoskrew.khaosnexus.dungeon.DungeonInstances.get(dungeon).isLive(this.dungeonSlot, this.dungeonGen)) {
             return false;
         }
-        this.discardWave();
-        this.sync();
+        this.collapseDungeon(level);
         return true;
+    }
+
+    /**
+     * An opened dungeon that is abandoned or reclaimed closes the gate for good (no reward). Reopening it would build a
+     * fresh instance with new chests and a new boss, which let a party loot, leave and come back for another roll.
+     */
+    public void collapseDungeon(ServerLevel level) {
+        this.discardWave();
+        this.closed = true;
+        BlockState state = level.getBlockState(this.getBlockPos());
+        if (state.getBlock() instanceof NexusGateBlock && !state.getValue(NexusGateBlock.CLOSED)) {
+            level.setBlock(this.getBlockPos(), state.setValue(NexusGateBlock.CLOSED, true), Block.UPDATE_ALL);
+        }
+        this.setChanged();
+        this.sync();
     }
 
     public void rememberMob(UUID id, BlockPos anchor) {
