@@ -137,11 +137,24 @@ configurations {
     runtimeClasspath.extendsFrom localRuntime
 }
 
+// Relics 0.10.x support: compiled separately against the 0.10.7.8 API (its classes clash with the 0.12 API used by
+// main), then packed into the same jar. Loaded only by reflection when Relics 0.10 is detected at runtime.
+sourceSets {
+    relicsLegacy {
+        java.srcDir 'src/relicsLegacy/java'
+        compileClasspath += sourceSets.main.output
+    }
+}
+neoForge.addModdingDependenciesTo(sourceSets.relicsLegacy)
+
 dependencies {
     // Optional companions, compile-time only (never shipped or required). Their classes are only touched from
     // compat code that runs after a ModList check, so the mod loads fine without them.
     compileOnly("maven.modrinth:ars-nouveau:yWDnir1o") { transitive = false }
-    compileOnly("maven.modrinth:relics-mod:WKEe9sPL") { transitive = false }
+    compileOnly("maven.modrinth:relics-mod:WKEe9sPL") { transitive = false } // 0.12.8 API
+    relicsLegacyCompileOnly("maven.modrinth:relics-mod:nvZZMhJS") { transitive = false } // 0.10.7.8 API
+    relicsLegacyCompileOnly("maven.modrinth:curios:yohfFbgD") { transitive = false }
+    relicsLegacyCompileOnly "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
     compileOnly("maven.modrinth:curios:yohfFbgD") { transitive = false }
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
     // Example optional mod dependency with JEI
@@ -224,3 +237,6 @@ tasks.named('check') {
         dependsOn tasks.named('runGameTestServer')
     }
 }
+
+// Ship the Relics 0.10 sigil inside the main jar (and on the dev/gametest runtime).
+tasks.named('jar', Jar) { from sourceSets.relicsLegacy.output }
