@@ -37,21 +37,57 @@ public final class CompatItems {
 
     public static void register(IEventBus bus) {
         if (ars()) {
-            RIFT_SOURCE_SHARD = ITEMS.registerSimpleItem("rift_source_shard", new Item.Properties().rarity(Rarity.UNCOMMON));
-            ArsCompat.init();
-            com.khaoskrew.khaosnexus.compat.items.tome.TomeRegistry.register(ITEMS, HUNTER_TOMES);
+            guarded("Ars Nouveau", () -> {
+                need("com.hollingsworth.arsnouveau.api.registry.GlyphRegistry", "com.hollingsworth.arsnouveau.api.spell.AbstractEffect",
+                        "com.hollingsworth.arsnouveau.common.items.SpellBook", "com.hollingsworth.arsnouveau.api.mana.IManaDiscountEquipment");
+                // Link our Ars-facing classes now, so an API mismatch fails here (caught) instead of at registry time.
+                need("com.khaoskrew.khaosnexus.compat.items.RiftRendEffect", "com.khaoskrew.khaosnexus.compat.items.GatesenseEffect",
+                        "com.khaoskrew.khaosnexus.compat.items.tome.HunterTomeItem");
+                ArsCompat.init();
+                RIFT_SOURCE_SHARD = ITEMS.registerSimpleItem("rift_source_shard", new Item.Properties().rarity(Rarity.UNCOMMON));
+                com.khaoskrew.khaosnexus.compat.items.tome.TomeRegistry.register(ITEMS, HUNTER_TOMES);
+            });
         }
         if (relics()) {
-            RIFT_HUNTERS_SIGIL = ITEMS.register("rift_hunters_sigil", RelicsCompat::sigil);
+            guarded("Relics", () -> {
+                java.util.function.Supplier<Item> sigil = RelicsSupport.sigilFactory();
+                if (sigil != null) {
+                    RIFT_HUNTERS_SIGIL = ITEMS.register("rift_hunters_sigil", sigil);
+                }
+            });
         }
         if (artifacts()) {
-            RIFT_LANTERN = ITEMS.register("rift_lantern", () -> new RiftArtifactItem(RiftArtifactItem.Kind.LANTERN));
-            VOIDSTEP_ANKLET = ITEMS.register("voidstep_anklet", () -> new RiftArtifactItem(RiftArtifactItem.Kind.ANKLET));
-            GATEBREAKER_BAND = ITEMS.register("gatebreaker_band", () -> new RiftArtifactItem(RiftArtifactItem.Kind.BAND));
-            WARDENS_BROKEN_CHAIN = ITEMS.register("wardens_broken_chain", () -> new RiftArtifactItem(RiftArtifactItem.Kind.CHAIN));
-            GUARDIANS_PLUME = ITEMS.register("guardians_plume", () -> new RiftArtifactItem(RiftArtifactItem.Kind.PLUME));
-            HUNTERS_LUCKY_COIN = ITEMS.register("hunters_lucky_coin", () -> new RiftArtifactItem(RiftArtifactItem.Kind.COIN));
+            guarded("Artifacts", () -> {
+                need("top.theillusivec4.curios.api.CuriosApi");
+                RIFT_LANTERN = ITEMS.register("rift_lantern", () -> new RiftArtifactItem(RiftArtifactItem.Kind.LANTERN));
+                VOIDSTEP_ANKLET = ITEMS.register("voidstep_anklet", () -> new RiftArtifactItem(RiftArtifactItem.Kind.ANKLET));
+                GATEBREAKER_BAND = ITEMS.register("gatebreaker_band", () -> new RiftArtifactItem(RiftArtifactItem.Kind.BAND));
+                WARDENS_BROKEN_CHAIN = ITEMS.register("wardens_broken_chain", () -> new RiftArtifactItem(RiftArtifactItem.Kind.CHAIN));
+                GUARDIANS_PLUME = ITEMS.register("guardians_plume", () -> new RiftArtifactItem(RiftArtifactItem.Kind.PLUME));
+                HUNTERS_LUCKY_COIN = ITEMS.register("hunters_lucky_coin", () -> new RiftArtifactItem(RiftArtifactItem.Kind.COIN));
+            });
         }
         ITEMS.register(bus);
+    }
+
+    /** Runs one companion's setup; a missing or changed companion API logs a warning instead of crashing the game. */
+    static void guarded(String mod, Runnable setup) {
+        try {
+            setup.run();
+        } catch (LinkageError | ReflectiveOperationException | RuntimeException e) {
+            KhaosNexus.LOGGER.warn("Khaos Nexus: {} integration disabled (incompatible version installed?): {}", mod, e.toString());
+        }
+    }
+
+    /** Loads (and links) each class by name; throws if any is missing so the guarded block bails out. */
+    static void need(String... classes) throws ClassNotFoundException {
+        for (String c : classes) {
+            Class.forName(c, false, CompatItems.class.getClassLoader());
+        }
+    }
+
+    @FunctionalInterface
+    interface Runnable {
+        void run() throws ReflectiveOperationException;
     }
 }

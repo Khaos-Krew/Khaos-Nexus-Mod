@@ -21,7 +21,15 @@ public final class RiftArtifacts {
     private RiftArtifacts() {}
 
     static boolean worn(LivingEntity e, net.neoforged.neoforge.registries.DeferredItem<Item> item) {
-        return item != null && CompatItems.artifacts() && SoftCompat.ARTIFACTS.active() && CuriosBridge.equipped(e, item.get());
+        return item != null && CompatItems.artifacts() && SoftCompat.ARTIFACTS.active() && safeEquipped(e, item.get());
+    }
+
+    private static boolean safeEquipped(LivingEntity e, Item item) {
+        try {
+            return CuriosBridge.equipped(e, item);
+        } catch (LinkageError ex) {
+            return false; // CuriosBridge itself failed to link (Curios API missing)
+        }
     }
 
     /** Rift Lantern: night vision while a rift mob is within 24 blocks (dungeons, gate waves). */

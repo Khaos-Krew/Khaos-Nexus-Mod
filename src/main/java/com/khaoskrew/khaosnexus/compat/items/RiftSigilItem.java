@@ -111,8 +111,4 @@ public class RiftSigilItem extends WearableRelicItem {
             }
         }
     }
-
-    static {
-        KhaosNexus.LOGGER.info("Relics present: Rift Hunter's Sigil enabled");
-    }
 }
